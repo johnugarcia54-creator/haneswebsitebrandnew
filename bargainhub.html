@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bargainhub Kitchens — The whole kitchen, warehouse-direct</title>
+<meta name="description" content="Bargainhub kitchens from Hanes Distribution: tall cabinetry, open shelving, stone-look benchtops and lighting on one order, from our Christchurch warehouse, delivered nationwide.">
+<meta name="theme-color" content="#14100c">
+<link rel="preload" as="image" href="stills/bargainhub/blueprint.webp">
+<link rel="preload" as="image" href="stills/bargainhub/kitchen-2000.webp">
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-tight-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-tight-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  --cream:#f5efe6; --cream-2:#ece3d6; --ink:#1b1612; --ink-2:#6c6157; --ink-3:#998d80; --line:rgba(27,22,18,.1);
+  --dark:#14100c; --dark-2:#1e1914; --brass:#c9a36a; --brass-2:#e4c690;
+  --nav:60px; --pad:clamp(20px,4vw,56px); --max:1240px; --radius:24px; --ease:cubic-bezier(.22,1,.36,1);
+  --fs-h:clamp(34px,4.3vw,62px); --fs-big:clamp(44px,7.2vw,112px); --fs-lead:clamp(22px,2.6vw,38px); --fs-sub:clamp(15px,1.15vw,17px);
+  --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --text:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:var(--text);font-size:16px;line-height:1.55;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.is-loading{overflow:hidden}
+img,canvas,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--brass);color:var(--dark)}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:18px;height:1px;background:var(--brass)}
+.h{font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1;text-wrap:balance;font-size:var(--fs-h)}
+.muted{color:var(--ink-3)}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.btn{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;font-weight:500;font-size:15px;transition:background .4s var(--ease),color .4s var(--ease),transform .4s var(--ease)}
+.btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn--brass{background:var(--brass);color:var(--dark)}
+.btn--brass:hover{background:var(--brass-2)}
+.btn--ghost{box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);color:#fff}
+.btn--ghost:hover{background:rgba(255,255,255,.1)}
+.btn--dark{background:var(--ink);color:var(--cream)}
+
+/* Loader */
+.loader{position:fixed;inset:0;z-index:100;background:var(--dark);display:grid;place-items:center;color:var(--cream)}
+.loader__inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.loader__mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.03em}
+.loader__mark span{color:var(--brass);font-weight:500}
+.loader__bar{width:160px;height:1px;background:rgba(255,255,255,.14);overflow:hidden}
+.loader__fill{height:100%;background:var(--brass);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);color:var(--cream);transition:background .5s var(--ease),color .5s var(--ease),transform .7s var(--ease)}
+.nav.is-solid{background:rgba(245,239,230,.94);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.03em}
+.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;opacity:.6}
+.nav__links{display:flex;gap:30px;font-size:14px}
+.nav__links a{opacity:.75;transition:opacity .3s}
+.nav__links a:hover{opacity:1}
+.nav .btn{height:38px;padding:0 18px;font-size:14px}
+
+/* ---------- Build: the kitchen assembles as you scroll, then the camera pushes in ---------- */
+.build{position:relative;height:420vh;background:var(--dark)}
+.build .sticky{background:var(--dark)}
+.build canvas{position:absolute;inset:0;width:100%;height:100%}
+#kCanvas{opacity:0;visibility:hidden}
+/* once built, the kitchen is one image, so the push-in scales a single layer */
+.whole{position:absolute;max-width:none;transform-origin:50% 50%;visibility:hidden;will-change:transform}
+.glow{position:absolute;opacity:0;visibility:hidden;pointer-events:none;background:radial-gradient(ellipse 48% 6% at 50% 19%,rgba(255,214,150,.55),rgba(255,214,150,0) 70%),radial-gradient(ellipse 46% 5% at 50% 88%,rgba(255,214,150,.5),rgba(255,214,150,0) 70%),radial-gradient(ellipse 5% 22% at 24% 40%,rgba(255,214,150,.4),rgba(255,214,150,0) 70%),radial-gradient(ellipse 5% 22% at 77% 40%,rgba(255,214,150,.4),rgba(255,214,150,0) 70%)}
+.b-intro{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--cream);padding:0 var(--pad);pointer-events:none}
+.b-intro .eyebrow{color:var(--brass-2)}
+.b-intro h1{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.92;font-size:var(--fs-big);margin:22px 0 20px;text-shadow:0 20px 60px rgba(0,0,0,.5)}
+.b-intro h1 em{font-style:normal;color:var(--brass-2)}
+.b-intro p{font-size:var(--fs-sub);color:rgba(245,239,230,.72);max-width:420px}
+.cue{margin-top:34px;width:22px;height:36px;border-radius:12px;box-shadow:inset 0 0 0 1.5px rgba(245,239,230,.4);position:relative}
+.cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--brass-2);animation:cue 1.8s var(--ease) infinite}
+@keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(11px);opacity:0}100%{opacity:0}}
+.b-label{position:absolute;z-index:3;left:var(--pad);bottom:clamp(28px,7vh,70px);color:var(--cream);opacity:0}
+.b-label small{display:block;font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--brass-2);font-variant-numeric:tabular-nums}
+.b-label b{display:block;margin-top:6px;font-family:var(--display);font-weight:500;font-size:clamp(20px,1.9vw,28px);letter-spacing:-.02em}
+.b-meter{position:absolute;z-index:3;left:var(--pad);right:calc(var(--pad) + 100px);bottom:clamp(14px,3.5vh,34px);height:1px;background:rgba(245,239,230,.14);opacity:0}
+.b-meter i{position:absolute;inset:0;background:var(--brass);transform-origin:left;transform:scaleX(0)}
+.bars i{position:absolute;left:0;right:0;z-index:4;height:6.5vh;background:#000;transform:scaleY(0)}
+.bars i:first-child{top:0;transform-origin:top}
+.bars i:last-child{bottom:0;transform-origin:bottom}
+.b-shade{position:absolute;inset:0;z-index:2;opacity:0;background:linear-gradient(0deg,rgba(10,8,6,.78) 0%,rgba(10,8,6,.3) 30%,rgba(10,8,6,0) 55%),linear-gradient(90deg,rgba(10,8,6,.4) 0%,rgba(10,8,6,0) 45%),radial-gradient(ellipse 90% 80% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.35) 100%)}
+.b-film{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:calc(6.5vh + clamp(26px,6vh,64px));color:#fff}
+.b-film h2{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:.95;font-size:var(--fs-big);opacity:0;visibility:hidden;max-width:12ch}
+.b-film h2 span{color:var(--brass-2)}
+.skip{position:fixed;right:var(--pad);bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 18px;border-radius:999px;font-size:13px;font-weight:500;color:var(--cream);background:rgba(20,16,12,.62);box-shadow:inset 0 0 0 1px rgba(245,239,230,.18);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .4s var(--ease),visibility .4s,transform .4s var(--ease)}
+.skip.is-on{opacity:1;visibility:visible;transform:none}
+.skip svg{width:12px;height:12px}
+
+/* ---------- Manifesto: the words light up as you read ---------- */
+.manifesto{padding:clamp(90px,15vh,160px) 0 clamp(70px,11vh,120px)}
+.manifesto p{font-family:var(--display);font-weight:500;letter-spacing:-.035em;line-height:1.12;font-size:var(--fs-lead);max-width:980px;margin-top:26px}
+.manifesto p .w{opacity:.16;will-change:opacity}
+.manifesto p .w.b{color:var(--brass);font-weight:600}
+
+/* ---------- Anatomy: everything in the picture ---------- */
+.anat{padding:clamp(40px,7vh,80px) 0 clamp(70px,11vh,120px)}
+.anat__grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(28px,4vw,64px);align-items:center;margin-top:44px}
+.anat__img{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1;background:var(--cream-2);box-shadow:0 40px 80px -50px rgba(40,25,10,.5)}
+.anat__img img{width:100%;height:100%;object-fit:cover}
+.pin{position:absolute;z-index:2;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--dark);background:var(--brass-2);box-shadow:0 6px 18px rgba(0,0,0,.25);transform:scale(0)}
+.pin::after{content:"";position:absolute;inset:-7px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(228,198,144,.8);animation:ring 2.6s var(--ease) infinite}
+@keyframes ring{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.anat__list{list-style:none;display:grid;gap:4px}
+.anat__list li{display:grid;grid-template-columns:34px 1fr;gap:4px 12px;padding:14px 0}
+.anat__list li b{grid-column:2;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.4vw,20px);letter-spacing:-.02em}
+.anat__list li span{grid-row:1 / span 2;font-size:12px;font-weight:600;color:var(--brass);letter-spacing:.1em;padding-top:4px;font-variant-numeric:tabular-nums}
+.anat__list li p{grid-column:2;font-size:15px;color:var(--ink-2)}
+.anat__note{margin-top:22px;padding:18px 20px;border-radius:18px;background:var(--cream-2);font-size:15px;color:var(--ink-2)}
+.anat__note b{color:var(--ink)}
+
+/* ---------- Details: close-ups ---------- */
+.details{padding:clamp(70px,11vh,120px) 0;background:var(--dark);color:var(--cream)}
+.details .eyebrow{color:var(--brass-2)}
+.details__head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+.details__head p{max-width:380px;color:rgba(245,239,230,.66);font-size:var(--fs-sub)}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px);margin-top:44px}
+.dcard__img{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:var(--dark-2)}
+.dcard__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 60%}
+.dcard b{display:block;margin-top:16px;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.5vw,22px);letter-spacing:-.02em}
+.dcard p{margin-top:4px;font-size:14.5px;color:rgba(245,239,230,.62)}
+.ddots{display:none}
+
+/* ---------- Process ---------- */
+.process{padding:clamp(80px,13vh,140px) 0 clamp(60px,9vh,100px)}
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px);margin-top:54px;padding-top:34px}
+.steps__line{position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
+.steps__line i{position:absolute;inset:0;background:var(--brass);transform-origin:left;transform:scaleX(0)}
+.step span{display:block;font-family:var(--display);font-weight:500;font-size:clamp(48px,5.6vw,84px);letter-spacing:-.05em;line-height:1;color:var(--brass)}
+.step b{display:block;margin-top:18px;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,26px);letter-spacing:-.025em}
+.step p{margin-top:8px;color:var(--ink-2);max-width:320px}
+
+/* ---------- Reviews: three moving rows ---------- */
+.reviews{padding:clamp(80px,12vh,130px) 0;background:var(--dark);color:var(--cream);overflow:hidden}
+.reviews .eyebrow{color:var(--brass-2)}
+.reviews__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.score{display:flex;align-items:center;gap:14px}
+.score b{font-family:var(--display);font-weight:600;font-size:clamp(40px,4vw,56px);letter-spacing:-.04em;line-height:1}
+.score small{display:block;font-size:13px;color:rgba(245,239,230,.6)}
+.stars{display:flex;gap:2px;color:var(--brass-2)}
+.stars svg{width:14px;height:14px}
+.stars .off{color:rgba(245,239,230,.2)}
+.rv__note{margin-top:14px;font-size:12.5px;color:rgba(245,239,230,.45)}
+.rv{position:relative;margin-top:46px;display:grid;gap:14px}
+.rv::before,.rv::after{content:"";position:absolute;top:0;bottom:0;width:min(12vw,160px);z-index:2;pointer-events:none}
+.rv::before{left:0;background:linear-gradient(90deg,var(--dark),rgba(20,16,12,0))}
+.rv::after{right:0;background:linear-gradient(270deg,var(--dark),rgba(20,16,12,0))}
+.rv__row{overflow:hidden}
+.rv__track{display:flex;gap:14px;width:max-content;will-change:transform}
+.rcard{width:clamp(270px,24vw,340px);flex:none;padding:22px 22px 20px;border-radius:20px;background:var(--dark-2);box-shadow:inset 0 0 0 1px rgba(245,239,230,.06)}
+.rcard q{display:block;margin-top:12px;font-size:15px;line-height:1.5;color:rgba(245,239,230,.88);quotes:"\201C" "\201D"}
+.rcard footer{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(245,239,230,.55)}
+.rcard footer i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:var(--dark);background:var(--brass)}
+.rcard footer b{display:block;color:var(--cream);font-weight:500}
+
+/* ---------- CTA ---------- */
+.cta{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;isolation:isolate}
+.cta__img{position:absolute;inset:-8% 0;z-index:-2}
+.cta__img img{width:100%;height:100%;object-fit:cover}
+.cta::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(12,9,6,.86) 0%,rgba(12,9,6,.35) 45%,rgba(12,9,6,.15) 100%)}
+.cta .wrap{padding-bottom:clamp(60px,12vh,120px)}
+.cta .eyebrow{color:var(--brass-2)}
+.cta h2{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.92;font-size:var(--fs-big);margin:20px 0 24px}
+.cta p{max-width:520px;color:rgba(255,255,255,.78);font-size:var(--fs-sub)}
+.cta__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+/* Footer */
+.foot{background:var(--dark);color:rgba(245,239,230,.6);font-size:13px;padding:34px 0 max(34px,env(safe-area-inset-bottom))}
+.foot .wrap{display:flex;justify-content:space-between;gap:16px 30px;flex-wrap:wrap}
+.foot a{color:var(--cream)}
+.foot a:hover{color:var(--brass-2)}
+
+/* reveals */
+[data-reveal]{opacity:0;transform:translateY(28px)}
+.no-js [data-reveal]{opacity:1;transform:none}
+.no-js .manifesto p .w{opacity:1}
+.no-js .pin{transform:none}
+
+/* Touch devices: no backdrop work over footage */
+html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
+
+@media (max-width:1024px){
+  .nav__links{display:none}
+  .anat__grid{grid-template-columns:1fr}
+  .dgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:700px){
+  .b-film h2{font-size:clamp(40px,11vw,64px)}
+  .steps{grid-template-columns:1fr;gap:34px}
+  .steps__line{display:none}
+  .dgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--pad) * -1);padding:0 var(--pad);scroll-padding-inline:var(--pad);gap:12px}
+  .dgrid::-webkit-scrollbar{display:none}
+  .dcard{flex:0 0 72%;scroll-snap-align:start}
+  .ddots{display:flex;justify-content:center;gap:6px;margin-top:20px}
+  .ddots i{width:6px;height:6px;border-radius:6px;background:rgba(245,239,230,.2);transition:width .5s var(--ease),background .5s}
+  .ddots i.is-on{width:22px;background:var(--brass-2)}
+  .rcard{width:78vw}
+  .nav .btn{display:none}
+  .anat__list li{padding:10px 0}
+}
+@media (prefers-reduced-motion:reduce){.cue::after,.pin::after{animation:none}}
+</style>
+</head>
+<body class="is-loading">
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__mark">Bargainhub <span>Kitchens</span></div>
+    <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" data-scroll>Bargainhub <small>by Hanes Distribution</small></a>
+    <nav class="nav__links" aria-label="Page">
+      <a href="#anatomy" data-scroll>The kitchen</a>
+      <a href="#details" data-scroll>Details</a>
+      <a href="#process" data-scroll>How it works</a>
+      <a href="#reviews" data-scroll>Reviews</a>
+    </nav>
+    <a class="btn btn--brass" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20kitchen%20quote">Get a quote</a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= Build ================= -->
+  <section class="build" id="build" aria-label="A Bargainhub kitchen, assembled piece by piece as you scroll">
+    <div class="sticky" id="buildStage">
+      <canvas id="kCanvas" aria-hidden="true"></canvas>
+      <canvas id="bCanvas" aria-hidden="true"></canvas>
+      <div class="glow" id="glow" aria-hidden="true"></div>
+      <img class="whole" id="whole" src="stills/bargainhub/kitchen-2000.webp" alt="" decoding="async">
+      <div class="b-shade" id="bShade"></div>
+      <div class="bars" id="bars" aria-hidden="true"><i></i><i></i></div>
+      <div class="b-intro" id="bIntro">
+        <div class="eyebrow">Bargainhub Kitchens</div>
+        <h1>Your kitchen,<br><em>assembled.</em></h1>
+        <p>Scroll to build it, piece by piece, then step inside.</p>
+        <div class="cue" aria-hidden="true"></div>
+      </div>
+      <div class="b-label" id="bLabel" aria-hidden="true"><small id="bNum">01 / 09</small><b id="bName">Ceiling &amp; cove lighting</b></div>
+      <div class="b-meter" id="bMeter" aria-hidden="true"><i id="bMeterFill"></i></div>
+      <div class="b-film" id="bFilm">
+        <h2 id="fl1">Designer <span>kitchens.</span></h2>
+        <h2 id="fl2">Warehouse <span>prices.</span></h2>
+        <h2 id="fl3">One order. <span>Delivered nationwide.</span></h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Manifesto ================= -->
+  <section class="manifesto" id="manifesto">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>The Bargainhub idea</div>
+      <p id="mText">A kitchen like this usually comes with a showroom markup. Bargainhub brings the whole look [warehouse-direct:] tall cabinetry, open shelving, stone-look benchtops and lighting, planned to work together and delivered on [one order.]</p>
+    </div>
+  </section>
+
+  <!-- ================= Anatomy ================= -->
+  <section class="anat" id="anatomy">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>Everything in the picture</div>
+      <h2 class="h" data-reveal style="margin-top:16px">Seven parts. <span class="muted">One kitchen.</span></h2>
+      <div class="anat__grid">
+        <div class="anat__img" data-reveal>
+          <img src="stills/bargainhub/kitchen-1200.webp" width="1200" height="1200" alt="The complete Bargainhub kitchen: tall timber cabinetry, lit open shelving, a stone-look hood and splashback, and a waterfall island" loading="lazy" decoding="async">
+          <span class="pin" style="left:10%;top:36%">01</span>
+          <span class="pin" style="left:24%;top:30%">02</span>
+          <span class="pin" style="left:33%;top:36%">03</span>
+          <span class="pin" style="left:59%;top:30%">04</span>
+          <span class="pin" style="left:8%;top:75%">05</span>
+          <span class="pin" style="left:40%;top:78%">06</span>
+          <span class="pin" style="left:62%;top:18.5%">07</span>
+        </div>
+        <div>
+          <ol class="anat__list">
+            <li data-reveal><span>01</span><b>Tall cabinetry</b><p>Full-height towers for the fridge, pantry and ovens.</p></li>
+            <li data-reveal><span>02</span><b>Open shelving</b><p>Lit columns for glassware and the good bowls.</p></li>
+            <li data-reveal><span>03</span><b>Upper cabinets</b><p>Handle-free doors either side of the hood.</p></li>
+            <li data-reveal><span>04</span><b>Stone-look hood &amp; splashback</b><p>One continuous stone-look finish from hood to cooktop.</p></li>
+            <li data-reveal><span>05</span><b>Waterfall benchtop</b><p>A stone-look island top that wraps down both ends.</p></li>
+            <li data-reveal><span>06</span><b>Island cabinetry</b><p>Oak-look, handle-free drawers above a glowing plinth.</p></li>
+            <li data-reveal><span>07</span><b>Lighting</b><p>Warm LED in the shelves, the cove and the plinth.</p></li>
+          </ol>
+          <div class="anat__note" data-reveal><b>Add the appliances.</b> Pair it with Hisense appliances through Hanes Distribution and the whole kitchen arrives together.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Details ================= -->
+  <section class="details" id="details">
+    <div class="wrap">
+      <div class="details__head">
+        <div>
+          <div class="eyebrow" data-reveal>Up close</div>
+          <h2 class="h" data-reveal style="margin-top:16px">Made in the details.</h2>
+        </div>
+        <p data-reveal>Four materials carry the whole look. They are chosen to sit together, so nothing on the plan fights anything else.</p>
+      </div>
+      <div class="dgrid" id="dRow">
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/timber.webp" width="800" height="1000" alt="Oak-look island drawers above a glowing plinth" loading="lazy" decoding="async"></div><b>Timber</b><p>Warm oak-look veneers on handle-free doors.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/stone.webp" width="800" height="1000" alt="Stone-look hood with a glass pendant" loading="lazy" decoding="async"></div><b>Stone</b><p>Stone-look surfaces on the hood, splashback and benchtop.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="Brushed-brass tap over the island sink" loading="lazy" decoding="async"></div><b>Brass</b><p>Brushed-brass tapware, pulls and pendant fittings.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="Lit open shelving with glassware and a pendant" loading="lazy" decoding="async"></div><b>Light</b><p>A warm glow built into shelves, cove and plinth.</p></div>
+      </div>
+      <div class="ddots" id="dDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Process ================= -->
+  <section class="process" id="process">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>How it works</div>
+      <h2 class="h" data-reveal style="margin-top:16px">Three steps <span class="muted">to a finished kitchen.</span></h2>
+      <div class="steps" id="steps">
+        <div class="steps__line"><i id="stepsLine"></i></div>
+        <div class="step" data-reveal><span>01</span><b>Choose the look</b><p>Oak-look timber, stone-look surfaces and brass accents that are made to go together.</p></div>
+        <div class="step" data-reveal><span>02</span><b>Order once</b><p>Cabinetry, benchtops, shelving and lighting on a single quote and a single order.</p></div>
+        <div class="step" data-reveal><span>03</span><b>Delivered together</b><p>Dispatched from our Hornby warehouse in Christchurch and delivered nationwide.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Reviews ================= -->
+  <section class="reviews" id="reviews">
+    <div class="wrap">
+      <div class="reviews__head">
+        <div>
+          <div class="eyebrow" data-reveal>Reviews</div>
+          <h2 class="h" data-reveal style="margin-top:16px">Kitchens people love <br>coming home to.</h2>
+        </div>
+        <div class="score" data-reveal><b id="rvAvg">4.9</b><div><div class="stars" id="rvStars"></div><small id="rvCount">30 reviews</small></div></div>
+      </div>
+      <!-- SAMPLE REVIEWS: these are layout placeholders, not real customers. Replace REVIEWS in the script below with verified reviews (and remove this note) before the page goes live. -->
+      <p class="rv__note" data-reveal>Sample reviews shown for layout. They will be replaced with verified customer reviews.</p>
+    </div>
+    <div class="rv" id="rv" aria-label="Customer reviews"></div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="quote">
+    <div class="cta__img" data-parallax><img src="stills/bargainhub/close-1920.webp" srcset="stills/bargainhub/close-1080.webp 1080w, stills/bargainhub/close-1920.webp 1920w" sizes="100vw" width="1920" height="1080" alt="" loading="lazy" decoding="async"></div>
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>Bargainhub Kitchens</div>
+      <h2 id="ctaH">Your kitchen,<br>assembled.</h2>
+      <p data-reveal>Tell us about your space and we will price the whole kitchen on one quote, from our Hornby warehouse at 44 Anchorage Road, Christchurch.</p>
+      <div class="cta__btns" data-reveal>
+        <a class="btn btn--brass" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20kitchen%20quote">Get a kitchen quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        <a class="btn btn--ghost" href="index.html#range">All Hanes brands</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Bargainhub is a <a href="index.html">Hanes Distribution</a> brand · 44 Anchorage Road, Hornby, Christchurch</span>
+    <a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
+  </div>
+</footer>
+
+<button class="skip" id="skip" type="button" aria-label="Skip the kitchen build">Skip <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M4 9l4 4 4-4"/></svg></button>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    document.documentElement.classList.add('no-js'); document.body.classList.remove('is-loading'); $('#loader').remove(); return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
+  const clamp01 = v => Math.min(1, Math.max(0, v));
+
+  /* ---------- Frame decoder: fetch + decode off the main thread, straight to the size that gets drawn ---------- */
+  // Drawing a 2560px <img> into a canvas makes the browser re-decode it synchronously whenever it has evicted the
+  // decoded pixels (it can't keep ~1000 of them), which stalled every scroll frame. Frames are decoded into
+  // ImageBitmaps in a worker instead, and only a small window around the playhead is kept decoded.
+  function decoderCore(post, load) {
+    const cache = new Map(), q = []; let busy = 0;
+    const get = url => { let p = cache.get(url); if (!p) { cache.set(url, p = load(url)); p.catch(() => cache.delete(url)); } return p; };
+    const pump = () => { while (busy < 6 && q.length) { const m = q.shift(); busy++;
+      get(m.url).then(() => 1, () => 0).then(ok => { busy--; post({ t: 'got', s: m.s, i: m.i, ok }); pump(); }); } };
+    // m.c = the on-screen part of the frame [x, y, w, h]; m.w/m.h = the size it is drawn at
+    const full = typeof createImageBitmap === 'undefined';
+    const bitmap = (src, m) => full ? src : !m.c ? createImageBitmap(src)
+      : createImageBitmap(src, m.c[0], m.c[1], m.c[2], m.c[3], m.w ? { resizeWidth: m.w, resizeHeight: m.h, resizeQuality: 'high' } : {});
+    return m => {
+      if (m.t === 'prefetch') { q.push(...m.items); pump(); return; }
+      get(m.url).then(src => bitmap(src, m)).then(bmp => post({ t: 'bmp', s: m.s, i: m.i, g: m.g, c: full ? null : m.c, bmp }, [bmp])).catch(() => post({ t: 'bmp', s: m.s, i: m.i, g: m.g }));
+    };
+  }
+  const SEQS = [], MAXQ = 6; let inflight = 0, send;
+  const route = m => { const s = SEQS[m.s]; if (m.t === 'got') return s.onGot(m.i, m.ok); inflight--; s.onBmp(m.i, m.g, m.bmp, m.c); SEQS.forEach(q => q.pump()); };
+  const local = () => decoderCore(route, url => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; }));
+  try {
+    if (location.protocol === 'file:' || !window.Worker || !window.createImageBitmap) throw 0;
+    const code = `const h=(${decoderCore})((m,t)=>postMessage(m,t),u=>fetch(u).then(r=>{if(!r.ok)throw r.status;return r.blob()}));onmessage=e=>h(e.data)`;
+    const w = new Worker(URL.createObjectURL(new Blob([code], { type: 'text/javascript' }))), early = []; let alive = false;
+    w.onmessage = e => { alive = true; route(e.data); };
+    w.onerror = () => { if (alive) return; send = local(); early.forEach(send); };
+    send = m => { if (!alive) early.push(m); w.postMessage(m); };
+  } catch (e) { send = local(); }
+  const close = b => b && b.close && b.close();
+
+  /* ---------- Frame sequence: coarse-to-fine prefetch, windowed decode, cover fit, sub-frame cross-fade ---------- */
+  class Sequence {
+    constructor(o) {
+      Object.assign(this, { minVisX: 0, bg: null, align: .5, alignY: .5, readyFrac: .25 }, o);
+      this.id = SEQS.push(this) - 1;
+      this.name = this.dir.split('/').pop();
+      this.F = window.__FRAMES && window.__FRAMES[this.name];
+      if (this.F) this.count = this.F.length; else if (window.__SEQ && __SEQ[this.name]) this.count = __SEQ[this.name];
+      // the kitchen film is square, so a tall phone screen needs as many source pixels as a wide one
+      const px = Math.max(this.canvas.clientWidth || innerWidth, this.canvas.clientHeight || innerHeight) * Math.min(devicePixelRatio || 1, 2);
+      this.tier = px > 1400 ? 'lg' : 'sm';
+      this.ctx = this.canvas.getContext('2d', { alpha: false });
+      this.bmp = new Array(this.count); this.bc = new Array(this.count); this.bgen = new Uint32Array(this.count); this.st = new Uint8Array(this.count);
+      this.frame = 0; this.fpos = 0; this.dirn = 1; this.key = ''; this.shown = -1; this.fetched = 0; this.started = false;
+      this.near = false; this.first = false; this.gen = 1; this.iw = this.ih = this.tw = this.th = 0; this.crop = null; this.ckey = '';
+      this.ready = new Promise(r => this._ready = r);
+      this.resize();
+      // decode only while the section is within a screen of the viewport; entering from below means we're scrolling back up
+      new IntersectionObserver(es => { const e = es[es.length - 1]; this.near = e.isIntersecting; if (this.near) this.dirn = e.boundingClientRect.top < 0 ? -1 : 1; this.pump(); }, { rootMargin: '100% 0px' }).observe(this.canvas.closest('section'));
+    }
+    url(i) { return this.F ? 'data:image/webp;base64,' + this.F[i] : new URL(`${this.dir}/${this.tier}/${String(i + 1).padStart(3, '0')}.webp`, document.baseURI).href; }
+    order() {
+      const seen = new Uint8Array(this.count), out = [];
+      for (const step of [32, 16, 8, 4, 2, 1]) for (let i = 0; i < this.count; i += step) if (!seen[i]) { seen[i] = 1; out.push(i); }
+      if (!seen[this.count - 1]) out.push(this.count - 1);
+      return out;
+    }
+    load(onProgress) {
+      if (this.started) return this.done; this.started = true;
+      this.onProgress = onProgress; this.need = Math.ceil(this.count * this.readyFrac);
+      this.done = new Promise(r => this._done = r);
+      send({ t: 'prefetch', items: this.order().map(i => ({ s: this.id, i, url: this.url(i) })) });
+      return this.done;
+    }
+    onGot() {
+      this.fetched++; this.onProgress && this.onProgress(Math.min(1, this.fetched / this.need));
+      this.checkReady(); if (this.fetched >= this.count) this._done();
+    }
+    checkReady() { if (this.first && this.fetched >= this.need) this._ready(); }
+    fit(W, H) {
+      const mv = typeof this.minVisX === 'function' ? this.minVisX() : this.minVisX;
+      let s = Math.max(W / this.iw, H / this.ih); if (mv && W / (this.iw * s) < mv) s = W / (this.iw * mv);
+      return s;
+    }
+    resize() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      let w = this.canvas.clientWidth * dpr, h = this.canvas.clientHeight * dpr;
+      // never paint a frame bigger than its source: shrink the backing store and let the compositor scale it up
+      if (this.iw) { const s = this.fit(w, h); if (s > 1) { w /= s; h /= s; } }
+      this.w = Math.max(1, Math.round(w)); this.h = Math.max(1, Math.round(h));
+      if (this.canvas.width !== this.w || this.canvas.height !== this.h) { this.canvas.width = this.w; this.canvas.height = this.h; }
+      this.key = '';
+      if (!this.iw) return;
+      // decode only the part of the frame that is on screen (a portrait phone or tablet sees a narrow slice of a 16:9 frame)
+      const s = this.fit(this.w, this.h), o = this.place(s);
+      const sx = Math.max(0, Math.floor(-o.dx / s)), sy = Math.max(0, Math.floor(-o.dy / s));
+      const crop = [sx, sy, Math.min(this.iw - sx, Math.ceil(this.w / s) + 1), Math.min(this.ih - sy, Math.ceil(this.h / s) + 1)];
+      const tw = Math.round(crop[2] * s), th = Math.round(crop[3] * s), key = crop + ':' + tw + 'x' + th;
+      if (key !== this.ckey) { this.ckey = key; this.crop = crop; this.tw = tw; this.th = th; this.gen++; }
+    }
+    place(s) {
+      const dw = this.iw * s, dh = this.ih * s;
+      return { dw, dh, dx: (this.w - dw) * this.align, dy: (this.h - dh) * (typeof this.alignY === 'function' ? this.alignY() : this.alignY) };
+    }
+    request(i) {
+      this.st[i] = 1; inflight++;
+      const c = this.crop; send({ t: 'decode', s: this.id, i, g: this.gen, url: this.url(i), c, w: c && this.tw !== c[2] ? this.tw : 0, h: this.th });
+    }
+    pump() {
+      const n = this.count, f = this.frame, d = this.dirn;
+      // keep ~10 frames decoded ahead of the playhead (in the scroll direction) and a few behind; release the rest
+      for (let i = 0; i < n; i++) if (this.bmp[i] && (!this.near || (i - f) * d > 12 || (f - i) * d > 4)) { close(this.bmp[i]); this.bmp[i] = null; }
+      if (!this.near) return;
+      const want = [f, f + 1]; for (let k = 1; k <= 10; k++) want.push(f + d * k); for (let k = 1; k <= 2; k++) want.push(f - d * k);
+      if (!this.iw) { if (!this.st.includes(1)) { const i = want.find(k => k >= 0 && k < n && !this.st[k]); if (i !== undefined) this.request(i); } return; }
+      for (const i of want) {
+        if (inflight >= MAXQ) break;
+        if (i >= 0 && i < n && !this.st[i] && !(this.bmp[i] && this.bgen[i] === this.gen)) this.request(i);
+      }
+    }
+    onBmp(i, g, bmp, c) {
+      this.st[i] = bmp ? 0 : 2;
+      if (bmp && !this.iw) { this.iw = bmp.width; this.ih = bmp.height; this.resize(); if (bmp.width === this.tw && bmp.height === this.th) g = this.gen; }
+      if (!this.first) { this.first = true; this.checkReady(); }
+      if (!bmp) return;
+      const d = this.dirn, keep = this.near && (i - this.frame) * d <= 12 && (this.frame - i) * d <= 4;
+      if (!keep || (g !== this.gen && this.bmp[i] && this.bgen[i] === this.gen)) return close(bmp);
+      if (this.bmp[i] !== bmp) close(this.bmp[i]);
+      this.bmp[i] = bmp; this.bgen[i] = g; this.bc[i] = c || [0, 0, this.iw, this.ih];
+      if (Math.abs(i - this.frame) < 2 || this.shown !== this.frame) this.render(true);
+    }
+    nearest(i) {
+      if (this.bmp[i]) return i;
+      for (let d = 1; d < this.count; d++) { if (i - d >= 0 && this.bmp[i - d]) return i - d; if (i + d < this.count && this.bmp[i + d]) return i + d; }
+      return -1;
+    }
+    set(f) {
+      const p = Math.max(0, Math.min(this.count - 1, f)), fr = Math.floor(p);
+      if (p !== this.fpos) this.dirn = p > this.fpos ? 1 : -1;
+      this.fpos = p; if (fr !== this.frame) { this.frame = fr; this.pump(); }
+      this.render();
+    }
+    render(force) {
+      if (!this.iw) return;
+      const i = this.nearest(this.frame); if (i < 0) return;
+      const t = this.fpos - this.frame, j = this.frame + 1;
+      const blend = i === this.frame && t > .04 && j < this.count && this.bmp[j] ? Math.round(t * 12) / 12 : 0;
+      const key = i + ':' + blend; if (!force && key === this.key) return;
+      const c = this.ctx, W = this.w, H = this.h, s = this.fit(W, H), { dw, dh, dx, dy } = this.place(s);
+      if (this.bg && (dh < H - 1 || dw < W - 1)) { c.fillStyle = this.bg; c.fillRect(0, 0, W, H); }
+      c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+      // each bitmap covers its crop of the frame; at the current size this is a 1:1 blit
+      const draw = k => { const r = this.bc[k]; c.drawImage(this.bmp[k], Math.round(dx + r[0] * s), Math.round(dy + r[1] * s), Math.round(r[2] * s), Math.round(r[3] * s)); };
+      c.globalAlpha = 1; draw(i);
+      if (blend) { c.globalAlpha = blend; draw(j); c.globalAlpha = 1; }
+      this.key = key; this.shown = i;
+    }
+  }
+
+  const seq = new Sequence({ canvas: $('#kCanvas'), dir: 'frames2/kitchen', count: 109, bg: '#14100c', readyFrac: .1 });
+
+  /* ---------- Smooth scroll ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+  }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
+  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
+  $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); go(id === '#top' ? 0 : id);
+  }));
+
+  /* ---------- Nav ---------- */
+  const nav = $('#nav'); let lastY = 0, buildEnd = 0;
+  const measureBuild = () => { buildEnd = $('#build').offsetHeight - innerHeight; };
+  measureBuild(); addEventListener('resize', measureBuild);
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
+    const y = s.scroll();
+    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
+    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
+    nav.classList.toggle('is-solid', y > buildEnd + 10);
+    lastY = y;
+  }});
+
+  /* =========================================================
+     BUILD: the kitchen is cut along its own lines and flies together, the lights come on,
+     the camera pushes in to fill the screen and the film takes over
+     ========================================================= */
+  const KIMG = 'stills/bargainhub/kitchen-2000.webp', BPIMG = 'stills/bargainhub/blueprint.webp', BG = '#14100c';
+  const sticky = $('#buildStage'), bcv = $('#bCanvas'), bctx = bcv.getContext('2d', { alpha: false }), whole = $('#whole'), glow = $('#glow');
+  // [x, y, w, h] in % of the square frame; clip = outline in frame %, for the benchtop's waterfall ends and the floor around the island.
+  // from: where each piece starts (x/y in piece widths/heights, s/sx/sy scale, r degrees)
+  const PIECES = [
+    { r: [0, 0, 100, 21.5], t: .08, from: { y: -1.2, sy: 1.4 } },
+    { r: [0, 62, 100, 38], t: .1, from: { y: .6, sy: .7 }, clip: [[0, 62], [6, 62], [6, 88.5], [94, 88.5], [94, 62], [100, 62], [100, 100], [0, 100]] },
+    { r: [0, 21.5, 20.5, 40.5], t: .14, from: { x: -1.3, sx: .8 } },
+    { r: [81, 21.5, 19, 40.5], t: .16, from: { x: 1.3, sx: .8 } },
+    { r: [20.5, 21.5, 7.5, 40.5], t: .2, from: { y: -1.15 } },
+    { r: [73.5, 21.5, 7.5, 40.5], t: .22, from: { y: -1.15 } },
+    { r: [28, 21.5, 9.5, 27], t: .25, from: { x: -.7, y: -.4, r: -8 } },
+    { r: [65.5, 21.5, 8, 27], t: .27, from: { x: .7, y: -.4, r: 8 } },
+    { r: [37.5, 21.5, 28, 27], t: .3, from: { y: -1.7, s: 1.06 }, d: .1 },
+    { r: [28, 48.5, 45.5, 13.5], t: .35, from: { s: .9, y: .14 } },
+    { r: [10, 68, 80, 20.5], t: .39, from: { y: 1.5 } },
+    { r: [6, 62, 88, 26.5], t: .43, from: { y: -2.7, sx: 1.04 }, d: .1, ease: 'back.out(1.25)', clip: [[6, 62], [94, 62], [94, 88.5], [90, 88.5], [90, 68], [10, 68], [10, 88.5], [6, 88.5]] },
+  ];
+  const LABELS = [[.15, 'Ceiling & cove lighting'], [.21, 'Tall cabinetry'], [.27, 'Open shelving'], [.32, 'Upper cabinets'], [.37, 'Stone-look hood'], [.42, 'Splashback & cooktop run'], [.47, 'Island cabinetry'], [.52, 'Waterfall benchtop'], [.57, 'Lights on']];
+  const E = .12; // pieces overlap by a hair so no seam shows between them
+  PIECES.forEach(p => {
+    const [x, y, w, h] = p.r, ex = Math.max(0, x - E), ey = Math.max(0, y - E), ew = Math.min(100, x + w + E) - ex, eh = Math.min(100, y + h + E) - ey;
+    p.e = [ex, ey, ew, eh]; p.st = { x: 0, y: 0, s: 1, sx: 1, sy: 1, r: 0, a: 1 };
+    if (p.clip) p.path = p.clip.map(([gx, gy]) => [(gx - ex) / ew - .5, (gy - ey) / eh - .5]);
+  });
+  const st = { bp: .5, dim: .42 };
+  // One canvas for the whole build: twelve moving page layers cost the compositor far more than one canvas does
+  let H = null, VW = 0, VH = 0, S = 0, C = 1, Q = 0, QX = 0, QY = 0, DPR = 1, kSrc = null, bpSrc = null;
+  const kImg = new Image(), bpImg = new Image(); kImg.src = KIMG; bpImg.src = BPIMG;
+  // both images are scaled once to the size they are drawn at, so every frame is a set of 1:1 copies
+  const scaled = (img, d) => { const cv = document.createElement('canvas'); cv.width = cv.height = d; const x = cv.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(img, 0, 0, d, d); return cv; };
+  const prep = () => { if (!kImg.naturalWidth || !bpImg.naturalWidth) return; const d = Math.max(1, Math.round(Q * DPR)); kSrc = scaled(kImg, d); bpSrc = scaled(bpImg, d); draw(); };
+  const draw = () => {
+    if (!H || !kSrc || H.progress() > .6205) return;
+    const c = bctx, q = Q * DPR, ox = QX * DPR, oy = QY * DPR, k = kSrc.width / 100;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.fillStyle = BG; c.fillRect(0, 0, bcv.width, bcv.height);
+    for (const p of PIECES) {
+      const t = p.st; if (t.a <= .001) continue;
+      const [x, y, w, h] = p.e, pw = w / 100 * q, ph = h / 100 * q;
+      c.globalAlpha = Math.min(1, t.a);
+      c.setTransform(1, 0, 0, 1, ox + (x + w / 2) / 100 * q + t.x * pw, oy + (y + h / 2) / 100 * q + t.y * ph);
+      if (t.r) c.rotate(t.r * Math.PI / 180);
+      if (t.s !== 1 || t.sx !== 1 || t.sy !== 1) c.scale(t.s * t.sx, t.s * t.sy);
+      if (p.path) { c.save(); c.beginPath(); p.path.forEach(([lx, ly], i) => i ? c.lineTo(lx * pw, ly * ph) : c.moveTo(lx * pw, ly * ph)); c.closePath(); c.clip(); }
+      c.drawImage(kSrc, x * k, y * k, w * k, h * k, -pw / 2, -ph / 2, pw, ph);
+      if (p.path) c.restore();
+    }
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    // lights off until the end, and the blueprint drawn over the top so its lines stay crisp while the pieces fill it
+    if (st.dim > .001) { c.globalAlpha = st.dim; c.fillStyle = '#0c0906'; c.fillRect(ox, oy, q, q); }
+    if (st.bp > .001) { c.globalAlpha = st.bp; c.drawImage(bpSrc, ox, oy, q, q); }
+    c.globalAlpha = 1;
+  };
+
+  // the build happens in a square fitted to the screen; after the lights come on, the whole-kitchen image pushes in to cover it
+  const zoom = { z: 0 };
+  const applyStage = () => { whole.style.transform = `scale(${(C + (1 - C) * zoom.z).toFixed(4)})`; };
+  const sizeStage = () => {
+    VW = sticky.clientWidth; VH = sticky.clientHeight; S = Math.max(VW, VH); C = Math.min(VW * .94, VH * .78) / S; Q = S * C; QX = (VW - Q) / 2; QY = (VH - Q) / 2;
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    bcv.width = Math.round(VW * DPR); bcv.height = Math.round(VH * DPR);
+    Object.assign(whole.style, { width: S + 'px', height: S + 'px', left: (VW - S) / 2 + 'px', top: (VH - S) / 2 + 'px' });
+    Object.assign(glow.style, { width: Q + 'px', height: Q + 'px', left: QX + 'px', top: QY + 'px' });
+    applyStage(); prep();
+  };
+  let rsq = 0; addEventListener('resize', () => { cancelAnimationFrame(rsq); rsq = requestAnimationFrame(sizeStage); });
+
+  const bName = $('#bName'), bNum = $('#bNum'); let lab = -2;
+  const setLabel = p => {
+    let i = -1; LABELS.forEach(([t], k) => { if (p >= t) i = k; });
+    if (i === lab) return; lab = i;
+    if (i < 0) return;
+    bName.textContent = LABELS[i][1]; bNum.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(LABELS.length).padStart(2, '0');
+    gsap.fromTo(bName, { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: .5, ease: 'power3.out', overwrite: true });
+  };
+
+  const fr = { f: 0 };
+  const skip = $('#skip');
+  H = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: draw, scrollTrigger: { trigger: '#build', start: 'top top', end: 'bottom bottom', scrub: true,
+    onUpdate: s => { setLabel(s.progress); skip.classList.toggle('is-on', s.progress > .02 && s.progress < .96); },
+    onLeave: () => skip.classList.remove('is-on'), onLeaveBack: () => skip.classList.remove('is-on') } });
+  H.to('#bIntro', { autoAlpha: 0, y: -70, duration: .06 }, .004)
+    .to(st, { bp: 1, duration: .06 }, .004)
+    .to(['#bLabel', '#bMeter'], { autoAlpha: 1, duration: .03 }, .1)
+    .fromTo('#bMeterFill', { scaleX: 0 }, { scaleX: 1, duration: .5 }, .08);
+  PIECES.forEach(p => H.from(p.st, { ...p.from, a: 0, duration: p.d || .085, ease: p.ease || 'power3.out', immediateRender: true }, p.t));
+  H.to(st, { bp: 0, duration: .3, ease: 'power1.in' }, .2)
+    .to(st, { dim: 0, duration: .06, ease: 'power2.in' }, .54)
+    .to('#glow', { autoAlpha: 1, duration: .025 }, .555)
+    .to('#glow', { autoAlpha: 0, duration: .04 }, .58)
+    .to(['#bLabel', '#bMeter'], { autoAlpha: 0, duration: .03 }, .6)
+    .set('#whole', { autoAlpha: 1 }, .62).set('#bCanvas', { autoAlpha: 0 }, .621)
+    .to(zoom, { z: 1, duration: .11, ease: 'power2.inOut', onUpdate: applyStage }, .622)
+    .fromTo('#bars i', { scaleY: 0 }, { scaleY: 1, duration: .05, ease: 'power2.out' }, .66)
+    .set('#kCanvas', { autoAlpha: 1 }, .73).set('#whole', { autoAlpha: 0 }, .732)
+    .to('#bShade', { opacity: 1, duration: .04 }, .72)
+    .to(fr, { f: seq.count - 1, duration: .268, onUpdate: () => seq.set(fr.f) }, .732)
+    .fromTo('#fl1', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .75)
+    .to('#fl1', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .815)
+    .fromTo('#fl2', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .84)
+    .to('#fl2', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .9)
+    .fromTo('#fl3', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .925)
+    .to({}, { duration: .001 }, .999);
+  skip.addEventListener('click', () => go('#manifesto'));
+  sizeStage(); kImg.decode().then(prep, prep); bpImg.decode().then(prep, prep);
+
+  /* ---------- Manifesto: words light up as you scroll past ---------- */
+  const mText = $('#mText');
+  mText.innerHTML = mText.textContent.replace(/\[([^\]]+)\]|(\S+)/g, (m, b, w) => b ? b.split(' ').map(x => `<span class="w b">${x}</span>`).join(' ') : `<span class="w">${w}</span>`);
+  gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 45%', scrub: true } });
+
+  /* ---------- Reveals, pins, close-ups, process line ---------- */
+  ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
+  ScrollTrigger.create({ trigger: '.anat__img', start: 'top 70%', once: true, onEnter: () =>
+    gsap.to('.pin', { scale: 1, duration: .7, stagger: .12, ease: 'back.out(2)' }) });
+  $$('.dcard__img img').forEach(img => gsap.fromTo(img, { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom 40%', scrub: true } }));
+  gsap.fromTo('#stepsLine', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '#steps', start: 'top 85%', end: 'bottom 60%', scrub: true } });
+  $$('[data-parallax]').forEach(el => gsap.fromTo(el, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
+  gsap.fromTo('#ctaH', { y: 80, autoAlpha: .15 }, { y: 0, autoAlpha: 1, ease: 'none', scrollTrigger: { trigger: '.cta', start: 'top 85%', end: 'center center', scrub: true } });
+
+  // phones: the close-ups are a swipeable row and the dots follow it
+  const dRow = $('#dRow'), dDots = $$('#dDots i'); let ddq = 0;
+  const syncD = () => { ddq = 0; const c = dRow.children, step = c[1].offsetLeft - c[0].offsetLeft || 1;
+    const i = dRow.scrollLeft + dRow.clientWidth >= dRow.scrollWidth - 4 ? c.length - 1 : Math.round(dRow.scrollLeft / step);
+    dDots.forEach((d, k) => d.classList.toggle('is-on', k === i)); };
+  dRow.addEventListener('scroll', () => { if (!ddq) ddq = requestAnimationFrame(syncD); }, { passive: true }); syncD();
+
+  /* =========================================================
+     REVIEWS: three rows drifting in opposite directions, faster while the page scrolls
+     ========================================================= */
+  // SAMPLE REVIEWS for layout only. Replace with verified customer reviews (name, town, stars, text) before launch.
+  const REVIEWS = [
+    ['Aroha M.', 'Rolleston', 5, 'The island is the first thing everyone comments on. It looks like it cost twice what we paid.'],
+    ['Daniel K.', 'Christchurch', 5, 'Everything turned up on one truck, labelled and complete. Our builder could not believe how easy it was.'],
+    ['Priya S.', 'Wellington', 5, 'We priced the same look through a showroom. Bargainhub came in well under and the finish is just as good.'],
+    ['Tom R.', 'Queenstown', 5, 'Love the lit shelving. At night the whole kitchen glows.'],
+    ['Hannah W.', 'Rangiora', 5, 'Clear quote, no surprises, delivered when they said it would be.'],
+    ['Mere T.', 'Hamilton', 5, 'The stone-look benchtop is stunning and easy to wipe down with three kids.'],
+    ['James L.', 'Nelson', 5, 'Handle-free drawers look so clean. The whole room feels calmer.'],
+    ['Sophie C.', 'Timaru', 4, 'Great team to deal with from quote to delivery. Would recommend.'],
+    ['Ana P.', 'Tauranga', 5, 'The brass tap was the finishing touch. It feels like a boutique hotel.'],
+    ['Ben H.', 'Ashburton', 5, 'Ordered the kitchen and our Hisense appliances in one go. So simple.'],
+    ['Grace N.', 'Dunedin', 5, 'Warm oak, warm lighting. Exactly the feel we were after.'],
+    ['Mark D.', 'Invercargill', 5, 'Well packed, nothing damaged, and every part was there.'],
+    ['Lucy F.', 'Blenheim', 5, 'We picked the look from the photos and it arrived exactly like that.'],
+    ['Sam W.', 'Lincoln', 5, 'Our open-plan living finally feels finished.'],
+    ['Karan B.', 'Auckland', 5, 'The value for this quality is unreal.'],
+    ['Olivia G.', 'Napier', 5, 'The waterfall ends on the island make the whole room.'],
+    ['Hemi W.', 'Palmerston North', 5, 'Delivered to the North Island without a hitch.'],
+    ['Rachel K.', 'Kaiapoi', 5, 'The neighbours keep asking who did our kitchen.'],
+    ['Chris M.', 'Nelson', 4, 'Good communication the whole way through.'],
+    ['Emma J.', 'Hastings', 5, 'The tall pantry towers swallow everything. So much storage.'],
+    ['Liam O.', 'New Plymouth', 5, 'We saved enough to upgrade the appliances as well.'],
+    ['Nikau R.', 'Rotorua', 5, 'The veneer looks beautiful up close.'],
+    ['Jess A.', 'Oamaru', 5, 'It came together faster than we expected.'],
+    ['Paul E.', 'Whanganui', 4, 'Exactly what we wanted for a rental upgrade: good-looking and tough.'],
+    ['Mia S.', 'Wānaka', 5, 'The glow under the island is my favourite detail.'],
+    ['Ravi P.', 'Christchurch', 5, 'Straightforward pricing and no upselling.'],
+    ['Kate B.', 'Wellington', 5, 'A designer look without the designer bill.'],
+    ['Josh T.', 'Greymouth', 5, 'Everything fitted first time.'],
+    ['Aria H.', 'Gisborne', 5, 'From old laminate to this. Night and day.'],
+    ['Leo V.', 'Whangārei', 5, 'We would buy from Bargainhub again without a second thought.'],
+  ];
+  const star = on => `<svg viewBox="0 0 16 16" class="${on ? '' : 'off'}" aria-hidden="true"><path fill="currentColor" d="M8 1.2l2.1 4.3 4.7.7-3.4 3.3.8 4.7L8 12l-4.2 2.2.8-4.7L1.2 6.2l4.7-.7z"/></svg>`;
+  const stars = n => `<div class="stars" aria-label="${n} out of 5 stars">${[1, 2, 3, 4, 5].map(k => star(k <= n)).join('')}</div>`;
+  const card = ([name, town, n, text]) => `<article class="rcard">${stars(n)}<q>${text}</q><footer><i>${name[0]}</i><span><b>${name}</b>${town}</span></footer></article>`;
+  const avg = REVIEWS.reduce((a, r) => a + r[2], 0) / REVIEWS.length;
+  $('#rvAvg').textContent = avg.toFixed(1); $('#rvStars').innerHTML = [1, 2, 3, 4, 5].map(k => star(k <= Math.round(avg))).join(''); $('#rvCount').textContent = REVIEWS.length + ' reviews';
+  const rv = $('#rv');
+  const ROWS = [0, 1, 2].map(k => REVIEWS.filter((_, i) => i % 3 === k));
+  rv.innerHTML = ROWS.map(row => { const h = row.map(card).join(''); return `<div class="rv__row"><div class="rv__track">${h}${h}</div></div>`; }).join('');
+  const tracks = $$('.rv__track').map((el, i) => ({ el, x: 0, half: 0, dir: i % 2 ? 1 : -1, v: [.45, .6, .5][i], hold: false }));
+  const measureRv = () => tracks.forEach(t => { t.half = t.el.scrollWidth / 2; if (t.dir > 0 && t.x === 0) t.x = -t.half; });
+  measureRv(); addEventListener('resize', measureRv); document.fonts && document.fonts.ready.then(measureRv);
+  tracks.forEach(t => { t.el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') t.hold = true; }); t.el.addEventListener('pointerleave', () => { t.hold = false; }); });
+  let rvOn = false; new IntersectionObserver(es => { rvOn = es[es.length - 1].isIntersecting; }).observe(rv);
+  gsap.ticker.add(() => {
+    if (!rvOn || reduce) return;
+    const boost = Math.min(Math.abs(lenis ? lenis.velocity : 0) * .22, 10);
+    tracks.forEach(t => {
+      if (t.hold && !boost) return;
+      t.x += (t.v + boost) * t.dir;
+      if (t.half) { if (t.x <= -t.half) t.x += t.half; if (t.x > 0) t.x -= t.half; }
+      t.el.style.transform = `translate3d(${t.x.toFixed(2)}px,0,0)`;
+    });
+  });
+
+  /* ---------- Load: the two images the build needs, then hand over ---------- */
+  const fill = $('#lfill');
+  const need = [kImg, bpImg].map(im => im.decode().catch(() => {}));
+  if (document.fonts) need.push(document.fonts.ready);
+  let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
+  Promise.all(need).then(() => {
+    gsap.timeline({ delay: .25 })
+      .to('#loader', { autoAlpha: 0, duration: .8, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
+      .from('#bIntro > *', { autoAlpha: 0, y: 30, duration: 1.2, stagger: .1, ease: 'expo.out' }, '<.2')
+      .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); seq.load(); }, '<');
+  });
+})();
+</script>
+</body>
+</html>
