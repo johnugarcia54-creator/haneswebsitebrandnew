@@ -76,9 +76,32 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .btn--glass:hover{background:rgba(255,255,255,.24)}
 .btn--lg{height:54px;padding:0 30px;font-size:16px}
 .nav .btn{height:32px;padding:0 15px;font-size:13px}
+.nav__cta{display:flex;align-items:center;gap:8px}
+.nav__menu{display:none;align-items:center;gap:9px;height:32px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:inset 0 0 0 1px rgba(0,0,0,.16)}
+.nav__menu i{position:relative;width:14px;height:8px}
+.nav__menu i::before,.nav__menu i::after{content:"";position:absolute;left:0;right:0;height:1.5px;border-radius:2px;background:currentColor;transition:transform .4s var(--ease),top .4s var(--ease)}
+.nav__menu i::before{top:0}
+.nav__menu i::after{top:6.5px}
+.nav.is-open{transform:none;background:#fff;box-shadow:none}
+.nav.is-open .nav__menu i::before{top:3.25px;transform:rotate(45deg)}
+.nav.is-open .nav__menu i::after{top:3.25px;transform:rotate(-45deg)}
+
+/* Menu sheet (tablets & phones) */
+.menu{position:fixed;inset:0;z-index:49;display:flex;flex-direction:column;justify-content:space-between;gap:36px;padding:calc(var(--nav) + 4vh) var(--pad) max(32px,env(safe-area-inset-bottom));overflow-y:auto;background:#fff;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
+.menu.is-open{opacity:1;visibility:visible}
+.menu__links{display:flex;flex-direction:column}
+.menu__links a{font-family:var(--display);font-size:clamp(30px,7vw,52px);font-weight:600;letter-spacing:-.035em;line-height:1.1;padding:12px 0;border-bottom:1px solid var(--line)}
+.menu__foot{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.menu__mail{font-size:15px;color:var(--ink-2)}
+
+/* Skip: fast-forwards to the end of a pinned film */
+.skip{position:fixed;right:var(--pad);bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 15px 0 18px;border-radius:999px;font-size:13px;font-weight:500;color:#fff;background:rgba(18,18,22,.62);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .4s var(--ease),visibility .4s,transform .4s var(--ease),background .3s}
+.skip svg{width:12px;height:12px}
+.skip:hover{background:rgba(18,18,22,.8)}
+.skip.is-on{opacity:1;visibility:visible;transform:none}
 
 /* ---------- HERO: truck ---------- */
-.hero{position:relative;height:560vh}
+.hero{position:relative;height:330vh}
 .hero__intro{position:absolute;left:0;right:0;top:calc(var(--nav) + 4.5vh);text-align:center;padding:0 var(--pad);z-index:1}
 .hero__intro .eyebrow{margin-bottom:18px}
 .hero__intro h1{font-size:clamp(42px,6.4vw,100px)}
@@ -114,7 +137,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .fact span{display:block;margin-top:12px;font-size:15px;color:var(--ink-2);max-width:220px}
 
 /* ---------- Network (portal) ---------- */
-.net{position:relative;height:640vh}
+.net{position:relative;height:370vh}
 .net__head{position:absolute;top:calc(var(--nav) + 5vh);left:0;right:0;text-align:center;padding:0 var(--pad);z-index:1}
 .net__head h2{font-size:clamp(42px,6.2vw,96px);margin:16px 0 16px}
 .net__head p{font-size:clamp(16px,1.4vw,20px);color:var(--ink-2);max-width:580px;margin:0 auto}
@@ -132,7 +155,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rail__item.is-on{color:#fff}
 
 /* ---------- Tracking ---------- */
-.trk{position:relative;height:470vh;background:#fff}
+.trk{position:relative;height:290vh;background:#fff}
 .trk__stage{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#f6f6f8 0%,#e3e7ec 60%,#cdd4dd 100%);will-change:opacity,transform}
 .trk__stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .trk__head{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 var(--pad);z-index:3}
@@ -147,7 +170,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes pulseg{50%{box-shadow:0 0 0 8px rgba(47,191,90,0)}}
 
 /* ---------- Warehouse (knockout zoom) ---------- */
-.wh{position:relative;height:560vh}
+.wh{position:relative;height:330vh}
 .wh__frame{position:absolute;inset:0;background:var(--dark);will-change:clip-path}
 .wh__frame canvas{position:absolute;inset:0;width:100%;height:100%}
 .wh .shade{background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,0) 70%),linear-gradient(0deg,rgba(0,0,0,.4),rgba(0,0,0,0) 40%)}
@@ -167,7 +190,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .wh__stat span{display:block;font-size:13px;color:rgba(255,255,255,.75);margin-top:8px;max-width:180px}
 
 /* ---------- Hisense (fridge-door reveal) ---------- */
-.hs{position:relative;height:580vh;background:#fff}
+.hs{position:relative;height:340vh;background:#fff}
 .hs__stage{position:absolute;inset:0;background:#050506;will-change:clip-path}
 .hs__stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .hs .shade{background:linear-gradient(90deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.2) 40%,rgba(0,0,0,0) 60%,rgba(0,0,0,.2) 80%,rgba(0,0,0,.7) 100%),linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,0) 45%)}
@@ -197,7 +220,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hs__tag{position:absolute;top:26px;left:var(--pad);z-index:4;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.8);opacity:0}
 
 /* ---------- Brands ---------- */
-.brands{position:relative;height:600vh}
+.brands{position:relative;height:350vh}
 .brands__grid{height:100%;max-width:1440px;margin:0 auto;padding:calc(var(--nav) + 4vh) var(--pad) 5vh;display:grid;grid-template-columns:minmax(300px,.8fr) 1.45fr;gap:clamp(28px,4vw,64px);align-items:center}
 .brands__copy h2{font-size:clamp(42px,5vw,76px);margin:18px 0 18px}
 .brands__copy > p{color:var(--ink-2);font-size:17px;max-width:410px}
@@ -339,6 +362,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
 
 @media (max-width:1024px){
   .nav__links{display:none}
+  .nav__menu{display:inline-flex}
   .range{grid-template-columns:repeat(2,1fr)}
   .card,.card--wide{grid-column:span 1;min-height:420px}
   .card--wide:first-child{grid-column:span 2}
@@ -405,9 +429,30 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
       <a href="#hisense" data-scroll>Hisense</a>
       <a href="#offices" data-scroll>Offices</a>
     </nav>
-    <a href="#contact" class="btn btn--dark" data-scroll>Enquire now</a>
+    <div class="nav__cta">
+      <a href="#contact" class="btn btn--dark" data-scroll>Enquire now</a>
+      <button class="nav__menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span>Menu</span><i aria-hidden="true"></i></button>
+    </div>
   </div>
 </header>
+
+<div class="menu" id="menu" inert>
+  <nav class="menu__links" aria-label="Sections">
+    <a href="#network" data-scroll>Network</a>
+    <a href="#tracking" data-scroll>Tracking</a>
+    <a href="#warehouse" data-scroll>Warehousing</a>
+    <a href="#brands" data-scroll>Brands</a>
+    <a href="#hisense" data-scroll>Hisense</a>
+    <a href="#offices" data-scroll>Offices</a>
+    <a href="#films" data-scroll>Films</a>
+  </nav>
+  <div class="menu__foot">
+    <a class="btn btn--dark btn--lg" href="#contact" data-scroll>Make an enquiry <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+    <a class="menu__mail" href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
+  </div>
+</div>
+
+<button class="skip" id="skip" type="button" aria-label="Skip to the end of this section">Skip <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"/></svg></button>
 
 <main id="top">
 
@@ -927,7 +972,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
   /* ---------- Smooth scroll ---------- */
   let lenis = null;
   if (!reduce) {
-    lenis = new Lenis({ lerp: .085, wheelMultiplier: .9, smoothWheel: true });
+    lenis = new Lenis({ lerp: .1, wheelMultiplier: 1, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
     lenis.stop();
@@ -960,18 +1005,54 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
     walk(el); return el.querySelectorAll('.ch');
   };
 
-  /* ---------- Nav ---------- */
-  const nav = $('#nav'), imm = {}; let lastY = 0;
-  const updNav = () => nav.classList.toggle('is-hidden', nav.dataset.userHide === '1' || Object.values(imm).some(Boolean));
-  const setImm = (k, v) => { if (imm[k] !== v) { imm[k] = v; updNav(); } };
+  /* ---------- Nav: hides while scrolling down, comes back as soon as you scroll up (inside the films too) ---------- */
+  const nav = $('#nav'); let lastY = 0;
   ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
     const y = s.scroll();
-    if (y > lastY + 4 && y > innerHeight * 1.2) nav.dataset.userHide = '1';
-    if (y < lastY - 4) nav.dataset.userHide = '0';
+    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
+    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
     nav.classList.toggle('is-solid', y > 40);
-    nav.classList.toggle('is-hidden', nav.dataset.userHide === '1' || Object.values(imm).some(Boolean));
     lastY = y;
   }});
+
+  /* ---------- Menu (tablets & phones, where the section links don't fit in the bar) ---------- */
+  const menu = $('#menu'), menuBtn = $('#menuBtn');
+  const setMenu = open => {
+    if (open === nav.classList.contains('is-open')) return;
+    nav.classList.toggle('is-open', open); menu.classList.toggle('is-open', open);
+    menuBtn.setAttribute('aria-expanded', open); menuBtn.querySelector('span').textContent = open ? 'Close' : 'Menu';
+    if (open) {
+      menu.removeAttribute('inert'); nav.classList.remove('is-hidden');
+      lenis ? lenis.stop() : document.documentElement.style.overflow = 'hidden';
+      menu.querySelector('a').focus({ preventScroll: true });
+    } else {
+      if (menu.contains(document.activeElement)) menuBtn.focus({ preventScroll: true });
+      menu.setAttribute('inert', '');
+      lenis ? lenis.start() : document.documentElement.style.overflow = '';
+    }
+  };
+  menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+  menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); }, true); // capture: close (and restart scrolling) before the link scrolls
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
+
+  /* ---------- Skip: fast-forward to the end of a pinned film ---------- */
+  const skip = $('#skip'), rail = $('#rail'); let skipEl = null;
+  const showSkip = el => {
+    if (el === skipEl) return; skipEl = el; skip.classList.toggle('is-on', !!el); skip.style.bottom = '';
+    if (el && el.id === 'network') { // sit above the chapter rail where the two would overlap
+      const r = rail.getBoundingClientRect(), k = skip.getBoundingClientRect();
+      if (r.right > k.left - 8) skip.style.bottom = Math.round(innerHeight - r.top + 12) + 'px';
+    }
+  };
+  $$('#hero, #network, #tracking, #warehouse, #brands, #hisense').forEach(el => ScrollTrigger.create({ trigger: el, start: 'top top', end: 'bottom bottom',
+    onUpdate: s => { if (s.progress > .02 && s.progress < .7) showSkip(el); else if (skipEl === el) showSkip(null); },
+    onToggle: s => { if (!s.isActive && skipEl === el) showSkip(null); } }));
+  skip.addEventListener('click', () => {
+    if (!skipEl) return;
+    const end = skipEl.getBoundingClientRect().top + scrollY + skipEl.offsetHeight - innerHeight + 2;
+    lenis ? lenis.scrollTo(end, { duration: 1.2, easing: t => 1 - Math.pow(1 - t, 3) }) : scrollTo({ top: end, behavior: 'smooth' });
+  });
 
   /* ---------- Clip helpers ---------- */
   const insetClip = (el, v, k) => { el.style.clipPath = `inset(${v[0]*k}vh ${v[1]*k}vw ${v[2]*k}vh ${v[3]*k}vw round ${v[4]*k}px)`; };
@@ -990,8 +1071,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
   gsap.set($$('.kw .ch'), { opacity: 0, yPercent: 70, ...blur(18) });
 
   const hs = { f: 0 };
-  const htl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: true,
-    onUpdate: s => setImm('hero', s.progress > .1 && s.progress < .9) , onLeave: () => setImm('hero', false), onLeaveBack: () => setImm('hero', false) } });
+  const htl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: true } });
   htl.to(hc, { open: 1, duration: .15, ease: 'power2.inOut', onUpdate: applyHero }, 0)
      .to('#heroIntro', { yPercent: -30, autoAlpha: 0, ...blur(10), duration: .1, ease: 'power1.in' }, .01)
      .to('#heroShade', { opacity: 1, duration: .1 }, .1)
@@ -1042,7 +1122,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
   });
   const ns = { f: 0 };
   const ntl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#network', start: 'top top', end: 'bottom bottom', scrub: true,
-    onEnter: () => seq.net.load(), onUpdate: s => setImm('net', s.progress > .1 && s.progress < .95), onLeave: () => setImm('net', false), onLeaveBack: () => setImm('net', false) } });
+    onEnter: () => seq.net.load() } });
   ntl.to(nc, { r: 1, duration: .15, ease: 'power3.inOut', onUpdate: applyNet }, 0)
      .to('#netHead', { y: -60, autoAlpha: 0, ...blur(8), duration: .08, ease: 'power1.in' }, .03)
      .fromTo('#netCanvas', { scale: 1.35 }, { scale: 1, duration: .22, ease: 'power2.out' }, 0)
@@ -1111,7 +1191,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
   const applyWH = () => insetClip(whFrame, isNarrow() ? [8, 4, 8, 4, 24] : [7, 4, 7, 4, 36], wc.close);
   const ws = { f: 0 };
   const wtl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#warehouse', start: 'top top', end: 'bottom bottom', scrub: true,
-    onEnter: () => seq.wh.load(), onUpdate: s => setImm('wh', s.progress > .3 && s.progress < .93), onLeave: () => setImm('wh', false), onLeaveBack: () => setImm('wh', false) } });
+    onEnter: () => seq.wh.load() } });
   wtl.to(ws, { f: seq.wh.count - 1, duration: .9, onUpdate: () => seq.wh.set(ws.f) }, 0)
      .to(['#koTop', '#koBot'], { autoAlpha: 0, y: (i) => i ? 30 : -30, duration: .05 }, .08)
      .to(kz, { s: 90, duration: .3, ease: 'power3.in', onUpdate: applyKO }, .1)
@@ -1153,7 +1233,7 @@ html.lite :is(.nav.is-solid,.rail,.chip,.btn--glass,.hs__cats span,.card__go,.pl
     scrollTrigger: { trigger: '#hisense', start: 'top 80%', end: 'top 10%', scrub: true } });
   const hss = { f: 0 };
   gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hisense', start: 'top top', end: 'bottom bottom', scrub: true,
-      onEnter: () => seq.hs.load(), onUpdate: s => setImm('hs', s.progress > .12 && s.progress < .93), onLeave: () => setImm('hs', false), onLeaveBack: () => setImm('hs', false) } })
+      onEnter: () => seq.hs.load() } })
     .to('#doorL', { rotateY: -108, duration: .24, ease: 'power2.in' }, .06)
     .to('#doorR', { rotateY: 108, duration: .24, ease: 'power2.in' }, .06)
     .to(['#doorL', '#doorR'], { autoAlpha: 0, duration: .04 }, .26)
