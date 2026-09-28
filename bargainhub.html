@@ -30,6 +30,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:var(--text);font-size:17px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
 body.is-loading{overflow:hidden}
+html.lenis-stopped{overflow:hidden}
 img,canvas,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
@@ -68,6 +69,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .nav__links{display:flex;gap:28px;font-size:13px;color:var(--ink-2)}
 .nav__links a:hover{color:var(--ink)}
 .nav .btn{height:32px;padding:0 14px;font-size:13px}
+.nav__end{display:flex;align-items:center;gap:6px}
+.burger{display:none;position:relative;width:40px;height:40px;margin-right:-10px}
+.burger::before,.burger::after{content:"";position:absolute;left:11px;right:11px;height:1.5px;border-radius:2px;background:var(--ink);transition:transform .5s var(--ease)}
+.burger::before{top:16px}
+.burger::after{top:23px}
+.nav.is-open .burger::before{transform:translateY(3.5px) rotate(45deg)}
+.nav.is-open .burger::after{transform:translateY(-3.5px) rotate(-45deg)}
+.menu{position:fixed;top:var(--nav);left:0;right:0;z-index:49;background:#fff;box-shadow:0 40px 60px -40px rgba(0,0,0,.3);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
+.menu a:not(.btn){display:block;padding:13px 0;font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.03em;box-shadow:0 1px 0 var(--line)}
+.menu .btn{margin-top:22px}
 
 /* ---------- Build: blueprint, then a clay model, then the real kitchen with the lights on; the camera pushes in and the film takes over ---------- */
 .build{position:relative;height:380vh;background:#fff}
@@ -104,22 +115,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .intro .w.b{color:var(--brass)}
 
 /* ---------- Rooms: the camera dollies past every room ---------- */
-.rooms{position:relative;height:240vh;background:#fff}
+.rooms{position:relative;height:280vh;background:#fff}
 .rooms .sticky{display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,3.5vh,36px);padding-top:var(--nav)}
 .rooms__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
 .rooms__head .h{font-size:clamp(30px,3.6vw,54px)}
 .track{display:flex;gap:clamp(16px,2.4vw,32px);padding:0 var(--pad);will-change:transform}
-.slide{flex:none;width:min(70vw,980px)}
+.slide{flex:none;width:min(70vw,980px);will-change:transform}
 .slide__img{position:relative;height:min(58vh,560px);border-radius:var(--radius);overflow:hidden;background:var(--bg-2)}
 .slide__img img{position:absolute;top:0;left:-9%;width:118%;height:100%;max-width:none;object-fit:cover;will-change:transform}
-.slide__cap{display:flex;gap:18px;align-items:baseline;margin-top:18px;max-width:640px}
+.slide__cap{display:flex;gap:18px;align-items:baseline;margin-top:18px;max-width:640px;will-change:transform,opacity}
 .slide__cap span{font-size:13px;font-weight:600;color:var(--brass);font-variant-numeric:tabular-nums}
 .slide__cap b{font-family:var(--display);font-weight:600;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.03em;white-space:nowrap}
 .slide__cap p{color:var(--ink-2);font-size:16px}
-.slide--text .slide__img{display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(28px,4vw,56px)}
-.slide--text h3{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1;font-size:clamp(34px,4.4vw,64px);max-width:12ch}
-.slide--text h3 em{font-style:normal;color:var(--ink-3)}
-.slide--text p{margin-top:16px;color:var(--ink-2);max-width:420px}
 .rooms__bar{height:2px;border-radius:2px;background:var(--bg-2);margin:0 var(--pad);overflow:hidden}
 .rooms__bar i{display:block;height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0)}
 
@@ -157,6 +164,52 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .dcard b{display:block;margin-top:16px;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.5vw,22px);letter-spacing:-.02em}
 .dcard p{margin-top:4px;font-size:15px;color:var(--ink-2)}
 .ddots{display:none}
+
+/* ---------- Packages: each room drops onto the pile and the price rolls up with it ---------- */
+.pkg{position:relative;height:250vh;background:#fff}
+.pkg .sticky{display:grid;grid-template-columns:minmax(320px,.9fr) 1.1fr;gap:clamp(24px,4vw,72px);align-items:center;padding:calc(var(--nav) + 2vh) var(--pad) 2vh;max-width:1400px;margin:0 auto}
+.pkg .h{font-size:clamp(30px,3.4vw,52px);margin-top:12px}
+.price{display:flex;align-items:baseline;gap:14px;margin-top:clamp(16px,3.2vh,32px)}
+.price small{font-size:15px;font-weight:500;color:var(--ink-2)}
+.price__num{display:flex;font-family:var(--display);font-weight:600;font-size:clamp(64px,7.4vw,112px);letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.odo{display:block;height:1em;overflow:hidden}
+.odo__s{display:block;will-change:transform}
+.odo__s span{display:block;height:1em}
+.odo__s .z{color:var(--ink-4)}
+.pkg__lead{margin-top:clamp(12px,2vh,18px);font-size:var(--fs-sub);color:var(--ink-2);max-width:460px}
+.incl{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-top:clamp(14px,2.6vh,26px);max-width:480px}
+.incl li{display:flex;gap:10px;align-items:center;padding:9px 0;font-size:15px;color:var(--ink-3);box-shadow:inset 0 1px 0 var(--line);transition:color .5s var(--ease)}
+.incl li i{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--ink-4);transition:background .4s var(--ease),box-shadow .4s var(--ease)}
+.incl li svg{width:10px;height:10px;color:#fff;opacity:0;transform:translateY(-12px);transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.incl li.is-on{color:var(--ink)}
+.incl li.is-on i{background:var(--brass);box-shadow:none}
+.incl li.is-on svg{opacity:1;transform:none}
+.pkg__cta{margin-top:clamp(18px,3vh,30px)}
+.pkg__fine{margin-top:12px;font-size:12.5px;color:var(--ink-3);max-width:440px}
+.stack{position:relative;justify-self:center;height:min(62vh,600px);width:calc(min(62vh,600px) * .8)}
+.pcard{position:absolute;inset:0;border-radius:24px;overflow:hidden;background:var(--bg-2);box-shadow:0 30px 60px -32px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.04);will-change:transform;visibility:hidden}
+.pcard img{width:100%;height:100%;object-fit:cover}
+.pcard span{position:absolute;left:14px;bottom:14px;display:flex;gap:8px;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.92);font-size:13px;font-weight:600}
+.pcard span small{font-size:13px;color:var(--brass);font-variant-numeric:tabular-nums}
+
+/* ---------- Showroom: three rooms drop down like blinds, and the pin drops on the address ---------- */
+.show{padding:clamp(90px,14vh,150px) 0;background:#fff}
+.show__grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,80px);align-items:center}
+.show__h{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.95;font-size:var(--fs-big);margin:12px 0 20px}
+.addr{display:flex;gap:16px;align-items:center;margin-top:30px}
+.pin{position:relative;flex:none;width:46px;height:46px;border-radius:50%;background:var(--bg-2);display:grid;place-items:center}
+.pin svg{width:20px;height:20px;color:var(--brass)}
+.pin i{position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--brass);opacity:0}
+.addr b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(22px,2vw,30px);letter-spacing:-.03em;line-height:1.15}
+.addr span{color:var(--ink-2)}
+.show__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn--line{box-shadow:inset 0 0 0 1px var(--ink-4);color:var(--ink)}
+.btn--line:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.trip{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1vw,14px);height:min(70vh,640px)}
+.tp{position:relative;border-radius:22px;overflow:hidden}
+.tp:nth-child(2){transform:translateY(7%)}
+.tp__in{position:absolute;inset:0;overflow:hidden;border-radius:22px;background:var(--bg-2);will-change:transform}
+.tp img{position:absolute;left:0;top:-10%;width:100%;height:120%;max-width:none;object-fit:cover;will-change:transform}
 
 /* ---------- Reviews: a moving wall, and one voice at a time ---------- */
 .reviews{position:relative;height:210vh;background:var(--bg-2)}
@@ -206,7 +259,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* reveals */
 [data-reveal]{opacity:0;transform:translateY(30px)}
-.no-js [data-reveal],.no-js .cta__copy{opacity:1;transform:none}
+[data-drop]{opacity:0}
+/* drop-in headings: every word (or letter) falls into place through its own mask */
+.dm{display:inline-block;overflow:hidden;vertical-align:top;padding:.08em 0 .16em;margin:-.08em 0 -.16em}
+.di{display:inline-block}
+.dw{display:inline-block;white-space:nowrap}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.no-js [data-reveal],.no-js [data-drop],.no-js .cta__copy{opacity:1;transform:none}
 .no-js .intro .w,.no-js .feat .fw{opacity:1}
 
 /* Touch devices: no live backdrop blur */
@@ -214,6 +273,11 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
 
 @media (max-width:1024px){
   .nav__links{display:none}
+  .burger{display:block}
+  .pkg .sticky{grid-template-columns:1fr;align-content:center;gap:clamp(14px,2.4vh,24px)}
+  .stack{order:-1;height:min(34svh,360px);width:calc(min(34svh,360px) * .8)}
+  .show__grid{grid-template-columns:1fr}
+  .trip{height:min(52svh,560px)}
   .design .sticky{grid-template-columns:1fr;align-content:center;gap:18px}
   .dsteps{position:relative;height:74px;margin-top:10px}
   .dsteps li{position:absolute;inset:0;opacity:0;transition:opacity .5s var(--ease)}
@@ -250,6 +314,21 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   .ddots i{width:6px;height:6px;border-radius:6px;background:var(--ink-4);transition:width .5s var(--ease),background .5s}
   .ddots i.is-on{width:22px;background:var(--ink)}
   .nav .btn{display:none}
+  .pkg .h{font-size:28px}
+  .price{margin-top:12px}
+  .price__num{font-size:60px}
+  .pkg__lead{display:none}
+  .incl{gap:0 16px;margin-top:12px}
+  .incl li{font-size:13.5px;padding:7px 0}
+  .pkg__cta{margin-top:16px}
+  .pkg__fine{font-size:11.5px}
+  .show__h{font-size:clamp(56px,17vw,80px)}
+  .trip{height:48svh}
+  .tp,.tp__in{border-radius:16px}
+}
+@media (max-width:700px) and (max-height:700px){
+  .pkg__fine{display:none}
+  .stack{height:28svh;width:calc(28svh * .8)}
 }
 @media (prefers-reduced-motion:reduce){.cue::after{animation:none}}
 </style>
@@ -269,12 +348,25 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     <nav class="nav__links" aria-label="Page">
       <a href="#rooms" data-scroll>Rooms</a>
       <a href="#design" data-scroll>Design</a>
-      <a href="#details" data-scroll>Materials</a>
+      <a href="#packages" data-scroll>Packages</a>
       <a href="#reviews" data-scroll>Reviews</a>
+      <a href="#showroom" data-scroll>Showroom</a>
     </nav>
-    <a class="btn btn--dark" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Get a quote</a>
+    <div class="nav__end">
+      <a class="btn btn--dark" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Get a quote</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
+    </div>
   </div>
 </header>
+<nav class="menu" id="menu" aria-label="Page">
+  <a href="#rooms" data-scroll>Rooms</a>
+  <a href="#design" data-scroll>Design</a>
+  <a href="#details" data-scroll>Materials</a>
+  <a href="#packages" data-scroll>Packages</a>
+  <a href="#reviews" data-scroll>Reviews</a>
+  <a href="#showroom" data-scroll>Showroom</a>
+  <a class="btn btn--dark" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</nav>
 
 <main id="top">
   <!-- ================= Build ================= -->
@@ -328,8 +420,10 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
           <div class="slide__cap"><span>02</span><b>Living rooms</b><p>Built-in shelving and joinery that frame the fireplace and the view.</p></div></article>
         <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/feature-900.webp" srcset="stills/bargainhub/rooms/feature-900.webp 900w, stills/bargainhub/rooms/feature-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Stone-look feature wall with a television and backlit timber shelving either side" loading="lazy" decoding="async" style="object-position:50% 46%"></div>
           <div class="slide__cap"><span>03</span><b>Feature walls</b><p>Stone-look panels and backlit joinery for the room you live in most.</p></div></article>
-        <article class="slide slide--text"><div class="slide__img"><h3>Bathrooms, laundries <em>and every room between.</em></h3><p>Designed and supplied the same way, on the same order. <a class="link" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20bathroom%20enquiry">Ask about yours</a></p></div>
-          <div class="slide__cap"><span>04</span><b>Bathrooms</b><p>Vanities, stone-look surfaces and storage to match the rest of the house.</p></div></article>
+        <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/bathroom-900.webp" srcset="stills/bargainhub/rooms/bathroom-900.webp 900w, stills/bargainhub/rooms/bathroom-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Bathroom with a round backlit mirror, floating oak vanity, walk-in shower and matt-black tapware" loading="lazy" decoding="async" style="object-position:50% 46%"></div>
+          <div class="slide__cap"><span>04</span><b>Bathrooms</b><p>Backlit mirrors, floating oak vanities and matt-black tapware.</p></div></article>
+        <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/bathroom-mosaic-900.webp" srcset="stills/bargainhub/rooms/bathroom-mosaic-900.webp 900w, stills/bargainhub/rooms/bathroom-mosaic-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Bathroom in green and blue mosaic tile with an arched niche, brass fittings and a carved timber vanity" loading="lazy" decoding="async" style="object-position:50% 50%"></div>
+          <div class="slide__cap"><span>05</span><b>Feature bathrooms</b><p>Mosaic tile, brass fittings and arched niches, for a room with character.</p></div></article>
       </div>
       <div class="rooms__bar" aria-hidden="true"><i id="roomsBar"></i></div>
     </div>
@@ -360,13 +454,13 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
       <div class="studio__img" data-reveal><img id="studioImg" src="stills/bargainhub/studio-800.webp" srcset="stills/bargainhub/studio-800.webp 800w, stills/bargainhub/studio-1400.webp 1400w" sizes="(max-width:1024px) 100vw, 50vw" width="1400" height="1400" alt="A designer modelling a kitchen in 3D, with sketches and floor plans pinned above the desk" loading="lazy" decoding="async"></div>
       <div>
         <div class="eyebrow" data-reveal>Designed with you</div>
-        <h2 class="h" data-reveal style="margin-top:12px">Your ideas, <span class="muted">drawn up properly.</span></h2>
+        <h2 class="h" style="margin-top:12px">Your ideas, <span class="muted">drawn up properly.</span></h2>
         <p class="sub" data-reveal>Bring a sketch, a photo or just a feeling. We turn it into plans and a 3D model, then supply every panel, benchtop and fitting to make it real.</p>
-        <ul data-reveal>
-          <li>Kitchens, bathrooms, laundries and living spaces</li>
-          <li>Plans, elevations and a 3D model of the room</li>
-          <li>Finishes chosen to match from room to room</li>
-          <li>Supplied together from our Hornby warehouse</li>
+        <ul>
+          <li data-drop>Kitchens, bathrooms, laundries and living spaces</li>
+          <li data-drop>Plans, elevations and a 3D model of the room</li>
+          <li data-drop>Finishes chosen to match from room to room</li>
+          <li data-drop>Supplied together from our Hornby warehouse</li>
         </ul>
       </div>
     </div>
@@ -378,17 +472,44 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
       <div class="details__head">
         <div>
           <div class="eyebrow" data-reveal>Materials</div>
-          <h2 class="h" data-reveal style="margin-top:12px">Made in the details.</h2>
+          <h2 class="h" style="margin-top:12px">Made in the details.</h2>
         </div>
         <p class="sub" data-reveal style="max-width:380px">Four materials carry the whole look, chosen to sit together from room to room.</p>
       </div>
       <div class="dgrid" id="dRow">
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/timber.webp" width="800" height="1000" alt="Oak-look drawers above a glowing plinth" loading="lazy" decoding="async"></div><b>Timber</b><p>Warm oak-look veneers on handle-free doors.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/stone.webp" width="800" height="1000" alt="Stone-look surface with a glass pendant" loading="lazy" decoding="async"></div><b>Stone</b><p>Stone-look surfaces for hoods, splashbacks and benchtops.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="Brushed-brass tap over a sink" loading="lazy" decoding="async"></div><b>Brass</b><p>Brushed-brass tapware, pulls and fittings.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="Lit open shelving with glassware and a pendant" loading="lazy" decoding="async"></div><b>Light</b><p>A warm glow built into shelves, coves and plinths.</p></div>
+        <div class="dcard" data-drop="tilt"><div class="dcard__img"><img src="stills/bargainhub/timber.webp" width="800" height="1000" alt="Oak-look drawers above a glowing plinth" loading="lazy" decoding="async"></div><b>Timber</b><p>Warm oak-look veneers on handle-free doors.</p></div>
+        <div class="dcard" data-drop="tilt"><div class="dcard__img"><img src="stills/bargainhub/stone.webp" width="800" height="1000" alt="Stone-look surface with a glass pendant" loading="lazy" decoding="async"></div><b>Stone</b><p>Stone-look surfaces for hoods, splashbacks and benchtops.</p></div>
+        <div class="dcard" data-drop="tilt"><div class="dcard__img"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="Brushed-brass tap over a sink" loading="lazy" decoding="async"></div><b>Brass</b><p>Brushed-brass tapware, pulls and fittings.</p></div>
+        <div class="dcard" data-drop="tilt"><div class="dcard__img"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="Lit open shelving with glassware and a pendant" loading="lazy" decoding="async"></div><b>Light</b><p>A warm glow built into shelves, coves and plinths.</p></div>
       </div>
       <div class="ddots" id="dDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Packages ================= -->
+  <section class="pkg" id="packages" aria-label="Whole-home interior packages">
+    <div class="sticky">
+      <div class="pkg__copy">
+        <div class="eyebrow">Whole-home packages</div>
+        <h2 class="h">The whole house. <span class="muted">One package.</span></h2>
+        <div class="price"><span class="vh">Packages start from $45k plus GST</span>
+          <small aria-hidden="true">From</small>
+          <div class="price__num" aria-hidden="true">$<span class="odo"><span class="odo__s" id="odoT">4</span></span><span class="odo"><span class="odo__s" id="odoU">5</span></span>k</div>
+          <small aria-hidden="true">+ GST</small>
+        </div>
+        <p class="pkg__lead">A whole-house interior package, including soft furnishings and a full kit-out, designed with you and supplied on one order.</p>
+        <ul class="incl" id="incl"><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Kitchen</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Bathrooms</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Living &amp; joinery</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Lighting</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Soft furnishings</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Full kit-out</li></ul>
+        <div class="pkg__cta"><a class="btn btn--dark" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Whole-home%20package%20enquiry">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+        <p class="pkg__fine">Talk to one of our sales consultants for more information. Starting price, excluding GST; yours depends on the size of your home and the finishes you choose.</p>
+      </div>
+      <div class="stack" id="stack" aria-hidden="true">
+        <div class="pcard"><img src="stills/bargainhub/pkg/kitchen.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>01</small>Kitchen</span></div>
+        <div class="pcard"><img src="stills/bargainhub/pkg/bathroom.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>02</small>Bathrooms</span></div>
+        <div class="pcard"><img src="stills/bargainhub/pkg/living.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>03</small>Living &amp; joinery</span></div>
+        <div class="pcard"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>04</small>Lighting</span></div>
+        <div class="pcard"><img src="stills/bargainhub/pkg/soft.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>05</small>Soft furnishings</span></div>
+        <div class="pcard"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="" loading="lazy" decoding="async"><span><small>06</small>Full kit-out</span></div>
+      </div>
     </div>
   </section>
 
@@ -407,6 +528,27 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     </div>
   </section>
 
+  <!-- ================= Showroom ================= -->
+  <section class="show" id="showroom" aria-label="Visit our showroom">
+    <div class="wrap show__grid">
+      <div>
+        <div class="eyebrow" data-reveal>Visit our showroom</div>
+        <h2 class="show__h" data-split="chars">Welcome.</h2>
+        <p class="sub" data-reveal>You are welcome to visit our showroom. See the finishes up close, open the drawers, and talk your plans through with one of our sales consultants.</p>
+        <div class="addr" id="addr"><span class="pin" id="pin"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2z"/></svg><i></i></span><address style="font-style:normal"><b>93 Main South Road</b><span>Sockburn, Christchurch</span></address></div>
+        <div class="show__btns" data-reveal>
+          <a class="btn btn--dark" href="https://www.google.com/maps/search/?api=1&amp;query=93%20Main%20South%20Road%2C%20Sockburn%2C%20Christchurch" target="_blank" rel="noopener">Get directions <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--line" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20showroom%20visit">Talk to a consultant</a>
+        </div>
+      </div>
+      <div class="trip" id="trip" aria-hidden="true">
+        <div class="tp"><div class="tp__in"><img src="stills/bargainhub/pkg/kitchen.webp" width="800" height="1000" alt="" loading="lazy" decoding="async" style="object-position:30% 50%"></div></div>
+        <div class="tp"><div class="tp__in"><img src="stills/bargainhub/rooms/bathroom-mosaic-900.webp" width="900" height="900" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"></div></div>
+        <div class="tp"><div class="tp__in"><img src="stills/bargainhub/pkg/living.webp" width="800" height="1000" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"></div></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= CTA ================= -->
   <section class="cta" id="quote">
     <div class="sticky">
@@ -414,10 +556,10 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
       <div class="wrap cta__copy" id="ctaCopy">
         <div class="eyebrow">Bargainhub Interiors</div>
         <h2>Your home,<br>assembled.</h2>
-        <p>Tell us about your space. We will design it with you and price the whole interior on one quote, from our Hornby warehouse at 44 Anchorage Road, Christchurch.</p>
+        <p>Tell us about your space. One of our sales consultants will design it with you and price the whole interior on one quote. Whole-home packages start from $45k + GST.</p>
         <div class="cta__btns">
-          <a class="btn btn--white" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Get a quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          <a class="btn btn--ghost" href="index.html#range">All Hanes brands</a>
+          <a class="btn btn--white" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=93%20Main%20South%20Road%2C%20Sockburn%2C%20Christchurch" target="_blank" rel="noopener">Visit the showroom</a>
         </div>
       </div>
     </div>
@@ -426,7 +568,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
 
 <footer class="foot">
   <div class="wrap">
-    <span>Bargainhub is a <a href="index.html">Hanes Distribution</a> brand · 44 Anchorage Road, Hornby, Christchurch</span>
+    <span>Bargainhub is a <a href="index.html">Hanes Distribution</a> brand · Showroom: 93 Main South Road, Sockburn · Warehouse: 44 Anchorage Road, Hornby, Christchurch</span>
     <a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
   </div>
 </footer>
@@ -449,6 +591,23 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
   const clamp01 = v => Math.min(1, Math.max(0, v));
   const insetClip = (el, v, k) => { el.style.clipPath = `inset(${v[0] * k}vh ${v[1] * k}vw ${v[2] * k}vh ${v[3] * k}vw round ${v[4] * k}px)`; };
+  // wraps every word (or letter) of a heading in its own mask, keeping inline styling such as the grey second line
+  const splitDrop = (el, chars) => {
+    const out = [], box = t => { const m = document.createElement('span'), i = document.createElement('span'); m.className = 'dm'; i.className = 'di'; i.textContent = t; m.append(i); out.push(i); return m; };
+    if (chars) el.setAttribute('aria-label', el.textContent.trim());
+    const walk = n => [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t => {
+          if (!t) return; if (/^\s+$/.test(t)) return f.append(' ');
+          if (!chars) return f.append(box(t));
+          const w = document.createElement('span'); w.className = 'dw'; w.setAttribute('aria-hidden', 'true'); [...t].forEach(ch => w.append(box(ch))); f.append(w);
+        });
+        c.replaceWith(f);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+    });
+    walk(el); return out;
+  };
 
   /* ---------- Frame decoder: fetch + decode off the main thread, straight to the size that gets drawn ---------- */
   // Drawing a 2560px <img> into a canvas makes the browser re-decode it synchronously whenever it has evicted the
@@ -613,15 +772,33 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
   const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
+
+  /* ---------- Menu (tablets and phones): the panel drops down from the bar and the links fall in after it ---------- */
+  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
+  const MT = gsap.timeline({ paused: true })
+    .set(menu, { visibility: 'visible' })
+    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
+    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
+  const setMenu = v => {
+    if (v === menuOpen) return; menuOpen = v;
+    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
+    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
+    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  };
+  burger.addEventListener('click', () => setMenu(!menuOpen));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
+
   $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); go(id === '#top' ? 0 : id);
+    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
   }));
+  $$('#menu a:not([data-scroll])').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
   /* ---------- Nav: out of the way while scrolling down, back as soon as you scroll up ---------- */
-  const nav = $('#nav'); let lastY = 0;
+  let lastY = 0;
   ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
-    const y = s.scroll();
+    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
     if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
     else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
     lastY = y;
@@ -731,11 +908,11 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     .set('#kCanvas', { autoAlpha: 1 }, .73).set('#whole', { autoAlpha: 0 }, .732)
     .to('#bShade', { opacity: 1, duration: .04 }, .72)
     .to(fr, { f: seq.count - 1, duration: .23, onUpdate: () => seq.set(fr.f) }, .732)
-    .fromTo('#fl1', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .745)
-    .to('#fl1', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .8)
-    .fromTo('#fl2', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .82)
-    .to('#fl2', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .87)
-    .fromTo('#fl3', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .89)
+    .fromTo('#fl1', { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'back.out(1.4)' }, .745)
+    .to('#fl1', { autoAlpha: 0, y: 50, duration: .025, ease: 'power2.in' }, .8)
+    .fromTo('#fl2', { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'back.out(1.4)' }, .82)
+    .to('#fl2', { autoAlpha: 0, y: 50, duration: .025, ease: 'power2.in' }, .87)
+    .fromTo('#fl3', { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'back.out(1.4)' }, .89)
     .to(['#fl3', '#bShade'], { autoAlpha: 0, duration: .03 }, .95)
     .to(fin, { k: 1, duration: .05, ease: 'power2.inOut', onUpdate: applyFin }, .95);
   skip.addEventListener('click', () => go('#intro'));
@@ -745,6 +922,15 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   const mText = $('#mText');
   mText.innerHTML = mText.textContent.replace(/\[([^\]]+)\]|(\S+)/g, (m, b, w) => b ? b.split(' ').map(x => `<span class="w b">${x}</span>`).join(' ') : `<span class="w">${w}</span>`);
   gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 48%', scrub: true } });
+
+  /* ---------- Headings: the words drop into place as each one comes into view ---------- */
+  if (!reduce) {
+    const dropIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; dropIO.unobserve(e.target);
+      gsap.to(e.target.__d, { yPercent: 0, duration: e.target.__c ? 1 : 1.15, stagger: e.target.__c ? .05 : .07, ease: 'back.out(1.5)', overwrite: true });
+    }), { rootMargin: '0px 0px -14% 0px' });
+    $$('main .h, [data-split]').forEach(el => { el.__c = el.dataset.split === 'chars'; el.__d = splitDrop(el, el.__c); gsap.set(el.__d, { yPercent: -118 }); dropIO.observe(el); });
+  }
 
   /* =========================================================
      ROOMS: the page stops and the camera dollies sideways past each room; each photo drifts inside its frame
@@ -761,8 +947,12 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     track.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
     slides.forEach((s, i) => {
       const o = (centres[i] + x - mid) / innerWidth; // -1 .. 1 across the screen
-      const img = sImgs[i]; if (img) img.style.transform = `translate3d(${(-o * 7).toFixed(2)}%,0,0) scale(${(1 + Math.min(1, Math.abs(o)) * .08).toFixed(4)})`;
-      sCaps[i].style.opacity = (1 - Math.min(1, Math.max(0, Math.abs(o) - .12) * 1.6)).toFixed(3);
+      // no tilt: a rotated frame makes the compositor mask its rounded corners the slow way on every frame
+      const a = Math.min(1.4, Math.abs(o));
+      s.style.transform = `translate3d(0,${(-a * a * 3.4).toFixed(3)}vh,0)`;
+      const img = sImgs[i]; if (img) img.style.transform = `translate3d(${(-o * 7).toFixed(2)}%,0,0) scale(${(1 + Math.min(1, a) * .08).toFixed(4)})`;
+      const k = 1 - Math.min(1, Math.max(0, a - .12) * 1.6);
+      sCaps[i].style.opacity = k.toFixed(3); sCaps[i].style.transform = `translate3d(0,${((1 - k) * -16).toFixed(2)}px,0)`;
     });
     $('#roomsBar').style.transform = `scaleX(${p.toFixed(4)})`;
   };
@@ -795,6 +985,9 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   /* ---------- Reveals, studio push-in, close-ups ---------- */
   ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
     gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
+  // list items fall into place one after another; the material cards are dropped onto the table with a slight tilt
+  $$('[data-drop]').forEach((el, i) => gsap.set(el, el.dataset.drop === 'tilt' ? { y: -110, rotation: i % 2 ? 5 : -4, transformOrigin: '50% 0%' } : { y: -26 }));
+  ScrollTrigger.batch('[data-drop]', { start: 'top 92%', once: true, onEnter: els => gsap.to(els, { opacity: 1, y: 0, rotation: 0, duration: 1.1, stagger: .09, ease: 'back.out(1.5)', overwrite: true }) });
   gsap.fromTo('#studioImg', { scale: 1.22 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.studio__img', start: 'top bottom', end: 'bottom 30%', scrub: true } });
   $$('.dcard__img img').forEach(img => gsap.fromTo(img, { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom 40%', scrub: true } }));
 
@@ -804,6 +997,36 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     const i = dRow.scrollLeft + dRow.clientWidth >= dRow.scrollWidth - 4 ? c.length - 1 : Math.round(dRow.scrollLeft / step);
     dDots.forEach((d, k) => d.classList.toggle('is-on', k === i)); };
   dRow.addEventListener('scroll', () => { if (!ddq) ddq = requestAnimationFrame(syncD); }, { passive: true }); syncD();
+
+  /* =========================================================
+     PACKAGES: each room drops onto the pile and the price rolls up with it; once the house is complete
+     the pile fans out so you can see everything that is in it
+     ========================================================= */
+  const pcards = $$('#stack .pcard'), incl = $$('#incl li'), stack = $('#stack'), odoT = $('#odoT'), odoU = $('#odoU');
+  const PRICE = 45, TILT = [-2.5, 2, -1.5, 3, -2, .8], N = pcards.length, LAND = pcards.map((_, i) => .35 + i * 1.1 + .75);
+  // odometer strips run from the highest value at the top down to zero, so as the price rises the digits drop down
+  odoU.innerHTML = Array.from({ length: PRICE + 1 }, (_, k) => `<span>${(PRICE - k) % 10}</span>`).join('');
+  odoT.innerHTML = [4, 3, 2, 1, 0].map(d => `<span${d ? '' : ' class="z"'}>${d}</span>`).join('');
+  const pr = { v: 0 }; let inclOn = -1;
+  const setPkg = () => {
+    const v = pr.v, t = Math.floor(v / 10) + Math.max(0, Math.min(1, v % 10 - 9));
+    odoU.style.transform = `translate3d(0,${(v - PRICE).toFixed(3)}em,0)`; odoT.style.transform = `translate3d(0,${(t - 4).toFixed(3)}em,0)`;
+    const tm = PK.time(); let n = 0; LAND.forEach(l => { if (tm >= l) n++; });
+    if (n !== inclOn) { inclOn = n; incl.forEach((li, i) => li.classList.toggle('is-on', i < n)); }
+  };
+  const PK = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: setPkg, scrollTrigger: { trigger: '#packages', start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } });
+  pcards.forEach((c, i) => {
+    const s = .35 + i * 1.1;
+    PK.fromTo(c, { yPercent: -185, rotation: TILT[i] + (i % 2 ? 14 : -14), autoAlpha: 1 }, { yPercent: 0, rotation: TILT[i], duration: .75, ease: 'power2.in', immediateRender: true }, s);
+    // the pile settles a little under each new room
+    pcards.slice(0, i).forEach((b, j) => { const d = Math.min(3, i - j); PK.to(b, { scale: 1 - d * .045, y: -d * 14, duration: .3, ease: 'power2.out' }, s + .75); });
+  });
+  PK.to(pr, { v: PRICE, duration: LAND[N - 1] - .35, ease: 'power1.inOut' }, .35);
+  // the finished house: the pile fans out
+  pcards.forEach((c, i) => { const o = i - (N - 1) / 2;
+    PK.to(c, { x: () => o * stack.offsetWidth * .15, y: () => (o * o * .012 - .04) * stack.offsetHeight, rotation: o * 4.5, scale: .84, duration: 1, ease: 'power3.inOut' }, LAND[N - 1] + .45); });
+  PK.to({}, { duration: .5 });
+  setPkg();
 
   /* =========================================================
      REVIEWS: columns of reviews drift in opposite directions and slide further as you scroll,
@@ -874,13 +1097,29 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     const t = i * 1.2;
     FT.to(f.querySelectorAll('.fw'), { opacity: 1, stagger: .03, duration: .2 }, t)
       .to(f.querySelector('figcaption'), { opacity: 1, duration: .15 }, t + .45);
-    if (i) FT.fromTo(f, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .15, immediateRender: true }, t - .08);
-    if (i < figs.length - 1) FT.to(f, { autoAlpha: 0, y: -24, duration: .2 }, t + .95);
+    if (i) FT.fromTo(f, { autoAlpha: 0, y: -34 }, { autoAlpha: 1, y: 0, duration: .15, ease: 'power2.out', immediateRender: true }, t - .08);
+    if (i < figs.length - 1) FT.to(f, { autoAlpha: 0, y: 30, duration: .2, ease: 'power1.in' }, t + .95);
   });
   FT.to({}, { duration: .2 });
 
   /* =========================================================
-     CTA: the last room opens from a card to the full screen as you arrive, and the words rise over it
+     SHOWROOM: three rooms drop down like blinds as you arrive, then the pin drops onto the address
+     ========================================================= */
+  const TP = gsap.timeline({ defaults: { ease: 'power3.out' }, scrollTrigger: { trigger: '#trip', start: 'top 92%', end: 'top 22%', scrub: true } });
+  $$('#trip .tp').forEach((tp, i) => TP
+    .fromTo(tp.querySelector('.tp__in'), { yPercent: -101 }, { yPercent: 0, duration: 1 }, i * .28)
+    .fromTo(tp.querySelector('img'), { yPercent: 60 }, { yPercent: 0, duration: 1 }, i * .28));
+  if (!reduce) {
+    const addr = $('#addr');
+    gsap.set(addr.querySelector('address'), { autoAlpha: 0, y: -16 }); gsap.set('#pin', { y: -70, autoAlpha: 0 });
+    ScrollTrigger.create({ trigger: addr, start: 'top 90%', once: true, onEnter: () => gsap.timeline()
+      .to('#pin', { y: 0, autoAlpha: 1, duration: 1, ease: 'bounce.out' })
+      .fromTo('#pin i', { scale: 1, opacity: .9 }, { scale: 1.9, opacity: 0, duration: .9, ease: 'power2.out' }, .45)
+      .to(addr.querySelector('address'), { autoAlpha: 1, y: 0, duration: 1, ease: 'back.out(1.6)' }, .3) });
+  }
+
+  /* =========================================================
+     CTA: the last room opens from a card to the full screen as you arrive, and the words drop in over it
      ========================================================= */
   const ctaFrame = $('#ctaFrame'), cf = { k: 1 };
   const applyCta = () => insetClip(ctaFrame, innerWidth < 700 ? [10, 5, 10, 5, 24] : [12, 8, 12, 8, 32], cf.k);
@@ -888,6 +1127,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     .to(cf, { k: 0, duration: .55, ease: 'power2.inOut', onUpdate: applyCta }, 0)
     .fromTo('#ctaImg', { scale: 1.18 }, { scale: 1, duration: .8 }, 0)
     .fromTo('#ctaCopy', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .3, ease: 'power3.out' }, .45)
+    .fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .22, stagger: .04, ease: 'back.out(1.5)' }, .48)
     .to({}, { duration: .2 });
   applyCta();
 
@@ -899,7 +1139,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   Promise.all(need).then(() => {
     gsap.timeline({ delay: .2 })
       .to('#loader', { autoAlpha: 0, duration: .7, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
-      .from('#bIntro > *', { autoAlpha: 0, y: 30, duration: 1.2, stagger: .1, ease: 'expo.out' }, '<.15')
+      .from('#bIntro > *', { autoAlpha: 0, y: -44, duration: 1.3, stagger: .1, ease: 'back.out(1.4)' }, '<.15')
       .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); seq.load(); }, '<');
   });
 })();
