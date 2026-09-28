@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bargainhub Kitchens — The whole kitchen, warehouse-direct</title>
-<meta name="description" content="Bargainhub kitchens from Hanes Distribution: tall cabinetry, open shelving, stone-look benchtops and lighting on one order, from our Christchurch warehouse, delivered nationwide.">
-<meta name="theme-color" content="#14100c">
-<link rel="preload" as="image" href="stills/bargainhub/blueprint.webp">
+<title>Bargainhub Interiors — Kitchens, bathrooms and whole homes, warehouse-direct</title>
+<meta name="description" content="Bargainhub Interiors from Hanes Distribution: kitchens, bathrooms and whole-home interiors, designed in plan and 3D, supplied on one order from our Christchurch warehouse and delivered nationwide.">
+<meta name="theme-color" content="#ffffff">
+<link rel="preload" as="image" href="stills/bargainhub/blueprint-ink.webp">
+<link rel="preload" as="image" href="stills/bargainhub/kitchen-clay-2000.webp">
 <link rel="preload" as="image" href="stills/bargainhub/kitchen-2000.webp">
 
 <style>
@@ -18,207 +19,246 @@
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
 
 :root{
-  --cream:#f5efe6; --cream-2:#ece3d6; --ink:#1b1612; --ink-2:#6c6157; --ink-3:#998d80; --line:rgba(27,22,18,.1);
-  --dark:#14100c; --dark-2:#1e1914; --brass:#c9a36a; --brass-2:#e4c690;
-  --nav:60px; --pad:clamp(20px,4vw,56px); --max:1240px; --radius:24px; --ease:cubic-bezier(.22,1,.36,1);
-  --fs-h:clamp(34px,4.3vw,62px); --fs-big:clamp(44px,7.2vw,112px); --fs-lead:clamp(22px,2.6vw,38px); --fs-sub:clamp(15px,1.15vw,17px);
+  --bg:#ffffff; --bg-2:#f5f5f7; --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --ink-4:#d2d2d7; --line:rgba(0,0,0,.08);
+  --brass:#9c7440; --brass-2:#c9a36a;
+  --nav:52px; --pad:clamp(20px,4vw,56px); --max:1240px; --radius:28px; --ease:cubic-bezier(.22,1,.36,1);
+  --fs-h:clamp(34px,4.6vw,68px); --fs-big:clamp(46px,8vw,124px); --fs-lead:clamp(24px,2.9vw,44px); --fs-sub:clamp(15px,1.2vw,19px);
   --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
   --text:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{font-family:var(--text);font-size:16px;line-height:1.55;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body{font-family:var(--text);font-size:17px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
 body.is-loading{overflow:hidden}
 img,canvas,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-::selection{background:var(--brass);color:var(--dark)}
+::selection{background:var(--ink);color:#fff}
 .wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:10px}
-.eyebrow::before{content:"";width:18px;height:1px;background:var(--brass)}
-.h{font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1;text-wrap:balance;font-size:var(--fs-h)}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--brass)}
+.h{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.02;text-wrap:balance;font-size:var(--fs-h)}
 .muted{color:var(--ink-3)}
+.sub{font-size:var(--fs-sub);color:var(--ink-2);max-width:560px}
 .sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.btn{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;font-weight:500;font-size:15px;transition:background .4s var(--ease),color .4s var(--ease),transform .4s var(--ease)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-weight:500;font-size:16px;transition:background .4s var(--ease),color .4s var(--ease),transform .4s var(--ease)}
 .btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
 .btn:hover svg{transform:translateX(3px)}
-.btn--brass{background:var(--brass);color:var(--dark)}
-.btn--brass:hover{background:var(--brass-2)}
-.btn--ghost{box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);color:#fff}
-.btn--ghost:hover{background:rgba(255,255,255,.1)}
-.btn--dark{background:var(--ink);color:var(--cream)}
+.btn--dark{background:var(--ink);color:#fff}
+.btn--dark:hover{background:#000}
+.btn--white{background:#fff;color:var(--ink)}
+.btn--ghost{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);color:#fff}
+.btn--ghost:hover{background:rgba(255,255,255,.12)}
+.link{color:var(--brass);font-weight:500}
+.link:hover{text-decoration:underline}
 
 /* Loader */
-.loader{position:fixed;inset:0;z-index:100;background:var(--dark);display:grid;place-items:center;color:var(--cream)}
+.loader{position:fixed;inset:0;z-index:100;background:#fff;display:grid;place-items:center}
 .loader__inner{display:flex;flex-direction:column;align-items:center;gap:20px}
 .loader__mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.03em}
-.loader__mark span{color:var(--brass);font-weight:500}
-.loader__bar{width:160px;height:1px;background:rgba(255,255,255,.14);overflow:hidden}
-.loader__fill{height:100%;background:var(--brass);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
+.loader__mark span{color:var(--ink-3);font-weight:500}
+.loader__bar{width:160px;height:2px;border-radius:2px;background:var(--bg-2);overflow:hidden}
+.loader__fill{height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
 
 /* Nav */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);color:var(--cream);transition:background .5s var(--ease),color .5s var(--ease),transform .7s var(--ease)}
-.nav.is-solid{background:rgba(245,239,230,.94);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease)}
 .nav.is-hidden{transform:translateY(-100%)}
 .nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.03em}
-.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;opacity:.6}
-.nav__links{display:flex;gap:30px;font-size:14px}
-.nav__links a{opacity:.75;transition:opacity .3s}
-.nav__links a:hover{opacity:1}
-.nav .btn{height:38px;padding:0 18px;font-size:14px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.03em}
+.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;color:var(--ink-3)}
+.nav__links{display:flex;gap:28px;font-size:13px;color:var(--ink-2)}
+.nav__links a:hover{color:var(--ink)}
+.nav .btn{height:32px;padding:0 14px;font-size:13px}
 
-/* ---------- Build: the kitchen assembles as you scroll, then the camera pushes in ---------- */
-.build{position:relative;height:420vh;background:var(--dark)}
-.build .sticky{background:var(--dark)}
-.build canvas{position:absolute;inset:0;width:100%;height:100%}
+/* ---------- Build: blueprint, then a clay model, then the real kitchen with the lights on; the camera pushes in and the film takes over ---------- */
+.build{position:relative;height:380vh;background:#fff}
+.build .sticky{background:#fff}
+.b-frame{position:absolute;inset:0;overflow:hidden}
+.b-frame canvas{position:absolute;inset:0;width:100%;height:100%}
 #kCanvas{opacity:0;visibility:hidden}
-/* once built, the kitchen is one image, so the push-in scales a single layer */
 .whole{position:absolute;max-width:none;transform-origin:50% 50%;visibility:hidden;will-change:transform}
-.glow{position:absolute;opacity:0;visibility:hidden;pointer-events:none;background:radial-gradient(ellipse 48% 6% at 50% 19%,rgba(255,214,150,.55),rgba(255,214,150,0) 70%),radial-gradient(ellipse 46% 5% at 50% 88%,rgba(255,214,150,.5),rgba(255,214,150,0) 70%),radial-gradient(ellipse 5% 22% at 24% 40%,rgba(255,214,150,.4),rgba(255,214,150,0) 70%),radial-gradient(ellipse 5% 22% at 77% 40%,rgba(255,214,150,.4),rgba(255,214,150,0) 70%)}
-.b-intro{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--cream);padding:0 var(--pad);pointer-events:none}
-.b-intro .eyebrow{color:var(--brass-2)}
-.b-intro h1{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.92;font-size:var(--fs-big);margin:22px 0 20px;text-shadow:0 20px 60px rgba(0,0,0,.5)}
-.b-intro h1 em{font-style:normal;color:var(--brass-2)}
-.b-intro p{font-size:var(--fs-sub);color:rgba(245,239,230,.72);max-width:420px}
-.cue{margin-top:34px;width:22px;height:36px;border-radius:12px;box-shadow:inset 0 0 0 1.5px rgba(245,239,230,.4);position:relative}
-.cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--brass-2);animation:cue 1.8s var(--ease) infinite}
+.glow{position:absolute;opacity:0;visibility:hidden;pointer-events:none;background:radial-gradient(ellipse 48% 6% at 50% 19%,rgba(255,210,140,.6),rgba(255,210,140,0) 70%),radial-gradient(ellipse 46% 5% at 50% 88%,rgba(255,210,140,.55),rgba(255,210,140,0) 70%),radial-gradient(ellipse 5% 22% at 24% 40%,rgba(255,210,140,.45),rgba(255,210,140,0) 70%),radial-gradient(ellipse 5% 22% at 77% 40%,rgba(255,210,140,.45),rgba(255,210,140,0) 70%)}
+.b-shade{position:absolute;inset:0;opacity:0;background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.22) 32%,rgba(0,0,0,0) 56%),linear-gradient(90deg,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 45%)}
+.b-film{position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(40px,9vh,90px);color:#fff}
+.b-film h2{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.95;font-size:var(--fs-big);opacity:0;visibility:hidden;max-width:13ch}
+.b-film h2 span{color:#f1d9ae}
+.b-intro{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--nav) var(--pad) 0;pointer-events:none}
+.b-intro h1{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.93;font-size:var(--fs-big);margin:16px 0 18px}
+.b-intro h1 em{font-style:normal;background:linear-gradient(90deg,#9c7440,#c9a36a 60%,#9c7440);-webkit-background-clip:text;background-clip:text;color:transparent}
+.b-intro p{font-size:var(--fs-sub);color:var(--ink-2);max-width:460px}
+.cue{margin-top:30px;width:22px;height:36px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--ink-4);position:relative}
+.cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--ink);animation:cue 1.8s var(--ease) infinite}
 @keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(11px);opacity:0}100%{opacity:0}}
-.b-label{position:absolute;z-index:3;left:var(--pad);bottom:clamp(28px,7vh,70px);color:var(--cream);opacity:0}
-.b-label small{display:block;font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--brass-2);font-variant-numeric:tabular-nums}
-.b-label b{display:block;margin-top:6px;font-family:var(--display);font-weight:500;font-size:clamp(20px,1.9vw,28px);letter-spacing:-.02em}
-.b-meter{position:absolute;z-index:3;left:var(--pad);right:calc(var(--pad) + 100px);bottom:clamp(14px,3.5vh,34px);height:1px;background:rgba(245,239,230,.14);opacity:0}
-.b-meter i{position:absolute;inset:0;background:var(--brass);transform-origin:left;transform:scaleX(0)}
-.bars i{position:absolute;left:0;right:0;z-index:4;height:6.5vh;background:#000;transform:scaleY(0)}
-.bars i:first-child{top:0;transform-origin:top}
-.bars i:last-child{bottom:0;transform-origin:bottom}
-.b-shade{position:absolute;inset:0;z-index:2;opacity:0;background:linear-gradient(0deg,rgba(10,8,6,.78) 0%,rgba(10,8,6,.3) 30%,rgba(10,8,6,0) 55%),linear-gradient(90deg,rgba(10,8,6,.4) 0%,rgba(10,8,6,0) 45%),radial-gradient(ellipse 90% 80% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.35) 100%)}
-.b-film{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:calc(6.5vh + clamp(26px,6vh,64px));color:#fff}
-.b-film h2{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:.95;font-size:var(--fs-big);opacity:0;visibility:hidden;max-width:12ch}
-.b-film h2 span{color:var(--brass-2)}
-.skip{position:fixed;right:var(--pad);bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 18px;border-radius:999px;font-size:13px;font-weight:500;color:var(--cream);background:rgba(20,16,12,.62);box-shadow:inset 0 0 0 1px rgba(245,239,230,.18);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .4s var(--ease),visibility .4s,transform .4s var(--ease)}
+.b-label{position:absolute;z-index:3;left:var(--pad);bottom:clamp(30px,7vh,70px);opacity:0}
+.b-label small{display:block;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--brass);font-variant-numeric:tabular-nums}
+.b-label b{display:block;margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.9vw,28px);letter-spacing:-.03em}
+.b-meter{position:absolute;z-index:3;left:var(--pad);right:calc(var(--pad) + 100px);bottom:clamp(16px,3.5vh,34px);height:2px;border-radius:2px;background:var(--bg-2);opacity:0}
+.b-meter i{position:absolute;inset:0;border-radius:2px;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+.skip{position:fixed;right:var(--pad);bottom:max(18px,env(safe-area-inset-bottom));z-index:45;display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 15px 0 17px;border-radius:999px;font-size:13px;font-weight:500;color:#fff;background:rgba(29,29,31,.72);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .4s var(--ease),visibility .4s,transform .4s var(--ease)}
 .skip.is-on{opacity:1;visibility:visible;transform:none}
 .skip svg{width:12px;height:12px}
 
-/* ---------- Manifesto: the words light up as you read ---------- */
-.manifesto{padding:clamp(90px,15vh,160px) 0 clamp(70px,11vh,120px)}
-.manifesto p{font-family:var(--display);font-weight:500;letter-spacing:-.035em;line-height:1.12;font-size:var(--fs-lead);max-width:980px;margin-top:26px}
-.manifesto p .w{opacity:.16;will-change:opacity}
-.manifesto p .w.b{color:var(--brass);font-weight:600}
+/* ---------- Intro: the words light up as you read ---------- */
+.intro{padding:clamp(100px,17vh,180px) 0 clamp(80px,12vh,130px)}
+.intro p{font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1.1;font-size:var(--fs-lead);max-width:1000px;margin-top:22px}
+.intro .w{opacity:.16;will-change:opacity}
+.intro .w.b{color:var(--brass)}
 
-/* ---------- Anatomy: everything in the picture ---------- */
-.anat{padding:clamp(40px,7vh,80px) 0 clamp(70px,11vh,120px)}
-.anat__grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(28px,4vw,64px);align-items:center;margin-top:44px}
-.anat__img{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1;background:var(--cream-2);box-shadow:0 40px 80px -50px rgba(40,25,10,.5)}
-.anat__img img{width:100%;height:100%;object-fit:cover}
-.pin{position:absolute;z-index:2;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--dark);background:var(--brass-2);box-shadow:0 6px 18px rgba(0,0,0,.25);transform:scale(0)}
-.pin::after{content:"";position:absolute;inset:-7px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(228,198,144,.8);animation:ring 2.6s var(--ease) infinite}
-@keyframes ring{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
-.anat__list{list-style:none;display:grid;gap:4px}
-.anat__list li{display:grid;grid-template-columns:34px 1fr;gap:4px 12px;padding:14px 0}
-.anat__list li b{grid-column:2;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.4vw,20px);letter-spacing:-.02em}
-.anat__list li span{grid-row:1 / span 2;font-size:12px;font-weight:600;color:var(--brass);letter-spacing:.1em;padding-top:4px;font-variant-numeric:tabular-nums}
-.anat__list li p{grid-column:2;font-size:15px;color:var(--ink-2)}
-.anat__note{margin-top:22px;padding:18px 20px;border-radius:18px;background:var(--cream-2);font-size:15px;color:var(--ink-2)}
-.anat__note b{color:var(--ink)}
+/* ---------- Rooms: the camera dollies past every room ---------- */
+.rooms{position:relative;height:240vh;background:#fff}
+.rooms .sticky{display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,3.5vh,36px);padding-top:var(--nav)}
+.rooms__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
+.rooms__head .h{font-size:clamp(30px,3.6vw,54px)}
+.track{display:flex;gap:clamp(16px,2.4vw,32px);padding:0 var(--pad);will-change:transform}
+.slide{flex:none;width:min(70vw,980px)}
+.slide__img{position:relative;height:min(58vh,560px);border-radius:var(--radius);overflow:hidden;background:var(--bg-2)}
+.slide__img img{position:absolute;top:0;left:-9%;width:118%;height:100%;max-width:none;object-fit:cover;will-change:transform}
+.slide__cap{display:flex;gap:18px;align-items:baseline;margin-top:18px;max-width:640px}
+.slide__cap span{font-size:13px;font-weight:600;color:var(--brass);font-variant-numeric:tabular-nums}
+.slide__cap b{font-family:var(--display);font-weight:600;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.03em;white-space:nowrap}
+.slide__cap p{color:var(--ink-2);font-size:16px}
+.slide--text .slide__img{display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(28px,4vw,56px)}
+.slide--text h3{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1;font-size:clamp(34px,4.4vw,64px);max-width:12ch}
+.slide--text h3 em{font-style:normal;color:var(--ink-3)}
+.slide--text p{margin-top:16px;color:var(--ink-2);max-width:420px}
+.rooms__bar{height:2px;border-radius:2px;background:var(--bg-2);margin:0 var(--pad);overflow:hidden}
+.rooms__bar i{display:block;height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0)}
 
-/* ---------- Details: close-ups ---------- */
-.details{padding:clamp(70px,11vh,120px) 0;background:var(--dark);color:var(--cream)}
-.details .eyebrow{color:var(--brass-2)}
+/* ---------- Design: the camera glides over the drawings ---------- */
+.design{position:relative;height:260vh;background:var(--bg-2)}
+.design .sticky{display:grid;grid-template-columns:minmax(300px,.8fr) 1.25fr;gap:clamp(24px,4vw,64px);align-items:center;padding:calc(var(--nav) + 2vh) var(--pad) 3vh;max-width:1400px;margin:0 auto}
+.design .h{font-size:clamp(30px,3.4vw,52px);margin-top:12px}
+.dsteps{list-style:none;margin-top:clamp(20px,4vh,40px);display:grid;gap:4px}
+.dsteps li{position:relative;padding:12px 0 12px 22px;color:var(--ink-3);transition:color .5s var(--ease)}
+.dsteps li::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;border-radius:2px;background:var(--ink-4);transition:background .5s var(--ease)}
+.dsteps li b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.4vw,20px);letter-spacing:-.02em}
+.dsteps li p{font-size:15px;max-height:0;overflow:hidden;opacity:0;transition:max-height .6s var(--ease),opacity .5s var(--ease)}
+.dsteps li.is-on{color:var(--ink)}
+.dsteps li.is-on::before{background:var(--brass)}
+.dsteps li.is-on p{max-height:80px;opacity:1;color:var(--ink-2);margin-top:4px}
+.plan{position:relative;aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:0 40px 80px -40px rgba(0,0,0,.25),0 0 0 1px var(--line)}
+.plan img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;will-change:transform}
+
+/* ---------- Studio ---------- */
+.studio{padding:clamp(90px,14vh,150px) 0}
+.studio__grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,5vw,80px);align-items:center}
+.studio__img{position:relative;aspect-ratio:1;border-radius:var(--radius);overflow:hidden;background:var(--bg-2)}
+.studio__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:40% 40%}
+.studio .sub{margin-top:18px}
+.studio ul{list-style:none;margin-top:26px;display:grid;gap:10px}
+.studio li{display:flex;gap:12px;align-items:baseline;color:var(--ink-2)}
+.studio li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--brass);transform:translateY(-2px)}
+
+/* ---------- Details ---------- */
+.details{padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
 .details__head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
-.details__head p{max-width:380px;color:rgba(245,239,230,.66);font-size:var(--fs-sub)}
 .dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px);margin-top:44px}
-.dcard__img{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:var(--dark-2)}
+.dcard__img{position:relative;aspect-ratio:4/5;border-radius:22px;overflow:hidden;background:var(--bg-2)}
 .dcard__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 60%}
 .dcard b{display:block;margin-top:16px;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.5vw,22px);letter-spacing:-.02em}
-.dcard p{margin-top:4px;font-size:14.5px;color:rgba(245,239,230,.62)}
+.dcard p{margin-top:4px;font-size:15px;color:var(--ink-2)}
 .ddots{display:none}
 
-/* ---------- Process ---------- */
-.process{padding:clamp(80px,13vh,140px) 0 clamp(60px,9vh,100px)}
-.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px);margin-top:54px;padding-top:34px}
-.steps__line{position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
-.steps__line i{position:absolute;inset:0;background:var(--brass);transform-origin:left;transform:scaleX(0)}
-.step span{display:block;font-family:var(--display);font-weight:500;font-size:clamp(48px,5.6vw,84px);letter-spacing:-.05em;line-height:1;color:var(--brass)}
-.step b{display:block;margin-top:18px;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,26px);letter-spacing:-.025em}
-.step p{margin-top:8px;color:var(--ink-2);max-width:320px}
-
-/* ---------- Reviews: three moving rows ---------- */
-.reviews{padding:clamp(80px,12vh,130px) 0;background:var(--dark);color:var(--cream);overflow:hidden}
-.reviews .eyebrow{color:var(--brass-2)}
-.reviews__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
-.score{display:flex;align-items:center;gap:14px}
+/* ---------- Reviews: a moving wall, and one voice at a time ---------- */
+.reviews{position:relative;height:210vh;background:var(--bg-2)}
+.reviews .sticky{display:grid;grid-template-columns:minmax(300px,.85fr) 1.3fr;gap:clamp(24px,4vw,64px);align-items:center;padding:calc(var(--nav) + 2vh) var(--pad) 0;max-width:1400px;margin:0 auto}
+.reviews .h{font-size:clamp(30px,3.4vw,52px);margin-top:12px}
+.score{display:flex;align-items:center;gap:14px;margin-top:22px}
 .score b{font-family:var(--display);font-weight:600;font-size:clamp(40px,4vw,56px);letter-spacing:-.04em;line-height:1}
-.score small{display:block;font-size:13px;color:rgba(245,239,230,.6)}
-.stars{display:flex;gap:2px;color:var(--brass-2)}
+.score small{display:block;font-size:13px;color:var(--ink-3)}
+.stars{display:flex;gap:2px;color:#b8873c}
 .stars svg{width:14px;height:14px}
-.stars .off{color:rgba(245,239,230,.2)}
-.rv__note{margin-top:14px;font-size:12.5px;color:rgba(245,239,230,.45)}
-.rv{position:relative;margin-top:46px;display:grid;gap:14px}
-.rv::before,.rv::after{content:"";position:absolute;top:0;bottom:0;width:min(12vw,160px);z-index:2;pointer-events:none}
-.rv::before{left:0;background:linear-gradient(90deg,var(--dark),rgba(20,16,12,0))}
-.rv::after{right:0;background:linear-gradient(270deg,var(--dark),rgba(20,16,12,0))}
-.rv__row{overflow:hidden}
-.rv__track{display:flex;gap:14px;width:max-content;will-change:transform}
-.rcard{width:clamp(270px,24vw,340px);flex:none;padding:22px 22px 20px;border-radius:20px;background:var(--dark-2);box-shadow:inset 0 0 0 1px rgba(245,239,230,.06)}
-.rcard q{display:block;margin-top:12px;font-size:15px;line-height:1.5;color:rgba(245,239,230,.88);quotes:"\201C" "\201D"}
-.rcard footer{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(245,239,230,.55)}
-.rcard footer i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:var(--dark);background:var(--brass)}
-.rcard footer b{display:block;color:var(--cream);font-weight:500}
+.stars .off{color:var(--ink-4)}
+.rv__note{margin-top:10px;font-size:12.5px;color:var(--ink-3)}
+.feat{position:relative;margin-top:clamp(22px,4vh,40px);min-height:clamp(170px,26vh,240px)}
+.feat figure{position:absolute;inset:0}
+.feat blockquote{font-family:var(--display);font-weight:500;font-size:clamp(21px,1.9vw,28px);letter-spacing:-.025em;line-height:1.28}
+.feat .fw{opacity:.16;will-change:opacity}
+.feat figcaption{margin-top:16px;font-size:14px;color:var(--ink-3);opacity:0}
+.feat figcaption b{color:var(--ink);font-weight:600}
+.wall{position:relative;height:calc(100svh - var(--nav) - 2vh);display:grid;grid-template-columns:repeat(3,1fr);gap:14px;overflow:hidden}
+.wall::before,.wall::after{content:"";position:absolute;left:0;right:0;height:22%;z-index:2;pointer-events:none}
+.wall::before{top:0;background:linear-gradient(180deg,var(--bg-2),rgba(245,245,247,0))}
+.wall::after{bottom:0;background:linear-gradient(0deg,var(--bg-2),rgba(245,245,247,0))}
+.wcol{display:flex;flex-direction:column;gap:14px;will-change:transform}
+.rcard{padding:20px 20px 18px;border-radius:20px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px -18px rgba(0,0,0,.18)}
+.rcard q{display:block;margin-top:10px;font-size:15px;line-height:1.5;color:var(--ink);quotes:"\201C" "\201D"}
+.rcard footer{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-3)}
+.rcard footer i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff;background:linear-gradient(135deg,#c9a36a,#9c7440)}
+.rcard footer b{display:block;color:var(--ink);font-weight:500}
 
-/* ---------- CTA ---------- */
-.cta{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;isolation:isolate}
-.cta__img{position:absolute;inset:-8% 0;z-index:-2}
-.cta__img img{width:100%;height:100%;object-fit:cover}
-.cta::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(12,9,6,.86) 0%,rgba(12,9,6,.35) 45%,rgba(12,9,6,.15) 100%)}
-.cta .wrap{padding-bottom:clamp(60px,12vh,120px)}
-.cta .eyebrow{color:var(--brass-2)}
-.cta h2{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.92;font-size:var(--fs-big);margin:20px 0 24px}
-.cta p{max-width:520px;color:rgba(255,255,255,.78);font-size:var(--fs-sub)}
-.cta__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+/* ---------- CTA: the last room opens up as you arrive ---------- */
+.cta{position:relative;height:160vh}
+.cta .sticky{display:flex;align-items:flex-end}
+.cta__frame{position:absolute;inset:0;overflow:hidden;clip-path:inset(12vh 8vw 12vh 8vw round 32px);will-change:clip-path}
+.cta__frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.cta__frame::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,.05) 100%)}
+.cta__copy{position:relative;z-index:2;color:#fff;padding-bottom:clamp(56px,11vh,110px);opacity:0}
+.cta__copy .eyebrow{color:#f1d9ae}
+.cta h2{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.93;font-size:var(--fs-big);margin:14px 0 20px}
+.cta p{max-width:520px;color:rgba(255,255,255,.82);font-size:var(--fs-sub)}
+.cta__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 
 /* Footer */
-.foot{background:var(--dark);color:rgba(245,239,230,.6);font-size:13px;padding:34px 0 max(34px,env(safe-area-inset-bottom))}
-.foot .wrap{display:flex;justify-content:space-between;gap:16px 30px;flex-wrap:wrap}
-.foot a{color:var(--cream)}
-.foot a:hover{color:var(--brass-2)}
+.foot{background:var(--bg-2);color:var(--ink-3);font-size:12.5px;padding:26px 0 max(26px,env(safe-area-inset-bottom))}
+.foot .wrap{display:flex;justify-content:space-between;gap:12px 30px;flex-wrap:wrap}
+.foot a{color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
 
 /* reveals */
-[data-reveal]{opacity:0;transform:translateY(28px)}
-.no-js [data-reveal]{opacity:1;transform:none}
-.no-js .manifesto p .w{opacity:1}
-.no-js .pin{transform:none}
+[data-reveal]{opacity:0;transform:translateY(30px)}
+.no-js [data-reveal],.no-js .cta__copy{opacity:1;transform:none}
+.no-js .intro .w,.no-js .feat .fw{opacity:1}
 
-/* Touch devices: no backdrop work over footage */
-html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
+/* Touch devices: no live backdrop blur */
+html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;backdrop-filter:none}
 
 @media (max-width:1024px){
   .nav__links{display:none}
-  .anat__grid{grid-template-columns:1fr}
+  .design .sticky{grid-template-columns:1fr;align-content:center;gap:18px}
+  .dsteps{position:relative;height:74px;margin-top:10px}
+  .dsteps li{position:absolute;inset:0;opacity:0;transition:opacity .5s var(--ease)}
+  .dsteps li.is-on{opacity:1}
+  .plan{aspect-ratio:4/3;max-height:52svh;width:100%}
+  .reviews .sticky{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start;gap:14px}
+  .feat{min-height:120px;margin-top:14px}
+  .wall{height:auto;min-height:0;align-self:stretch}
   .dgrid{grid-template-columns:repeat(2,1fr)}
+  .studio__grid{grid-template-columns:1fr}
 }
 @media (max-width:700px){
+  body{font-size:16px}
   .b-film h2{font-size:clamp(40px,11vw,64px)}
-  .steps{grid-template-columns:1fr;gap:34px}
-  .steps__line{display:none}
+  .slide{width:84vw}
+  .slide__img{height:52svh}
+  .slide__cap{flex-direction:column;gap:4px}
+  .rooms__head .sub{display:none}
+  .plan{aspect-ratio:4/5;max-height:50svh}
+  .design .h{font-size:28px}
+  .wall{grid-template-columns:repeat(2,1fr);gap:10px}
+  .wcol{gap:10px}
+  .wcol:nth-child(3){display:none}
+  .rcard{padding:16px}
+  .rcard q{font-size:14px}
+  .reviews .h{font-size:28px}
+  .score{margin-top:12px}
+  .score b{font-size:36px}
+  .feat blockquote{font-size:18px}
   .dgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--pad) * -1);padding:0 var(--pad);scroll-padding-inline:var(--pad);gap:12px}
   .dgrid::-webkit-scrollbar{display:none}
   .dcard{flex:0 0 72%;scroll-snap-align:start}
   .ddots{display:flex;justify-content:center;gap:6px;margin-top:20px}
-  .ddots i{width:6px;height:6px;border-radius:6px;background:rgba(245,239,230,.2);transition:width .5s var(--ease),background .5s}
-  .ddots i.is-on{width:22px;background:var(--brass-2)}
-  .rcard{width:78vw}
+  .ddots i{width:6px;height:6px;border-radius:6px;background:var(--ink-4);transition:width .5s var(--ease),background .5s}
+  .ddots i.is-on{width:22px;background:var(--ink)}
   .nav .btn{display:none}
-  .anat__list li{padding:10px 0}
 }
-@media (prefers-reduced-motion:reduce){.cue::after,.pin::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.cue::after{animation:none}}
 </style>
 </head>
 <body class="is-loading">
 
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader__inner">
-    <div class="loader__mark">Bargainhub <span>Kitchens</span></div>
+    <div class="loader__mark">Bargainhub <span>Interiors</span></div>
     <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
   </div>
 </div>
@@ -227,77 +267,107 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
   <div class="wrap nav__in">
     <a class="brand" href="#top" data-scroll>Bargainhub <small>by Hanes Distribution</small></a>
     <nav class="nav__links" aria-label="Page">
-      <a href="#anatomy" data-scroll>The kitchen</a>
-      <a href="#details" data-scroll>Details</a>
-      <a href="#process" data-scroll>How it works</a>
+      <a href="#rooms" data-scroll>Rooms</a>
+      <a href="#design" data-scroll>Design</a>
+      <a href="#details" data-scroll>Materials</a>
       <a href="#reviews" data-scroll>Reviews</a>
     </nav>
-    <a class="btn btn--brass" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20kitchen%20quote">Get a quote</a>
+    <a class="btn btn--dark" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Get a quote</a>
   </div>
 </header>
 
 <main id="top">
   <!-- ================= Build ================= -->
-  <section class="build" id="build" aria-label="A Bargainhub kitchen, assembled piece by piece as you scroll">
+  <section class="build" id="build" aria-label="A Bargainhub kitchen goes from blueprint to model to real as you scroll">
     <div class="sticky" id="buildStage">
-      <canvas id="kCanvas" aria-hidden="true"></canvas>
-      <canvas id="bCanvas" aria-hidden="true"></canvas>
-      <div class="glow" id="glow" aria-hidden="true"></div>
-      <img class="whole" id="whole" src="stills/bargainhub/kitchen-2000.webp" alt="" decoding="async">
-      <div class="b-shade" id="bShade"></div>
-      <div class="bars" id="bars" aria-hidden="true"><i></i><i></i></div>
+      <div class="b-frame" id="bFrame">
+        <canvas id="kCanvas" aria-hidden="true"></canvas>
+        <canvas id="bCanvas" aria-hidden="true"></canvas>
+        <div class="glow" id="glow" aria-hidden="true"></div>
+        <img class="whole" id="whole" src="stills/bargainhub/kitchen-2000.webp" alt="" decoding="async">
+        <div class="b-shade" id="bShade"></div>
+        <div class="b-film" id="bFilm">
+          <h2 id="fl1">Designer <span>interiors.</span></h2>
+          <h2 id="fl2">Warehouse <span>prices.</span></h2>
+          <h2 id="fl3">One order. <span>Delivered nationwide.</span></h2>
+        </div>
+      </div>
       <div class="b-intro" id="bIntro">
-        <div class="eyebrow">Bargainhub Kitchens</div>
-        <h1>Your kitchen,<br><em>assembled.</em></h1>
-        <p>Scroll to build it, piece by piece, then step inside.</p>
+        <div class="eyebrow">Bargainhub Interiors</div>
+        <h1>Your home,<br><em>assembled.</em></h1>
+        <p>Kitchens, bathrooms and whole-home interiors. Scroll to build one, from the first line to the lights coming on.</p>
         <div class="cue" aria-hidden="true"></div>
       </div>
-      <div class="b-label" id="bLabel" aria-hidden="true"><small id="bNum">01 / 09</small><b id="bName">Ceiling &amp; cove lighting</b></div>
+      <div class="b-label" id="bLabel" aria-hidden="true"><small id="bNum">01 / 10</small><b id="bName">The drawing</b></div>
       <div class="b-meter" id="bMeter" aria-hidden="true"><i id="bMeterFill"></i></div>
-      <div class="b-film" id="bFilm">
-        <h2 id="fl1">Designer <span>kitchens.</span></h2>
-        <h2 id="fl2">Warehouse <span>prices.</span></h2>
-        <h2 id="fl3">One order. <span>Delivered nationwide.</span></h2>
-      </div>
     </div>
   </section>
 
-  <!-- ================= Manifesto ================= -->
-  <section class="manifesto" id="manifesto">
+  <!-- ================= Intro ================= -->
+  <section class="intro" id="intro">
     <div class="wrap">
       <div class="eyebrow" data-reveal>The Bargainhub idea</div>
-      <p id="mText">A kitchen like this usually comes with a showroom markup. Bargainhub brings the whole look [warehouse-direct:] tall cabinetry, open shelving, stone-look benchtops and lighting, planned to work together and delivered on [one order.]</p>
+      <p id="mText">Rooms like these usually come with a showroom markup. Bargainhub designs the whole interior with you, then supplies it [warehouse-direct:] kitchens, bathrooms, joinery and lighting, drawn to fit, chosen to match and delivered on [one order.]</p>
     </div>
   </section>
 
-  <!-- ================= Anatomy ================= -->
-  <section class="anat" id="anatomy">
-    <div class="wrap">
-      <div class="eyebrow" data-reveal>Everything in the picture</div>
-      <h2 class="h" data-reveal style="margin-top:16px">Seven parts. <span class="muted">One kitchen.</span></h2>
-      <div class="anat__grid">
-        <div class="anat__img" data-reveal>
-          <img src="stills/bargainhub/kitchen-1200.webp" width="1200" height="1200" alt="The complete Bargainhub kitchen: tall timber cabinetry, lit open shelving, a stone-look hood and splashback, and a waterfall island" loading="lazy" decoding="async">
-          <span class="pin" style="left:10%;top:36%">01</span>
-          <span class="pin" style="left:24%;top:30%">02</span>
-          <span class="pin" style="left:33%;top:36%">03</span>
-          <span class="pin" style="left:59%;top:30%">04</span>
-          <span class="pin" style="left:8%;top:75%">05</span>
-          <span class="pin" style="left:40%;top:78%">06</span>
-          <span class="pin" style="left:62%;top:18.5%">07</span>
-        </div>
+  <!-- ================= Rooms ================= -->
+  <section class="rooms" id="rooms" aria-label="Rooms we design and supply">
+    <div class="sticky">
+      <div class="wrap rooms__head">
         <div>
-          <ol class="anat__list">
-            <li data-reveal><span>01</span><b>Tall cabinetry</b><p>Full-height towers for the fridge, pantry and ovens.</p></li>
-            <li data-reveal><span>02</span><b>Open shelving</b><p>Lit columns for glassware and the good bowls.</p></li>
-            <li data-reveal><span>03</span><b>Upper cabinets</b><p>Handle-free doors either side of the hood.</p></li>
-            <li data-reveal><span>04</span><b>Stone-look hood &amp; splashback</b><p>One continuous stone-look finish from hood to cooktop.</p></li>
-            <li data-reveal><span>05</span><b>Waterfall benchtop</b><p>A stone-look island top that wraps down both ends.</p></li>
-            <li data-reveal><span>06</span><b>Island cabinetry</b><p>Oak-look, handle-free drawers above a glowing plinth.</p></li>
-            <li data-reveal><span>07</span><b>Lighting</b><p>Warm LED in the shelves, the cove and the plinth.</p></li>
-          </ol>
-          <div class="anat__note" data-reveal><b>Add the appliances.</b> Pair it with Hisense appliances through Hanes Distribution and the whole kitchen arrives together.</div>
+          <div class="eyebrow">Every room</div>
+          <h2 class="h" style="margin-top:10px">One look, <span class="muted">room to room.</span></h2>
         </div>
+        <p class="sub">From the kitchen to the living room to the bathroom, the same finishes carry through the whole home.</p>
+      </div>
+      <div class="track" id="track">
+        <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/kitchen-900.webp" srcset="stills/bargainhub/rooms/kitchen-900.webp 900w, stills/bargainhub/rooms/kitchen-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Kitchen with a waterfall stone-look island, velvet stools and backlit shelving" loading="lazy" decoding="async" style="object-position:50% 48%"></div>
+          <div class="slide__cap"><span>01</span><b>Kitchens</b><p>Stone-look islands, handle-free cabinetry and light built into every shelf.</p></div></article>
+        <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/living-900.webp" srcset="stills/bargainhub/rooms/living-900.webp 900w, stills/bargainhub/rooms/living-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Double-height living room with arched lit shelving either side of a stone fireplace" loading="lazy" decoding="async" style="object-position:50% 44%"></div>
+          <div class="slide__cap"><span>02</span><b>Living rooms</b><p>Built-in shelving and joinery that frame the fireplace and the view.</p></div></article>
+        <article class="slide"><div class="slide__img"><img src="stills/bargainhub/rooms/feature-900.webp" srcset="stills/bargainhub/rooms/feature-900.webp 900w, stills/bargainhub/rooms/feature-1600.webp 1600w" sizes="(max-width:700px) 100vw, 82vw" width="1600" height="1600" alt="Stone-look feature wall with a television and backlit timber shelving either side" loading="lazy" decoding="async" style="object-position:50% 46%"></div>
+          <div class="slide__cap"><span>03</span><b>Feature walls</b><p>Stone-look panels and backlit joinery for the room you live in most.</p></div></article>
+        <article class="slide slide--text"><div class="slide__img"><h3>Bathrooms, laundries <em>and every room between.</em></h3><p>Designed and supplied the same way, on the same order. <a class="link" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20bathroom%20enquiry">Ask about yours</a></p></div>
+          <div class="slide__cap"><span>04</span><b>Bathrooms</b><p>Vanities, stone-look surfaces and storage to match the rest of the house.</p></div></article>
+      </div>
+      <div class="rooms__bar" aria-hidden="true"><i id="roomsBar"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Design ================= -->
+  <section class="design" id="design" aria-label="How we design your interior">
+    <div class="sticky">
+      <div>
+        <div class="eyebrow">Design studio</div>
+        <h2 class="h">Drawn to the millimetre, <span class="muted">before anything is made.</span></h2>
+        <ol class="dsteps" id="dsteps">
+          <li class="is-on"><b>Measure and plan</b><p>Every wall, window and door measured and drawn to scale.</p></li>
+          <li><b>Elevations</b><p>Each wall drawn front-on, with heights, hoods and LED strips marked.</p></li>
+          <li><b>Materials and finishes</b><p>Laminates, quartz, tile and hardware chosen to sit together.</p></li>
+          <li><b>3D model</b><p>The whole room modelled, so you can see it from every angle.</p></li>
+          <li><b>Finished render</b><p>The room lit and styled, the way it will look when it is done.</p></li>
+          <li><b>Your drawing set</b><p>Plans, elevations, finishes and a render, before you commit.</p></li>
+        </ol>
+      </div>
+      <div class="plan" id="plan"><img id="planImg" src="stills/bargainhub/plan-1200.webp" srcset="stills/bargainhub/plan-1200.webp 1200w, stills/bargainhub/plan-2000.webp 2000w" sizes="(max-width:1024px) 100vw, 60vw" width="2000" height="2000" alt="Kitchen design set: layout plan, three elevations, materials and finishes, an isometric model and a photoreal render" decoding="async"></div>
+    </div>
+  </section>
+
+  <!-- ================= Studio ================= -->
+  <section class="studio" id="studio">
+    <div class="wrap studio__grid">
+      <div class="studio__img" data-reveal><img id="studioImg" src="stills/bargainhub/studio-800.webp" srcset="stills/bargainhub/studio-800.webp 800w, stills/bargainhub/studio-1400.webp 1400w" sizes="(max-width:1024px) 100vw, 50vw" width="1400" height="1400" alt="A designer modelling a kitchen in 3D, with sketches and floor plans pinned above the desk" loading="lazy" decoding="async"></div>
+      <div>
+        <div class="eyebrow" data-reveal>Designed with you</div>
+        <h2 class="h" data-reveal style="margin-top:12px">Your ideas, <span class="muted">drawn up properly.</span></h2>
+        <p class="sub" data-reveal>Bring a sketch, a photo or just a feeling. We turn it into plans and a 3D model, then supply every panel, benchtop and fitting to make it real.</p>
+        <ul data-reveal>
+          <li>Kitchens, bathrooms, laundries and living spaces</li>
+          <li>Plans, elevations and a 3D model of the room</li>
+          <li>Finishes chosen to match from room to room</li>
+          <li>Supplied together from our Hornby warehouse</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -307,61 +377,48 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     <div class="wrap">
       <div class="details__head">
         <div>
-          <div class="eyebrow" data-reveal>Up close</div>
-          <h2 class="h" data-reveal style="margin-top:16px">Made in the details.</h2>
+          <div class="eyebrow" data-reveal>Materials</div>
+          <h2 class="h" data-reveal style="margin-top:12px">Made in the details.</h2>
         </div>
-        <p data-reveal>Four materials carry the whole look. They are chosen to sit together, so nothing on the plan fights anything else.</p>
+        <p class="sub" data-reveal style="max-width:380px">Four materials carry the whole look, chosen to sit together from room to room.</p>
       </div>
       <div class="dgrid" id="dRow">
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/timber.webp" width="800" height="1000" alt="Oak-look island drawers above a glowing plinth" loading="lazy" decoding="async"></div><b>Timber</b><p>Warm oak-look veneers on handle-free doors.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/stone.webp" width="800" height="1000" alt="Stone-look hood with a glass pendant" loading="lazy" decoding="async"></div><b>Stone</b><p>Stone-look surfaces on the hood, splashback and benchtop.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="Brushed-brass tap over the island sink" loading="lazy" decoding="async"></div><b>Brass</b><p>Brushed-brass tapware, pulls and pendant fittings.</p></div>
-        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="Lit open shelving with glassware and a pendant" loading="lazy" decoding="async"></div><b>Light</b><p>A warm glow built into shelves, cove and plinth.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/timber.webp" width="800" height="1000" alt="Oak-look drawers above a glowing plinth" loading="lazy" decoding="async"></div><b>Timber</b><p>Warm oak-look veneers on handle-free doors.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/stone.webp" width="800" height="1000" alt="Stone-look surface with a glass pendant" loading="lazy" decoding="async"></div><b>Stone</b><p>Stone-look surfaces for hoods, splashbacks and benchtops.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/brass.webp" width="800" height="1000" alt="Brushed-brass tap over a sink" loading="lazy" decoding="async"></div><b>Brass</b><p>Brushed-brass tapware, pulls and fittings.</p></div>
+        <div class="dcard" data-reveal><div class="dcard__img"><img src="stills/bargainhub/light.webp" width="800" height="1000" alt="Lit open shelving with glassware and a pendant" loading="lazy" decoding="async"></div><b>Light</b><p>A warm glow built into shelves, coves and plinths.</p></div>
       </div>
       <div class="ddots" id="dDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     </div>
   </section>
 
-  <!-- ================= Process ================= -->
-  <section class="process" id="process">
-    <div class="wrap">
-      <div class="eyebrow" data-reveal>How it works</div>
-      <h2 class="h" data-reveal style="margin-top:16px">Three steps <span class="muted">to a finished kitchen.</span></h2>
-      <div class="steps" id="steps">
-        <div class="steps__line"><i id="stepsLine"></i></div>
-        <div class="step" data-reveal><span>01</span><b>Choose the look</b><p>Oak-look timber, stone-look surfaces and brass accents that are made to go together.</p></div>
-        <div class="step" data-reveal><span>02</span><b>Order once</b><p>Cabinetry, benchtops, shelving and lighting on a single quote and a single order.</p></div>
-        <div class="step" data-reveal><span>03</span><b>Delivered together</b><p>Dispatched from our Hornby warehouse in Christchurch and delivered nationwide.</p></div>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= Reviews ================= -->
-  <section class="reviews" id="reviews">
-    <div class="wrap">
-      <div class="reviews__head">
-        <div>
-          <div class="eyebrow" data-reveal>Reviews</div>
-          <h2 class="h" data-reveal style="margin-top:16px">Kitchens people love <br>coming home to.</h2>
-        </div>
-        <div class="score" data-reveal><b id="rvAvg">4.9</b><div><div class="stars" id="rvStars"></div><small id="rvCount">30 reviews</small></div></div>
+  <section class="reviews" id="reviews" aria-label="Customer reviews">
+    <div class="sticky">
+      <div>
+        <div class="eyebrow">Reviews</div>
+        <h2 class="h">Loved in homes <span class="muted">across New Zealand.</span></h2>
+        <div class="score"><b id="rvAvg">4.9</b><div><div class="stars" id="rvStars"></div><small id="rvCount">30 reviews</small></div></div>
+        <!-- SAMPLE REVIEWS: these are layout placeholders, not real customers. Replace REVIEWS in the script below with verified reviews (and remove this note) before the page goes live. -->
+        <p class="rv__note">Sample reviews shown for layout. They will be replaced with verified customer reviews.</p>
+        <div class="feat" id="feat"></div>
       </div>
-      <!-- SAMPLE REVIEWS: these are layout placeholders, not real customers. Replace REVIEWS in the script below with verified reviews (and remove this note) before the page goes live. -->
-      <p class="rv__note" data-reveal>Sample reviews shown for layout. They will be replaced with verified customer reviews.</p>
+      <div class="wall" id="wall" aria-hidden="true"></div>
     </div>
-    <div class="rv" id="rv" aria-label="Customer reviews"></div>
   </section>
 
   <!-- ================= CTA ================= -->
   <section class="cta" id="quote">
-    <div class="cta__img" data-parallax><img src="stills/bargainhub/close-1920.webp" srcset="stills/bargainhub/close-1080.webp 1080w, stills/bargainhub/close-1920.webp 1920w" sizes="100vw" width="1920" height="1080" alt="" loading="lazy" decoding="async"></div>
-    <div class="wrap">
-      <div class="eyebrow" data-reveal>Bargainhub Kitchens</div>
-      <h2 id="ctaH">Your kitchen,<br>assembled.</h2>
-      <p data-reveal>Tell us about your space and we will price the whole kitchen on one quote, from our Hornby warehouse at 44 Anchorage Road, Christchurch.</p>
-      <div class="cta__btns" data-reveal>
-        <a class="btn btn--brass" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20kitchen%20quote">Get a kitchen quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-        <a class="btn btn--ghost" href="index.html#range">All Hanes brands</a>
+    <div class="sticky">
+      <div class="cta__frame" id="ctaFrame"><img id="ctaImg" src="stills/bargainhub/rooms/living-900.webp" srcset="stills/bargainhub/rooms/living-900.webp 900w, stills/bargainhub/rooms/living-1600.webp 1600w" sizes="100vw" width="1600" height="1600" alt="" loading="lazy" decoding="async" style="object-position:50% 45%"></div>
+      <div class="wrap cta__copy" id="ctaCopy">
+        <div class="eyebrow">Bargainhub Interiors</div>
+        <h2>Your home,<br>assembled.</h2>
+        <p>Tell us about your space. We will design it with you and price the whole interior on one quote, from our Hornby warehouse at 44 Anchorage Road, Christchurch.</p>
+        <div class="cta__btns">
+          <a class="btn btn--white" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Bargainhub%20interiors%20quote">Get a quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--ghost" href="index.html#range">All Hanes brands</a>
+        </div>
       </div>
     </div>
   </section>
@@ -374,7 +431,7 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
   </div>
 </footer>
 
-<button class="skip" id="skip" type="button" aria-label="Skip the kitchen build">Skip <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M4 9l4 4 4-4"/></svg></button>
+<button class="skip" id="skip" type="button" aria-label="Skip the build">Skip <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M4 9l4 4 4-4"/></svg></button>
 
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
@@ -391,6 +448,7 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
   const clamp01 = v => Math.min(1, Math.max(0, v));
+  const insetClip = (el, v, k) => { el.style.clipPath = `inset(${v[0] * k}vh ${v[1] * k}vw ${v[2] * k}vh ${v[3] * k}vw round ${v[4] * k}px)`; };
 
   /* ---------- Frame decoder: fetch + decode off the main thread, straight to the size that gets drawn ---------- */
   // Drawing a 2560px <img> into a canvas makes the browser re-decode it synchronously whenever it has evicted the
@@ -542,7 +600,7 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     }
   }
 
-  const seq = new Sequence({ canvas: $('#kCanvas'), dir: 'frames2/kitchen', count: 109, bg: '#14100c', readyFrac: .1 });
+  const seq = new Sequence({ canvas: $('#kCanvas'), dir: 'frames2/kitchen', count: 109, bg: '#ffffff', readyFrac: .1 });
 
   /* ---------- Smooth scroll ---------- */
   let lenis = null;
@@ -560,24 +618,21 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     e.preventDefault(); go(id === '#top' ? 0 : id);
   }));
 
-  /* ---------- Nav ---------- */
-  const nav = $('#nav'); let lastY = 0, buildEnd = 0;
-  const measureBuild = () => { buildEnd = $('#build').offsetHeight - innerHeight; };
-  measureBuild(); addEventListener('resize', measureBuild);
+  /* ---------- Nav: out of the way while scrolling down, back as soon as you scroll up ---------- */
+  const nav = $('#nav'); let lastY = 0;
   ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
     const y = s.scroll();
     if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
     else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
-    nav.classList.toggle('is-solid', y > buildEnd + 10);
     lastY = y;
   }});
 
   /* =========================================================
-     BUILD: the kitchen is cut along its own lines and flies together, the lights come on,
-     the camera pushes in to fill the screen and the film takes over
+     BUILD: the blueprint is drawn, the pieces arrive as an untextured model, the materials and lights come on,
+     the camera pushes in and the film takes over; at the end the frame settles into a card
      ========================================================= */
-  const KIMG = 'stills/bargainhub/kitchen-2000.webp', BPIMG = 'stills/bargainhub/blueprint.webp', BG = '#14100c';
-  const sticky = $('#buildStage'), bcv = $('#bCanvas'), bctx = bcv.getContext('2d', { alpha: false }), whole = $('#whole'), glow = $('#glow');
+  const KIMG = 'stills/bargainhub/kitchen-2000.webp', CIMG = 'stills/bargainhub/kitchen-clay-2000.webp', BPIMG = 'stills/bargainhub/blueprint-ink.webp', BG = '#ffffff';
+  const sticky = $('#buildStage'), frame = $('#bFrame'), bcv = $('#bCanvas'), bctx = bcv.getContext('2d', { alpha: false }), whole = $('#whole'), glow = $('#glow');
   // [x, y, w, h] in % of the square frame; clip = outline in frame %, for the benchtop's waterfall ends and the floor around the island.
   // from: where each piece starts (x/y in piece widths/heights, s/sx/sy scale, r degrees)
   const PIECES = [
@@ -594,23 +649,26 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     { r: [10, 68, 80, 20.5], t: .39, from: { y: 1.5 } },
     { r: [6, 62, 88, 26.5], t: .43, from: { y: -2.7, sx: 1.04 }, d: .1, ease: 'back.out(1.25)', clip: [[6, 62], [94, 62], [94, 88.5], [90, 88.5], [90, 68], [10, 68], [10, 88.5], [6, 88.5]] },
   ];
-  const LABELS = [[.15, 'Ceiling & cove lighting'], [.21, 'Tall cabinetry'], [.27, 'Open shelving'], [.32, 'Upper cabinets'], [.37, 'Stone-look hood'], [.42, 'Splashback & cooktop run'], [.47, 'Island cabinetry'], [.52, 'Waterfall benchtop'], [.57, 'Lights on']];
+  const LABELS = [[.004, 'The drawing'], [.15, 'Ceiling & cove lighting'], [.21, 'Tall cabinetry'], [.27, 'Open shelving'], [.32, 'Upper cabinets'], [.37, 'Stone-look hood'], [.42, 'Splashback & cooktop run'], [.47, 'Island cabinetry'], [.52, 'Waterfall benchtop'], [.56, 'Materials & light']];
   const E = .12; // pieces overlap by a hair so no seam shows between them
   PIECES.forEach(p => {
     const [x, y, w, h] = p.r, ex = Math.max(0, x - E), ey = Math.max(0, y - E), ew = Math.min(100, x + w + E) - ex, eh = Math.min(100, y + h + E) - ey;
     p.e = [ex, ey, ew, eh]; p.st = { x: 0, y: 0, s: 1, sx: 1, sy: 1, r: 0, a: 1 };
     if (p.clip) p.path = p.clip.map(([gx, gy]) => [(gx - ex) / ew - .5, (gy - ey) / eh - .5]);
   });
-  const st = { bp: .5, dim: .42 };
+  const st = { bp: .3, lit: 0 };
   // One canvas for the whole build: twelve moving page layers cost the compositor far more than one canvas does
-  let H = null, VW = 0, VH = 0, S = 0, C = 1, Q = 0, QX = 0, QY = 0, DPR = 1, kSrc = null, bpSrc = null;
-  const kImg = new Image(), bpImg = new Image(); kImg.src = KIMG; bpImg.src = BPIMG;
-  // both images are scaled once to the size they are drawn at, so every frame is a set of 1:1 copies
+  let H = null, VW = 0, VH = 0, S = 0, C = 1, Q = 0, QX = 0, QY = 0, DPR = 1, kSrc = null, cSrc = null, bpSrc = null;
+  const kImg = new Image(), cImg = new Image(), bpImg = new Image(); kImg.src = KIMG; cImg.src = CIMG; bpImg.src = BPIMG;
+  // the images are scaled once to the size they are drawn at, so every frame is a set of 1:1 copies
   const scaled = (img, d) => { const cv = document.createElement('canvas'); cv.width = cv.height = d; const x = cv.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(img, 0, 0, d, d); return cv; };
-  const prep = () => { if (!kImg.naturalWidth || !bpImg.naturalWidth) return; const d = Math.max(1, Math.round(Q * DPR)); kSrc = scaled(kImg, d); bpSrc = scaled(bpImg, d); draw(); };
+  const prep = () => {
+    if (!kImg.naturalWidth || !cImg.naturalWidth || !bpImg.naturalWidth) return;
+    const d = Math.max(1, Math.round(Q * DPR)); kSrc = scaled(kImg, d); cSrc = scaled(cImg, d); bpSrc = scaled(bpImg, d); draw();
+  };
   const draw = () => {
     if (!H || !kSrc || H.progress() > .6205) return;
-    const c = bctx, q = Q * DPR, ox = QX * DPR, oy = QY * DPR, k = kSrc.width / 100;
+    const c = bctx, q = Q * DPR, ox = QX * DPR, oy = QY * DPR, k = cSrc.width / 100;
     c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.fillStyle = BG; c.fillRect(0, 0, bcv.width, bcv.height);
     for (const p of PIECES) {
       const t = p.st; if (t.a <= .001) continue;
@@ -620,21 +678,22 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
       if (t.r) c.rotate(t.r * Math.PI / 180);
       if (t.s !== 1 || t.sx !== 1 || t.sy !== 1) c.scale(t.s * t.sx, t.s * t.sy);
       if (p.path) { c.save(); c.beginPath(); p.path.forEach(([lx, ly], i) => i ? c.lineTo(lx * pw, ly * ph) : c.moveTo(lx * pw, ly * ph)); c.closePath(); c.clip(); }
-      c.drawImage(kSrc, x * k, y * k, w * k, h * k, -pw / 2, -ph / 2, pw, ph);
+      c.drawImage(cSrc, x * k, y * k, w * k, h * k, -pw / 2, -ph / 2, pw, ph);
       if (p.path) c.restore();
     }
     c.setTransform(1, 0, 0, 1, 0, 0);
-    // lights off until the end, and the blueprint drawn over the top so its lines stay crisp while the pieces fill it
-    if (st.dim > .001) { c.globalAlpha = st.dim; c.fillStyle = '#0c0906'; c.fillRect(ox, oy, q, q); }
+    // materials and light arrive over the finished model; the blueprint sits on top until the pieces have filled it
+    if (st.lit > .001) { c.globalAlpha = st.lit; c.drawImage(kSrc, ox, oy, q, q); }
     if (st.bp > .001) { c.globalAlpha = st.bp; c.drawImage(bpSrc, ox, oy, q, q); }
     c.globalAlpha = 1;
   };
 
   // the build happens in a square fitted to the screen; after the lights come on, the whole-kitchen image pushes in to cover it
-  const zoom = { z: 0 };
+  const zoom = { z: 0 }, fin = { k: 0 };
   const applyStage = () => { whole.style.transform = `scale(${(C + (1 - C) * zoom.z).toFixed(4)})`; };
+  const applyFin = () => { if (fin.k <= 0) frame.style.clipPath = ''; else insetClip(frame, innerWidth < 700 ? [5, 4, 5, 4, 24] : [6, 5, 6, 5, 32], fin.k); };
   const sizeStage = () => {
-    VW = sticky.clientWidth; VH = sticky.clientHeight; S = Math.max(VW, VH); C = Math.min(VW * .94, VH * .78) / S; Q = S * C; QX = (VW - Q) / 2; QY = (VH - Q) / 2;
+    VW = sticky.clientWidth; VH = sticky.clientHeight; S = Math.max(VW, VH); C = Math.min(VW * .94, (VH - 60) * .8) / S; Q = S * C; QX = (VW - Q) / 2; QY = (VH - Q) / 2;
     DPR = Math.min(devicePixelRatio || 1, 2);
     bcv.width = Math.round(VW * DPR); bcv.height = Math.round(VH * DPR);
     Object.assign(whole.style, { width: S + 'px', height: S + 'px', left: (VW - S) / 2 + 'px', top: (VH - S) / 2 + 'px' });
@@ -655,47 +714,89 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
   const fr = { f: 0 };
   const skip = $('#skip');
   H = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: draw, scrollTrigger: { trigger: '#build', start: 'top top', end: 'bottom bottom', scrub: true,
-    onUpdate: s => { setLabel(s.progress); skip.classList.toggle('is-on', s.progress > .02 && s.progress < .96); },
+    onUpdate: s => { setLabel(s.progress); skip.classList.toggle('is-on', s.progress > .02 && s.progress < .94); },
     onLeave: () => skip.classList.remove('is-on'), onLeaveBack: () => skip.classList.remove('is-on') } });
   H.to('#bIntro', { autoAlpha: 0, y: -70, duration: .06 }, .004)
     .to(st, { bp: 1, duration: .06 }, .004)
-    .to(['#bLabel', '#bMeter'], { autoAlpha: 1, duration: .03 }, .1)
-    .fromTo('#bMeterFill', { scaleX: 0 }, { scaleX: 1, duration: .5 }, .08);
+    .to(['#bLabel', '#bMeter'], { autoAlpha: 1, duration: .03 }, .04)
+    .fromTo('#bMeterFill', { scaleX: 0 }, { scaleX: 1, duration: .54 }, .04);
   PIECES.forEach(p => H.from(p.st, { ...p.from, a: 0, duration: p.d || .085, ease: p.ease || 'power3.out', immediateRender: true }, p.t));
   H.to(st, { bp: 0, duration: .3, ease: 'power1.in' }, .2)
-    .to(st, { dim: 0, duration: .06, ease: 'power2.in' }, .54)
-    .to('#glow', { autoAlpha: 1, duration: .025 }, .555)
-    .to('#glow', { autoAlpha: 0, duration: .04 }, .58)
+    .to(st, { lit: 1, duration: .06, ease: 'power1.inOut' }, .535)
+    .to('#glow', { autoAlpha: 1, duration: .025 }, .565)
+    .to('#glow', { autoAlpha: 0, duration: .04 }, .59)
     .to(['#bLabel', '#bMeter'], { autoAlpha: 0, duration: .03 }, .6)
     .set('#whole', { autoAlpha: 1 }, .62).set('#bCanvas', { autoAlpha: 0 }, .621)
     .to(zoom, { z: 1, duration: .11, ease: 'power2.inOut', onUpdate: applyStage }, .622)
-    .fromTo('#bars i', { scaleY: 0 }, { scaleY: 1, duration: .05, ease: 'power2.out' }, .66)
     .set('#kCanvas', { autoAlpha: 1 }, .73).set('#whole', { autoAlpha: 0 }, .732)
     .to('#bShade', { opacity: 1, duration: .04 }, .72)
-    .to(fr, { f: seq.count - 1, duration: .268, onUpdate: () => seq.set(fr.f) }, .732)
-    .fromTo('#fl1', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .75)
-    .to('#fl1', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .815)
-    .fromTo('#fl2', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .84)
-    .to('#fl2', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .9)
-    .fromTo('#fl3', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .925)
-    .to({}, { duration: .001 }, .999);
-  skip.addEventListener('click', () => go('#manifesto'));
-  sizeStage(); kImg.decode().then(prep, prep); bpImg.decode().then(prep, prep);
+    .to(fr, { f: seq.count - 1, duration: .23, onUpdate: () => seq.set(fr.f) }, .732)
+    .fromTo('#fl1', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .745)
+    .to('#fl1', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .8)
+    .fromTo('#fl2', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .82)
+    .to('#fl2', { autoAlpha: 0, y: -40, duration: .025, ease: 'power2.in' }, .87)
+    .fromTo('#fl3', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .03, ease: 'power3.out' }, .89)
+    .to(['#fl3', '#bShade'], { autoAlpha: 0, duration: .03 }, .95)
+    .to(fin, { k: 1, duration: .05, ease: 'power2.inOut', onUpdate: applyFin }, .95);
+  skip.addEventListener('click', () => go('#intro'));
+  sizeStage(); [kImg, cImg, bpImg].forEach(im => im.decode().then(prep, prep));
 
-  /* ---------- Manifesto: words light up as you scroll past ---------- */
+  /* ---------- Intro: the words go from pale to ink as you read ---------- */
   const mText = $('#mText');
   mText.innerHTML = mText.textContent.replace(/\[([^\]]+)\]|(\S+)/g, (m, b, w) => b ? b.split(' ').map(x => `<span class="w b">${x}</span>`).join(' ') : `<span class="w">${w}</span>`);
-  gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 45%', scrub: true } });
+  gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 48%', scrub: true } });
 
-  /* ---------- Reveals, pins, close-ups, process line ---------- */
+  /* =========================================================
+     ROOMS: the page stops and the camera dollies sideways past each room; each photo drifts inside its frame
+     and settles as it reaches the centre
+     ========================================================= */
+  const track = $('#track'), slides = $$('#track .slide'), sImgs = slides.map(s => s.querySelector('img')), sCaps = slides.map(s => s.querySelector('.slide__cap'));
+  let maxX = 0, centres = [];
+  const measureRooms = () => {
+    maxX = Math.max(0, track.scrollWidth - innerWidth);
+    centres = slides.map(s => s.offsetLeft + s.offsetWidth / 2);
+  };
+  const setRooms = p => {
+    const x = -maxX * p, mid = innerWidth / 2;
+    track.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
+    slides.forEach((s, i) => {
+      const o = (centres[i] + x - mid) / innerWidth; // -1 .. 1 across the screen
+      const img = sImgs[i]; if (img) img.style.transform = `translate3d(${(-o * 7).toFixed(2)}%,0,0) scale(${(1 + Math.min(1, Math.abs(o)) * .08).toFixed(4)})`;
+      sCaps[i].style.opacity = (1 - Math.min(1, Math.max(0, Math.abs(o) - .12) * 1.6)).toFixed(3);
+    });
+    $('#roomsBar').style.transform = `scaleX(${p.toFixed(4)})`;
+  };
+  measureRooms(); setRooms(0);
+  ScrollTrigger.create({ trigger: '#rooms', start: 'top top', end: 'bottom bottom', onUpdate: s => setRooms(s.progress), onRefresh: s => { measureRooms(); setRooms(s.progress); } });
+
+  /* =========================================================
+     DESIGN: the camera moves over the drawing set, plan to elevation to finishes to model to render, then pulls back
+     ========================================================= */
+  const plan = $('#plan'), planImg = $('#planImg'), dsteps = $$('#dsteps li');
+  // [cx, cy] in fractions of the sheet, z = zoom (1 = the sheet covers the frame; 0 = fit the whole sheet)
+  const SHOTS = [[.23, .135, 2.3], [.23, .405, 2.2], [.63, .86, 2.1], [.72, .57, 1.8], [.72, .215, 1.85], [.5, .5, 0]];
+  const cam = { cx: SHOTS[0][0], cy: SHOTS[0][1], z: SHOTS[0][2] };
+  let PW = 0, PH = 0, D = 0;
+  const applyCam = () => {
+    const fit = Math.min(PW, PH) / D, s = cam.z > 0 ? Math.max(fit, cam.z) : fit, size = D * s;
+    let tx = PW / 2 - cam.cx * size, ty = PH / 2 - cam.cy * size;
+    tx = size >= PW ? Math.min(0, Math.max(PW - size, tx)) : (PW - size) / 2;
+    ty = size >= PH ? Math.min(0, Math.max(PH - size, ty)) : (PH - size) / 2;
+    planImg.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(4)})`;
+  };
+  const sizePlan = () => { PW = plan.clientWidth; PH = plan.clientHeight; D = Math.max(PW, PH); Object.assign(planImg.style, { width: D + 'px', height: D + 'px' }); applyCam(); };
+  sizePlan(); addEventListener('resize', sizePlan);
+  let step = 0;
+  const setStep = () => { const i = Math.min(dsteps.length - 1, Math.max(0, Math.floor((DT.time() + .5) / 1.35))); if (i !== step) { step = i; dsteps.forEach((li, k) => li.classList.toggle('is-on', k === i)); } };
+  const DT = gsap.timeline({ defaults: { ease: 'power2.inOut' }, onUpdate: () => { applyCam(); setStep(); }, scrollTrigger: { trigger: '#design', start: 'top top', end: 'bottom bottom', scrub: true } });
+  SHOTS.slice(1).forEach(([cx, cy, z], i) => DT.to(cam, { cx, cy, z: z || .0001, duration: 1 }, i * 1.35 + .35));
+  DT.to({}, { duration: .35 });
+
+  /* ---------- Reveals, studio push-in, close-ups ---------- */
   ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
     gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
-  ScrollTrigger.create({ trigger: '.anat__img', start: 'top 70%', once: true, onEnter: () =>
-    gsap.to('.pin', { scale: 1, duration: .7, stagger: .12, ease: 'back.out(2)' }) });
+  gsap.fromTo('#studioImg', { scale: 1.22 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.studio__img', start: 'top bottom', end: 'bottom 30%', scrub: true } });
   $$('.dcard__img img').forEach(img => gsap.fromTo(img, { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom 40%', scrub: true } }));
-  gsap.fromTo('#stepsLine', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '#steps', start: 'top 85%', end: 'bottom 60%', scrub: true } });
-  $$('[data-parallax]').forEach(el => gsap.fromTo(el, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
-  gsap.fromTo('#ctaH', { y: 80, autoAlpha: .15 }, { y: 0, autoAlpha: 1, ease: 'none', scrollTrigger: { trigger: '.cta', start: 'top 85%', end: 'center center', scrub: true } });
 
   // phones: the close-ups are a swipeable row and the dots follow it
   const dRow = $('#dRow'), dDots = $$('#dDots i'); let ddq = 0;
@@ -705,7 +806,8 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
   dRow.addEventListener('scroll', () => { if (!ddq) ddq = requestAnimationFrame(syncD); }, { passive: true }); syncD();
 
   /* =========================================================
-     REVIEWS: three rows drifting in opposite directions, faster while the page scrolls
+     REVIEWS: columns of reviews drift in opposite directions and slide further as you scroll,
+     while one review at a time is read out large on the left
      ========================================================= */
   // SAMPLE REVIEWS for layout only. Replace with verified customer reviews (name, town, stars, text) before launch.
   const REVIEWS = [
@@ -721,7 +823,7 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     ['Ben H.', 'Ashburton', 5, 'Ordered the kitchen and our Hisense appliances in one go. So simple.'],
     ['Grace N.', 'Dunedin', 5, 'Warm oak, warm lighting. Exactly the feel we were after.'],
     ['Mark D.', 'Invercargill', 5, 'Well packed, nothing damaged, and every part was there.'],
-    ['Lucy F.', 'Blenheim', 5, 'We picked the look from the photos and it arrived exactly like that.'],
+    ['Lucy F.', 'Blenheim', 5, 'Seeing the 3D model first meant there were no surprises on the day.'],
     ['Sam W.', 'Lincoln', 5, 'Our open-plan living finally feels finished.'],
     ['Karan B.', 'Auckland', 5, 'The value for this quality is unreal.'],
     ['Olivia G.', 'Napier', 5, 'The waterfall ends on the island make the whole room.'],
@@ -729,7 +831,7 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     ['Rachel K.', 'Kaiapoi', 5, 'The neighbours keep asking who did our kitchen.'],
     ['Chris M.', 'Nelson', 4, 'Good communication the whole way through.'],
     ['Emma J.', 'Hastings', 5, 'The tall pantry towers swallow everything. So much storage.'],
-    ['Liam O.', 'New Plymouth', 5, 'We saved enough to upgrade the appliances as well.'],
+    ['Liam O.', 'New Plymouth', 5, 'We did the kitchen and the living room shelving together. It all matches.'],
     ['Nikau R.', 'Rotorua', 5, 'The veneer looks beautiful up close.'],
     ['Jess A.', 'Oamaru', 5, 'It came together faster than we expected.'],
     ['Paul E.', 'Whanganui', 4, 'Exactly what we wanted for a rental upgrade: good-looking and tough.'],
@@ -740,39 +842,64 @@ html.lite .nav.is-solid{background:rgba(245,239,230,.98)}
     ['Aria H.', 'Gisborne', 5, 'From old laminate to this. Night and day.'],
     ['Leo V.', 'Whangārei', 5, 'We would buy from Bargainhub again without a second thought.'],
   ];
+  const FEATURED = [2, 0, 26];
   const star = on => `<svg viewBox="0 0 16 16" class="${on ? '' : 'off'}" aria-hidden="true"><path fill="currentColor" d="M8 1.2l2.1 4.3 4.7.7-3.4 3.3.8 4.7L8 12l-4.2 2.2.8-4.7L1.2 6.2l4.7-.7z"/></svg>`;
   const stars = n => `<div class="stars" aria-label="${n} out of 5 stars">${[1, 2, 3, 4, 5].map(k => star(k <= n)).join('')}</div>`;
   const card = ([name, town, n, text]) => `<article class="rcard">${stars(n)}<q>${text}</q><footer><i>${name[0]}</i><span><b>${name}</b>${town}</span></footer></article>`;
   const avg = REVIEWS.reduce((a, r) => a + r[2], 0) / REVIEWS.length;
   $('#rvAvg').textContent = avg.toFixed(1); $('#rvStars').innerHTML = [1, 2, 3, 4, 5].map(k => star(k <= Math.round(avg))).join(''); $('#rvCount').textContent = REVIEWS.length + ' reviews';
-  const rv = $('#rv');
-  const ROWS = [0, 1, 2].map(k => REVIEWS.filter((_, i) => i % 3 === k));
-  rv.innerHTML = ROWS.map(row => { const h = row.map(card).join(''); return `<div class="rv__row"><div class="rv__track">${h}${h}</div></div>`; }).join('');
-  const tracks = $$('.rv__track').map((el, i) => ({ el, x: 0, half: 0, dir: i % 2 ? 1 : -1, v: [.45, .6, .5][i], hold: false }));
-  const measureRv = () => tracks.forEach(t => { t.half = t.el.scrollWidth / 2; if (t.dir > 0 && t.x === 0) t.x = -t.half; });
-  measureRv(); addEventListener('resize', measureRv); document.fonts && document.fonts.ready.then(measureRv);
-  tracks.forEach(t => { t.el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') t.hold = true; }); t.el.addEventListener('pointerleave', () => { t.hold = false; }); });
-  let rvOn = false; new IntersectionObserver(es => { rvOn = es[es.length - 1].isIntersecting; }).observe(rv);
+  const COLS = [0, 1, 2].map(k => REVIEWS.filter((_, i) => i % 3 === k));
+  $('#wall').innerHTML = COLS.map(col => { const h = col.map(card).join(''); return `<div class="wcol">${h}${h}</div>`; }).join('');
+  $('#feat').innerHTML = FEATURED.map(i => { const [name, town, , text] = REVIEWS[i];
+    return `<figure><blockquote>${text.split(' ').map(w => `<span class="fw">${w}</span>`).join(' ')}</blockquote><figcaption><b>${name}</b> · ${town}</figcaption></figure>`; }).join('');
+  const cols = $$('.wcol').map((el, i) => ({ el, drift: 0, half: 0, dir: i % 2 ? 1 : -1, v: [.32, .44, .38][i], sv: [520, 760, 620][i] }));
+  const measureWall = () => cols.forEach(c => { c.half = c.el.scrollHeight / 2; });
+  measureWall(); addEventListener('resize', measureWall); document.fonts && document.fonts.ready.then(measureWall);
+  let rvOn = false, rvP = 0; new IntersectionObserver(es => { rvOn = es[es.length - 1].isIntersecting; }).observe($('#wall'));
+  ScrollTrigger.create({ trigger: '#reviews', start: 'top bottom', end: 'bottom top', onUpdate: s => { rvP = s.progress; } });
   gsap.ticker.add(() => {
-    if (!rvOn || reduce) return;
-    const boost = Math.min(Math.abs(lenis ? lenis.velocity : 0) * .22, 10);
-    tracks.forEach(t => {
-      if (t.hold && !boost) return;
-      t.x += (t.v + boost) * t.dir;
-      if (t.half) { if (t.x <= -t.half) t.x += t.half; if (t.x > 0) t.x -= t.half; }
-      t.el.style.transform = `translate3d(${t.x.toFixed(2)}px,0,0)`;
+    if (!rvOn) return;
+    const boost = reduce ? 0 : Math.min(Math.abs(lenis ? lenis.velocity : 0) * .12, 6);
+    cols.forEach(c => {
+      if (!c.half) return;
+      if (!reduce) c.drift += c.v + boost;
+      const o = (c.drift + rvP * c.sv) * c.dir, y = -(((o % c.half) + c.half) % c.half);
+      c.el.style.transform = `translate3d(0,${y.toFixed(2)}px,0)`;
     });
   });
+  // one voice at a time: each featured review is read out word by word, then gives way to the next
+  const figs = $$('#feat figure');
+  const FT = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#reviews', start: 'top top', end: 'bottom bottom', scrub: true } });
+  figs.forEach((f, i) => {
+    const t = i * 1.2;
+    FT.to(f.querySelectorAll('.fw'), { opacity: 1, stagger: .03, duration: .2 }, t)
+      .to(f.querySelector('figcaption'), { opacity: 1, duration: .15 }, t + .45);
+    if (i) FT.fromTo(f, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .15, immediateRender: true }, t - .08);
+    if (i < figs.length - 1) FT.to(f, { autoAlpha: 0, y: -24, duration: .2 }, t + .95);
+  });
+  FT.to({}, { duration: .2 });
 
-  /* ---------- Load: the two images the build needs, then hand over ---------- */
+  /* =========================================================
+     CTA: the last room opens from a card to the full screen as you arrive, and the words rise over it
+     ========================================================= */
+  const ctaFrame = $('#ctaFrame'), cf = { k: 1 };
+  const applyCta = () => insetClip(ctaFrame, innerWidth < 700 ? [10, 5, 10, 5, 24] : [12, 8, 12, 8, 32], cf.k);
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top top', end: 'bottom bottom', scrub: true } })
+    .to(cf, { k: 0, duration: .55, ease: 'power2.inOut', onUpdate: applyCta }, 0)
+    .fromTo('#ctaImg', { scale: 1.18 }, { scale: 1, duration: .8 }, 0)
+    .fromTo('#ctaCopy', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .3, ease: 'power3.out' }, .45)
+    .to({}, { duration: .2 });
+  applyCta();
+
+  /* ---------- Load: the three images the build needs, then hand over ---------- */
   const fill = $('#lfill');
-  const need = [kImg, bpImg].map(im => im.decode().catch(() => {}));
+  const need = [kImg, cImg, bpImg].map(im => im.decode().catch(() => {}));
   if (document.fonts) need.push(document.fonts.ready);
   let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
   Promise.all(need).then(() => {
-    gsap.timeline({ delay: .25 })
-      .to('#loader', { autoAlpha: 0, duration: .8, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
-      .from('#bIntro > *', { autoAlpha: 0, y: 30, duration: 1.2, stagger: .1, ease: 'expo.out' }, '<.2')
+    gsap.timeline({ delay: .2 })
+      .to('#loader', { autoAlpha: 0, duration: .7, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
+      .from('#bIntro > *', { autoAlpha: 0, y: 30, duration: 1.2, stagger: .1, ease: 'expo.out' }, '<.15')
       .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); seq.load(); }, '<');
   });
 })();
