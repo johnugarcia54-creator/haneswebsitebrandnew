@@ -1089,7 +1089,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   const ko = $('#ko'), kctx = ko.getContext('2d'), koFont = fs => `700 ${fs}px "Inter Tight", Helvetica, Arial, sans-serif`;
   const kz = { s: 1, a: 0 }; let koO = [0, 0], koFs = 100, koW = 0, koH = 0, koK = 1, koHidden = false;
   const applyKO = () => {
-    const hide = kz.s > 70; if (hide !== koHidden) { koHidden = hide; ko.style.visibility = hide ? 'hidden' : 'visible'; }
+    const hide = kz.s > 70; if (hide !== koHidden) { koHidden = hide; ko.style.visibility = hide ? 'hidden' : ''; }
     if (hide) return;
     const c = kctx, k = koK, s = kz.s;
     c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
@@ -1126,6 +1126,9 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   relayoutKO(); (document.fonts ? document.fonts.load('700 100px "Inter Tight"').then(() => document.fonts.ready) : Promise.resolve()).then(layoutKO); addEventListener('resize', relayoutKO);
 
   const whFrame = $('#whFrame'), wc = { close: 0 };
+  // off screen the pinned stage is hidden, so its full-screen layers add nothing to every other frame
+  const whStage = $('#warehouse > .sticky');
+  new IntersectionObserver(es => { whStage.style.visibility = es[es.length - 1].isIntersecting ? '' : 'hidden'; }, { rootMargin: '20% 0px' }).observe($('#warehouse'));
   const applyWH = () => insetClip(whFrame, isNarrow() ? [8, 4, 8, 4, 24] : [7, 4, 7, 4, 32], wc.close);
   const ws = { f: 0 };
   gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#warehouse', start: 'top top', end: 'bottom bottom', scrub: true, onEnter: () => seq.wh.load() } })
