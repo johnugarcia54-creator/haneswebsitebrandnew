@@ -237,21 +237,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .sec__head > p{flex:0 1 380px;color:var(--ink-2);font-size:var(--fs-sub)}
 .sec__head h2{font-size:var(--fs-h);margin-top:14px;max-width:820px}
 
-/* Range */
-.range{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
-.card{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--surface);isolation:isolate;min-height:360px;grid-column:span 2;display:flex;flex-direction:column;justify-content:flex-end;color:#fff}
-.card--wide{grid-column:span 3;min-height:420px}
-.card__img{position:absolute;inset:-6% 0;z-index:-2}
-.card__img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.64) 100%)}
-.card:hover .card__img img{transform:scale(1.045)}
-.card__body{padding:28px 28px 30px}
-.card__n{font-size:12px;font-weight:600;letter-spacing:.16em;opacity:.75}
-.card h3{font-family:var(--display);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:8px 0}
-.card p{font-size:15px;opacity:.88;max-width:360px}
-.card__go{position:absolute;right:22px;top:22px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:background .4s,color .4s,transform .5s var(--ease)}
+/* Range: one tile per brand, photo on top and words underneath (the brand photography carries its own type) */
+.range{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(30px,3.2vw,44px) clamp(14px,1.6vw,22px)}
+.card{display:flex;flex-direction:column;color:var(--ink)}
+.card__img{position:relative;aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;background:var(--surface);isolation:isolate;box-shadow:0 30px 60px -44px rgba(10,14,30,.4)}
+.card__media{position:absolute;inset:-3% 0}
+.card__media img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s var(--ease),transform 1.2s var(--ease)}
+.card__media img.is-in,.no-js .card__media img{opacity:1}
+.card:hover .card__media img{transform:scale(1.045)}
+.card__go{position:absolute;right:16px;top:16px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(18,18,22,.34);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:background .4s,color .4s,transform .5s var(--ease)}
 .card:hover .card__go{background:#fff;color:var(--ink);transform:rotate(-45deg)}
 .card__go svg{width:14px;height:14px}
+.card__body{padding:18px 4px 0}
+.card__meta{display:flex;gap:12px;align-items:baseline;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.card__n{color:var(--accent)}
+.card h3{font-family:var(--display);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:8px 0 6px}
+.card p{font-size:15px;color:var(--ink-2);max-width:380px}
+.range__dots{display:none}
 
 /* Offices */
 .offices{background:linear-gradient(180deg,var(--bg) 0,var(--surface) 160px,var(--surface) calc(100% - 160px),var(--bg) 100%)}
@@ -334,7 +336,7 @@ footer{background:linear-gradient(180deg,var(--bg) 0,var(--surface) 140px);font-
 /* Touch devices (phones, tablets): drop live backdrop blurs over moving footage and scrubbed text blurs, the heaviest GPU work per frame */
 html.lite .nav.is-solid{background:rgba(255,255,255,.94)}
 html.lite .hs__cats span{background:rgba(255,255,255,.16)}
-html.lite .card__go{background:rgba(255,255,255,.26)}
+html.lite .card__go{background:rgba(18,18,22,.5)}
 html.lite .play{background:rgba(255,255,255,.3)}
 html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-filter:none;backdrop-filter:none}
 
@@ -348,8 +350,6 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   .nav__links{display:none}
   .nav__menu{display:inline-flex}
   .range{grid-template-columns:repeat(2,1fr)}
-  .card,.card--wide{grid-column:span 1;min-height:360px}
-  .card--wide:first-child{grid-column:span 2}
   .facts{grid-template-columns:repeat(2,1fr);row-gap:40px}
   .off{grid-template-columns:1fr}
   .map{position:relative;top:0}
@@ -378,8 +378,13 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
 }
 @media (max-width:600px){
   body{font-size:16px}
-  .range{grid-template-columns:1fr}
-  .card,.card--wide,.card--wide:first-child{grid-column:span 1;min-height:340px}
+  .range{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:14px;margin-inline:calc(var(--pad) * -1);padding:0 var(--pad) 2px;scroll-padding-inline:var(--pad)}
+  .range::-webkit-scrollbar{display:none}
+  .card{flex:0 0 min(80%,340px);scroll-snap-align:start}
+  .card__img{border-radius:22px}
+  .range__dots{display:flex;justify-content:center;gap:6px;margin-top:22px}
+  .range__dots i{width:6px;height:6px;border-radius:6px;background:rgba(0,0,0,.14);transition:width .5s var(--ease),background .5s}
+  .range__dots i.is-on{width:22px;background:var(--ink)}
   .facts{grid-template-columns:1fr 1fr;gap:32px 20px}
   .nav .btn{display:none}
   .film__body{padding:22px}
@@ -585,35 +590,53 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
           <div class="eyebrow" data-reveal><span class="dot"></span>The range</div>
           <h2 class="h-display" data-reveal>Everything the build needs. <span class="muted">Under one roof.</span></h2>
         </div>
-        <p data-reveal>Frame, board, timber and insulation arrive together, on one order and one truck, from one team that answers the phone.</p>
+        <p data-reveal>Frame, board, timber, insulation and joinery arrive together, on one order and one truck, from one team that answers the phone.</p>
       </div>
-      <div class="range">
-        <a href="#contact" data-scroll class="card card--wide" data-reveal>
-          <div class="card__img" data-parallax><img src="stills/steel.webp" alt="Close-up of a precision steel profile" loading="lazy"></div>
-          <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-          <div class="card__body"><div class="card__n">01</div><h3>Hanesteel</h3><p>Precision steel profiles and framing systems. Strength you can spec, speed you can feel on site.</p></div>
-        </a>
-        <a href="#contact" data-scroll class="card card--wide" data-reveal>
-          <div class="card__img" data-parallax><img src="stills/stone.webp" alt="Boards moving along a production line" loading="lazy"></div>
-          <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-          <div class="card__body"><div class="card__n">02</div><h3>Hanestone</h3><p>Engineered board and panel, made on modern lines to the same spec, every sheet.</p></div>
+      <div class="range" id="rangeRow">
+        <a href="#contact" data-scroll class="card" data-reveal>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/hanesteel-720.webp" srcset="stills/range/hanesteel-720.webp 720w, stills/range/hanesteel-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Steel ceiling framing with boards fitted, the sun setting through the window" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">01</span><span>Steel framing</span></div><h3>Hanesteel</h3><p>Precision steel profiles and framing systems for walls and ceilings. Strength you can spec, speed you can feel on site.</p></div>
         </a>
         <a href="#contact" data-scroll class="card" data-reveal>
-          <div class="card__img" data-parallax><img src="stills/wood.webp" alt="Timber grain in warm light" loading="lazy"></div>
-          <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-          <div class="card__body"><div class="card__n">03</div><h3>Hanewood</h3><p>Timber and engineered wood for structure and finish.</p></div>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/hanestone-720.webp" srcset="stills/range/hanestone-720.webp 720w, stills/range/hanestone-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Kitchen with stone-look benchtops and timber-veneer panels" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">02</span><span>Board &amp; panel</span></div><h3>Hanestone</h3><p>Engineered board and panel for kitchens, joinery and interiors, made to the same spec, every sheet.</p></div>
         </a>
         <a href="#contact" data-scroll class="card" data-reveal>
-          <div class="card__img" data-parallax><img src="stills/insul.webp" alt="Insulation fitted into a timber frame" loading="lazy"></div>
-          <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-          <div class="card__body"><div class="card__n">04</div><h3>Hanesulation</h3><p>Thermal and acoustic insulation for walls, floors and roofs.</p></div>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/hanewood-720.webp" srcset="stills/range/hanewood-720.webp 720w, stills/range/hanewood-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Hanewood plywood sheets and timbers stacked in a timber store" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">03</span><span>Plywood &amp; timber</span></div><h3>Hanewood</h3><p>Plywood and timbers for structure and finish. Built on strength, crafted to last.</p></div>
         </a>
         <a href="#contact" data-scroll class="card" data-reveal>
-          <div class="card__img" data-parallax><img src="stills/hub.webp" alt="Forklift in a high-bay warehouse aisle" loading="lazy"></div>
-          <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-          <div class="card__body"><div class="card__n">05</div><h3>BarganHub</h3><p>Warehouse-direct value on quality stock, in volume.</p></div>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/hanesulation-720.webp" srcset="stills/range/hanesulation-720.webp 720w, stills/range/hanesulation-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Insulation roll, slabs and a batt on a concrete floor" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">04</span><span>Insulation</span></div><h3>Hanesulation</h3><p>Thermal and acoustic insulation in rolls, batts and slabs for walls, floors and roofs.</p></div>
+        </a>
+        <a href="#contact" data-scroll class="card" data-reveal>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/windows-doors-720.webp" srcset="stills/range/windows-doors-720.webp 720w, stills/range/windows-doors-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="White uPVC and charcoal aluminium windows and doors" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">05</span><span>uPVC &amp; aluminium</span></div><h3>Windows &amp; Doors</h3><p>Windows, sliding and entrance doors in uPVC and aluminium, insulated against heat and noise and built for the weather.</p></div>
+        </a>
+        <a href="#contact" data-scroll class="card" data-reveal>
+          <div class="card__img">
+            <div class="card__media" data-parallax="2.5"><img src="stills/range/barganhub-720.webp" srcset="stills/range/barganhub-720.webp 720w, stills/range/barganhub-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Forklift in a high-bay warehouse aisle" loading="lazy" decoding="async"></div>
+            <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+          </div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">06</span><span>Trade value</span></div><h3>BarganHub</h3><p>Warehouse-direct value on quality stock, in volume.</p></div>
         </a>
       </div>
+      <div class="range__dots" id="rangeDots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
   </section>
 
@@ -1226,7 +1249,17 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   // media cards grow into place as they scroll in (and reverse on the way back up)
   $$('[data-zoom]').forEach(el => gsap.fromTo(el, { scale: .9, y: 48, autoAlpha: .35 }, { scale: 1, y: 0, autoAlpha: 1, ease: 'none',
     scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 58%', scrub: true } }));
-  $$('[data-parallax]').forEach(el => gsap.fromTo(el, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
+  $$('[data-parallax]').forEach(el => { const a = +el.dataset.parallax || 4; gsap.fromTo(el, { yPercent: -a }, { yPercent: a, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }); });
+  // brand photos fade in as they arrive instead of popping in
+  $$('.card__media img').forEach(i => i.complete && i.naturalWidth ? i.classList.add('is-in') : i.addEventListener('load', () => i.classList.add('is-in'), { once: true }));
+  // phones: the range is a swipeable row and the dots under it follow the swipe
+  const rangeRow = $('#rangeRow'), rangeDots = $$('#rangeDots i'); let rdq = 0;
+  const syncDots = () => {
+    rdq = 0; const c = rangeRow.children, step = c.length > 1 ? c[1].offsetLeft - c[0].offsetLeft : 1;
+    const i = rangeRow.scrollLeft + rangeRow.clientWidth >= rangeRow.scrollWidth - 4 ? c.length - 1 : Math.round(rangeRow.scrollLeft / step);
+    rangeDots.forEach((d, k) => d.classList.toggle('is-on', k === i));
+  };
+  rangeRow.addEventListener('scroll', () => { if (!rdq) rdq = requestAnimationFrame(syncDots); }, { passive: true }); syncDots();
   gsap.fromTo('.cta h2', { scale: .9 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'center center', scrub: true } });
 
   /* ---------- Film modal ---------- */
