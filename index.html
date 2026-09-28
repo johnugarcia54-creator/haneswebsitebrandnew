@@ -155,22 +155,24 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .trk__stage{position:relative;aspect-ratio:16/9;border-radius:32px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#f6f6f8 0%,#e3e7ec 60%,#cdd4dd 100%)}
 .trk__stage canvas{position:absolute;inset:0;width:100%;height:100%}
 
-/* ---------- Warehouse ---------- */
-.wh__title{text-align:center;margin-bottom:clamp(22px,4vh,40px)}
-.wh__big{font-family:var(--display);font-weight:700;letter-spacing:-.055em;line-height:.9;font-size:var(--fs-big);margin-top:14px}
-.wh__sub{margin-top:14px;font-family:var(--display);font-size:clamp(17px,1.5vw,22px);font-weight:500;letter-spacing:-.02em;color:var(--ink-2)}
-.wh__frame{position:relative;height:clamp(320px,58svh,620px);border-radius:32px;overflow:hidden;background:var(--dark)}
+/* ---------- Warehouse: fly through the letters of "IN STOCK." (pinned, like Hisense) ---------- */
+.wh{position:relative;height:300vh}
+.wh__frame{position:absolute;inset:0;background:var(--dark);will-change:clip-path}
 .wh__frame canvas{position:absolute;inset:0;width:100%;height:100%}
-.wh .shade{opacity:1;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,0) 70%),linear-gradient(0deg,rgba(0,0,0,.4),rgba(0,0,0,0) 40%)}
-.wh__copy{position:absolute;left:clamp(22px,4vw,56px);right:clamp(22px,4vw,56px);bottom:clamp(26px,6vh,64px);z-index:4;color:#fff;max-width:760px}
+.wh .shade{background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,0) 70%),linear-gradient(0deg,rgba(0,0,0,.4),rgba(0,0,0,0) 40%)}
+.ko{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.ko__cap{position:absolute;left:0;right:0;z-index:3;text-align:center;padding:0 var(--pad)}
+.ko__cap--top{top:calc(var(--nav) + 6vh)}
+.ko__cap--bot{bottom:9vh;font-family:var(--display);font-size:clamp(17px,1.5vw,22px);font-weight:500;letter-spacing:-.02em;color:var(--ink-2)}
+.wh__copy{position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(40px,10vh,110px);z-index:4;color:#fff;max-width:760px}
 .wh__copy .eyebrow{color:rgba(255,255,255,.8);margin-bottom:16px}
 .wh__copy h2{font-size:var(--fs-h)}
 .wh__copy h2 span{color:rgba(255,255,255,.6)}
 .wh__copy p{margin-top:14px;font-size:var(--fs-sub);color:rgba(255,255,255,.85);max-width:480px}
-.wh__foot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:28px;align-items:end;margin-top:clamp(24px,4vh,40px)}
-.wh__foot h3{font-family:var(--display);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.035em;line-height:1.05;margin-top:12px}
+.wh__copy--a,.wh__copy--b{opacity:0}
+.wh__stat{display:flex;gap:40px;margin-top:24px}
 .wh__stat b{display:block;font-family:var(--display);font-size:var(--fs-num);font-weight:600;letter-spacing:-.045em;line-height:1}
-.wh__stat span{display:block;margin-top:10px;font-size:14px;color:var(--ink-2);max-width:240px}
+.wh__stat span{display:block;font-size:13px;color:rgba(255,255,255,.75);margin-top:8px;max-width:180px}
 
 /* ---------- Hisense (fridge-door reveal) ---------- */
 .hs{position:relative;height:340vh;background:#fff}
@@ -359,10 +361,9 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   .reel__tab{scroll-snap-align:start}
   .trk__grid{grid-template-columns:1fr}
   .net__stage{aspect-ratio:4/3;border-radius:24px}
-  .trk__stage,.wh__frame,.hero__frame{border-radius:24px}
+  .trk__stage,.hero__frame{border-radius:24px}
   .hero__frame{height:clamp(280px,48svh,520px)}
-  .wh__foot{grid-template-columns:1fr 1fr}
-  .wh__foot > :first-child{grid-column:1 / -1}
+  .wh__stat{gap:24px}
   .films{grid-template-columns:1fr}
   .sec__head{flex-direction:column;align-items:flex-start;gap:18px}
   .sec__head > p{flex-basis:auto}
@@ -516,26 +517,28 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   </section>
 
   <!-- ================= Warehousing ================= -->
-  <section class="sec wh" id="warehouse" aria-label="Warehousing in Christchurch">
-    <div class="wrap">
-      <div class="wh__title">
-        <div class="eyebrow" data-reveal="drop"><span class="dot"></span>Warehousing · Hornby, Christchurch</div>
-        <p class="wh__big" id="whBig" aria-hidden="true">IN STOCK.</p>
-        <p class="wh__sub" data-reveal="drop">Landed. Cleared. Ready to roll.</p>
+  <section class="wh" id="warehouse" aria-label="Warehousing in Christchurch">
+    <div class="sticky">
+      <div class="wh__frame" id="whFrame">
+        <canvas id="whCanvas" aria-hidden="true"></canvas>
+        <div class="shade" id="whShade"></div>
       </div>
-      <div class="wh__frame" id="whFrame" data-zoom>
-        <div class="media" data-parallax><canvas id="whCanvas" aria-hidden="true"></canvas></div>
-        <div class="shade"></div>
-        <div class="wh__copy" data-reveal="left">
-          <div class="eyebrow">Our warehouse</div>
-          <h2 class="h-display">Stocked here.<br><span>Ready now.</span></h2>
-          <p>Your materials wait in New Zealand, not on the ocean. Racked, checked and staged, so your programme runs on your timeline.</p>
+      <canvas class="ko" id="ko" aria-hidden="true"></canvas>
+      <div class="ko__cap ko__cap--top" id="koTop"><div class="eyebrow"><span class="dot"></span>Warehousing · Hornby, Christchurch</div></div>
+      <div class="ko__cap ko__cap--bot" id="koBot">Landed. Cleared. Ready to roll.</div>
+
+      <div class="wh__copy wh__copy--a" id="whA">
+        <div class="eyebrow">Our warehouse</div>
+        <h2 class="h-display">Stocked here.<br><span>Ready now.</span></h2>
+        <p>Your materials wait in New Zealand, not on the ocean. Racked, checked and staged, so your programme runs on your timeline.</p>
+      </div>
+      <div class="wh__copy wh__copy--b" id="whB">
+        <div class="eyebrow">44 Anchorage Road, Hornby</div>
+        <h2 class="h-display">Port to site.<br><span>Without the wait.</span></h2>
+        <div class="wh__stat">
+          <div><b>20 min</b><span>to the Port of Lyttelton</span></div>
+          <div><b>1</b><span>team from wharf to your front gate</span></div>
         </div>
-      </div>
-      <div class="wh__foot">
-        <div data-reveal="left"><div class="eyebrow">44 Anchorage Road, Hornby</div><h3>Port to site.<br><span class="muted">Without the wait.</span></h3></div>
-        <div class="wh__stat" data-reveal="drop"><b>20 min</b><span>to the Port of Lyttelton</span></div>
-        <div class="wh__stat" data-reveal="drop"><b>1</b><span>team from wharf to your front gate</span></div>
       </div>
     </div>
   </section>
@@ -1007,7 +1010,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   /* ---------- Skip: fast-forward to the end of a pinned film ---------- */
   const skip = $('#skip'); let skipEl = null;
   const showSkip = el => { if (el !== skipEl) { skipEl = el; skip.classList.toggle('is-on', !!el); } };
-  $$('#hisense').forEach(el => ScrollTrigger.create({ trigger: el, start: 'top top', end: 'bottom bottom',
+  $$('#warehouse, #hisense').forEach(el => ScrollTrigger.create({ trigger: el, start: 'top top', end: 'bottom bottom',
     onUpdate: s => { if (s.progress > .02 && s.progress < .7) showSkip(el); else if (skipEl === el) showSkip(null); },
     onToggle: s => { if (!s.isActive && skipEl === el) showSkip(null); } }));
   skip.addEventListener('click', () => {
@@ -1080,13 +1083,63 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   ScrollTrigger.create({ trigger: '#trkStage', start: 'top 75%', once: true, onEnter: () => { seq.trk.load(); playSeq(seq.trk, 5); } });
 
   /* =========================================================
-     WAREHOUSE — "IN STOCK." drops in letter by letter, then the aisle film plays
+     WAREHOUSE — fly through the letters of "IN STOCK." into the warehouse (pinned, like Hisense)
      ========================================================= */
-  const whChars = split($('#whBig'));
-  gsap.set(whChars, { opacity: 0, yPercent: -120 });
-  ScrollTrigger.create({ trigger: '#whBig', start: 'top 85%', once: true, onEnter: () =>
-    gsap.to(whChars, { opacity: 1, yPercent: 0, duration: .9, stagger: .05, ease: 'back.out(1.7)' }) });
-  ScrollTrigger.create({ trigger: '#whFrame', start: 'top 70%', once: true, onEnter: () => { seq.wh.load(); playSeq(seq.wh, 5.5); } });
+  // drawn into a canvas: an SVG mask would re-rasterise the whole screen on every scroll frame
+  const ko = $('#ko'), kctx = ko.getContext('2d'), koFont = fs => `700 ${fs}px "Inter Tight", Helvetica, Arial, sans-serif`;
+  const kz = { s: 1, a: 0 }; let koO = [0, 0], koFs = 100, koW = 0, koH = 0, koK = 1, koHidden = false;
+  const applyKO = () => {
+    const hide = kz.s > 70; if (hide !== koHidden) { koHidden = hide; ko.style.visibility = hide ? 'hidden' : 'visible'; }
+    if (hide) return;
+    const c = kctx, k = koK, s = kz.s;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
+    c.fillStyle = '#fff'; c.fillRect(0, 0, ko.width, ko.height);
+    if (kz.a <= 0) return;
+    // translate(o) scale(s) translate(-o), in device pixels
+    c.setTransform(k * s, 0, 0, k * s, k * koO[0] * (1 - s), k * koO[1] * (1 - s));
+    c.globalCompositeOperation = 'destination-out'; c.globalAlpha = Math.min(1, kz.a);
+    c.font = koFont(koFs); c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    c.fillText('IN STOCK.', koW / 2, koH / 2 + koFs * .36);
+  };
+  const layoutKO = () => {
+    const W = ko.clientWidth || innerWidth, H = ko.clientHeight || innerHeight, k = Math.min(devicePixelRatio || 1, 2);
+    const bw = Math.round(W * k), bh = Math.round(H * k);
+    if (ko.width !== bw || ko.height !== bh) { ko.width = bw; ko.height = bh; }
+    koW = W; koH = H; koK = k;
+    kctx.font = koFont(100);
+    const len = kctx.measureText('IN STOCK.').width || 500;
+    const fs = koFs = Math.min((W * (isNarrow() ? .92 : .86)) / (len / 100), H * .46);
+    // find the real stem of the "I" by rasterising the same text and scanning for the first ink run
+    try {
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const cx = cv.getContext('2d');
+      cx.font = koFont(fs); cx.textAlign = 'center'; cx.textBaseline = 'alphabetic';
+      const by = H / 2 + fs * .36; cx.fillText('IN STOCK.', W / 2, by);
+      const row = Math.round(by - fs * .36), data = cx.getImageData(0, row, W, 1).data, runs = []; let a = -1;
+      for (let x = 0; x <= W; x++) { const on = x < W && data[x * 4 + 3] > 128; if (on && a < 0) a = x; if (!on && a >= 0) { runs.push([a, x]); a = -1; } }
+      const good = runs.filter(r => r[1] - r[0] > fs * .09).sort((p, q) => Math.abs((p[0] + p[1]) / 2 - W / 2) - Math.abs((q[0] + q[1]) / 2 - W / 2));
+      koO = good.length ? [(good[0][0] + good[0][1]) / 2, row] : [W / 2, H / 2];
+    } catch (e) { koO = [W * .12, H / 2]; }
+    applyKO();
+  };
+  let koKey = '';
+  const relayoutKO = () => { const key = ko.clientWidth + 'x' + ko.clientHeight + '@' + devicePixelRatio; if (key !== koKey) { koKey = key; layoutKO(); } };
+  relayoutKO(); (document.fonts ? document.fonts.load('700 100px "Inter Tight"').then(() => document.fonts.ready) : Promise.resolve()).then(layoutKO); addEventListener('resize', relayoutKO);
+
+  const whFrame = $('#whFrame'), wc = { close: 0 };
+  const applyWH = () => insetClip(whFrame, isNarrow() ? [8, 4, 8, 4, 24] : [7, 4, 7, 4, 32], wc.close);
+  const ws = { f: 0 };
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#warehouse', start: 'top top', end: 'bottom bottom', scrub: true, onEnter: () => seq.wh.load() } })
+    .to(ws, { f: seq.wh.count - 1, duration: .9, onUpdate: () => seq.wh.set(ws.f) }, 0)
+    .to(['#koTop', '#koBot'], { autoAlpha: 0, y: i => i ? 30 : -30, duration: .05 }, .06)
+    .to(kz, { s: 90, duration: .3, ease: 'power3.in', onUpdate: applyKO }, .08)
+    .to('#whShade', { opacity: 1, duration: .08 }, .32)
+    .fromTo('#whA', { autoAlpha: 0, x: -48 }, { autoAlpha: 1, x: 0, duration: .07, ease: 'power3.out' }, .36)
+    .to('#whA', { autoAlpha: 0, x: 48, duration: .05, ease: 'power2.in' }, .58)
+    .fromTo('#whB', { autoAlpha: 0, y: -36 }, { autoAlpha: 1, y: 0, duration: .07, ease: 'back.out(1.2)' }, .64)
+    .to('#whB', { autoAlpha: 0, duration: .04 }, .88)
+    .to(wc, { close: 1, duration: .08, ease: 'power2.inOut', onUpdate: applyWH }, .92);
+  // the letters open up as the section arrives: white screen, then "IN STOCK." becomes windows onto the warehouse
+  gsap.fromTo(kz, { a: 0 }, { a: 1, ease: 'none', onUpdate: applyKO, scrollTrigger: { trigger: '#warehouse', start: 'top 80%', end: 'top 20%', scrub: true } });
 
   /* =========================================================
      BRANDS — the film loops while on screen; a highlight glides to the brand on screen, tap a brand to jump to it
