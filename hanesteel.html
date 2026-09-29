@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanesteel — Aluminium and uPVC windows and doors</title>
+<meta name="description" content="Hanesteel windows and doors from Hanes Distribution: aluminium in AkzoNobel powder coat and uPVC in Renolit woodgrain, low-E soft-coat glass (Ug 0.6), NZS 4211 and CodeMark certified, with timber reveals included.">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="image" href="stills/hanesteel/aluminium-2000.webp">
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-tight-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-tight-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  /* the photography is shot on pure black, so the page is too: every product sits in the same darkness */
+  --bg:#000; --bg-2:#0c0c0d; --bg-3:#161618; --ink:#f5f5f7; --ink-2:#a1a1a6; --ink-3:#6e6e73; --ink-4:#3a3a3c; --line:rgba(255,255,255,.1);
+  --glass:#a9c8de; --glass-2:#6f96b5; --timber:#d39a5e; --timber-2:#a8672f;
+  --nav:52px; --pad:clamp(20px,4vw,56px); --max:1240px; --radius:28px; --ease:cubic-bezier(.22,1,.36,1);
+  --fs-h:clamp(34px,4.6vw,68px); --fs-big:clamp(48px,8.4vw,132px); --fs-sub:clamp(15px,1.2vw,19px);
+  --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --text:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#000}
+body{font-family:var(--text);font-size:17px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.is-loading{overflow:hidden}
+html.lenis-stopped{overflow:hidden}
+img,canvas,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--ink);color:#000}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--glass)}
+.h{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.02;text-wrap:balance;font-size:var(--fs-h)}
+.muted{color:var(--ink-3)}
+.sub{font-size:var(--fs-sub);color:var(--ink-2);max-width:560px}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-weight:500;font-size:16px;transition:background .4s var(--ease),color .4s var(--ease),box-shadow .4s var(--ease)}
+.btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn--light{background:var(--ink);color:#000}
+.btn--light:hover{background:#fff}
+.btn--line{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);color:var(--ink)}
+.btn--line:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+.grad-glass{background:linear-gradient(100deg,#eef5fb 0%,#a9c8de 45%,#6f96b5 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad-timber{background:linear-gradient(100deg,#f3d2a8 0%,#d39a5e 50%,#a8672f 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Loader */
+.loader{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}
+.loader__inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.loader__mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.03em}
+.loader__bar{width:160px;height:2px;border-radius:2px;background:var(--bg-3);overflow:hidden}
+.loader__fill{height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);background:rgba(0,0,0,.62);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.03em}
+.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;color:var(--ink-3)}
+.nav__links{display:flex;gap:28px;font-size:13px;color:var(--ink-2)}
+.nav__links a:hover{color:var(--ink)}
+.nav .btn{height:32px;padding:0 14px;font-size:13px}
+.nav__end{display:flex;align-items:center;gap:6px}
+.burger{display:none;position:relative;width:40px;height:40px;margin-right:-10px}
+.burger::before,.burger::after{content:"";position:absolute;left:11px;right:11px;height:1.5px;border-radius:2px;background:var(--ink);transition:transform .5s var(--ease)}
+.burger::before{top:16px}
+.burger::after{top:23px}
+.nav.is-open .burger::before{transform:translateY(3.5px) rotate(45deg)}
+.nav.is-open .burger::after{transform:translateY(-3.5px) rotate(-45deg)}
+.menu{position:fixed;top:var(--nav);left:0;right:0;z-index:49;background:#000;box-shadow:0 40px 60px -30px rgba(0,0,0,.9),0 1px 0 var(--line);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
+.menu a:not(.btn){display:block;padding:13px 0;font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.03em;box-shadow:0 1px 0 var(--line)}
+.menu .btn{margin-top:22px}
+
+/* ---------- Hero: one continuous camera move across the range, cutting through the dark glass from one window to the next ---------- */
+.hero{position:relative;height:540vh;background:#000}
+.stage{background:#000}
+.shot{position:absolute;left:0;top:0;width:2000px;height:2000px;max-width:none;transform-origin:0 0;will-change:transform,opacity;visibility:hidden}
+/* a band of light that runs across the metal; overlay leaves pure black untouched, so it only lights the product */
+.sheen{position:absolute;top:0;bottom:0;left:0;width:36%;pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(104deg,rgba(255,255,255,0) 18%,rgba(255,255,255,.95) 50%,rgba(255,255,255,0) 82%);transform:translate3d(-100%,0,0);will-change:transform}
+
+.h-dark{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.h-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+.h-copy{position:absolute;z-index:3;left:var(--pad);top:50%;transform:translateY(-46%);max-width:min(560px,46vw)}
+.h-copy h1{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.92;font-size:var(--fs-big);margin:14px 0 22px}
+.h-copy p{font-size:var(--fs-sub);color:var(--ink-2);max-width:430px}
+.h-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.55) 30%,rgba(0,0,0,0) 55%)}
+.cue{margin-top:30px;width:22px;height:36px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--ink-4);position:relative}
+.cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--ink);animation:cue 1.8s var(--ease) infinite}
+@keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(11px);opacity:0}100%{opacity:0}}
+.caps{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:clamp(44px,10vh,100px);pointer-events:none}
+.cap{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.96;font-size:clamp(36px,5.6vw,86px);max-width:15ch;opacity:0;visibility:hidden;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.cap span{color:var(--ink-2)}
+.cap .grad-glass,.cap .grad-timber{text-shadow:none}
+.h-meter{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:clamp(18px,3.5vh,34px);height:2px;border-radius:2px;background:rgba(255,255,255,.1)}
+.h-meter i{position:absolute;inset:0;border-radius:2px;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+.h-chap{position:absolute;z-index:3;right:var(--pad);top:calc(var(--nav) + 22px);font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--ink-3);font-variant-numeric:tabular-nums;opacity:0}
+.h-chap b{color:var(--ink);font-weight:600}
+
+/* callouts: a dot on the part, a hairline and a label, pinned to the photo as the camera moves */
+.co{position:absolute;left:0;top:0;z-index:3;opacity:0;visibility:hidden;pointer-events:none;will-change:transform,opacity;--len:clamp(34px,5vw,84px)}
+.co__dot{position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 18px rgba(255,255,255,.6)}
+.co__dot::after{content:"";position:absolute;inset:-7px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);animation:ping 2.2s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:1}80%,100%{transform:scale(1.8);opacity:0}}
+.co__line{position:absolute;top:-.5px;left:10px;width:var(--len);height:1px;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.5));transform-origin:left;will-change:transform}
+.co__label{position:absolute;top:0;left:calc(var(--len) + 20px);transform:translateY(-50%);white-space:nowrap;padding:9px 14px 10px;border-radius:14px;background:rgba(18,18,20,.78);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:13px;color:var(--ink-2);line-height:1.35;will-change:transform,opacity}
+.co__label b{display:block;color:#fff;font-weight:600;font-size:15px;letter-spacing:-.01em}
+.co.is-l .co__line{left:auto;right:10px;transform-origin:right;background:linear-gradient(270deg,rgba(255,255,255,.9),rgba(255,255,255,.5))}
+.co.is-l .co__label{left:auto;right:calc(var(--len) + 20px)}
+
+/* ---------- Performance ---------- */
+.perf{position:relative;padding:clamp(110px,18vh,190px) 0 clamp(90px,14vh,150px);background:#000}
+.perf__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px 60px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
+.stat{position:relative;padding:clamp(22px,2.4vw,34px);border-radius:26px;background:linear-gradient(180deg,#111113,#0a0a0b);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.35),rgba(255,255,255,0))}
+.stat small{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--ink-3)}
+.stat .num{display:flex;flex-wrap:nowrap;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:clamp(48px,4.6vw,84px);letter-spacing:-.05em;line-height:1;margin:18px 0 16px;font-variant-numeric:tabular-nums}
+.stat .num > span{flex:none}
+.stat .num .u{font-size:.3em;letter-spacing:0;color:var(--ink-3);align-self:flex-end;margin:0 0 .5em .35em;font-weight:500}
+.stat b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.5vw,21px);letter-spacing:-.02em}
+.stat p{margin-top:4px;font-size:15px;color:var(--ink-2)}
+.stat--glass .num{color:var(--glass)}
+.stat--timber .num{color:var(--timber)}
+.od{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
+.od__s{display:block;will-change:transform}
+.od__s span{display:block;height:1em}
+.cmp{margin-top:clamp(44px,7vh,72px);display:grid;grid-template-columns:minmax(260px,.8fr) 1.2fr;gap:clamp(24px,5vw,80px);align-items:center}
+.cmp__big{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.95;font-size:clamp(44px,6vw,92px)}
+.cmp__big small{display:block;margin-top:14px;font-family:var(--text);font-size:15px;letter-spacing:0;line-height:1.5;font-weight:400;color:var(--ink-2);max-width:360px}
+.bars{display:grid;gap:22px}
+.bar__top{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;color:var(--ink-2)}
+.bar__top b{font-family:var(--display);font-size:clamp(22px,2vw,30px);letter-spacing:-.03em;color:var(--ink)}
+.bar__track{margin-top:10px;height:14px;border-radius:14px;background:#141416;overflow:hidden}
+.bar__track i{display:block;height:100%;border-radius:14px;transform-origin:left;transform:scaleX(0);will-change:transform}
+.bar--alu i{background:linear-gradient(90deg,#3a3a3e,#8e8e93)}
+.bar--upvc i{background:linear-gradient(90deg,#a8672f,#f0c48e)}
+.note{margin-top:26px;font-size:13px;color:var(--ink-3);max-width:760px}
+
+/* ---------- Certified ---------- */
+.cert{position:relative;padding:clamp(90px,14vh,150px) 0;background:#000}
+.cert__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
+.seal-card{position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#111113,#0a0a0b);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);text-align:center}
+.seal{position:relative;width:min(220px,62%);aspect-ratio:1;margin:0 auto 26px}
+.seal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.seal .ring{fill:none;stroke:rgba(255,255,255,.85);stroke-width:1.2}
+.seal .ring2{fill:none;stroke:rgba(255,255,255,.25);stroke-width:1}
+.seal .txt{fill:var(--ink-2);font-size:10.5px;font-weight:600;letter-spacing:.24em;font-family:var(--text)}
+.seal .spin{transform-origin:50% 50%;will-change:transform}
+.seal__mid{position:absolute;inset:0;display:grid;place-content:center;font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1}
+.seal__mid small{font-size:13px;letter-spacing:.12em;color:var(--ink-3);font-family:var(--text);font-weight:600}
+.seal__mid strong{font-size:clamp(34px,3.2vw,48px);margin-top:6px}
+.seal__mid .ico{width:44px;height:44px;margin:0 auto;color:var(--timber)}
+.seal-card b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,24px);letter-spacing:-.02em}
+.seal-card p{margin:8px auto 0;font-size:15px;color:var(--ink-2);max-width:320px}
+
+/* ---------- Hardware ---------- */
+.hw{position:relative;padding:clamp(90px,14vh,150px) 0;background:#000;overflow:hidden}
+.hw__grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(24px,5vw,80px);align-items:center}
+.hw__img{position:relative;aspect-ratio:875/945;perspective:1400px}
+.hw__img .in{position:absolute;inset:0;overflow:hidden;will-change:transform}
+.hw__img img{width:100%;height:100%;object-fit:cover}
+.feats{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+.feats li{display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:#0e0e10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);font-weight:500}
+.feats svg{flex:none;width:26px;height:26px;color:var(--glass)}
+.hwrow{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.2vw,16px);margin-top:clamp(56px,9vh,96px)}
+.hwc__img{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:#0a0a0b;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.hwc__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hwc b{display:block;margin-top:14px;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:-.02em}
+.hwc p{margin-top:2px;font-size:14px;color:var(--ink-2)}
+
+/* ---------- CTA ---------- */
+.cta{position:relative;height:150vh;background:#000}
+.cta .sticky{display:flex;align-items:flex-end}
+.cta__img{position:absolute;inset:0;overflow:hidden}
+.cta__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 50%;will-change:transform}
+.cta__img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 38%,rgba(0,0,0,0) 70%),linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 45%)}
+.cta__copy{position:relative;z-index:2;padding-bottom:clamp(56px,11vh,110px)}
+.cta h2{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.93;font-size:var(--fs-big);margin:14px 0 20px}
+.cta p{max-width:520px;color:var(--ink-2);font-size:var(--fs-sub)}
+.cta__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+
+/* Footer */
+.foot{background:#000;color:var(--ink-3);font-size:12.5px;padding:26px 0 max(26px,env(safe-area-inset-bottom));box-shadow:0 -1px 0 var(--line)}
+.foot .wrap{display:flex;justify-content:space-between;gap:12px 30px;flex-wrap:wrap}
+.foot a{color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+
+/* reveals */
+[data-reveal]{opacity:0;transform:translateY(30px)}
+[data-drop]{opacity:0}
+.dm{display:inline-block;overflow:hidden;vertical-align:top;padding:.08em 0 .16em;margin:-.08em 0 -.16em}
+.di{display:inline-block}
+.dw{display:inline-block;white-space:nowrap}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.no-js [data-reveal],.no-js [data-drop]{opacity:1;transform:none}
+.no-js .shot{visibility:visible}
+
+html.lite .nav{background:rgba(0,0,0,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
+
+@media (max-width:1024px){
+  .nav__links{display:none}
+  .burger{display:block}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cmp{grid-template-columns:1fr}
+  .cert__grid{grid-template-columns:1fr}
+  .seal-card{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:center;text-align:left}
+  .seal{width:120px;margin:0;grid-row:span 2}
+  .seal-card p{margin:0}
+  .seal__mid strong{font-size:26px}
+  .seal__mid small{font-size:10px}
+  .seal .txt{font-size:12px}
+  .hw__grid{grid-template-columns:1fr}
+  .hw__img{max-width:520px;width:100%;margin:0 auto}
+  .hwrow{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:700px){
+  body{font-size:16px}
+  .nav .btn{display:none}
+  .h-copy{top:calc(var(--nav) + 26px);transform:none;max-width:none;right:var(--pad)}
+  .h-copy h1{font-size:clamp(52px,15vw,80px)}
+  .h-shade{background:linear-gradient(180deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 38%,rgba(0,0,0,0) 60%)}
+  .cap{font-size:clamp(32px,9.6vw,48px)}
+  .co{--len:26px}
+  .co__label{font-size:12px;padding:7px 11px 8px}
+  .co__label b{font-size:13.5px}
+  .stat{padding:18px;border-radius:20px}
+  .stat .num{font-size:clamp(38px,11vw,60px);margin:12px 0 10px}
+  .stat p{font-size:13.5px}
+  .feats{grid-template-columns:1fr 1fr;gap:8px}
+  .feats li{padding:12px;font-size:14px;gap:10px}
+  .feats svg{width:22px;height:22px}
+  .hwrow{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--pad) * -1);padding:0 var(--pad);scroll-padding-inline:var(--pad);gap:12px}
+  .hwrow::-webkit-scrollbar{display:none}
+  .hwc{flex:0 0 62%;scroll-snap-align:start}
+  .cta__img img{object-position:30% 50%}
+  .cta__img::after{background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 45%,rgba(0,0,0,.1) 75%)}
+}
+@media (prefers-reduced-motion:reduce){.cue::after,.co__dot::after{animation:none}}
+</style>
+</head>
+<body class="is-loading">
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__mark">Hanesteel</div>
+    <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" data-scroll>Hanesteel <small>by Hanes Distribution</small></a>
+    <nav class="nav__links" aria-label="Page">
+      <a href="#top" data-scroll>Windows</a>
+      <a href="#performance" data-scroll>Performance</a>
+      <a href="#certified" data-scroll>Certified</a>
+      <a href="#hardware" data-scroll>Smart hardware</a>
+    </nav>
+    <div class="nav__end">
+      <a class="btn btn--light" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Hanesteel%20windows%20and%20doors%20quote">Get a quote</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
+    </div>
+  </div>
+</header>
+<nav class="menu" id="menu" aria-label="Page">
+  <a href="#top" data-scroll>Windows</a>
+  <a href="#performance" data-scroll>Performance</a>
+  <a href="#certified" data-scroll>Certified</a>
+  <a href="#hardware" data-scroll>Smart hardware</a>
+  <a class="btn btn--light" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Hanesteel%20windows%20and%20doors%20quote">Get a quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</nav>
+
+<main id="top">
+  <!-- ================= Hero: one take across the range ================= -->
+  <section class="hero" id="hero" aria-label="Hanesteel aluminium and uPVC windows">
+    <div class="sticky stage" id="hStage">
+      <img class="shot" id="shotA" src="stills/hanesteel/aluminium-2000.webp" width="2000" height="2000" alt="Black aluminium windows: a cut-away corner showing the frame and glass, a fixed window, a tilted window and a side-opening window" decoding="async">
+      <img class="shot" id="shotB" src="stills/hanesteel/upvc-2000.webp" width="2000" height="2000" alt="Timber-look uPVC windows, one tilted open and one swung open, with a cut-away corner of the frame and glass" decoding="async">
+      <img class="shot" id="shotC" src="stills/hanesteel/sliding-2000.webp" width="2000" height="2000" alt="Timber-look uPVC sliding window with a cut-away corner of the frame and glass" decoding="async">
+      <div class="h-vig" aria-hidden="true"></div>
+      <div class="h-dark" id="hDark" aria-hidden="true"></div>
+
+      <div class="co" data-shot="0" data-x=".305" data-y=".47" data-side="r"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>Low-E soft-coat glass</b>Ug 0.6 W/m²K</span></div>
+      <div class="co" data-shot="0" data-x=".13" data-y=".62" data-side="l"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>AkzoNobel powder coat</b>On every aluminium face</span></div>
+      <div class="co" data-shot="0" data-x=".68" data-y=".3" data-side="r"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>Aluminium window</b>R0.50</span></div>
+      <div class="co" data-shot="1" data-x=".47" data-y=".86" data-side="r"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>Insulated uPVC frame</b>Uf 0.6 W/m²K</span></div>
+      <div class="co" data-shot="1" data-x=".395" data-y=".74" data-side="l"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>Renolit woodgrain film</b>The look of timber, outside and in</span></div>
+      <div class="co" data-shot="1" data-x=".49" data-y=".68" data-side="r"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>Low-E soft-coat glass</b>Ug 0.6 W/m²K</span></div>
+      <div class="co" data-shot="2" data-x=".36" data-y=".22" data-side="r"><i class="co__dot"></i><i class="co__line"></i><span class="co__label"><b>uPVC window</b>R1.4</span></div>
+
+      <div class="h-shade" id="hShade" aria-hidden="true"></div>
+      <div class="h-copy" id="hCopy">
+        <div class="eyebrow">Hanesteel windows &amp; doors</div>
+        <h1>Light in.<br><span class="grad-glass">Cold out.</span></h1>
+        <p>Aluminium and uPVC windows and doors with low-E soft-coat glass, certified for New Zealand homes.</p>
+        <div class="cue" aria-hidden="true"></div>
+      </div>
+      <div class="caps" aria-hidden="true">
+        <h2 class="cap" id="cap1">Glass that holds the heat. <span class="grad-glass">Ug 0.6.</span></h2>
+        <h2 class="cap" id="cap2">Aluminium, <span>powder-coated by AkzoNobel.</span></h2>
+        <h2 class="cap" id="cap3">uPVC, <span class="grad-timber">in Renolit woodgrain.</span></h2>
+        <h2 class="cap" id="cap4">A frame that keeps the warmth. <span class="grad-glass">Uf 0.6.</span></h2>
+        <h2 class="cap" id="cap5">R1.4. <span>Timber reveals included.</span></h2>
+      </div>
+      <div class="h-chap" id="hChap" aria-hidden="true"><b id="hChapN">01</b> / 03 &nbsp;<span id="hChapT">Aluminium</span></div>
+      <div class="h-meter" aria-hidden="true"><i id="hMeter"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Performance ================= -->
+  <section class="perf" id="performance">
+    <div class="wrap">
+      <div class="perf__head">
+        <div>
+          <div class="eyebrow" data-reveal>Performance</div>
+          <h2 class="h" style="margin-top:12px">Warmth, <span class="muted">measured.</span></h2>
+        </div>
+        <p class="sub" data-reveal style="max-width:420px">Low-E soft-coat glass and an insulated frame keep the heat where you want it: inside.</p>
+      </div>
+      <div class="stats">
+        <div class="stat stat--glass" data-drop="tilt"><small>GLASS · Ug</small><div class="num"><span data-odo>0.6</span><span class="u">W/m²K</span></div><b>Low-E soft coat</b><p>The coating reflects heat back into the room.</p></div>
+        <div class="stat stat--glass" data-drop="tilt"><small>FRAME · Uf</small><div class="num"><span data-odo>0.6</span><span class="u">W/m²K</span></div><b>Insulated uPVC frame</b><p>Multi-chamber profile, finished in Renolit film.</p></div>
+        <div class="stat stat--timber" data-drop="tilt"><small>WINDOW · R</small><div class="num"><span data-odo>R1.4</span></div><b>uPVC window</b><p>Frame and glass together.</p></div>
+        <div class="stat" data-drop="tilt"><small>WINDOW · R</small><div class="num"><span data-odo>R0.50</span></div><b>Aluminium window</b><p>In AkzoNobel powder coat.</p></div>
+      </div>
+      <div class="cmp">
+        <div class="cmp__big" data-reveal><span class="grad-timber">2.8×</span> the insulation.<small>Our uPVC window (R1.4) holds back nearly three times as much heat as our aluminium window (R0.50).</small></div>
+        <div class="bars" id="bars">
+          <div class="bar bar--alu"><div class="bar__top"><span>Aluminium window</span><b>R0.50</b></div><div class="bar__track"><i data-to=".357"></i></div></div>
+          <div class="bar bar--upvc"><div class="bar__top"><span>uPVC window</span><b>R1.4</b></div><div class="bar__track"><i data-to="1"></i></div></div>
+        </div>
+      </div>
+      <p class="note" data-reveal>U-value is how much heat passes through, in W/m²K: lower is better. R-value is how well the whole window resists heat flow: higher is better.</p>
+    </div>
+  </section>
+
+  <!-- ================= Certified ================= -->
+  <section class="cert" id="certified">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>Certified</div>
+      <h2 class="h" style="margin-top:12px">Certified. <span class="muted">Not just claimed.</span></h2>
+      <div class="cert__grid">
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp1" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp1">NEW ZEALAND STANDARD · WINDOWS · NEW ZEALAND STANDARD · WINDOWS ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>NZS</small><strong>4211</strong></div>
+          </div>
+          <b>Built to NZS 4211</b>
+          <p>New Zealand's performance standard for windows, covering wind, water and air.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp2" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp2">PRODUCT CERTIFICATION · NEW ZEALAND · PRODUCT CERTIFICATION · NZ ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>CERTIFIED</small><strong>CodeMark</strong></div>
+          </div>
+          <b>CodeMark certified</b>
+          <p>New Zealand's product certification scheme for showing a building product complies with the Building Code.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp3" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp3">TIMBER REVEALS · INCLUDED · TIMBER REVEALS · INCLUDED ·</textPath></text></g></svg>
+            <div class="seal__mid"><svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="6" width="30" height="36" rx="1.5"/><rect x="15" y="12" width="18" height="24"/><path d="M9 6l6 6M39 6l-6 6M9 42l6-6M39 42l-6-6"/></svg></div>
+          </div>
+          <b>Timber reveals included</b>
+          <p>Your windows come with timber reveals, ready for your builder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Smart hardware ================= -->
+  <section class="hw" id="hardware">
+    <div class="wrap">
+      <div class="hw__grid">
+        <div class="hw__img" id="hwImg" aria-hidden="true"><div class="in" id="hwIn"><img src="stills/hanesteel/handle.webp" width="875" height="945" alt="" loading="lazy" decoding="async"><div class="sheen" id="hwSheen"></div></div></div>
+        <div>
+          <div class="eyebrow" data-reveal>Smart hardware</div>
+          <h2 class="h" style="margin-top:12px">Smart at <span class="muted">the door.</span></h2>
+          <p class="sub" data-reveal style="margin-top:18px">The Xiaomi smart handle opens with a fingerprint, a passcode or the app, and keeps a mechanical key for backup.</p>
+          <ul class="feats">
+            <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 18.5c1-1.8 1.5-3.8 1.5-6a4 4 0 0 1 8 0c0 1.3-.1 2.6-.4 3.8M12 12.5c0 3-.8 5.7-2.2 8M15.2 19.5c.3-.6.6-1.3.8-2M4.6 15.8c.3-1 .4-2.1.4-3.3a7 7 0 0 1 11.7-5.2M19 12.5c0 1.7-.2 3.3-.6 4.8"/></svg>Fingerprint</li>
+            <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="1.6"/><circle cx="12" cy="5" r="1.6"/><circle cx="18" cy="5" r="1.6"/><circle cx="6" cy="11" r="1.6"/><circle cx="12" cy="11" r="1.6"/><circle cx="18" cy="11" r="1.6"/><circle cx="6" cy="17" r="1.6"/><circle cx="12" cy="17" r="1.6"/><circle cx="18" cy="17" r="1.6"/></svg>Passcode</li>
+            <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>App control</li>
+            <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8L20 3M16 7l2.5 2.5M18.5 4.5L21 7"/></svg>Mechanical key</li>
+          </ul>
+        </div>
+      </div>
+      <div class="hwrow" id="hwRow">
+        <div class="hwc" data-drop="tilt"><div class="hwc__img"><img src="stills/hanesteel/hw-sliding.webp" width="730" height="730" alt="Black sliding door track and roller" loading="lazy" decoding="async" style="object-position:40% 50%"></div><b>Sliding door systems</b><p>Tracks and rollers for heavy doors.</p></div>
+        <div class="hwc" data-drop="tilt"><div class="hwc__img"><img src="stills/hanesteel/hw-hinges.webp" width="410" height="560" alt="Black front door hinge" loading="lazy" decoding="async"></div><b>Hinges</b><p>For front and internal doors.</p></div>
+        <div class="hwc" data-drop="tilt"><div class="hwc__img"><img src="stills/hanesteel/hw-closer.webp" width="495" height="560" alt="Black door closer arm" loading="lazy" decoding="async" style="object-position:60% 50%"></div><b>Door closers</b><p>Doors that close gently, every time.</p></div>
+        <div class="hwc" data-drop="tilt"><div class="hwc__img"><img src="stills/hanesteel/hw-window.webp" width="470" height="560" alt="Black window handle" loading="lazy" decoding="async"></div><b>Window hardware</b><p>Handles to match the frames.</p></div>
+        <div class="hwc" data-drop="tilt"><div class="hwc__img"><img src="stills/hanesteel/hw-lock.webp" width="430" height="560" alt="Black mortice lock body" loading="lazy" decoding="async"></div><b>Lock systems</b><p>Locks and strikes for every door.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="quote">
+    <div class="sticky">
+      <div class="cta__img"><img id="ctaImg" src="stills/hanesteel/upvc-2000.webp" width="2000" height="2000" alt="" loading="lazy" decoding="async"></div>
+      <div class="wrap cta__copy" id="ctaCopy">
+        <div class="eyebrow">Hanesteel</div>
+        <h2>Let the<br>light in.</h2>
+        <p>Tell us about your build or renovation. We'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn.</p>
+        <div class="cta__btns">
+          <a class="btn btn--light" href="mailto:Enquiry@hanesdistribution.co.nz?subject=Hanesteel%20windows%20and%20doors%20quote">Get a quote <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--line" href="https://www.google.com/maps/search/?api=1&amp;query=93%20Main%20South%20Road%2C%20Sockburn%2C%20Christchurch" target="_blank" rel="noopener">Get directions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Hanesteel is a <a href="index.html">Hanes Distribution</a> brand · 93 Main South Road, Sockburn, Christchurch</span>
+    <a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    document.documentElement.classList.add('no-js'); document.body.classList.remove('is-loading'); $('#loader').remove(); return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
+
+  // wraps every word of a heading in its own mask, keeping inline styling such as the grey second line
+  const splitDrop = el => {
+    const out = [], box = t => { const m = document.createElement('span'), i = document.createElement('span'); m.className = 'dm'; i.className = 'di'; i.textContent = t; m.append(i); out.push(i); return m; };
+    const walk = n => [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) return f.append(' '); f.append(box(t)); });
+        c.replaceWith(f);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+    });
+    walk(el); return out;
+  };
+
+  /* ---------- Smooth scroll ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+  }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
+  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
+
+  /* ---------- Menu (tablets and phones): the panel drops down from the bar and the links fall in after it ---------- */
+  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
+  const MT = gsap.timeline({ paused: true })
+    .set(menu, { visibility: 'visible' })
+    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
+    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
+  const setMenu = v => {
+    if (v === menuOpen) return; menuOpen = v;
+    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
+    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
+    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  };
+  burger.addEventListener('click', () => setMenu(!menuOpen));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
+  $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
+  }));
+  $$('#menu a:not([data-scroll])').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+  /* ---------- Nav: out of the way while scrolling down, back as soon as you scroll up ---------- */
+  let lastY = 0;
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
+    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
+    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
+    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
+    lastY = y;
+  }});
+
+  /* =========================================================
+     HERO: one continuous camera move. It starts close on the aluminium cut-away, pulls back to the whole range,
+     then flies through the dark glass of a window and comes out in the next shot: the uPVC range, its cut-away,
+     and the sliding window. Every photo is 2000px square on black, so the camera is a scale and a translate.
+     ========================================================= */
+  const stage = $('#hStage'), shots = $$('#hStage .shot'), dark = $('#hDark'), N0 = 2000;
+  // cx, cy: the point of the photo at the centre of the screen (fractions); z: zoom (1 = the whole photo fits); o: opacity
+  // k: how far the first shot is pushed aside to make room for the title
+  const cams = [{ cx: .36, cy: .8, z: 2.5, o: 1, k: 1 }, { cx: .5, cy: .5, z: 1, o: 0, k: 0 }, { cx: .5, cy: .5, z: 1, o: 0, k: 0 }];
+  const cos = $$('#hStage .co').map(el => ({ el, shot: +el.dataset.shot, x: +el.dataset.x, y: +el.dataset.y, pref: el.dataset.side, side: '', v: 0, shown: -1, lw: 0,
+    line: el.querySelector('.co__line'), label: el.querySelector('.co__label') }));
+  let W = 0, H = 0, S0 = 1, ZK = 1, OX = 0, OY = 0, LEN = 60;
+  const intro = { z: 1 }; // the opening settle after the loader, kept apart from the scroll timeline so the two never fight
+  const camAt = c => { const cz = c === cams[0] ? c.z * intro.z : c.z, z = cz >= 1 ? 1 + (cz - 1) * ZK : cz, s = S0 * z; return { s, tx: W / 2 - c.cx * N0 * s + OX * c.k * W, ty: H / 2 - c.cy * N0 * s + OY * c.k * H }; };
+  const applyHero = () => {
+    cams.forEach((c, i) => {
+      const el = shots[i];
+      if (c.o <= .001) { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; return; }
+      const { s, tx, ty } = camAt(c);
+      el.style.visibility = 'visible'; el.style.opacity = c.o >= .999 ? '' : c.o.toFixed(3);
+      el.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(5)})`;
+    });
+    cos.forEach(co => {
+      if (co.v <= .001) { if (co.shown) { co.el.style.visibility = 'hidden'; co.shown = 0; } return; }
+      if (!co.shown) { co.el.style.visibility = 'visible'; co.shown = 1; if (!co.lw) co.lw = co.label.offsetWidth; }
+      const { s, tx, ty } = camAt(cams[co.shot]), X = tx + co.x * N0 * s, Y = ty + co.y * N0 * s;
+      // keep the label on screen: flip it to the other side of the point when it would run off the edge
+      let side = co.pref; const need = LEN + co.lw + 36;
+      if (side === 'r' && X + need > W) side = 'l'; else if (side === 'l' && X - need < 0) side = 'r';
+      if (side !== co.side) { co.side = side; co.el.classList.toggle('is-l', side === 'l'); }
+      co.el.style.transform = `translate3d(${X.toFixed(1)}px,${Y.toFixed(1)}px,0)`;
+      co.el.style.opacity = Math.min(1, co.v * 1.6).toFixed(3);
+      co.line.style.transform = `scaleX(${Math.min(1, co.v * 1.3).toFixed(3)})`;
+      const lv = Math.max(0, co.v * 1.4 - .4);
+      co.label.style.opacity = lv.toFixed(3); co.label.style.transform = `translate3d(0,${(-50 - (1 - lv) * 40).toFixed(1)}%,0)`;
+    });
+  };
+  const sizeHero = () => {
+    W = stage.clientWidth; H = stage.clientHeight;
+    const portrait = W < H * .9;
+    S0 = Math.min(W, H) / N0 * (portrait ? 1 : .98);
+    ZK = portrait ? 1.6 : 1;                           // phones get a closer camera: the photo is much smaller there
+    OX = portrait ? 0 : .17; OY = portrait ? .16 : .02;  // room for the title: to the right on wide screens, below it on phones
+    LEN = parseFloat(getComputedStyle(cos[0].el).getPropertyValue('--len')) || (W < 700 ? 26 : 60);
+    cos.forEach(co => { co.lw = 0; co.side = ''; });
+    applyHero();
+  };
+  let hrq = 0; addEventListener('resize', () => { cancelAnimationFrame(hrq); hrq = requestAnimationFrame(sizeHero); });
+
+  const caps = $$('.cap'), [A, B, C] = cams, CO = cos;
+  const chapN = $('#hChapN'), chapT = $('#hChapT'); let chap = -1;
+  const CHAPS = [[0, '01', 'Aluminium'], [3.8, '02', 'uPVC'], [7.8, '03', 'Sliding']];
+  const setChap = t => { let i = 0; CHAPS.forEach(([s], k) => { if (t >= s) i = k; }); if (i !== chap) { chap = i; chapN.textContent = CHAPS[i][1]; chapT.textContent = CHAPS[i][2]; } };
+  const capIn = (tl, el, t) => tl.fromTo(el, { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .35, ease: 'back.out(1.4)', immediateRender: false }, t);
+  const capOut = (tl, el, t) => tl.to(el, { autoAlpha: 0, y: 50, duration: .25, ease: 'power2.in' }, t);
+  const coIn = (tl, co, t) => tl.to(co, { v: 1, duration: .35, ease: 'power2.out' }, t);
+  const coOut = (tl, co, t) => tl.to(co, { v: 0, duration: .2, ease: 'power1.in' }, t);
+
+  const HT = gsap.timeline({ defaults: { ease: 'power2.inOut' }, onUpdate: () => { applyHero(); setChap(HT.time()); },
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: true } });
+  // the title gives way and the cut-away moves to the centre
+  HT.to(['#hCopy', '#hShade'], { autoAlpha: 0, y: -50, duration: .35, ease: 'power2.in' }, .05)
+    .to('#hChap', { opacity: 1, duration: .2 }, .3)
+    .to(A, { k: 0, cx: .25, cy: .63, z: 1.55, duration: .7 }, .05);
+  // 1. aluminium cut-away: glass and powder coat
+  coIn(HT, CO[0], .5); coIn(HT, CO[1], .65); capIn(HT, caps[0], .55);
+  coOut(HT, CO[0], 1.15); coOut(HT, CO[1], 1.15); capOut(HT, caps[0], 1.15);
+  // 2. pull back to the whole aluminium range
+  HT.to(A, { cx: .5, cy: .5, z: 1, duration: 1 }, 1.2);
+  capIn(HT, caps[1], 1.75); coIn(HT, CO[2], 1.95);
+  capOut(HT, caps[1], 2.6); coOut(HT, CO[2], 2.6);
+  // 3. into the glass of the tilted window, and out in the uPVC range
+  HT.to(A, { cx: .645, cy: .45, z: 1.9, duration: .6 }, 2.7)
+    .to(A, { z: 9, duration: .5, ease: 'power3.in' }, 3.3)
+    .to(dark, { opacity: 1, duration: .35, ease: 'power2.in' }, 3.45)
+    .set(A, { o: 0 }, 3.8).set(B, { o: 1 }, 3.8)
+    .fromTo(B, { cx: .26, cy: .46, z: 3.4 }, { cx: .5, cy: .5, z: 1, duration: .85, ease: 'power3.out', immediateRender: false }, 3.8)
+    .to(dark, { opacity: 0, duration: .45, ease: 'power2.out' }, 3.8);
+  capIn(HT, caps[2], 4.2); capOut(HT, caps[2], 5.0);
+  // 4. the uPVC cut-away: frame, film and glass
+  HT.to(B, { cx: .4, cy: .74, z: 2.3, duration: .8 }, 5.0);
+  coIn(HT, CO[3], 5.6); coIn(HT, CO[4], 5.75); coIn(HT, CO[5], 5.9); capIn(HT, caps[3], 5.65);
+  coOut(HT, CO[3], 6.55); coOut(HT, CO[4], 6.55); coOut(HT, CO[5], 6.55); capOut(HT, caps[3], 6.55);
+  // 5. through the glass of the open window, out on the sliding window
+  HT.to(B, { cx: .72, cy: .45, z: 1.8, duration: .6 }, 6.7)
+    .to(B, { z: 9, duration: .5, ease: 'power3.in' }, 7.3)
+    .to(dark, { opacity: 1, duration: .35, ease: 'power2.in' }, 7.45)
+    .set(B, { o: 0 }, 7.8).set(C, { o: 1 }, 7.8)
+    .fromTo(C, { cx: .3, cy: .5, z: 3.4 }, { cx: .52, cy: .5, z: 1, duration: .85, ease: 'power3.out', immediateRender: false }, 7.8)
+    .to(dark, { opacity: 0, duration: .45, ease: 'power2.out' }, 7.8);
+  capIn(HT, caps[4], 8.3); coIn(HT, CO[6], 8.45);
+  HT.to(C, { z: 1.08, duration: 1.2, ease: 'none' }, 8.65)
+    .to(['#hChap', caps[4]], { autoAlpha: 0, duration: .3 }, 9.55);
+  coOut(HT, CO[6], 9.55);
+  HT.fromTo('#hMeter', { scaleX: 0 }, { scaleX: 1, duration: HT.duration(), ease: 'none' }, 0);
+  sizeHero();
+
+  /* ---------- Headings: the words drop into place as each one comes into view ---------- */
+  if (!reduce) {
+    const dropIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; dropIO.unobserve(e.target);
+      gsap.to(e.target.__d, { yPercent: 0, duration: 1.15, stagger: .07, ease: 'back.out(1.5)', overwrite: true });
+    }), { rootMargin: '0px 0px -14% 0px' });
+    $$('main .h').forEach(el => { el.__d = splitDrop(el); gsap.set(el.__d, { yPercent: -118 }); dropIO.observe(el); });
+  }
+
+  /* ---------- Reveals: fade-ups, and cards dropped onto the page with a slight tilt ---------- */
+  ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
+  $$('[data-drop]').forEach((el, i) => gsap.set(el, el.dataset.drop === 'tilt' ? { y: -110, rotation: i % 2 ? 4 : -3.5, transformOrigin: '50% 0%' } : { y: -26 }));
+  ScrollTrigger.batch('[data-drop]', { start: 'top 92%', once: true, onEnter: els => gsap.to(els, { opacity: 1, y: 0, rotation: 0, duration: 1.1, stagger: .09, ease: 'back.out(1.5)', overwrite: true }) });
+
+  /* ---------- Performance: the figures roll into place like an odometer, and the bars fill as you scroll ---------- */
+  const odoEls = $$('[data-odo]');
+  odoEls.forEach(el => {
+    const txt = el.textContent; el.setAttribute('aria-label', txt); el.setAttribute('role', 'img');
+    // each digit is a strip that runs one full turn and lands on the digit, falling downwards as it counts up
+    el.innerHTML = [...txt].map(ch => {
+      if (!/\d/.test(ch)) return `<span aria-hidden="true">${ch}</span>`;
+      const d = +ch, seq = []; for (let k = d; k >= 0; k--) seq.push(k); for (let k = 9; k >= 0; k--) seq.push(k);
+      return `<span class="od" aria-hidden="true"><span class="od__s">${seq.map(n => `<span>${n}</span>`).join('')}</span></span>`;
+    }).join('');
+    const strips = [...el.querySelectorAll('.od__s')];
+    strips.forEach(s => gsap.set(s, { yPercent: -(s.children.length - 1) / s.children.length * 100 }));
+    ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () =>
+      gsap.to(strips, { yPercent: 0, duration: reduce ? 0 : 1.8, stagger: .12, ease: 'power3.inOut', delay: .15 }) });
+  });
+  $$('#bars i').forEach((b, i) => gsap.fromTo(b, { scaleX: 0 }, { scaleX: +b.dataset.to, ease: 'power2.out',
+    scrollTrigger: { trigger: '#bars', start: 'top 85%', end: 'top 40%', scrub: true } }));
+
+  /* ---------- Certified: the seal rings draw themselves and the lettering turns ---------- */
+  $$('.seal').forEach(seal => {
+    gsap.fromTo(seal.querySelector('.ring'), { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top 90%', end: 'top 40%', scrub: true } });
+    gsap.fromTo(seal.querySelector('.spin'), { rotation: -40, svgOrigin: '100 100' }, { rotation: 60, svgOrigin: '100 100', ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  /* ---------- Hardware: the handle turns towards you as it rises, with light running down it ---------- */
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hwImg', start: 'top bottom', end: 'bottom 25%', scrub: true } })
+    .fromTo('#hwIn', { rotationY: -22, rotationX: 6, y: 80, scale: .92, transformPerspective: 1400 }, { rotationY: 8, rotationX: 0, y: -20, scale: 1, duration: 1 }, 0)
+    .fromTo('#hwSheen', { xPercent: -100 }, { xPercent: 280, duration: .7 }, .2);
+
+  /* ---------- CTA: the room settles in and the words drop in over it ---------- */
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top bottom', end: 'bottom bottom', scrub: true } })
+    .fromTo('#ctaImg', { scale: 1.25 }, { scale: 1, duration: 1 }, 0)
+    .fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .3, stagger: .05, ease: 'back.out(1.5)' }, .5)
+    .fromTo('#ctaCopy > :not(h2)', { autoAlpha: 0, y: -24 }, { autoAlpha: 1, y: 0, duration: .3, stagger: .06, ease: 'power3.out' }, .55);
+
+  /* ---------- Load: the first shot and the fonts, then hand over ---------- */
+  const fill = $('#lfill');
+  const need = [shots[0].decode().catch(() => {})];
+  if (document.fonts) need.push(document.fonts.ready);
+  let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
+  Promise.all(need).then(() => {
+    shots.slice(1).forEach(s => s.decode().catch(() => {}));
+    gsap.timeline({ delay: .2 })
+      .to('#loader', { autoAlpha: 0, duration: .8, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
+      .from('#hCopy > *', { autoAlpha: 0, y: -44, duration: 1.3, stagger: .1, ease: 'back.out(1.4)' }, '<.2')
+      .from(intro, { z: 1.18, duration: 2.4, ease: 'power3.out', onUpdate: applyHero }, '<')
+      .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); }, '<');
+  });
+})();
+</script>
+</body>
+</html>
