@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanewood — MDF, HDF, plywood, H3.2 radiata pine plywood and LVL, priced for bulk</title>
+<meta name="description" content="Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Structural plywood to AS/NZS 2269, LVL to AS/NZS 4357. Stocked in Christchurch, delivered nationwide. Ask for bulk pricing.">
+<meta name="theme-color" content="#0c0a08">
+<link rel="preload" as="image" href="stills/hanewood/stack.webp">
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-tight-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-tight-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  /* the warehouse at night, the birch of a fresh sheet, and the amber of cut timber */
+  --bg:#0c0a08; --bg-2:#14110d; --bg-3:#1d1914; --ink:#f6f1e8; --ink-2:#bcb2a2; --ink-3:#847a6b; --ink-4:#403a31; --line:rgba(255,236,210,.1);
+  --birch:#efe8dc; --birch-2:#e4dac8; --char:#1c1712; --char-2:#5e5446; --char-3:#9a8e7d;
+  --timber:#e9b47a; --timber-2:#c98a4b; --timber-3:#9c5f25;
+  --nav:52px; --pad:clamp(20px,4vw,56px); --max:1240px; --ease:cubic-bezier(.22,1,.36,1);
+  --fs-h:clamp(34px,4.6vw,68px); --fs-big:clamp(54px,9vw,146px); --fs-sub:clamp(15px,1.2vw,19px);
+  --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --text:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg)}
+body{font-family:var(--text);font-size:17px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.is-loading{overflow:hidden}
+html.lenis-stopped{overflow:hidden}
+img,canvas,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:var(--timber);color:#000}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--timber)}
+.h{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.02;text-wrap:balance;font-size:var(--fs-h)}
+.muted{color:var(--ink-3)}
+.sub{font-size:var(--fs-sub);color:var(--ink-2);max-width:560px}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-weight:500;font-size:16px;transition:background .4s var(--ease),color .4s var(--ease),box-shadow .4s var(--ease)}
+.btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn--timber{background:var(--timber);color:#1d1206}
+.btn--timber:hover{background:#f4c690}
+.btn--line{box-shadow:inset 0 0 0 1px rgba(255,236,210,.3);color:var(--ink)}
+.btn--line:hover{box-shadow:inset 0 0 0 1px rgba(255,236,210,.75)}
+.timber{background:linear-gradient(100deg,#fde6c8 0%,#e9b47a 45%,#b8743a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* a heading laid up like plywood: horizontal slices of it slide in from alternate sides and lock together */
+.lamh{position:relative}
+.lamh__s{display:block}
+.lamh__s ~ .lamh__s{position:absolute;left:0;top:0;width:100%}
+
+/* Loader */
+.loader{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}
+.loader__inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.loader__mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.03em}
+.loader__bar{width:160px;height:2px;border-radius:2px;background:var(--bg-3);overflow:hidden}
+.loader__fill{height:100%;background:var(--timber);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);background:rgba(12,10,8,.62);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.03em}
+.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;color:var(--ink-3)}
+.nav__links{display:flex;gap:28px;font-size:13px;color:var(--ink-2)}
+.nav__links a:hover{color:var(--ink)}
+.nav .btn{height:32px;padding:0 14px;font-size:13px}
+.nav__end{display:flex;align-items:center;gap:6px}
+.burger{display:none;position:relative;width:40px;height:40px;margin-right:-10px}
+.burger::before,.burger::after{content:"";position:absolute;left:11px;right:11px;height:1.5px;border-radius:2px;background:var(--ink);transition:transform .5s var(--ease)}
+.burger::before{top:16px}
+.burger::after{top:23px}
+.nav.is-open .burger::before{transform:translateY(3.5px) rotate(45deg)}
+.nav.is-open .burger::after{transform:translateY(-3.5px) rotate(-45deg)}
+.menu{position:fixed;top:var(--nav);left:0;right:0;z-index:49;background:var(--bg);box-shadow:0 40px 60px -30px rgba(0,0,0,.9),0 1px 0 var(--line);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
+.menu a:not(.btn){display:block;padding:13px 0;font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.03em;box-shadow:0 1px 0 var(--line)}
+.menu .btn{margin-top:22px}
+
+/* a photo moved by a camera: one layer, scaled and translated */
+.cam{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;will-change:transform,opacity;visibility:hidden}
+.stage{background:#000}
+.caps{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:clamp(44px,10vh,100px);pointer-events:none}
+.cap{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.96;font-size:clamp(36px,5.4vw,84px);max-width:16ch;opacity:0;visibility:hidden;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.cap span{color:var(--ink-2)}
+.meter{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:clamp(18px,3.5vh,34px);height:2px;border-radius:2px;background:rgba(255,236,210,.12)}
+.meter i{position:absolute;inset:0;border-radius:2px;background:var(--timber);transform-origin:left;transform:scaleX(0)}
+
+/* ---------- Hero: the photo is laid up in strips like veneers, and at the end it comes apart again ---------- */
+.hero{position:relative;height:440vh;background:#000}
+.strips{position:absolute;inset:0;z-index:1}
+.strip{position:absolute;left:0;right:0;height:calc(100% / 9 + 1px);overflow:hidden;will-change:transform}
+.strip img{position:absolute;left:0;top:0;width:1254px;height:1254px;max-width:none;transform-origin:0 0;will-change:transform}
+.h-shade{position:absolute;inset:0;z-index:2;pointer-events:none;will-change:opacity;background:linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 34%,rgba(0,0,0,0) 62%)}
+.h-low{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;will-change:opacity;background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 32%,rgba(0,0,0,0) 58%)}
+.h-copy{position:absolute;z-index:5;left:var(--pad);top:50%;transform:translateY(-48%);max-width:min(640px,50vw);will-change:transform,opacity}
+.h-copy h1{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.9;font-size:var(--fs-big);margin:14px 0 22px}
+.h-copy p{font-size:var(--fs-sub);color:var(--ink-2);max-width:470px}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+
+/* ---------- Range: the camera walks the bench, one board at a time, under a spotlight ---------- */
+.range{position:relative;height:470vh;background:#000}
+#shotBoards{width:1672px;height:941px}
+.spot{position:absolute;left:0;top:0;width:300vmax;height:300vmax;margin:-150vmax 0 0 -150vmax;z-index:1;pointer-events:none;opacity:0;will-change:transform,opacity;background:radial-gradient(circle closest-side,rgba(0,0,0,0) 0,rgba(0,0,0,0) 9%,rgba(0,0,0,.74) 17%,rgba(0,0,0,.8) 100%)}
+.b-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 30%,rgba(0,0,0,0) 50%)}
+.b-intro{position:absolute;z-index:3;left:var(--pad);right:var(--pad);top:calc(var(--nav) + 5vh);max-width:760px}
+.b-intro .h{margin-top:12px}
+.b-intro .sub{margin-top:14px}
+.b-item{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:clamp(40px,8vh,84px);max-width:560px;opacity:0;visibility:hidden}
+.b-n{display:block;font-size:13px;font-weight:600;letter-spacing:.12em;color:var(--timber)}
+.b-name{margin-top:6px;font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.92;font-size:clamp(52px,7.4vw,120px)}
+.b-tag{margin-top:10px;font-family:var(--display);font-weight:600;letter-spacing:-.03em;font-size:clamp(20px,1.9vw,28px)}
+.b-txt{margin-top:8px;color:var(--ink-2);font-size:var(--fs-sub);max-width:500px}
+.b-sw{display:none}
+.b-dots{position:absolute;z-index:3;right:var(--pad);bottom:clamp(40px,8vh,84px);display:flex;flex-direction:column;align-items:flex-end;gap:10px;font-size:13px;font-weight:600;color:var(--ink-4);opacity:0}
+.b-dots span{display:flex;align-items:center;gap:10px;transition:color .5s var(--ease)}
+.b-dots span::after{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;transition:transform .5s var(--ease)}
+.b-dots span.is-on{color:var(--timber)}
+.b-dots span.is-on::after{transform:scale(1.5)}
+/* if the bench photo can't load, the range lays itself out as four sample cards */
+.range.flat{height:auto;padding:clamp(90px,14vh,150px) 0}
+.range.flat .sticky{position:relative;height:auto;overflow:visible;background:none;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.range.flat .cam,.range.flat .spot,.range.flat .b-shade,.range.flat .b-dots{display:none}
+.range.flat .b-intro{position:relative;left:auto;right:auto;top:auto;padding:0}
+.range.flat .b-items{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:clamp(36px,6vh,60px)}
+.range.flat .b-item{position:relative;left:auto;right:auto;bottom:auto;opacity:1;visibility:visible;padding:18px 18px 22px;border-radius:24px;background:var(--bg-2);box-shadow:inset 0 0 0 1px rgba(255,236,210,.07)}
+.range.flat .b-name{font-size:clamp(30px,2.6vw,40px)}
+.range.flat .b-tag{font-size:18px}
+.range.flat .b-txt{font-size:15px}
+.range.flat .b-sw{display:block;position:relative;aspect-ratio:1.25;border-radius:14px;margin-bottom:18px;overflow:hidden}
+.b-sw::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18%}
+.sw-mdf{background:radial-gradient(rgba(90,58,26,.28) 1px,rgba(0,0,0,0) 1.6px) 0 0/5px 5px,radial-gradient(rgba(255,240,220,.2) 1px,rgba(0,0,0,0) 1.6px) 2px 3px/7px 7px,#c79c6b}
+.sw-mdf::after{background:radial-gradient(rgba(80,50,20,.35) 1px,rgba(0,0,0,0) 1.6px) 0 0/4px 4px,#b88c5c}
+.sw-hdf{background:radial-gradient(rgba(40,22,8,.3) 1px,rgba(0,0,0,0) 1.6px) 0 0/5px 5px,radial-gradient(rgba(255,220,190,.12) 1px,rgba(0,0,0,0) 1.6px) 2px 3px/7px 7px,#7c5538}
+.sw-hdf::after{background:radial-gradient(rgba(30,16,6,.4) 1px,rgba(0,0,0,0) 1.6px) 0 0/4px 4px,#6a452b}
+.sw-ply{background:url(stills/hanewood/veneer.webp) 30% 50%/auto 140%,#d8b487}
+.sw-ply::after,.sw-h32::after{background:repeating-linear-gradient(180deg,#ecd3aa 0 5px,#9f7446 5px 7px)}
+.sw-h32{background:linear-gradient(rgba(255,226,120,.22),rgba(255,226,120,.22)),url(stills/hanewood/veneer.webp) 70% 50%/auto 140%,#e0c48c}
+.sw-h32 b{position:absolute;right:12px;top:12px;padding:3px 7px;border:2px solid rgba(20,14,8,.8);border-radius:4px;font-family:var(--display);font-weight:600;font-size:15px;color:rgba(20,14,8,.85);letter-spacing:-.02em}
+
+/* ---------- Layers: a plywood sample in 3D, peeled into veneers, crossed, pressed, treated, then lined up into LVL ---------- */
+.layers{position:relative;height:560vh;background:var(--birch);color:var(--char)}
+.layers .sticky{display:grid;grid-template-columns:minmax(300px,.8fr) 1.2fr;align-items:center;gap:clamp(20px,4vw,60px);padding:calc(var(--nav) + 2vh) var(--pad) 3vh;max-width:1400px;margin:0 auto}
+.steps{position:relative;height:min(420px,56svh)}
+.step{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);opacity:0;visibility:hidden}
+.step:first-child{opacity:1;visibility:visible}
+.step .eyebrow{color:var(--timber-3)}
+.step h2{margin-top:12px;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:1;text-wrap:balance;font-size:clamp(34px,4.2vw,66px)}
+.step h2 span{color:var(--timber-3)}
+.step p{margin-top:16px;color:var(--char-2);font-size:var(--fs-sub);max-width:470px}
+.prog{position:absolute;left:0;bottom:0;display:flex;gap:6px}
+.prog i{width:28px;height:3px;border-radius:3px;background:rgba(28,23,18,.14);transition:background .5s var(--ease),width .5s var(--ease)}
+.prog i.is-on{background:var(--timber-3);width:44px}
+.lam-scene{--S:min(34vw,50vh,440px);--rx:58deg;--rz:-38deg;--t:18px;--glue:0;--tint:0;position:relative;height:min(84svh,760px);perspective:1800px;perspective-origin:50% 38%}
+.lam-shadow{position:absolute;left:50%;top:58%;width:calc(var(--S) * 1.5);height:calc(var(--S) * .5);margin:calc(var(--S) * -.25) 0 0 calc(var(--S) * -.75);border-radius:50%;background:radial-gradient(closest-side,rgba(60,40,20,.28),rgba(60,40,20,0));will-change:transform,opacity}
+.lam-shake,.lam,.lam-in,.lay,.ven{transform-style:preserve-3d}
+.lam-shake{position:absolute;inset:0;will-change:transform}
+.lam{position:absolute;left:50%;top:50%;width:var(--S);height:var(--S);margin:calc(var(--S) / -2) 0 0 calc(var(--S) / -2);transform:rotateX(var(--rx)) rotateZ(var(--rz))}
+.lam-in{position:absolute;inset:0;will-change:transform}
+.lay{position:absolute;inset:0;visibility:hidden;will-change:transform}
+.ven{position:absolute;inset:0}
+/* the face is one flat layer (texture, grain lines and treatment tint together), so the 3D sort has one plane per veneer face */
+.face{position:absolute;inset:0;background:url(stills/hanewood/veneer.webp) 0 0/400% 100% no-repeat,#d7b284}
+.face::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(96,56,18,.13) 0 1px,rgba(96,56,18,0) 1px 6px,rgba(96,56,18,.07) 6px 7px,rgba(96,56,18,0) 7px 11px),linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,0) 45%,rgba(60,30,0,.08))}
+.face u{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(120,150,70,.36),rgba(84,118,56,.26));opacity:0;will-change:opacity}
+.ven i{position:absolute;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:inset 0 0 14px rgba(255,190,90,calc(var(--glue) * .95))}
+.ven .eb{left:0;top:100%;width:100%;height:var(--t);transform-origin:50% 0;transform:rotateX(-90deg);background:linear-gradient(180deg,#e2bf90 0%,#c2925f 80%,#6e4520 100%)}
+.ven .et{left:0;bottom:100%;width:100%;height:var(--t);transform-origin:50% 100%;transform:rotateX(90deg);background:linear-gradient(0deg,#e2bf90 0%,#c2925f 80%,#6e4520 100%)}
+.ven .er{left:100%;top:0;width:var(--t);height:100%;transform-origin:0 50%;transform:rotateY(90deg);background:linear-gradient(90deg,#d0a070 0%,#a97748 80%,#62401d 100%)}
+.ven .el{right:100%;top:0;width:var(--t);height:100%;transform-origin:100% 50%;transform:rotateY(-90deg);background:linear-gradient(270deg,#d0a070 0%,#a97748 80%,#62401d 100%)}
+.lab{position:absolute;left:0;top:0;transform-origin:0 0;transform:rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--rx) * -1)) translate(calc(-100% - 6px),-50%);display:flex;align-items:center;gap:10px;white-space:nowrap;font-size:13px;font-weight:600;color:var(--char);opacity:0}
+.lab::after{content:"";width:34px;height:1px;background:var(--char-3)}
+.lab small{font-weight:500;color:var(--char-2)}
+.scan{position:absolute;left:10%;right:10%;top:0;height:34%;z-index:2;background:radial-gradient(closest-side,rgba(170,215,130,.5),rgba(170,215,130,0));opacity:0;pointer-events:none;will-change:transform,opacity}
+
+/* ---------- LVL, yard and truck: one photo each, moved by a camera ---------- */
+.lvl{position:relative;height:300vh;background:#000}
+.yard{position:relative;height:230vh;background:#000}
+.truck{position:relative;height:250vh;background:#000}
+#shotL,#shotY,#shotT{width:1672px;height:941px}
+.p-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.4) 40%,rgba(0,0,0,0) 64%),linear-gradient(90deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 50%)}
+.p-copy{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:clamp(40px,9vh,90px);max-width:660px}
+.p-copy > *{opacity:0;visibility:hidden}
+.p-copy .h{margin-top:12px}
+.p-copy .sub{margin-top:14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pills span{padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:600;background:rgba(20,17,13,.8);box-shadow:inset 0 0 0 1px rgba(255,236,210,.14)}
+.p-tag{position:absolute;z-index:3;right:var(--pad);top:calc(var(--nav) + 22px);display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(12,10,8,.62);font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--ink-2);opacity:0}
+.p-tag i{width:8px;height:8px;border-radius:50%;background:var(--timber);box-shadow:0 0 0 4px rgba(233,180,122,.2)}
+.sweep{position:absolute;top:0;bottom:0;left:0;width:60%;z-index:1;pointer-events:none;opacity:0;will-change:transform,opacity;background:linear-gradient(100deg,rgba(255,190,110,0) 0%,rgba(255,196,120,.22) 50%,rgba(255,190,110,0) 100%)}
+
+/* ---------- Standards ---------- */
+.std{position:relative;padding:clamp(90px,14vh,150px) 0;background:var(--birch);color:var(--char);overflow-x:clip}
+.std .eyebrow{color:var(--timber-3)}
+.std .muted{color:var(--char-3)}
+.std__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
+.seal-card{position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:#f7f2ea;box-shadow:inset 0 0 0 1px rgba(28,23,18,.07),0 30px 60px -40px rgba(60,40,20,.35);text-align:center}
+.seal{position:relative;width:min(220px,62%);aspect-ratio:1;margin:0 auto 26px}
+.seal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.seal .ring{fill:none;stroke:var(--timber-3);stroke-width:1.2}
+.seal .ring2{fill:none;stroke:rgba(28,23,18,.16);stroke-width:1}
+.seal .txt{fill:var(--char-2);font-size:10.5px;font-weight:600;letter-spacing:.24em;font-family:var(--text)}
+.seal__mid{position:absolute;inset:0;display:grid;place-content:center;font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1}
+.seal__mid small{font-size:13px;letter-spacing:.12em;color:var(--char-3);font-family:var(--text);font-weight:600}
+.seal__mid strong{font-size:clamp(32px,3vw,46px);margin-top:6px}
+.seal-card b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,24px);letter-spacing:-.02em}
+.seal-card p{margin:8px auto 0;font-size:15px;color:var(--char-2);max-width:320px}
+
+/* ---------- Marquee ---------- */
+.marq{position:relative;padding:clamp(40px,8vh,90px) 0;background:var(--bg);overflow:hidden;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line)}
+.marq__row{display:flex;white-space:nowrap}
+.marq__track{display:flex;flex:none;will-change:transform}
+.marq__track span{flex:none;display:inline-flex;align-items:center;gap:.36em;padding-right:.36em;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.1;font-size:clamp(52px,9vw,160px)}
+.marq__track i{font-style:normal;color:var(--timber);font-size:.42em}
+.marq__row--o span{color:transparent;letter-spacing:0;-webkit-text-stroke:1.5px rgba(233,180,122,.75)}
+.marq__row--o i{-webkit-text-stroke:0;color:var(--ink-4)}
+
+/* ---------- Pricing ---------- */
+.pricing{position:relative;overflow-x:clip;padding:clamp(90px,14vh,150px) 0 clamp(70px,10vh,110px);background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(233,180,122,.08),rgba(0,0,0,0) 70%),var(--bg)}
+.pricing__grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,80px);align-items:start}
+.pricing .sub{margin-top:18px}
+.ticks{list-style:none;margin-top:28px;display:grid;gap:12px}
+.ticks li{display:flex;gap:12px;align-items:flex-start;color:var(--ink-2)}
+.ticks li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--timber) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%231d1206' stroke-width='2'/%3E%3C/svg%3E") center/11px no-repeat}
+.ticks b{color:var(--ink);font-weight:600}
+.form{padding:clamp(22px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#17130f,#0f0c0a);box-shadow:inset 0 0 0 1px rgba(255,236,210,.09),0 40px 80px -40px rgba(0,0,0,.8)}
+.form h3{font-family:var(--display);font-weight:600;font-size:clamp(22px,2vw,28px);letter-spacing:-.03em}
+.form > p{margin-top:6px;font-size:14.5px;color:var(--ink-2)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label,.field legend{font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2)}
+.field input,.field select,.field textarea{width:100%;padding:13px 14px;border-radius:14px;border:0;background:#0c0a08;box-shadow:inset 0 0 0 1px rgba(255,236,210,.14);outline:none;transition:box-shadow .3s var(--ease)}
+.field textarea{min-height:92px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{box-shadow:inset 0 0 0 1.5px var(--timber)}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23bcb2a2' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:12px}
+fieldset.field{border:0}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggles label{position:relative;cursor:pointer}
+.toggles input{position:absolute;opacity:0;width:1px;height:1px}
+.toggles span{display:inline-flex;padding:10px 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2);box-shadow:inset 0 0 0 1px rgba(255,236,210,.18);transition:background .3s var(--ease),color .3s var(--ease)}
+.toggles input:checked + span{background:var(--timber);color:#1d1206;box-shadow:none}
+.toggles input:focus-visible + span{outline:2px solid var(--timber);outline-offset:2px}
+.form .btn{margin-top:20px;width:100%;justify-content:center;height:54px;font-size:17px}
+.form__note{margin-top:12px;font-size:12.5px;color:var(--ink-3);text-align:center}
+.form__done{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(233,180,122,.1);color:var(--timber);font-size:14px;display:none}
+.form__done.is-on{display:block}
+
+/* Footer */
+.foot{background:var(--bg);color:var(--ink-3);font-size:12.5px;padding:26px 0 max(26px,env(safe-area-inset-bottom));box-shadow:0 -1px 0 var(--line)}
+.foot .wrap{display:flex;justify-content:space-between;gap:12px 30px;flex-wrap:wrap}
+.foot a{color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+
+/* reveals */
+[data-reveal]{opacity:0;transform:translateY(30px)}
+[data-drop]{opacity:0}
+.no-js [data-reveal],.no-js [data-drop],.no-js .p-copy > *,.no-js .step,.no-js .b-item{opacity:1;visibility:visible;transform:none}
+.no-js .cam{visibility:visible}
+.no-js .step,.no-js .b-item{position:relative;top:auto;bottom:auto;transform:none;margin-bottom:28px}
+.no-js .steps{height:auto}
+.no-js .lam-scene,.no-js .spot,.no-js .b-dots{display:none}
+.no-js .layers,.no-js .range{height:auto}
+.no-js .layers .sticky,.no-js .range .sticky{position:relative;height:auto;display:block}
+
+html.lite .nav{background:rgba(12,10,8,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
+
+@media (max-width:1024px){
+  .nav__links{display:none}
+  .burger{display:block}
+  .layers .sticky{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-content:stretch;gap:0;padding-top:calc(var(--nav) + 3vh)}
+  .steps{height:min(300px,38svh)}
+  .step{top:0;transform:none}
+  .lam-scene{--S:min(58vw,30svh,340px);height:auto;min-height:0}
+  .std__grid{grid-template-columns:1fr}
+  .seal-card{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:center;text-align:left}
+  .seal{width:120px;margin:0;grid-row:span 2}
+  .seal-card p{margin:0}
+  .seal__mid strong{font-size:24px}
+  .seal__mid small{font-size:10px}
+  .seal .txt{font-size:12px}
+  .pricing__grid{grid-template-columns:1fr}
+  .range.flat .b-items{grid-template-columns:1fr 1fr}
+}
+@media (max-width:700px){
+  body{font-size:16px}
+  .nav .btn{display:none}
+  .h-copy{top:auto;bottom:calc(9vh + 10px);transform:none;max-width:none;right:var(--pad)}
+  .h-copy h1{font-size:clamp(56px,16vw,84px)}
+  .h-copy p{font-size:15.5px}
+  .ctas{margin-top:20px}
+  .h-shade{background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 45%,rgba(0,0,0,0) 72%)}
+  .cap{font-size:clamp(32px,9.6vw,48px)}
+  .b-intro .h{font-size:clamp(32px,9vw,44px)}
+  .b-name{font-size:clamp(46px,14vw,72px)}
+  .b-tag{font-size:19px}
+  .b-txt{font-size:15px}
+  .b-item{bottom:28px}
+  .b-dots{top:calc(var(--nav) + 18px);bottom:auto;flex-direction:row;gap:12px;font-size:11px}
+  .b-dots span{flex-direction:column-reverse;gap:6px}
+  .step h2{font-size:clamp(28px,8.4vw,40px)}
+  .step p{font-size:15px;margin-top:10px}
+  .prog,.lab{display:none}
+  .lam{top:54%}
+  .range.flat .b-items{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr}
+  .marq__track span{font-size:clamp(44px,14vw,72px)}
+  .marq__row--o span{-webkit-text-stroke-width:1px}
+}
+</style>
+</head>
+<body class="is-loading">
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__mark">Hanewood</div>
+    <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" data-scroll>Hanewood <small>by Hanes Distribution</small></a>
+    <nav class="nav__links" aria-label="Page">
+      <a href="#range" data-scroll>The range</a>
+      <a href="#layers" data-scroll>Plywood</a>
+      <a href="#lvl" data-scroll>LVL</a>
+      <a href="#yard" data-scroll>Supply</a>
+      <a href="#standards" data-scroll>Standards</a>
+    </nav>
+    <div class="nav__end">
+      <a class="btn btn--timber" href="#pricing" data-scroll>Bulk pricing</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
+    </div>
+  </div>
+</header>
+<nav class="menu" id="menu" aria-label="Page">
+  <a href="#range" data-scroll>The range</a>
+  <a href="#layers" data-scroll>Plywood</a>
+  <a href="#lvl" data-scroll>LVL</a>
+  <a href="#yard" data-scroll>Supply</a>
+  <a href="#standards" data-scroll>Standards</a>
+  <a class="btn btn--timber" href="#pricing" data-scroll>Ask for bulk pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</nav>
+
+<main id="top">
+  <!-- ================= Hero: laid up in strips ================= -->
+  <section class="hero" id="hero" aria-label="Hanewood board, plywood and LVL">
+    <div class="sticky stage" id="hStage">
+      <div class="strips" id="strips" role="img" aria-label="A pack of plywood sheets on a pallet in a warehouse">
+        <div class="strip" style="top:0"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(100% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(200% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(300% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(400% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(500% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(600% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(700% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+        <div class="strip" style="top:calc(800% / 9)"><img src="stills/hanewood/stack.webp" alt="" width="1254" height="1254" decoding="async"></div>
+      </div>
+      <div class="h-shade" id="hShade" aria-hidden="true"></div>
+      <div class="h-low" id="hLow" aria-hidden="true"></div>
+      <div class="h-copy" id="hCopy">
+        <div class="eyebrow">Hanewood · For merchants and retailers</div>
+        <h1 id="hTitle">Built in<br><span class="timber">layers.</span></h1>
+        <p>MDF, HDF, plywood, H3.2 radiata pine plywood and LVL. Stocked deep in Christchurch, delivered by the truckload, and priced for bulk.</p>
+        <div class="ctas">
+          <a class="btn btn--timber" href="#pricing" data-scroll>Ask for bulk pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--line" href="#range" data-scroll>See the range</a>
+        </div>
+      </div>
+      <div class="caps" aria-hidden="true">
+        <h2 class="cap">Every sheet, <span class="timber">cross-laminated.</span></h2>
+        <h2 class="cap">H3.2 plywood. <span>Made for outside.</span></h2>
+        <h2 class="cap">Priced by the pack. <span>Delivered by the truckload.</span></h2>
+      </div>
+      <div class="meter" aria-hidden="true"><i id="hMeter"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= The range: four boards on the bench ================= -->
+  <section class="range" id="range" aria-label="The range: MDF, HDF, plywood and H3.2 radiata pine plywood">
+    <div class="sticky stage" id="bStage">
+      <img class="cam" id="shotBoards" src="stills/hanewood/boards.webp" width="1672" height="941" alt="Samples of MDF, HDF, plywood and H3.2 radiata pine plywood on a dark bench" decoding="async">
+      <div class="spot" id="spot" aria-hidden="true"></div>
+      <div class="b-shade" aria-hidden="true"></div>
+      <div class="b-intro" id="bIntro">
+        <div class="eyebrow">The range</div>
+        <h2 class="h">Every board, <span class="timber">one supplier.</span></h2>
+        <p class="sub">From smooth MDF for joinery to H3.2 plywood for the outdoors, and LVL for the beams that hold it all up.</p>
+      </div>
+      <div class="b-items">
+        <article class="b-item"><div class="b-sw sw-mdf" aria-hidden="true"></div><span class="b-n">01 · MDF</span><h3 class="b-name">MDF</h3><p class="b-tag">Smooth to the core.</p><p class="b-txt">Medium-density fibreboard with a fine, even face and a consistent core. It machines cleanly, routes crisply and paints beautifully: made for joinery, cabinetry, shelving and furniture.</p></article>
+        <article class="b-item"><div class="b-sw sw-hdf" aria-hidden="true"></div><span class="b-n">02 · HDF</span><h3 class="b-name">HDF</h3><p class="b-tag">Denser. Harder. Thinner.</p><p class="b-txt">High-density fibreboard packs more fibre into every millimetre for a hard-wearing, stable panel: made for cabinet backs, drawer bases, door skins and more.</p></article>
+        <article class="b-item"><div class="b-sw sw-ply" aria-hidden="true"></div><span class="b-n">03 · Plywood</span><h3 class="b-name">Plywood</h3><p class="b-tag">Strength, in layers.</p><p class="b-txt">Cross-laminated veneers for a strong, stable sheet that holds its fixings, from structure and bracing to fit-out and everything in between.</p></article>
+        <article class="b-item"><div class="b-sw sw-h32" aria-hidden="true"><b>H3.2</b></div><span class="b-n">04 · H3.2 plywood</span><h3 class="b-name">H3.2 radiata</h3><p class="b-tag">Radiata pine plywood, made for outside.</p><p class="b-txt">Treated to H3.2 for exterior use above ground: cladding, soffits, fences and the outdoor jobs that face the weather.</p></article>
+      </div>
+      <div class="b-dots" id="bDots" aria-hidden="true"><span>MDF</span><span>HDF</span><span>Plywood</span><span>H3.2</span></div>
+    </div>
+  </section>
+
+  <!-- ================= Layers: plywood, then LVL, in 3D ================= -->
+  <section class="layers" id="layers" aria-label="How plywood and LVL are made">
+    <div class="sticky">
+      <div class="steps" id="steps">
+        <div class="step"><div class="eyebrow">Inside every sheet</div><h2>Strength, <span>crossed.</span></h2><p>Plywood starts as thin veneers of timber, peeled from the log and laid up one on top of the next.</p></div>
+        <div class="step"><div class="eyebrow">Cross-laminated</div><h2>Every other layer, <span>turned 90°.</span></h2><p>Each veneer's grain runs across the one below it. That keeps the sheet stable, stops it splitting and makes it strong in both directions.</p></div>
+        <div class="step"><div class="eyebrow">Bonded</div><h2>Heat. Pressure. <span>One solid sheet.</span></h2><p>The veneers are glued and pressed into a single panel: structural plywood to AS/NZS 2269.</p></div>
+        <div class="step"><div class="eyebrow">H3.2 treated</div><h2>Made for <span>outside.</span></h2><p>Radiata pine plywood treated to hazard class H3.2 for exterior use above ground, out in the weather.</p></div>
+        <div class="step"><div class="eyebrow">LVL</div><h2>Line them up, and it's <span>LVL.</span></h2><p>Turn every veneer the same way and you get laminated veneer lumber: long, straight and strong along its length. LVL to AS/NZS 4357.</p></div>
+        <div class="prog" id="prog" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="lam-scene" id="lamScene" aria-hidden="true">
+        <div class="lam-shadow" id="lamShadow"></div>
+        <div class="lam-shake" id="lamShake"><div class="lam" id="lam"><div class="lam-in" id="lamIn"></div></div></div>
+        <div class="scan" id="scan"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LVL on site ================= -->
+  <section class="lvl" id="lvl" aria-label="LVL">
+    <div class="sticky stage" id="vStage">
+      <img class="cam" id="shotL" src="stills/hanewood/lvl.webp" width="1672" height="941" alt="Builders guide an LVL beam, lifted by a crane, onto its posts on a timber-framed house above a lake" loading="lazy" decoding="async">
+      <div class="p-shade" aria-hidden="true"></div>
+      <div class="caps" aria-hidden="true">
+        <h2 class="cap">LVL. <span>Long, straight, strong.</span></h2>
+        <h2 class="cap">Structural LVL <span>to AS/NZS 4357.</span></h2>
+      </div>
+      <div class="p-copy" id="vCopy">
+        <div class="eyebrow">LVL</div>
+        <h2 class="h">Beams you can <span class="timber">build on.</span></h2>
+        <p class="sub">Laminated veneer lumber for beams, lintels and headers: straight, consistent from one length to the next, and stocked ready for your yard.</p>
+      </div>
+      <div class="meter" aria-hidden="true"><i id="vMeter"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Supply: the yard ================= -->
+  <section class="yard" id="yard" aria-label="Stock">
+    <div class="sticky stage" id="yStage">
+      <img class="cam" id="shotY" src="stills/hanewood/yard.webp" width="1672" height="941" alt="A forklift carries a strapped pack of plywood through a warehouse stacked high with sheet packs" loading="lazy" decoding="async">
+      <div class="p-shade" aria-hidden="true"></div>
+      <div class="p-tag" id="yTag" aria-hidden="true"><i></i>CHRISTCHURCH WAREHOUSE</div>
+      <div class="p-copy" id="yCopy">
+        <div class="eyebrow">Supply</div>
+        <h2 class="h">Stocked deep. <span class="muted">Ready to load.</span></h2>
+        <p class="sub">Pack after pack of board, plywood and LVL, held in our Christchurch warehouse and ready when your yard needs it.</p>
+        <div class="pills"><span>Christchurch warehouse</span><span>Full packs</span><span>Board, plywood and LVL</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Supply: the truck ================= -->
+  <section class="truck" id="truck" aria-label="Delivery">
+    <div class="sticky stage" id="tStage">
+      <img class="cam" id="shotT" src="stills/hanewood/truck.webp" width="1672" height="941" alt="A Hanes Distribution curtain-sider truck and trailer being loaded with plywood packs by forklift at sunrise" loading="lazy" decoding="async">
+      <div class="sweep" id="sweep" aria-hidden="true"></div>
+      <div class="p-shade" aria-hidden="true"></div>
+      <div class="p-copy" id="tCopy">
+        <div class="eyebrow">Delivery</div>
+        <h2 class="h">By the <span class="timber">truckload.</span></h2>
+        <p class="sub">Full packs, loaded at our Christchurch dock and delivered right across New Zealand.</p>
+        <a class="btn btn--timber" href="#pricing" data-scroll style="margin-top:22px">Ask for bulk pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Standards ================= -->
+  <section class="std" id="standards">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>Standards</div>
+      <h2 class="h lam-io" style="margin-top:12px">Built to the standard. <span class="muted">Ready for your shelves.</span></h2>
+      <div class="std__grid">
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp1" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp1">STRUCTURAL PLYWOOD · AUSTRALIA AND NEW ZEALAND · PLYWOOD ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>AS/NZS</small><strong>2269</strong></div>
+          </div>
+          <b>Structural plywood to AS/NZS 2269</b>
+          <p>The Australian and New Zealand standard for structural plywood.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp2" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp2">LAMINATED VENEER LUMBER · STRUCTURAL LVL · LVL ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>AS/NZS</small><strong>4357</strong></div>
+          </div>
+          <b>LVL to AS/NZS 4357</b>
+          <p>The Australian and New Zealand standard for structural laminated veneer lumber.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp3" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp3">EXTERIOR · ABOVE GROUND · RADIATA PINE PLYWOOD ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>TREATED</small><strong>H3.2</strong></div>
+          </div>
+          <b>H3.2 radiata pine plywood</b>
+          <p>Treated to hazard class H3.2 for exterior use above ground, where timber faces the weather.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Marquee ================= -->
+  <section class="marq" id="marq" aria-label="MDF, HDF, plywood, H3.2 radiata pine plywood and LVL, with bulk pricing and nationwide delivery">
+    <div class="marq__row" aria-hidden="true" data-dir="1"><div class="marq__track"><span>MDF <i>✦</i></span><span>HDF <i>✦</i></span><span>Plywood <i>✦</i></span><span>H3.2 radiata pine plywood <i>✦</i></span><span>LVL <i>✦</i></span></div></div>
+    <div class="marq__row marq__row--o" aria-hidden="true" data-dir="-1"><div class="marq__track"><span>Built in layers <i>✦</i></span><span>Bulk pricing <i>✦</i></span><span>Stocked in Christchurch <i>✦</i></span><span>Delivered nationwide <i>✦</i></span></div></div>
+  </section>
+
+  <!-- ================= Bulk pricing ================= -->
+  <section class="pricing" id="pricing">
+    <div class="wrap pricing__grid">
+      <div>
+        <div class="eyebrow" data-reveal>For merchants and retailers</div>
+        <h2 class="h lam-io" style="margin-top:12px">Buy by the pack. <span class="muted">Price by the truckload.</span></h2>
+        <p class="sub" data-reveal>Timber merchants, retailers and builders' suppliers: tell us what you move, and we'll come back with bulk pricing built around your volumes.</p>
+        <ul class="ticks">
+          <li data-drop><span><b>Bulk pricing.</b> Built around your volumes, not a price list.</span></li>
+          <li data-drop><span><b>One supplier.</b> MDF, HDF, plywood, H3.2 radiata pine plywood and LVL.</span></li>
+          <li data-drop><span><b>Built to the standard.</b> Structural plywood to AS/NZS 2269, LVL to AS/NZS 4357.</span></li>
+          <li data-drop><span><b>Christchurch stock.</b> Delivered by the truckload right across New Zealand.</span></li>
+        </ul>
+      </div>
+      <form class="form" id="priceForm" data-drop="tilt" novalidate>
+        <h3>Ask for bulk pricing</h3>
+        <p>Takes a minute. A member of our team will be in touch.</p>
+        <div class="fgrid">
+          <div class="field"><label for="fBiz">Business name</label><input id="fBiz" name="business" required autocomplete="organization"></div>
+          <div class="field"><label for="fName">Your name</label><input id="fName" name="name" required autocomplete="name"></div>
+          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="fPhone">Phone</label><input id="fPhone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="fType">Your business</label><select id="fType" name="type" required><option value="">Choose one</option><option>Timber merchant</option><option>Retailer</option><option>Builders' merchant</option><option>Joinery or cabinet maker</option><option>Builder</option><option>Other</option></select></div>
+          <div class="field"><label for="fRegion">Region</label><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select></div>
+          <fieldset class="field full"><legend>Interested in</legend><div class="toggles"><label><input type="checkbox" name="interest" value="MDF"><span>MDF</span></label><label><input type="checkbox" name="interest" value="HDF"><span>HDF</span></label><label><input type="checkbox" name="interest" value="Plywood" checked><span>Plywood</span></label><label><input type="checkbox" name="interest" value="H3.2 radiata pine plywood" checked><span>H3.2 plywood</span></label><label><input type="checkbox" name="interest" value="LVL"><span>LVL</span></label></div></fieldset>
+          <div class="field full"><label for="fMsg">Products, sizes and volumes</label><textarea id="fMsg" name="message" placeholder="For example: H3.2 plywood in 2440 × 1220 sheets, two packs a month, plus LVL in the sizes you stock"></textarea></div>
+        </div>
+        <button class="btn btn--timber" type="submit">Ask for bulk pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+        <p class="form__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+        <p class="form__done" id="fDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz and we'll take it from there.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Hanewood is a <a href="index.html">Hanes Distribution</a> brand, supplied to merchants and retailers · 93 Main South Road, Sockburn · Warehouse: 44 Anchorage Road, Hornby, Christchurch</span>
+    <a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    document.documentElement.classList.add('no-js'); document.body.classList.remove('is-loading'); $('#loader').remove(); return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
+  const phone = () => innerWidth < 700;
+
+  // lays a heading up like plywood: n horizontal slices of it, each a full copy clipped to its band
+  const laminate = (el, n = 6) => {
+    const html = el.innerHTML, text = el.textContent.replace(/\s+/g, ' ').trim();
+    el.classList.add('lamh');
+    el.innerHTML = `<span class="sr">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>` + Array.from({ length: n }, (_, k) => {
+      const top = k ? (k / n * 100 - .2).toFixed(2) + '%' : '-25%', bot = k < n - 1 ? (100 - (k + 1) / n * 100 - .2).toFixed(2) + '%' : '-25%';
+      return `<span class="lamh__s" aria-hidden="true" style="clip-path:inset(${top} -3% ${bot} -3%)">${html}</span>`;
+    }).join('');
+    return [...el.querySelectorAll('.lamh__s')];
+  };
+  const side = i => (i % 2 ? 1 : -1);
+
+  /* ---------- Smooth scroll, menu and nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+  }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
+  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
+  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
+  const MT = gsap.timeline({ paused: true })
+    .set(menu, { visibility: 'visible' })
+    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
+    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
+  const setMenu = v => {
+    if (v === menuOpen) return; menuOpen = v;
+    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
+    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
+    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  };
+  burger.addEventListener('click', () => setMenu(!menuOpen));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
+  $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
+  }));
+  let lastY = 0;
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
+    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
+    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
+    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
+    lastY = y;
+  }});
+
+  // a camera over a photo: cx, cy = the point at the centre of the screen; z = zoom (1 = the photo just covers the screen)
+  const makeCam = (stage, img, iw, ih, c0) => {
+    const c = Object.assign({ cx: .5, cy: .5, z: 1, o: 1 }, c0); let W = 0, H = 0, S0 = 1;
+    const apply = () => {
+      if (c.o <= .001) { if (img.style.visibility !== 'hidden') img.style.visibility = 'hidden'; return; }
+      img.style.visibility = 'visible'; img.style.opacity = c.o >= .999 ? '' : c.o.toFixed(3);
+      const s = S0 * c.z, dw = iw * s, dh = ih * s;
+      let tx = W / 2 - c.cx * dw, ty = H / 2 - c.cy * dh;
+      if (c.z >= 1) { tx = Math.min(0, Math.max(W - dw, tx)); ty = Math.min(0, Math.max(H - dh, ty)); } // never show past the photo's edge
+      c.tx = tx; c.ty = ty; c.s = s;
+      img.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(5)})`;
+    };
+    const size = () => { W = stage.clientWidth; H = stage.clientHeight; S0 = Math.max(W / iw, H / ih); apply(); };
+    addEventListener('resize', () => requestAnimationFrame(size));
+    return { c, apply, size };
+  };
+  const capIn = (tl, el, t) => tl.fromTo(el, { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .45, ease: 'back.out(1.4)', immediateRender: false }, t);
+  const capOut = (tl, el, t) => tl.to(el, { autoAlpha: 0, y: 50, duration: .3, ease: 'power2.in' }, t);
+  const copyIn = (tl, els, t, d = .12) => tl.fromTo(els, { autoAlpha: 0, y: -40 }, { autoAlpha: 1, y: 0, duration: d, stagger: d / 3, ease: 'back.out(1.4)', immediateRender: false }, t);
+
+  /* =========================================================
+     HERO: the photo is cut into nine strips, like veneers. On load they slide in from alternate sides and lock
+     together; the headline is laid up the same way. Scrolling, the camera glides to the stack's edge, where every
+     sheet shows its layers, and then the strips come apart and fly off, left and right, into the dark.
+     ========================================================= */
+  const hStage = $('#hStage'), strips = $$('.strip'), sImg = strips.map(s => s.firstElementChild), NS = strips.length;
+  const HC = { cx: .47, cy: .56, z: 1.1 }, hIntro = { z: 1 }; let hW = 0, hH = 0, hS0 = 1;
+  const applyH = () => {
+    const s = hS0 * HC.z * hIntro.z, d = 1254 * s;
+    const tx = Math.min(0, Math.max(hW - d, hW / 2 - HC.cx * d)), ty = Math.min(0, Math.max(hH - d, hH / 2 - HC.cy * d));
+    for (let i = 0; i < NS; i++) sImg[i].style.transform = `translate3d(${tx.toFixed(1)}px,${(ty - i * hH / NS).toFixed(1)}px,0) scale(${s.toFixed(5)})`;
+  };
+  const sizeH = () => { hW = hStage.clientWidth; hH = hStage.clientHeight; hS0 = Math.max(hW, hH) / 1254; applyH(); };
+  const hTitle = laminate($('#hTitle'), 6);
+  const hCaps = $$('#hStage .cap');
+  const HT = gsap.timeline({ defaults: { ease: 'power2.inOut' }, onUpdate: applyH, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } });
+  HT.to(['#hCopy', '#hShade'], { autoAlpha: 0, y: -50, duration: .8, ease: 'power2.in' }, .3)
+    .to(HC, { cx: .74, cy: .55, z: 1.5, duration: 4 }, .2)
+    .to(HC, { cx: .8, z: 1.95, duration: 2.6, ease: 'power1.in' }, 4.2)
+    .fromTo(strips, { y: 0 }, { y: i => (i - (NS - 1) / 2) * innerHeight * .035, duration: .8, ease: 'power2.out', immediateRender: false }, 6.4)
+    .fromTo(strips, { x: 0, rotation: 0 }, { x: i => side(i) * innerWidth * 1.2, rotation: i => side(i) * 3, duration: 1.3, stagger: .06, ease: 'power3.in', immediateRender: false }, 7.1)
+    .to('#hLow', { opacity: 1, duration: .6 }, .7)
+    .to('#hLow', { opacity: 0, duration: .5 }, 6.1)
+    .fromTo('#hMeter', { scaleX: 0 }, { scaleX: 1, duration: 9, ease: 'none' }, 0)
+    .to({}, { duration: .5 }, 9);
+  capIn(HT, hCaps[0], 1.2); capOut(HT, hCaps[0], 2.5);
+  capIn(HT, hCaps[1], 2.8); capOut(HT, hCaps[1], 4.1);
+  capIn(HT, hCaps[2], 4.4); capOut(HT, hCaps[2], 5.9);
+  sizeH();
+
+  /* ---------- Headings in the flow are laid up as they come into view ---------- */
+  if (!reduce) {
+    const lamIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; lamIO.unobserve(e.target);
+      gsap.to(e.target.__s, { x: 0, autoAlpha: 1, duration: 1.3, stagger: .05, ease: 'expo.out', overwrite: true });
+    }), { rootMargin: '0px 0px -14% 0px' });
+    $$('.lam-io').forEach(el => { el.__s = laminate(el, 6); gsap.set(el.__s, { x: i => side(i) * Math.min(420, innerWidth * .4), autoAlpha: 0 }); lamIO.observe(el); });
+  }
+
+  /* =========================================================
+     THE RANGE: the camera walks the bench from board to board under a spotlight: MDF, HDF, plywood and
+     H3.2 radiata pine plywood. Each name is laid up in slices as its board comes into the light.
+     ========================================================= */
+  const bStage = $('#bStage'), range = $('#range'), spot = $('#spot'), bItems = $$('.b-item'), bDots = $$('#bDots span');
+  const Bc = makeCam(bStage, $('#shotBoards'), 1672, 941, { cx: .5, cy: .48, z: 1.02 });
+  const BOARD = [[.136, .48], [.383, .49], [.619, .48], [.87, .48]], bs = { k: 0, on: 0 };
+  let bOn = -1, RB = null;
+  const applyB = () => {
+    Bc.apply();
+    const k = Math.max(0, Math.min(3, bs.k)), a = Math.floor(k), f = k - a, b = Math.min(3, a + 1);
+    const px = BOARD[a][0] + (BOARD[b][0] - BOARD[a][0]) * f, py = BOARD[a][1] + (BOARD[b][1] - BOARD[a][1]) * f;
+    const c = Bc.c, sx = c.tx + px * 1672 * c.s, sy = c.ty + py * 941 * c.s, vmax = Math.max(innerWidth, innerHeight) * 1.5;
+    const sc = (250 * c.s) / (vmax * .09);
+    spot.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0) scale(${sc.toFixed(4)})`;
+    spot.style.opacity = bs.on.toFixed(3);
+    const on = bs.on > .5 ? Math.round(k) : -1;
+    if (on !== bOn) { bOn = on; bDots.forEach((d, i) => d.classList.toggle('is-on', i === on)); }
+  };
+  const bNames = bItems.map(it => laminate(it.querySelector('.b-name'), 5));
+  const buildRange = () => {
+    const ZP = phone() ? 1.14 : 1.5;
+    RB = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: applyB, scrollTrigger: { trigger: '#range', start: 'top top', end: 'bottom bottom', scrub: true } });
+    RB.to(Bc.c, { z: 1.08, duration: 1.4 }, 0)
+      .to('#bIntro', { autoAlpha: 0, y: -40, duration: .4, ease: 'power2.in' }, 1.2)
+      .to(bs, { on: 1, duration: .5 }, 1.6)
+      .to('#bDots', { opacity: 1, duration: .4 }, 1.6);
+    bItems.forEach((it, k) => {
+      const t = 1.6 + k * 2.1, parts = it.querySelectorAll('.b-n, .b-tag, .b-txt');
+      RB.to(Bc.c, { cx: BOARD[k][0], cy: BOARD[k][1], z: ZP, duration: .9, ease: 'power2.inOut' }, t)
+        .to(bs, { k, duration: .9, ease: 'power2.inOut' }, t)
+        .to(Bc.c, { z: ZP * 1.06, duration: 1.2 }, t + .9)
+        .set(it, { autoAlpha: 1, y: 0 }, t + .5)
+        .fromTo(bNames[k], { x: i => side(i) * 260, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, stagger: .04, ease: 'expo.out', immediateRender: false }, t + .5)
+        .fromTo(parts, { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .35, stagger: .08, ease: 'back.out(1.4)', immediateRender: false }, t + .6)
+        .to(it, { autoAlpha: 0, y: -30, duration: .3, ease: 'power2.in' }, t + 1.85);
+    });
+    RB.to(Bc.c, { cx: .5, cy: .48, z: 1.02, duration: .9, ease: 'power2.inOut' }, 10.1)
+      .to(bs, { on: 0, duration: .6 }, 10.1)
+      .to('#bDots', { opacity: 0, duration: .4 }, 10.1)
+      .to({}, { duration: .5 }, 11);
+    Bc.size(); applyB();
+  };
+  // if the bench photo is missing, the range lays out as four sample cards instead of a film
+  const flatRange = () => {
+    if (RB) { RB.scrollTrigger && RB.scrollTrigger.kill(); RB.progress(0).kill(); RB = null; }
+    range.classList.add('flat');
+    gsap.set([...bNames.flat(), ...bItems, ...$$('.b-item > *'), '#bIntro'], { clearProps: 'transform,opacity,visibility' });
+    ScrollTrigger.refresh();
+  };
+  const boardImg = $('#shotBoards');
+  if (boardImg.complete && !boardImg.naturalWidth) flatRange(); else { buildRange(); boardImg.addEventListener('error', flatRange); }
+
+  /* =========================================================
+     LAYERS: a plywood sample, built in 3D. Veneers fall into place, the cross bands turn 90°, the whole lot is
+     pressed into one sheet with a flash of glue, a treatment wave passes through it (H3.2), and finally every
+     veneer is lined up and stretched into a beam: LVL.
+     ========================================================= */
+  const lamScene = $('#lamScene'), lamIn = $('#lamIn'), scan = $('#scan'), NV = 7;
+  const LAB = { 6: 'Face veneer', 5: 'Cross band <small>· grain across</small>', 0: 'Back veneer' };
+  lamIn.insertAdjacentHTML('afterbegin', Array.from({ length: NV }, (_, i) =>
+    `<div class="lay"><div class="ven"><b class="face" style="background-position:${(i * 29 + 7) % 100}% 0">${i === NV - 1 ? '<u></u>' : ''}</b><i class="eb"></i><i class="et"></i><i class="el"></i><i class="er"></i></div>${LAB[i] ? `<b class="lab">${LAB[i]}</b>` : ''}</div>`).join(''));
+  const lays = $$('#lamIn .lay'), cross = lays.filter((_, i) => i % 2).map(l => l.firstElementChild), labs = $$('#lamIn .lab'), steps = $$('.step'), progI = $$('#prog i');
+  const L = { drop: 0, spread: 1, spin: 0, lab: 0, glue: 0, tint: 0, scan: 1, scanO: 0, beam: 0, rx: 58, rz: -38 };
+  let S = 400, T = 18, GAP = 48, DROP = 900, BEAM = .72, curStep = 0, lastGlue = -1;
+  const tintEl = $('#lamIn .face u');
+  const renderLam = () => {
+    for (let i = 0; i < NV; i++) {
+      const q = Math.min(1, Math.max(0, L.drop * (1 + (NV - 1) * .22) - i * .22)), e = 1 - Math.pow(1 - q, 3);
+      const z = i * T + L.spread * i * GAP + (1 - e) * DROP, st = lays[i].style;
+      st.visibility = q > 0 ? 'visible' : 'hidden';
+      st.transform = `translate3d(0,0,${z.toFixed(1)}px)`;
+    }
+    const spin = `rotateZ(${L.spin.toFixed(2)}deg)`; cross.forEach(v => { v.style.transform = spin; });
+    const ss = lamScene.style;
+    ss.setProperty('--rx', `${L.rx.toFixed(2)}deg`); ss.setProperty('--rz', `${L.rz.toFixed(2)}deg`);
+    if (L.glue !== lastGlue) { lastGlue = L.glue; ss.setProperty('--glue', L.glue.toFixed(3)); }
+    tintEl.style.opacity = L.tint.toFixed(3); // only the top face shows once the sheet is pressed, so only it takes the tint
+    labs.forEach(b => { b.style.opacity = L.lab.toFixed(3); });
+    lamIn.style.transform = `scale3d(${(1 + L.beam * BEAM).toFixed(4)},${(1 - L.beam * .56).toFixed(4)},1)`;
+    scan.style.transform = `translate3d(0,${((1 - L.scan) * 220 - 20).toFixed(1)}%,0)`; scan.style.opacity = L.scanO.toFixed(3); // a glow sweeps down over the sheet
+    $('#lamShadow').style.transform = `scale(${(1 + L.beam * .55).toFixed(3)},${(1 - L.beam * .3).toFixed(3)})`;
+    $('#lamShadow').style.opacity = Math.min(1, L.drop * 1.4).toFixed(3);
+    const t = LT.time(), k = t < 1.9 ? 0 : t < 3.5 ? 1 : t < 5.05 ? 2 : t < 6.7 ? 3 : 4;
+    if (k !== curStep) { curStep = k; progI.forEach((p, i) => p.classList.toggle('is-on', i === k)); }
+  };
+  const sizeLam = () => {
+    S = $('#lam').offsetWidth; T = S * .045; GAP = S * (phone() ? .1 : .12); DROP = phone() ? 760 : 900; BEAM = phone() ? .42 : .72;
+    lamScene.style.setProperty('--t', `${(T + .6).toFixed(1)}px`);
+    renderLam();
+  };
+  const stepSwap = (tl, a, b, t) => {
+    tl.to(steps[a], { autoAlpha: 0, y: -30, duration: .25, ease: 'power2.in' }, t)
+      .fromTo(steps[b], { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: .35, ease: 'back.out(1.4)', immediateRender: false }, t + .2);
+  };
+  const LT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: renderLam, scrollTrigger: { trigger: '#layers', start: 'top 60%', end: 'bottom bottom', scrub: true } });
+  LT.to(L, { drop: 1, duration: 1.5 }, 0)
+    .to(L, { lab: 1, duration: .3 }, 1.3)
+    .to(L, { rz: -31, rx: 56, duration: 6.4 }, 0)
+    .to(L, { spin: 90, duration: 1, ease: 'power2.inOut' }, 2.2)
+    .to(L, { lab: 0, duration: .3 }, 3.4)
+    .to(L, { spread: 0, duration: .5, ease: 'power4.in' }, 3.65)
+    .fromTo('#lamShake', { x: 0, y: 0 }, { keyframes: { x: [12, -9, 6, -3, 0], y: [-7, 5, -3, 1, 0] }, duration: .45, immediateRender: false }, 4.15)
+    .to(L, { glue: 1, duration: .12 }, 4.15).to(L, { glue: 0, duration: .7 }, 4.3)
+    .to(L, { scanO: 1, duration: .2 }, 5.25).to(L, { scan: 0, duration: 1.1, ease: 'power1.inOut' }, 5.25).to(L, { scanO: 0, duration: .2 }, 6.2)
+    .to(L, { tint: 1, duration: 1.1, ease: 'power1.inOut' }, 5.25)
+    .to(L, { tint: 0, duration: .4 }, 6.8)
+    .to(L, { spread: .45, duration: .5, ease: 'power2.out' }, 6.85)
+    .to(L, { spin: 180, duration: .7, ease: 'power2.inOut' }, 7.3)
+    .to(L, { spread: 0, duration: .4, ease: 'power4.in' }, 8)
+    .to(L, { beam: 1, rz: -21, rx: 60, duration: .9, ease: 'power2.inOut' }, 8.3)
+    .to({}, { duration: .5 }, 9.2);
+  stepSwap(LT, 0, 1, 1.85); stepSwap(LT, 1, 2, 3.45); stepSwap(LT, 2, 3, 5); stepSwap(LT, 3, 4, 6.65);
+  sizeLam();
+
+  /* ---------- LVL: from the beam's end grain, the camera pulls back to the crane lift and the lake ---------- */
+  const V = makeCam($('#vStage'), $('#shotL'), 1672, 941, { cx: .215, cy: .28, z: 2 });
+  const vCaps = $$('#vStage .cap');
+  const VT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: V.apply, scrollTrigger: { trigger: '#lvl', start: 'top top', end: 'bottom bottom', scrub: true } });
+  VT.to(V.c, { cx: .5, cy: .45, z: 1.04, duration: 4, ease: 'power3.inOut' }, 0)
+    .to(V.c, { cx: .56, z: 1.12, duration: 6, ease: 'none' }, 4)
+    .fromTo('#vMeter', { scaleX: 0 }, { scaleX: 1, duration: 10 }, 0);
+  capIn(VT, vCaps[0], 1); capOut(VT, vCaps[0], 3.2);
+  capIn(VT, vCaps[1], 3.5); capOut(VT, vCaps[1], 5.6);
+  copyIn(VT, '#vCopy > *', 6, .7);
+  V.size();
+
+  /* ---------- Supply: from the bright doorway, back along the aisle to the forklift and the packs ---------- */
+  const Y = makeCam($('#yStage'), $('#shotY'), 1672, 941, { cx: .17, cy: .44, z: 1.9 });
+  const YT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: Y.apply, scrollTrigger: { trigger: '#yard', start: 'top top', end: 'bottom bottom', scrub: true } })
+    .to(Y.c, { cx: .5, cy: .5, z: 1.04, duration: .55, ease: 'power3.out' }, 0)
+    .to(Y.c, { cx: .58, z: 1.12, duration: .45 }, .55)
+    .to('#yTag', { opacity: 1, duration: .1 }, .2);
+  copyIn(YT, '#yCopy > *', .32);
+  Y.size();
+
+  /* ---------- Delivery: from the Hanes name on the curtain, back to the whole rig in the sunrise ---------- */
+  const Tc = makeCam($('#tStage'), $('#shotT'), 1672, 941, { cx: .69, cy: .4, z: 2 });
+  gsap.timeline({ defaults: { ease: 'none' }, onUpdate: Tc.apply, scrollTrigger: { trigger: '#truck', start: 'top top', end: 'bottom bottom', scrub: true } })
+    .to(Tc.c, { cx: .5, cy: .5, z: 1.03, duration: .6, ease: 'power3.inOut' }, 0)
+    .to(Tc.c, { cx: .44, z: 1.1, duration: .4 }, .6)
+    .fromTo('#sweep', { xPercent: -100, opacity: 0 }, { xPercent: 180, opacity: 1, duration: .7, ease: 'power1.inOut' }, .1)
+    .fromTo('#tCopy > *', { autoAlpha: 0, y: -40 }, { autoAlpha: 1, y: 0, duration: .12, stagger: .04, ease: 'back.out(1.4)', immediateRender: false }, .45);
+  Tc.size();
+
+  /* ---------- Reveals: fade-ups, and cards dropped onto the page with a slight tilt ---------- */
+  ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
+  $$('[data-drop]').forEach((el, i) => gsap.set(el, el.dataset.drop === 'tilt' ? { y: -110, rotation: i % 2 ? 3 : -2.5, transformOrigin: '50% 0%' } : { y: -26 }));
+  ScrollTrigger.batch('[data-drop]', { start: 'top 92%', once: true, onEnter: els => gsap.to(els, { opacity: 1, y: 0, rotation: 0, duration: 1.1, stagger: .09, ease: 'back.out(1.5)', overwrite: true }) });
+
+  /* ---------- Standards: the seal rings draw themselves and the lettering turns ---------- */
+  $$('.seal').forEach(seal => {
+    gsap.fromTo(seal.querySelector('.ring'), { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top 90%', end: 'top 40%', scrub: true } });
+    gsap.fromTo(seal.querySelector('.spin'), { rotation: -40, svgOrigin: '100 100' }, { rotation: 60, svgOrigin: '100 100', ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  /* ---------- Marquee: two belts of promises; they run faster, turn with you, and lean as you scroll ---------- */
+  const belts = $$('.marq__track').map(el => { el.innerHTML += el.innerHTML; return { el, dir: +el.parentNode.dataset.dir, x: 0, w: 0 }; });
+  const sizeBelts = () => belts.forEach(b => { b.w = b.el.scrollWidth / 2; });
+  let mOn = false, mVel = 0, mSkew = 0, mSign = 1;
+  ScrollTrigger.create({ trigger: '#marq', start: 'top bottom', end: 'bottom top', onToggle: s => { mOn = s.isActive; }, onUpdate: s => { mVel = s.getVelocity(); if (mVel) mSign = mVel > 0 ? 1 : -1; } });
+  if (!reduce) gsap.ticker.add((t, dt) => {
+    if (!mOn) return;
+    mVel *= .92;
+    const v = Math.max(-4000, Math.min(4000, mVel));
+    mSkew += (Math.max(-10, Math.min(10, -v / 220)) - mSkew) * .12;
+    const sp = (.07 + Math.abs(v) * .0006) * Math.min(dt, 50) * mSign;
+    belts.forEach(b => {
+      if (!b.w) return;
+      b.x = (b.x - sp * b.dir) % b.w; if (b.x > 0) b.x -= b.w;
+      b.el.style.transform = `translate3d(${b.x.toFixed(1)}px,0,0) skewX(${mSkew.toFixed(2)}deg)`;
+    });
+  });
+  sizeBelts();
+
+  let rsz = 0, lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) { sizeBelts(); return; } // a phone's toolbar, not a real resize
+    lastW = innerWidth; lastH = innerHeight; sizeH(); sizeLam(); sizeBelts(); applyB();
+  }); });
+
+  /* ---------- Bulk pricing: the form writes the email for you ---------- */
+  const form = $('#priceForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const f = new FormData(form), interest = f.getAll('interest').join(', ') || 'Not specified';
+    const body = [
+      'Hanewood bulk pricing request', '',
+      `Business: ${f.get('business')}`, `Contact: ${f.get('name')}`, `Email: ${f.get('email')}`, `Phone: ${f.get('phone') || '-'}`,
+      `Business type: ${f.get('type')}`, `Region: ${f.get('region')}`, `Interested in: ${interest}`, '',
+      'Products, sizes and volumes:', f.get('message') || '-',
+    ].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Hanewood bulk pricing request: ' + f.get('business'))}&body=${encodeURIComponent(body)}`;
+    $('#fDone').classList.add('is-on');
+  });
+
+  /* ---------- Load: the first photo and the fonts, then the strips and the headline are laid up ---------- */
+  const fill = $('#lfill');
+  const need = [sImg[0].decode().catch(() => {})];
+  if (document.fonts) need.push(document.fonts.ready);
+  let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
+  Promise.all(need).then(() => {
+    sizeH(); sizeLam(); sizeBelts();
+    gsap.timeline({ delay: .15 })
+      .to('#loader', { autoAlpha: 0, duration: .7, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
+      .fromTo(strips, { x: i => side(i) * innerWidth * 1.1 }, { x: 0, duration: 1.5, stagger: .05, ease: 'expo.out' }, '<.1')
+      .fromTo(hIntro, { z: 1.16 }, { z: 1, duration: 2.8, ease: 'power3.out', onUpdate: applyH }, '<')
+      .fromTo(hTitle, { x: i => side(i) * Math.min(300, innerWidth * .3), autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 1.3, stagger: .06, ease: 'expo.out' }, '<.55')
+      .from(['#hCopy .eyebrow', '#hCopy p', '#hCopy .ctas'], { autoAlpha: 0, y: -30, duration: 1.1, stagger: .1, ease: 'back.out(1.4)' }, '<.3')
+      .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); }, '<');
+  });
+})();
+</script>
+</body>
+</html>
