@@ -103,6 +103,55 @@ button{background:none;border:0;cursor:pointer}
 .cap .gold{text-shadow:none}
 .h-meter{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:clamp(18px,3.5vh,34px);height:2px;border-radius:2px;background:rgba(255,240,210,.12)}
 .h-meter i{position:absolute;inset:0;border-radius:2px;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+.h-flash{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;will-change:opacity;background:radial-gradient(ellipse 60% 55% at 62% 52%,rgba(255,236,180,.95),rgba(255,176,70,.35) 45%,rgba(0,0,0,0) 75%)}
+
+/* ---------- Warmth: one giant word is a window onto the wool, and the camera flies through its H ---------- */
+.warmth{position:relative;height:360vh;background:var(--bg)}
+.warmth .stage{background:var(--bg)}
+#shotW{width:2000px;height:1290px}
+.w-cv{position:absolute;inset:0;width:100%;height:100%;z-index:2}
+.w-ask{position:absolute;z-index:3;left:0;right:0;top:calc(50% - 15vw);text-align:center;font-family:var(--display);font-weight:600;letter-spacing:-.03em;font-size:clamp(18px,2vw,30px);color:var(--ink-2);opacity:0;visibility:hidden}
+.w-shade{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;will-change:opacity;background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.5) 40%,rgba(0,0,0,0) 68%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 55%)}
+.w-copy{position:absolute;z-index:4;left:var(--pad);right:var(--pad);bottom:clamp(40px,9vh,96px);max-width:700px}
+.w-copy .eyebrow,.w-copy .sub{opacity:0;visibility:hidden}
+.w-copy .sub{margin-top:16px}
+.big{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.98;text-wrap:balance;font-size:clamp(40px,6vw,96px)}
+.w-copy .big{margin-top:10px}
+
+/* ---------- Rolls: a roll of Hanesulation drops onto the floor and rolls out a blanket as you scroll ---------- */
+.rolls{position:relative;height:320vh;background:var(--bg)}
+.r-stage{--floor:82%;background:radial-gradient(ellipse 70% 30% at 50% var(--floor),rgba(242,201,90,.1),rgba(0,0,0,0) 70%),linear-gradient(180deg,#0a0907 0%,#0c0a08 var(--floor),#17130d var(--floor),#0d0b08 100%)}
+.r-cv{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.r-head{position:absolute;z-index:2;left:var(--pad);right:var(--pad);top:calc(var(--nav) + 5vh)}
+.r-head .eyebrow{opacity:0;visibility:hidden}
+.r-big{margin-top:10px;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.98;font-size:clamp(44px,6.4vw,108px)}
+.r-big .rw{display:inline-block;opacity:0;transform:translateY(-70%) rotate(-6deg);will-change:transform,opacity}
+.r-head .sub{margin-top:16px;opacity:0;visibility:hidden}
+
+/* ---------- Demand: four short lines slam onto the screen, then the reason to stock it ---------- */
+.demand{position:relative;height:380vh;background:#000}
+.d-stage{display:grid;place-items:center;background:radial-gradient(ellipse 70% 55% at 50% 55%,rgba(242,201,90,.08),rgba(0,0,0,0) 70%),#000}
+.d-shake{position:relative;width:100%;display:grid;place-items:center;will-change:transform}
+.slam{display:grid;justify-items:center;text-align:center;padding:0 var(--pad)}
+.sl{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:1.02;font-size:clamp(34px,7.6vw,128px);white-space:nowrap;opacity:0;visibility:hidden;will-change:transform,opacity}
+.sl span{color:var(--ink-3)}
+.d-flash{position:absolute;inset:0;pointer-events:none;opacity:0;will-change:opacity;background:radial-gradient(ellipse 55% 45% at 50% 50%,rgba(255,222,140,.6),rgba(255,160,60,.14) 45%,rgba(0,0,0,0) 72%)}
+.d-ring{position:absolute;left:50%;top:50%;width:46vmin;height:46vmin;margin:-23vmin 0 0 -23vmin;border-radius:50%;box-shadow:0 0 0 2px rgba(242,201,90,.9),inset 0 0 50px rgba(242,201,90,.35);opacity:0;pointer-events:none;will-change:transform,opacity}
+.d-end{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--pad);pointer-events:none}
+.d-end .eyebrow,.d-end .sub,.d-end .btn{opacity:0;visibility:hidden}
+.d-end.is-on{pointer-events:auto}
+.d-big{margin-top:14px;font-family:var(--display);font-weight:600;letter-spacing:-.06em;line-height:.92;font-size:clamp(58px,11.5vw,200px)}
+.d-end .sub{margin:24px auto 0;max-width:640px}
+.d-end .btn{margin-top:28px}
+
+/* ---------- Marquee: the promises, on two belts that speed up and lean as you scroll ---------- */
+.marq{position:relative;padding:clamp(40px,8vh,90px) 0;background:var(--bg);overflow:hidden;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line)}
+.marq__row{display:flex;white-space:nowrap}
+.marq__track{display:flex;flex:none;will-change:transform}
+.marq__track span{flex:none;display:inline-flex;align-items:center;gap:.36em;padding-right:.36em;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.1;font-size:clamp(52px,9vw,160px)}
+.marq__track i{font-style:normal;color:var(--gold);font-size:.42em}
+.marq__row--o span{color:transparent;letter-spacing:0;-webkit-text-stroke:1.5px rgba(242,201,90,.75)}
+.marq__row--o i{-webkit-text-stroke:0;color:var(--ink-4)}
 
 /* ---------- The range: a house in section; heat escapes until the walls and ceiling fill, and the R-value climbs ---------- */
 .range{position:relative;height:270vh;background:var(--bg)}
@@ -211,9 +260,12 @@ fieldset.field{border:0}
 [data-drop]{opacity:0}
 .dm{display:inline-block;overflow:hidden;vertical-align:top;padding:.08em 0 .16em;margin:-.08em 0 -.16em}
 .di{display:inline-block}
-.no-js [data-reveal],.no-js [data-drop],.no-js .s-copy > *{opacity:1;visibility:visible;transform:none}
+.no-js [data-reveal],.no-js [data-drop],.no-js .s-copy > *,.no-js .w-copy *,.no-js .r-head *,.no-js .d-end *,.no-js .sl{opacity:1;visibility:visible;transform:none}
 .no-js .cam{visibility:visible}
-.no-js .unroll__sheet{display:none}
+.no-js .unroll__sheet,.no-js .w-cv,.no-js .r-cv,.no-js .w-ask{display:none}
+.no-js .warmth,.no-js .rolls,.no-js .demand{height:auto}
+.no-js .warmth .sticky,.no-js .rolls .sticky,.no-js .demand .sticky{position:relative;height:auto;min-height:100svh}
+.no-js .d-end{position:relative}
 
 html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
 
@@ -249,6 +301,14 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   .feats{grid-template-columns:1fr 1fr 1fr;gap:8px}
   .feats li{padding:12px;font-size:13px}
   .fgrid{grid-template-columns:1fr}
+  .w-ask{top:calc(50% - 26vw)}
+  .big{font-size:clamp(34px,10vw,48px)}
+  .r-stage{--floor:80%}
+  .r-big{font-size:clamp(40px,12vw,58px)}
+  .sl{font-size:clamp(28px,12.2vw,52px)}
+  .d-big{font-size:clamp(52px,17vw,84px)}
+  .marq__track span{font-size:clamp(44px,14vw,72px)}
+  .marq__row--o span{-webkit-text-stroke-width:1px}
 }
 @media (prefers-reduced-motion:reduce){.mote,.house .heat{animation:none}}
 </style>
@@ -267,6 +327,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
     <a class="brand" href="#top" data-scroll>Hanesulation <small>by Hanes Distribution</small></a>
     <nav class="nav__links" aria-label="Page">
       <a href="#range" data-scroll>The range</a>
+      <a href="#demand" data-scroll>Why stock it</a>
       <a href="#certified" data-scroll>Certified</a>
       <a href="#supply" data-scroll>Supply</a>
       <a href="#pricing" data-scroll>For retailers</a>
@@ -278,7 +339,9 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   </div>
 </header>
 <nav class="menu" id="menu" aria-label="Page">
+  <a href="#warmth" data-scroll>Inside the roll</a>
   <a href="#range" data-scroll>The range</a>
+  <a href="#demand" data-scroll>Why stock it</a>
   <a href="#certified" data-scroll>Certified</a>
   <a href="#supply" data-scroll>Supply</a>
   <a href="#brand" data-scroll>The brand</a>
@@ -293,6 +356,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
       <img class="cam" id="shotA" src="stills/hanesulation/attic-2000.webp" width="2000" height="1290" alt="A roll of glass wool insulation in a sunlit roof space, between timber framing" decoding="async">
       <img class="cam" id="shotB" src="stills/hanesulation/roll-2000.webp" width="2000" height="2000" alt="A roll of premium glass wool insulation unrolled on a concrete floor under a dramatic sky" decoding="async">
       <div class="motes" id="motes" aria-hidden="true"></div>
+      <div class="h-flash" id="hFlash" aria-hidden="true"></div>
       <div class="h-dark" id="hDark" aria-hidden="true"></div>
       <div class="h-shade" id="hShade" aria-hidden="true"></div>
       <div class="lb lb--t" id="lbT" aria-hidden="true"></div>
@@ -300,7 +364,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
       <div class="h-copy" id="hCopy">
         <div class="eyebrow">Hanesulation · For retailers and the trade</div>
         <h1>Warmth,<br><span class="gold">by the roll.</span></h1>
-        <p>Glass wool insulation for walls and ceilings, from R2 to R7. BRANZ Appraised, and ready for your shelves.</p>
+        <p>Premium glass wool for walls and ceilings, R2 to R7. BRANZ Appraised, stocked in Christchurch and ready to fill your shelves.</p>
         <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
       </div>
       <div class="caps" aria-hidden="true">
@@ -309,6 +373,21 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
         <h2 class="cap" id="cap3">BRANZ Appraised. <span>R-values to AS/NZS 4859.1.</span></h2>
       </div>
       <div class="h-meter" aria-hidden="true"><i id="hMeter"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Warmth: through the word ================= -->
+  <section class="warmth" id="warmth" aria-label="What is inside every roll">
+    <div class="sticky stage" id="wStage">
+      <img class="cam" id="shotW" src="stills/hanesulation/attic-2000.webp" width="2000" height="1290" alt="" loading="lazy" decoding="async">
+      <canvas class="w-cv" id="wCv" aria-hidden="true"></canvas>
+      <p class="w-ask" id="wAsk" aria-hidden="true">What's inside every roll?</p>
+      <div class="w-shade" id="wShade" aria-hidden="true"></div>
+      <div class="w-copy" id="wCopy">
+        <div class="eyebrow">Inside every roll</div>
+        <h2 class="big" id="wBig">Millions of tiny pockets of <span class="gold">still air.</span></h2>
+        <p class="sub">Glass wool is fine glass fibre, spun into a soft blanket that traps still air, and still air is what slows heat down. More wool, more trapped air, a higher R-value. That's how the range climbs from R2 to R7.</p>
+      </div>
     </div>
   </section>
 
@@ -353,6 +432,46 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
         <text class="lab" x="320" y="116" text-anchor="middle">CEILING</text>
       </svg>
     </div>
+  </section>
+
+  <!-- ================= Rolls: a roll drops in and rolls out a blanket ================= -->
+  <section class="rolls" id="rolls" aria-label="Rolls and batts">
+    <div class="sticky stage r-stage" id="rStage">
+      <canvas class="r-cv" id="rCv" role="img" aria-label="A roll of glass wool insulation rolls across the floor, laying a blanket behind it"></canvas>
+      <div class="r-head" id="rHead">
+        <div class="eyebrow">Rolls and batts</div>
+        <h2 class="r-big" id="rBig"><span class="rw">Roll</span> <span class="rw">it</span> <span class="rw">out.</span> <span class="rw gold">Room</span> <span class="rw gold">by</span> <span class="rw gold">room.</span></h2>
+        <p class="sub">Glass wool rolls and batts from R2 to R7, packed to stack neatly on your shelves and easy for your customers to carry to site. Cut to fit, pressed into place, and the room is warmer for it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Demand: why stock it ================= -->
+  <section class="demand" id="demand" aria-label="Why stock Hanesulation">
+    <div class="sticky d-stage" id="dStage">
+      <div class="d-flash" id="dFlash" aria-hidden="true"></div>
+      <div class="d-shake" id="dShake">
+        <div class="d-ring" id="dRing" aria-hidden="true"></div>
+        <div class="slam" id="slam">
+          <p class="sl"><span>Every</span> new build.</p>
+          <p class="sl"><span>Every</span> renovation.</p>
+          <p class="sl"><span>Every</span> ceiling.</p>
+          <p class="sl"><span>Every</span> wall.</p>
+        </div>
+      </div>
+      <div class="d-end" id="dEnd">
+        <div class="eyebrow">Why stock Hanesulation</div>
+        <h2 class="d-big" id="dBig">Demand, <span class="gold">built in.</span></h2>
+        <p class="sub">The Building Code requires insulation in every new home, and every renovation is a chance to top it up. Stock one brand that covers it all: R2 to R7, walls and ceilings.</p>
+        <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Marquee ================= -->
+  <section class="marq" id="marq" aria-label="R2 to R7 for walls and ceilings, BRANZ Appraised, R-values to AS/NZS 4859.1, delivered nationwide">
+    <div class="marq__row" aria-hidden="true" data-dir="1"><div class="marq__track"><span>R2 to R7 <i>✦</i></span><span>Walls <i>✦</i></span><span>Ceilings <i>✦</i></span><span>BRANZ Appraised <i>✦</i></span><span>AS/NZS 4859.1 <i>✦</i></span></div></div>
+    <div class="marq__row marq__row--o" aria-hidden="true" data-dir="-1"><div class="marq__track"><span>Warmth by the roll <i>✦</i></span><span>Stocked in Christchurch <i>✦</i></span><span>Delivered nationwide <i>✦</i></span><span>Pricing for stockists <i>✦</i></span></div></div>
   </section>
 
   <!-- ================= Certified ================= -->
@@ -430,7 +549,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
     <div class="wrap pricing__grid">
       <div>
         <div class="eyebrow" data-reveal>For retailers and the trade</div>
-        <h2 class="h" style="margin-top:12px">Stock Hanesulation. <span class="muted">Let's talk pricing.</span></h2>
+        <h2 class="h" style="margin-top:12px">Put warmth on your shelves. <span class="muted">Let's talk pricing.</span></h2>
         <p class="sub" data-reveal>If you're a retailer, merchant or installer, tell us about your business. We'll come back to you with pricing built around your volumes.</p>
         <ul class="ticks">
           <li data-drop><span><b>Pricing for stockists.</b> Built around what you sell, not a price list.</span></li>
@@ -577,6 +696,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
     .set(A.c, { o: 0 }, 4.6).set(B.c, { o: 1 }, 4.6)
     .fromTo(B.c, { cx: .89, cy: .55, z: 7 }, { cx: .62, cy: .52, z: 1.05, duration: 1.2, ease: 'power3.out', immediateRender: false }, 4.6)
     .to('#hDark', { opacity: 0, duration: .5, ease: 'power2.out' }, 4.6)
+    .fromTo('#hFlash', { opacity: .9 }, { opacity: 0, duration: .9, ease: 'power2.out', immediateRender: false }, 4.6)
     .to(B.c, { cx: .7, z: 1.18, duration: 4.2, ease: 'none' }, 5.8);
   capIn(HT, caps[0], 5.3); capOut(HT, caps[0], 6.6);
   capIn(HT, caps[1], 6.9); capOut(HT, caps[1], 8.2);
@@ -584,6 +704,74 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   HT.fromTo('#hMeter', { scaleX: 0 }, { scaleX: 1, duration: 10, ease: 'none' }, 0);
   const sizeHero = () => { A.size(); B.size(); };
   sizeHero();
+  const backOut = q => { const c = 1.70158, u = q - 1; return 1 + (c + 1) * u * u * u + c * u * u; };
+
+  /* =========================================================
+     WARMTH: one giant word, cut out of the dark, with a roll of glass wool glowing through it. The letters drop in,
+     then the camera flies into the H until the wool fills the screen: what's inside every roll.
+     ========================================================= */
+  const wStage = $('#wStage'), wCv = $('#wCv'), wx = wCv.getContext('2d'), wAsk = $('#wAsk');
+  const Wc = makeCam(wStage, $('#shotW'), 2000, 1290, { cx: .39, cy: .5, z: 1.5 });
+  const WORD = 'WARMTH', wm = { drop: 0, zoom: 0 };
+  let wW = 0, wH = 0, wDpr = 1, wFs = 100, wLx = [], wAdv = [], wBase = 0, wCap = 0, wP = { x: 0, y: 0 }, wEnd = 40;
+  const drawW = () => {
+    const z = wm.zoom;
+    if (z >= .999) { if (wCv.style.visibility !== 'hidden') wCv.style.visibility = 'hidden'; return; } // through the H: the wool fills the screen
+    if (wCv.style.visibility) wCv.style.visibility = '';
+    // scale grows exponentially so the flight feels steady; the H's stem glides to the centre of the screen as we go
+    const s = Math.exp(Math.log(wEnd) * z), k = 1 - Math.pow(1 - Math.min(1, z * 1.5), 3);
+    const fx = wP.x + (wW / 2 - wP.x) * k, fy = wP.y + (wH / 2 - wP.y) * k;
+    wx.setTransform(1, 0, 0, 1, 0, 0); wx.globalCompositeOperation = 'source-over'; wx.globalAlpha = 1;
+    wx.fillStyle = '#0a0907'; wx.fillRect(0, 0, wCv.width, wCv.height);
+    wx.setTransform(wDpr * s, 0, 0, wDpr * s, wDpr * (fx - wP.x * s), wDpr * (fy - wP.y * s));
+    wx.font = `600 ${wFs}px "Inter Tight"`;
+    const at = [];
+    for (let i = 0; i < WORD.length; i++) {
+      const q = Math.min(1, Math.max(0, (wm.drop - i * .1) / .5));
+      if (q > 0) { const e = backOut(q); at.push([i, wBase - (1 - e) * wH * .8, (1 - e) * (i % 2 ? .4 : -.32), Math.min(1, q * 2.5)]); }
+    }
+    const each = f => at.forEach(([i, y, r, o]) => { wx.save(); wx.globalAlpha = o; wx.translate(wLx[i] + wAdv[i] / 2, y - wCap / 2); wx.rotate(r); f(WORD[i], -wAdv[i] / 2, wCap / 2); wx.restore(); });
+    // a hairline of gold light around every letter: stroked first, then the letters cut out, so only the outer edge stays
+    wx.lineWidth = 2.6 / s; wx.strokeStyle = 'rgba(242,201,90,.7)';
+    each((t, x, y) => wx.strokeText(t, x, y));
+    wx.globalCompositeOperation = 'destination-out';
+    each((t, x, y) => wx.fillText(t, x, y));
+  };
+  const sizeW = () => {
+    wW = wStage.clientWidth; wH = wStage.clientHeight; wDpr = Math.min(2, devicePixelRatio || 1);
+    wCv.width = Math.round(wW * wDpr); wCv.height = Math.round(wH * wDpr);
+    wx.font = '600 100px "Inter Tight"';
+    const adv = [...WORD].map(ch => wx.measureText(ch).width), tr = -3.5, tw = adv.reduce((a, b) => a + b, 0) + tr * (WORD.length - 1);
+    const cap = wx.measureText('H').actualBoundingBoxAscent || 72;
+    wFs = Math.min(wW * .9 / tw * 100, wH * .4 / cap * 100);
+    const k = wFs / 100; let x = (wW - tw * k) / 2;
+    wAdv = adv.map(a => a * k); wLx = adv.map(a => { const p = x; x += (a + tr) * k; return p; });
+    wCap = cap * k; wBase = wH / 2 + wCap / 2;
+    // find the H's left stem: draw an H, then scan across its middle for the first run of ink
+    const oc = document.createElement('canvas'), ow = Math.ceil(adv[5]) + 4; oc.width = ow; oc.height = 110;
+    const ox = oc.getContext('2d'); ox.font = '600 100px "Inter Tight"'; ox.fillText('H', 0, 100);
+    const row = ox.getImageData(0, Math.round(100 - cap / 2), ow, 1).data; let a0 = -1, a1 = -1;
+    for (let i = 0; i < ow; i++) { const on = row[i * 4 + 3] > 127; if (on && a0 < 0) a0 = i; else if (!on && a0 >= 0) { a1 = i; break; } }
+    if (a0 < 0 || a1 < 0) { a0 = 8; a1 = 22; }
+    wP = { x: wLx[5] + (a0 + a1) / 2 * k, y: wBase - wCap / 2 };
+    wEnd = 1.25 * Math.max(wW / ((a1 - a0) * k), wH / wCap);
+    wAsk.style.top = `${Math.round(wBase - wCap * 1.3 - wAsk.offsetHeight)}px`;
+    Wc.size(); drawW();
+  };
+  const wBig = splitDrop($('#wBig')); gsap.set(wBig, { yPercent: -135 });
+  const WT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: () => { Wc.apply(); drawW(); }, scrollTrigger: { trigger: '#warmth', start: 'top top', end: 'bottom bottom', scrub: true } });
+  WT.to(wm, { drop: 1, duration: 1.3 }, 0)
+    .to(Wc.c, { z: 1.32, duration: 1.8, ease: 'power1.out' }, 0)
+    .fromTo(wAsk, { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .4, ease: 'back.out(1.4)', immediateRender: false }, .95)
+    .to(wAsk, { autoAlpha: 0, y: -30, duration: .3, ease: 'power2.in' }, 1.9)
+    .to(wm, { zoom: 1, duration: 2.1, ease: 'power2.in' }, 1.9)
+    .to(Wc.c, { cx: .34, z: 2.2, duration: 3.1, ease: 'power1.in' }, 1.9)
+    .to('#wShade', { opacity: 1, duration: .6 }, 4)
+    .fromTo('#wCopy .eyebrow', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .35, ease: 'back.out(1.4)', immediateRender: false }, 4.1)
+    .to(wBig, { yPercent: 0, duration: .6, stagger: .05, ease: 'back.out(1.5)' }, 4.15)
+    .fromTo('#wCopy .sub', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .4, ease: 'back.out(1.4)', immediateRender: false }, 4.6)
+    .to({}, { duration: .5 }, 5);
+  sizeW();
 
   /* ---------- Headings: the words drop into place as each one comes into view ---------- */
   if (!reduce) {
@@ -591,7 +779,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
       if (!e.isIntersecting) return; dropIO.unobserve(e.target);
       gsap.to(e.target.__d, { yPercent: 0, duration: 1.15, stagger: .07, ease: 'back.out(1.5)', overwrite: true });
     }), { rootMargin: '0px 0px -14% 0px' });
-    $$('main .h').forEach(el => { el.__d = splitDrop(el); gsap.set(el.__d, { yPercent: -118 }); dropIO.observe(el); });
+    $$('main .h').forEach(el => { el.__d = splitDrop(el); gsap.set(el.__d, { yPercent: -135 }); dropIO.observe(el); });
   }
 
   /* =========================================================
@@ -621,6 +809,170 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
     .to('#heat', { opacity: 0, duration: 7, ease: 'power1.in' }, 1.5)
     .to({}, { duration: 1.5 });
   setR();
+
+  /* =========================================================
+     ROLLS: a roll of Hanesulation drops onto the floor, then rolls out a blanket as you scroll. It's drawn to scale:
+     the spiral's pitch is the blanket's thickness, so the roll shrinks by exactly what it lays down, and the headline
+     comes up word by word as the roll passes under it.
+     ========================================================= */
+  const rStage = $('#rStage'), rCv = $('#rCv'), rx = rCv.getContext('2d'), rHead = $('#rHead'), rWords = $$('#rBig .rw');
+  const strip = new Image(); strip.decoding = 'async'; strip.src = 'stills/hanesulation/blanket-strip.webp';
+  const roll = { drop: 0, p: 0 };
+  let rW = 0, rH = 0, rDpr = 1, R0 = 100, T = 20, ra = 9, rb = 3, phiMax = 30, floorY = 0, x0 = 0, x1 = 0, rollTex = null, stripPat = null, rWx = [], rWq = [];
+  const wound = phi => ra * phi + rb * phi * phi / 2; // length of blanket wound from the core out to angle phi
+  const buildRoll = () => {
+    if (!strip.naturalWidth || !rW) return;
+    const sw = strip.naturalWidth, sh = strip.naturalHeight, loop = sw * 2, src = sh / T;
+    // the blanket's texture, mirrored end to end so it repeats without a seam
+    const dbl = document.createElement('canvas'); dbl.width = loop; dbl.height = sh;
+    const dx = dbl.getContext('2d'); dx.drawImage(strip, 0, 0); dx.translate(loop, 0); dx.scale(-1, 1); dx.drawImage(strip, 0, 0);
+    stripPat = rx.createPattern(dbl, 'repeat'); stripPat.setTransform(new DOMMatrix([1 / src, 0, 0, 1 / src, x0, floorY - T]));
+    // the roll's end face: the same blanket wound into a spiral, laid slice by slice along the spiral, once
+    const n = Math.ceil(R0 * 2 * rDpr) + 2; rollTex = document.createElement('canvas'); rollTex.width = rollTex.height = n;
+    const c = rollTex.getContext('2d'); c.translate(n / 2, n / 2); c.scale(rDpr, rDpr);
+    c.fillStyle = '#6b4c17'; c.beginPath(); c.arc(0, 0, R0, 0, Math.PI * 2); c.fill();
+    for (let phi = phiMax; phi > .4;) {
+      const rc = ra + rb * phi - T / 2; if (rc <= 1) break;
+      const st = Math.min(.15, 5 / rc), seg = rc * st * 1.3, sl = Math.min(loop, seg * src);
+      let sx = (wound(phi) * src) % loop; if (sx + sl > loop) sx = loop - sl;
+      c.save(); c.rotate(phi + Math.PI / 2); c.translate(0, -rc); c.drawImage(dbl, sx, 0, sl, sh, -seg / 2, -T / 2, seg, T); c.restore();
+      phi -= st;
+    }
+    // the seams between the layers, a thin catch of light on each, and the core
+    const spiral = off => { c.beginPath(); for (let phi = .6; phi <= phiMax; phi += .05) { const r = ra + rb * phi - off; c.lineTo(r * Math.cos(phi), r * Math.sin(phi)); } };
+    spiral(0); c.lineWidth = Math.max(1, T * .09); c.strokeStyle = 'rgba(56,34,6,.62)'; c.stroke();
+    spiral(T * .16); c.lineWidth = Math.max(.6, T * .05); c.strokeStyle = 'rgba(255,236,190,.2)'; c.stroke();
+    c.fillStyle = '#1b1307'; c.beginPath(); c.arc(0, 0, ra * .85, 0, Math.PI * 2); c.fill();
+  };
+  const drawR = () => {
+    rx.setTransform(1, 0, 0, 1, 0, 0); rx.clearRect(0, 0, rCv.width, rCv.height);
+    if (!rollTex) return;
+    rx.setTransform(rDpr, 0, 0, rDpr, 0, 0);
+    const L = roll.p * (x1 - x0), left = Math.max(0, wound(phiMax) - L);
+    const phiE = (-ra + Math.sqrt(ra * ra + 2 * rb * left)) / rb, R = ra + rb * phiE, rot = Math.PI / 2 - phiE;
+    const land = roll.drop, cx = x0 + L, cy = floorY - R - (1 - land) * (floorY + R * 1.3);
+    // the blanket laid so far, lit along its top edge
+    if (L > .5) {
+      rx.fillStyle = stripPat; rx.fillRect(x0, floorY - T, L, T);
+      const g = rx.createLinearGradient(0, floorY - T, 0, floorY);
+      g.addColorStop(0, 'rgba(255,228,160,.34)'); g.addColorStop(.2, 'rgba(255,228,160,0)'); g.addColorStop(1, 'rgba(0,0,0,.35)');
+      rx.fillStyle = g; rx.fillRect(x0, floorY - T, L, T);
+    }
+    // a pool of warm light travels with it
+    const pg = rx.createRadialGradient(cx, floorY - R, 0, cx, floorY - R, R * 3);
+    pg.addColorStop(0, `rgba(242,190,90,${(.12 * land).toFixed(3)})`); pg.addColorStop(1, 'rgba(242,190,90,0)');
+    rx.fillStyle = pg; rx.fillRect(cx - R * 3, floorY - R * 4, R * 6, R * 6);
+    // its shadow on the floor
+    if (land > .02) {
+      rx.save(); rx.translate(cx, floorY); rx.scale(1, .16);
+      const sg = rx.createRadialGradient(0, 0, 0, 0, 0, R * 1.3); sg.addColorStop(0, `rgba(0,0,0,${(.65 * land * land).toFixed(3)})`); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      rx.fillStyle = sg; rx.beginPath(); rx.arc(0, 0, R * 1.3, 0, Math.PI * 2); rx.fill(); rx.restore();
+    }
+    // the roll: clipped to what is left of its spiral (the outer layer ends right where the blanket leaves it), then turned
+    rx.save(); rx.beginPath();
+    for (let j = 0; j <= 96; j++) { const phi = phiE - Math.PI * 2 * (1 - j / 96), r = ra + rb * phi, a = phi + rot; rx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); }
+    rx.closePath(); rx.clip(); rx.translate(cx, cy);
+    const hs = rollTex.width / rDpr / 2;
+    rx.save(); rx.rotate(rot); rx.drawImage(rollTex, -hs, -hs, hs * 2, hs * 2); rx.restore();
+    // the light stays put while the roll turns: a warm glow up top, the rim falling into shadow
+    const lg = rx.createRadialGradient(-R * .3, -R * .35, 0, 0, 0, R * 1.05);
+    lg.addColorStop(0, 'rgba(255,240,205,.18)'); lg.addColorStop(.55, 'rgba(0,0,0,0)'); lg.addColorStop(1, 'rgba(0,0,0,.5)');
+    rx.fillStyle = lg; rx.fillRect(-R, -R, R * 2, R * 2); rx.restore();
+    // the headline comes up word by word as the roll passes beneath it
+    const front = land >= .999 ? cx + R * .8 : -1e5;
+    rWords.forEach((el, i) => {
+      const q = Math.min(1, Math.max(0, (front - rWx[i]) / (R0 * 1.2)));
+      if (Math.abs(q - rWq[i]) < .002) return; rWq[i] = q;
+      const e = backOut(q);
+      el.style.opacity = Math.min(1, q * 2).toFixed(3);
+      el.style.transform = `translate3d(0,${((1 - e) * -70).toFixed(2)}%,0) rotate(${((1 - e) * -6).toFixed(2)}deg)`;
+    });
+  };
+  const sizeR = () => {
+    rW = rStage.clientWidth; rH = rStage.clientHeight; rDpr = Math.min(2, devicePixelRatio || 1);
+    rCv.width = Math.round(rW * rDpr); rCv.height = Math.round(rH * rDpr);
+    const phone = rW < 700, pad = rHead.offsetLeft;
+    R0 = Math.min(rH * (phone ? .21 : .26), rW * (phone ? .36 : .2)); T = R0 * (phone ? .26 : .22); ra = T * .45; rb = T / (Math.PI * 2); phiMax = (R0 - ra) / rb;
+    floorY = Math.round(rH * (phone ? .76 : .82)); rStage.style.setProperty('--floor', `${floorY}px`);
+    x0 = phone ? R0 * .25 : pad + R0; x1 = rW - pad - R0 * .95;
+    // each word waits for the roll to pass under it; if the headline wraps, the words are spread along the roll's path in reading order
+    const wraps = rWords.some(el => el.offsetTop !== rWords[0].offsetTop);
+    rWx = rWords.map((el, i) => wraps ? x0 - R0 * .2 + (x1 - x0) * .92 * i / (rWords.length - 1) : pad + el.offsetLeft + el.offsetWidth / 2); rWq = rWords.map(() => -1);
+    buildRoll(); drawR();
+  };
+  strip.addEventListener('load', () => { buildRoll(); drawR(); });
+  const RT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: drawR, scrollTrigger: { trigger: '#rolls', start: 'top 35%', end: 'bottom bottom', scrub: true } });
+  RT.fromTo('#rHead .eyebrow', { autoAlpha: 0, y: -24 }, { autoAlpha: 1, y: 0, duration: .12, ease: 'back.out(1.4)', immediateRender: false }, .02)
+    .to(roll, { drop: 1, duration: .38, ease: 'bounce.out' }, .05)
+    .to(roll, { p: 1, duration: 1.6, ease: 'power1.inOut' }, .5)
+    .fromTo('#rHead .sub', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .2, ease: 'back.out(1.4)', immediateRender: false }, 1.8)
+    .to({}, { duration: .3 }, 2.1);
+  sizeR();
+
+  /* =========================================================
+     DEMAND: four short lines slam onto the screen, one by one, each landing with a flash, a ring and a shake.
+     Then the reason to stock it drops in. The slams play in real time, so they hit hard however fast you scroll.
+     ========================================================= */
+  const SL = $$('.sl'), dEnd = $('#dEnd'), dRing = $('#dRing'), dEndEls = $$('#dEnd .eyebrow, #dEnd .sub, #dEnd .btn');
+  const dBig = splitDrop($('#dBig')); gsap.set(dBig, { yPercent: -135 });
+  const DSTEP = [.001, .17, .33, .49, .68]; let dStep = 0;
+  // the newest line always lands dead centre, pushing the ones before it up the screen
+  const centreOn = el => gsap.to('#slam', { y: $('#slam').offsetHeight / 2 - (el.offsetTop - SL[0].offsetTop + el.offsetHeight / 2), duration: .5, ease: 'power3.out', overwrite: true });
+  const impact = () => {
+    gsap.fromTo(dRing, { scale: .25, opacity: .95 }, { scale: 2.8, opacity: 0, duration: 1, ease: 'power2.out', overwrite: true });
+    gsap.fromTo('#dFlash', { opacity: .95 }, { opacity: 0, duration: .8, ease: 'power2.out', overwrite: true });
+    gsap.fromTo('#dShake', { x: 0, y: 0 }, { keyframes: { x: [18, -14, 10, -6, 3, 0], y: [-10, 8, -5, 3, -1, 0] }, duration: .5, ease: 'none', overwrite: true });
+  };
+  const setD = k => {
+    const prev = dStep; if (k === prev) return; dStep = k;
+    if (k === 5) {
+      dEnd.classList.add('is-on');
+      gsap.to(SL, { y: -90, autoAlpha: 0, duration: .45, stagger: .05, ease: 'power3.in', overwrite: true });
+      gsap.fromTo(dEndEls[0], { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .8, delay: .35, ease: 'back.out(1.4)', overwrite: true });
+      gsap.to(dBig, { yPercent: 0, duration: 1.1, delay: .42, stagger: .08, ease: 'back.out(1.6)', overwrite: true });
+      gsap.fromTo(dEndEls.slice(1), { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .9, delay: .75, stagger: .1, ease: 'back.out(1.4)', overwrite: true });
+      gsap.fromTo('#dFlash', { opacity: .8 }, { opacity: 0, duration: 1.2, delay: .5, ease: 'power2.out', overwrite: true });
+      return;
+    }
+    if (prev === 5) {
+      dEnd.classList.remove('is-on');
+      gsap.to(dBig, { yPercent: -135, duration: .4, stagger: .03, ease: 'power2.in', overwrite: true });
+      gsap.to(dEndEls, { autoAlpha: 0, y: -20, duration: .3, overwrite: true });
+    }
+    SL.forEach((el, i) => {
+      if (i >= k) { if (i < prev && prev !== 5) gsap.to(el, { autoAlpha: 0, scale: 1.5, y: 0, duration: .3, ease: 'power2.in', overwrite: true }); return; }
+      const newest = i === k - 1;
+      if (newest) centreOn(el);
+      if (newest && k > prev && prev !== 5) gsap.fromTo(el, { autoAlpha: 0, scale: 2.8, y: 0 }, { autoAlpha: 1, scale: 1, duration: .34, ease: 'power4.in', overwrite: true, onComplete: impact });
+      else gsap.to(el, { autoAlpha: newest ? 1 : .26, scale: 1, y: 0, duration: .45, ease: 'power2.out', overwrite: true });
+    });
+  };
+  ScrollTrigger.create({ trigger: '#demand', start: 'top top', end: 'bottom bottom', onUpdate: s => { let k = 0; while (k < DSTEP.length && s.progress >= DSTEP[k]) k++; setD(k); } });
+
+  /* ---------- Marquee: two belts of promises; they run faster, turn with you, and lean as you scroll ---------- */
+  const belts = $$('.marq__track').map(el => { el.innerHTML += el.innerHTML; return { el, dir: +el.parentNode.dataset.dir, x: 0, w: 0 }; });
+  const sizeBelts = () => belts.forEach(b => { b.w = b.el.scrollWidth / 2; });
+  let mOn = false, mVel = 0, mSkew = 0, mSign = 1;
+  ScrollTrigger.create({ trigger: '.marq', start: 'top bottom', end: 'bottom top', onToggle: s => { mOn = s.isActive; }, onUpdate: s => { mVel = s.getVelocity(); if (mVel) mSign = mVel > 0 ? 1 : -1; } });
+  if (!reduce) gsap.ticker.add((t, dt) => {
+    if (!mOn) return;
+    mVel *= .92;
+    const v = Math.max(-4000, Math.min(4000, mVel));
+    mSkew += (Math.max(-10, Math.min(10, -v / 220)) - mSkew) * .12;
+    const sp = (.07 + Math.abs(v) * .0006) * Math.min(dt, 50) * mSign;
+    belts.forEach(b => {
+      if (!b.w) return;
+      b.x = (b.x - sp * b.dir) % b.w; if (b.x > 0) b.x -= b.w;
+      b.el.style.transform = `translate3d(${b.x.toFixed(1)}px,0,0) skewX(${mSkew.toFixed(2)}deg)`;
+    });
+  });
+  sizeBelts();
+  let rsz = 0;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (wStage.clientWidth !== wW || wStage.clientHeight !== wH) sizeW();
+    if (rStage.clientWidth !== rW || rStage.clientHeight !== rH) sizeR();
+    sizeBelts();
+  }); });
 
   /* ---------- Reveals: fade-ups, and cards dropped onto the page with a slight tilt ---------- */
   ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
@@ -671,10 +1023,11 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   /* ---------- Load: the first shot and the fonts, then the bars, the dust and the title ---------- */
   const fill = $('#lfill');
   const need = [$('#shotA').decode().catch(() => {})];
-  if (document.fonts) need.push(document.fonts.ready);
+  if (document.fonts) need.push(document.fonts.load('600 100px "Inter Tight"').catch(() => {}).then(() => document.fonts.ready));
   let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
   Promise.all(need).then(() => {
     $('#shotB').decode().catch(() => {});
+    sizeW(); sizeR(); sizeBelts(); // the canvases measure the real typeface now that it has loaded
     gsap.timeline({ delay: .2 })
       .to('#loader', { autoAlpha: 0, duration: .8, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
       .from(intro, { z: 1.15, duration: 2.8, ease: 'power3.out', onUpdate: A.apply }, '<')
