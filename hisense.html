@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hisense appliances — Supplied by Hanes Distribution</title>
-<meta name="description" content="Hisense home appliances, supplied nationwide through Hanes Distribution. Refrigeration, laundry, cooking and ventilation, specified alongside your building materials and delivered on the same programme.">
+<meta name="description" content="Hisense TVs and home appliances, supplied nationwide through Hanes Distribution. TVs, refrigeration, laundry, air conditioning, cooking and ventilation, with the 2026 catalogues to flip through.">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -13,6 +13,7 @@
 <meta property="og:title" content="Hisense appliances — Supplied by Hanes Distribution">
 <meta property="og:description" content="The whole kitchen. One supplier. Hisense home appliances, delivered nationwide.">
 <link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/flipbook.css">
 <link rel="preload" as="image" href="frames2/hisense/lg/001.webp">
 <script>document.documentElement.classList.add('js')</script>
 
@@ -141,6 +142,170 @@ section{position:relative}
 .pc__txt h3{margin-top:6px;font-family:var(--display);font-size:clamp(24px,2.1vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.1}
 .pc__txt p{margin-top:6px;font-size:15px;line-height:1.4;color:var(--dim)}
 .pc canvas{position:absolute;inset:0;width:100%;height:100%}
+.cards--6{grid-template-columns:repeat(3,1fr)}
+.cards--6 .pc{aspect-ratio:4/4.4}
+.pc__ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform 1.2s var(--ease)}
+.pc:hover .pc__ph{transform:scale(1.07)}
+.pc:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ---------- Shared pieces for the product sections ---------- */
+.eyebrow{display:inline-block;margin-bottom:12px;padding-bottom:.06em;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.6vw,21px);letter-spacing:-.01em}
+figure{margin:0}
+.ph{position:relative;overflow:hidden;border-radius:28px;background:#0b0b0d;isolation:isolate}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+.ph--white{background:#fff}
+figcaption h3{font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,24px);line-height:1.15;letter-spacing:-.018em}
+figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
+.chipset{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.chipset span{font-size:13px;font-weight:500;padding:8px 14px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(227,187,106,.45);color:#f3dca6}
+.fine{margin-top:16px;font-size:12px;color:var(--dim-2)}
+
+/* =========================================================================================
+   TV: the first picture grows to fill the screen, then each new one opens through a gold iris
+   ========================================================================================= */
+.tvh{background:#000;padding-bottom:clamp(36px,4vw,56px)}
+.tvs{height:480vh;background:#000}
+.tvs__stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.tvs__layer{position:absolute;inset:0;pointer-events:none}
+.tvs__card{position:absolute;inset:0;overflow:hidden;background:#050506;will-change:transform}
+.tvs__iris{position:absolute;left:50%;top:50%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;border-radius:50%;overflow:hidden;background:#000;visibility:hidden;transform:scale(0);will-change:transform}
+.tvs img{position:absolute;left:50%;top:50%;width:100vw;height:100vh;height:100svh;max-width:none;translate:-50% -50%;object-fit:cover;will-change:transform}
+.tvs__ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.tvs__shade{position:absolute;inset:0;opacity:0;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.8) 0%,rgba(0,0,0,.35) 30%,rgba(0,0,0,0) 55%),radial-gradient(120% 90% at 50% 40%,rgba(0,0,0,0) 50%,rgba(0,0,0,.5) 100%)}
+.tvs__caps{position:absolute;left:max(var(--pad),calc((100vw - 1180px) / 2));right:max(var(--pad),calc((100vw - 1180px) / 2));bottom:clamp(72px,13vh,130px)}
+.tvcap{position:absolute;left:0;bottom:0;width:min(580px,100%);visibility:hidden;opacity:0}
+.tvcap--r{left:auto;right:0;text-align:right}
+.tvcap--r p{margin-left:auto}
+.tvcap small{display:block;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.tvcap h3{margin-top:10px;font-family:var(--display);font-weight:600;font-size:clamp(36px,4.6vw,64px);line-height:1.02;letter-spacing:-.03em;text-wrap:balance}
+.tvcap p{margin-top:14px;max-width:440px;font-size:clamp(17px,1.4vw,20px);color:rgba(245,245,247,.82)}
+.tvs__prog{position:absolute;left:50%;bottom:clamp(28px,5vh,48px);translate:-50% 0;display:flex;gap:6px;list-style:none;opacity:0}
+.tvs__prog li{width:34px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
+.tvs__prog i{display:block;height:100%;background:var(--gold);transform:scaleX(0);transform-origin:0 50%}
+@media (max-aspect-ratio:1/1){
+  /* on a tall screen the picture is a band across the top, and each iris opens from the middle of the band */
+  .tvs__card{background:#000}
+  .tvs__card img{top:calc(var(--ln) + 4svh);height:44svh;translate:-50% 0}
+  .tvs__iris{top:calc(var(--ln) + 26svh)}
+  .tvs__iris img{top:calc(50% - 22svh);height:44svh;translate:-50% 0}
+  .tvs__shade{display:none}
+  .tvs__caps{left:var(--pad);right:var(--pad);bottom:calc(30px + env(safe-area-inset-bottom))}
+  .tvcap,.tvcap--r{left:0;right:auto;width:100%;text-align:left}
+  .tvcap--r p{margin-left:0}
+  .tvcap h3{font-size:clamp(30px,7.6vw,44px)}
+  .tvs__prog{left:var(--pad);bottom:auto;top:calc(var(--ln) + 51svh);translate:none}
+}
+
+/* ---------- The TV range: a coverflow ---------- */
+.lineup{background:#000;padding-top:clamp(80px,9vw,120px)}
+.lineup__head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.lineup__btns{display:flex;gap:10px}
+.lineup__btns button{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#1d1d1f;color:var(--paper);transition:background .2s,opacity .3s}
+.lineup__btns button:hover{background:#2c2c2e}
+.lineup__btns button:disabled{opacity:.35;cursor:default}
+.lineup__btns button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.lineup__btns svg{width:16px;height:16px}
+.lineup__track{--cw:min(640px,74vw);position:relative;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:clamp(34px,4vw,56px) calc(50% - var(--cw) / 2) 12px;scrollbar-width:none;overscroll-behavior-x:contain;cursor:grab}
+.lineup__track::-webkit-scrollbar{display:none}
+.lineup__track.is-drag{cursor:grabbing;scroll-snap-type:none}
+.tvc{flex:none;width:var(--cw);scroll-snap-align:center;will-change:transform}
+.tvc__img{position:relative;aspect-ratio:16/11;border-radius:22px;overflow:hidden;background:#0b0b0d;-webkit-box-reflect:below 4px linear-gradient(transparent 74%,rgba(255,255,255,.2))}
+.tvc__img img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.tvc__img::after{content:"";position:absolute;inset:0;background:#000;opacity:var(--dk,0);pointer-events:none}
+.tvc__txt{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:22px}
+.tvc__txt b{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.02em}
+.tvc__txt span{font-size:15px;color:var(--gold)}
+
+/* ---------- Laser TV ---------- */
+.laser{background:#000;padding-top:clamp(40px,5vw,72px)}
+.laser__grid{display:grid;grid-template-columns:1.65fr 1fr;gap:20px;align-items:start;max-width:var(--wide);margin:0 auto;padding:0 var(--pad)}
+.laser .ph{aspect-ratio:1600/1177}
+.laser figcaption{padding:18px 4px 0}
+.laser figcaption small{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.laser__big figcaption h3{margin-top:6px}
+.laser .ph::after{content:"";position:absolute;inset:-20% -60%;z-index:1;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 42%,rgba(255,236,200,.32) 50%,rgba(255,255,255,0) 58%);transform:translateX(-100%)}
+.laser .in .ph::after{animation:sweep 1.9s var(--ease) .4s both}
+@keyframes sweep{to{transform:translateX(100%)}}
+.laser figure:hover .ph img,.trio figure:hover .ph img{transform:scale(1.045)}
+
+/* ---------- Refrigeration and laundry ---------- */
+.fresh{background:radial-gradient(60% 50% at 25% 35%,rgba(90,140,200,.13),rgba(0,0,0,0) 70%),#000}
+.laundry{background:radial-gradient(60% 50% at 75% 35%,rgba(140,202,184,.13),rgba(0,0,0,0) 70%),#000;padding-top:clamp(40px,5vw,72px)}
+.split{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:clamp(32px,6vw,96px);max-width:var(--wide);margin:0 auto;padding:0 var(--pad)}
+.split--rev .split__img{order:2}
+.split__img .ph{aspect-ratio:1/1;border-radius:32px}
+.split__img .ph--full{aspect-ratio:1056/1120}
+.split__img [data-par] img{position:absolute;left:0;top:-8%;height:116%;transition:none;will-change:transform}
+.split__txt .t-head{font-size:clamp(38px,4.4vw,60px)}
+.split__p{margin-top:18px;max-width:520px;font-size:clamp(17px,1.4vw,21px);line-height:1.45;color:var(--dim)}
+.split__p b{color:var(--paper);font-weight:600}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:var(--wide);margin:clamp(48px,6vw,80px) auto 0;padding:0 var(--pad)}
+.trio .ph{aspect-ratio:4/4.4}
+.trio figcaption{padding:16px 4px 0}
+
+/* ---------- Air conditioning: a bright, cool room, with air streaming out of the unit ---------- */
+.air{background:linear-gradient(180deg,#e7f4f3 0%,#f5fafa 45%,#fff 100%);color:var(--ink)}
+.air__eyebrow{color:#0a8a86}
+.air .t-intro{color:var(--ink-3)}
+.air .t-intro b{color:var(--ink)}
+.air__hero{position:relative;width:min(1216px,calc(100% - var(--pad) * 2));aspect-ratio:1054/588;margin:clamp(44px,6vw,72px) auto 0;border-radius:32px;overflow:hidden;background:#efe7dc;box-shadow:0 40px 80px -50px rgba(0,70,70,.45)}
+.air__hero img{width:100%;height:100%;object-fit:cover}
+#breeze{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.air__feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:var(--wide);margin:20px auto 0;padding:0 var(--pad)}
+.af{padding:22px 22px 24px;border-radius:22px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 18px 40px -30px rgba(0,70,70,.35)}
+.af__ic{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#e2f5f3,#c4eae6);color:#0a8a86}
+.af__ic svg{width:24px;height:24px}
+.af b{display:block;margin-top:16px;font-size:17px;font-weight:600;letter-spacing:-.015em}
+.af p{margin-top:4px;font-size:14px;line-height:1.4;color:var(--ink-2)}
+.air__note{margin:18px auto 0;padding:0 var(--pad);text-align:center;font-size:12px;color:var(--ink-3)}
+.air .ph{background:#eef2f2}
+.air .ph--white{background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.air figcaption p{color:var(--ink-2)}
+.trio--air .ph{aspect-ratio:4/3}
+
+/* =========================================================================================
+   THE CATALOGUES: four books stand on a lit shelf. Pick one up and it opens into the flipbook.
+   ========================================================================================= */
+.shelfsec{background:radial-gradient(80% 55% at 50% 0%,rgba(227,187,106,.14),rgba(227,187,106,0) 70%),#000;overflow:hidden}
+.shelf{--w:clamp(148px,15vw,214px);position:relative;display:flex;justify-content:center;gap:clamp(34px,5.5vw,88px);max-width:var(--wide);margin:clamp(60px,8vw,110px) auto 0;padding:0 var(--pad)}
+.shelf::before{content:"";position:absolute;left:var(--pad);right:var(--pad);top:calc(var(--w) * 1.4711 + 1px);height:14px;border-top:1px solid rgba(255,236,190,.5);background:linear-gradient(180deg,rgba(227,187,106,.3),rgba(227,187,106,0));-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.bk{position:relative;display:flex;flex-direction:column;align-items:center;gap:34px;perspective:1400px;perspective-origin:50% -30%;color:var(--paper);-webkit-tap-highlight-color:transparent}
+.bk::before{content:"";position:absolute;left:-6%;right:-14%;top:calc(var(--w) * 1.4711 - 16px);height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.85),rgba(0,0,0,0));filter:blur(3px)}
+.bk__3d{position:relative;display:block;width:var(--w);aspect-ratio:900/1324;transform-style:preserve-3d;transform:rotateY(30deg);transition:transform 1s var(--ease)}
+.bk__3d > i{position:absolute;display:block}
+.bk:hover .bk__3d,.bk:focus-visible .bk__3d{transform:rotateY(6deg) translateZ(36px) translateY(-10px)}
+.bk__f{inset:0;transform:translateZ(calc(var(--t) / 2));border-radius:2px 5px 5px 2px;overflow:hidden;background:var(--c1)}
+.bk__f img{width:100%;height:100%;object-fit:cover}
+.bk__f::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.4) 0,rgba(255,255,255,.2) 1.4%,rgba(0,0,0,.14) 3%,rgba(0,0,0,0) 6%)}
+.bk__f::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.3) 45%,rgba(255,255,255,0) 60%);transform:translateX(-90%);transition:transform 1.3s var(--ease)}
+.bk:hover .bk__f::after{transform:translateX(90%)}
+.bk__bk{inset:0;transform:rotateY(180deg) translateZ(calc(var(--t) / 2));border-radius:5px 2px 2px 5px;background:var(--c2)}
+.bk__3d > .bk__s{left:calc(var(--t) / -2);top:0;width:var(--t);height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;transform:rotateY(-90deg);background:linear-gradient(90deg,var(--c2),var(--c1) 22%,var(--c1) 78%,var(--c2))}
+.bk__s b{writing-mode:vertical-rl;font-size:clamp(7px,.62vw,9px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:var(--st,#e9cf93)}
+.bk__p{left:calc(100% - var(--t) / 2);top:3px;bottom:3px;width:var(--t);transform:rotateY(90deg);background:repeating-linear-gradient(90deg,#e4dfd4 0 1px,#fbf8f1 1px 3px)}
+.bk__tp{left:3px;right:3px;top:calc(var(--t) / -2);height:var(--t);transform:rotateX(90deg);background:repeating-linear-gradient(0deg,#e4dfd4 0 1px,#fbf8f1 1px 3px)}
+.bk__cap{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.bk__cap b{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.bk__cap small{font-size:13px;color:var(--dim-2)}
+.bk__cap em{margin-top:8px;font-style:normal;font-size:14px;color:var(--gold);opacity:0;transform:translateY(-4px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.bk:hover .bk__cap em,.bk:focus-visible .bk__cap em{opacity:1;transform:none}
+.bk:focus-visible{outline:none}
+.bk:focus-visible .bk__cap b{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:4px}
+.shelf__note{max-width:640px;margin:clamp(40px,5vw,64px) auto 0;padding:0 var(--pad);text-align:center;font-size:13px;line-height:1.5;color:var(--dim-2)}
+@media (prefers-reduced-motion:no-preference){
+  .bk__3d{animation:bob 6s ease-in-out infinite;animation-delay:calc(var(--i,0) * -1.4s)}
+  @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+}
+
+/* ---------- Retailers and merchants ---------- */
+.trade{background:#000;padding:clamp(30px,5vw,60px) var(--pad) 0}
+.trade__in{position:relative;max-width:var(--wide);margin:0 auto;padding:clamp(56px,8vw,120px) clamp(24px,5vw,80px);border-radius:36px;overflow:hidden;isolation:isolate;text-align:center;background:#0d0b07;box-shadow:inset 0 0 0 1px rgba(227,187,106,.24)}
+.trade__in::before{content:"";position:absolute;left:50%;top:50%;z-index:-2;width:150%;aspect-ratio:1;margin:-75% 0 0 -75%;background:conic-gradient(from 0deg,rgba(227,187,106,0) 0deg,rgba(227,187,106,.42) 40deg,rgba(227,187,106,0) 95deg,rgba(227,187,106,0) 180deg,rgba(200,150,62,.34) 225deg,rgba(227,187,106,0) 285deg);filter:blur(50px);animation:spin 18s linear infinite}
+.trade__in::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(75% 95% at 50% 50%,rgba(13,11,7,.15),rgba(13,11,7,.88))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.trade__in h2{font-family:var(--display);font-weight:600;font-size:clamp(40px,5.6vw,72px);line-height:1.02;letter-spacing:-.035em;text-wrap:balance}
+.trade__in p:not(.eyebrow){max-width:560px;margin:18px auto 0;font-size:clamp(17px,1.5vw,21px);color:rgba(245,245,247,.78)}
+.ctas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 26px;margin-top:32px}
 
 /* =========================================================================================
    THE WHOLE KITCHEN: a kitchen builds itself in 3D. The cabinetry and benchtop go in, then the
@@ -285,9 +450,26 @@ section{position:relative}
   .tile{min-height:240px}
   .tile--photo{min-height:340px}
   .fgrid{grid-template-columns:1fr}
+  .cards--6 .pc{aspect-ratio:3/4}
+  .lineup__track{--cw:78vw}
+  .tvc__txt b{font-size:20px}
+  .laser__grid{grid-template-columns:1fr;gap:36px}
+  .split{grid-template-columns:1fr;gap:36px}
+  .split--rev .split__img{order:0}
+  .trio{grid-template-columns:1fr;gap:28px}
+  .trio .ph{aspect-ratio:4/3}
+  .air__feats{grid-template-columns:1fr 1fr;gap:10px}
+  .af{padding:18px}
+  .air__hero{border-radius:22px}
+  .shelf{--w:min(36vw,170px);display:grid;grid-template-columns:repeat(2,auto);justify-content:center;gap:56px 40px}
+  .shelf::before{display:none}
+  .bk{gap:26px}
+  .bk::after{content:"";position:absolute;left:-16%;right:-16%;top:calc(var(--w) * 1.4711 + 1px);height:12px;border-top:1px solid rgba(255,236,190,.5);background:linear-gradient(180deg,rgba(227,187,106,.3),rgba(227,187,106,0))}
+  .bk__cap em{display:none}
+  .trade__in{border-radius:28px}
 }
 @media (max-width:560px){.cards{grid-template-columns:1fr 1fr;gap:12px}.pc{border-radius:20px}.pc__txt{padding:16px 14px}.pc__txt p{display:none}.pc__txt h3{font-size:20px}}
-@media (prefers-reduced-motion:reduce){.js [data-anim]{transition:none}.op__cue i::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.js [data-anim]{transition:none}.op__cue i::after{animation:none}.trade__in::before{animation:none}.laser .in .ph::after{animation:none}}
 </style>
 </head>
 <body>
@@ -310,8 +492,9 @@ section{position:relative}
     <a class="ln__title" href="#top" data-go>Hisense<small>by Hanes Distribution</small></a>
     <div class="ln__menu" id="lnMenu">
       <a href="#range" data-go>The range</a>
-      <a href="#kitchen" data-go>The whole kitchen</a>
-      <a href="#why" data-go>Why Hanes</a>
+      <a href="#tv" data-go>TV</a>
+      <a href="#air" data-go>Air</a>
+      <a href="#catalogues" data-go>Catalogues</a>
     </div>
     <div class="ln__end">
       <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
@@ -337,31 +520,151 @@ section{position:relative}
       <div class="op__tag" id="opTag">Hisense × Hanes Distribution</div>
       <div class="op__copy op__copy--a" id="opA">
         <h2>The whole kitchen.<br><span>One supplier.</span></h2>
-        <p>Refrigeration, laundry, cooking and ventilation, specified alongside your building materials and delivered on the same programme.</p>
+        <p>TVs, refrigeration, laundry, air conditioning, cooking and ventilation, specified alongside your building materials and delivered on the same programme.</p>
       </div>
       <div class="op__copy op__copy--b" id="opB">
         <h2>Smarter homes.<br><span>Delivered nationwide.</span></h2>
-        <div class="cats"><span>Refrigeration</span><span>Laundry</span><span>Cooking</span><span>Ventilation</span></div>
+        <div class="cats"><span>TVs</span><span>Refrigeration</span><span>Laundry</span><span>Air conditioning</span><span>Cooking</span><span>Ventilation</span></div>
       </div>
     </div>
   </section>
 
   <!-- ================= Statement ================= -->
   <section class="lit" aria-label="Hisense, through Hanes">
-    <p id="lit">Hisense brings refrigeration, laundry, cooking and ventilation to the Hanes network. Specify them alongside your building materials, and they arrive on the same programme, anywhere in New Zealand.</p>
+    <p id="lit">Hisense brings TVs, refrigeration, laundry, air conditioning, cooking and ventilation to the Hanes network. Specify them alongside your building materials, and they arrive on the same programme, anywhere in New Zealand.</p>
   </section>
 
   <!-- ================= The range ================= -->
   <section class="sec range" id="range" aria-label="The range">
     <div class="wrap center">
       <h2 class="t-head" data-anim>The range.</h2>
-      <p class="t-intro" data-anim>Four categories, <b>for every room that works hard.</b></p>
+      <p class="t-intro" data-anim>Six categories, <b>for every room that works hard.</b></p>
     </div>
-    <div class="cards">
-      <article class="pc" data-anim style="--bs:296% auto;--bp:34% 55%"><div class="pc__img" role="img" aria-label="A Hisense French-door fridge with a screen in the door"></div><div class="pc__txt"><small>01</small><h3>Refrigeration</h3><p>Fridges and freezers for the heart of the kitchen.</p></div></article>
-      <article class="pc" data-anim style="--bs:405% auto;--bp:60.8% 83.5%"><div class="pc__img" role="img" aria-label="A Hisense front-loading washing machine"></div><div class="pc__txt"><small>02</small><h3>Laundry</h3><p>Washers and dryers for the laundry.</p></div></article>
-      <article class="pc" data-anim style="--bs:420% auto;--bp:78.5% 18.6%"><div class="pc__img" role="img" aria-label="A Hisense microwave above a wine cabinet"></div><div class="pc__txt"><small>03</small><h3>Cooking</h3><p>Ovens, cooktops and microwaves.</p></div></article>
-      <article class="pc" data-anim><canvas id="airCanvas" aria-hidden="true"></canvas><div class="pc__txt"><small>04</small><h3>Ventilation</h3><p>Rangehoods to clear the air.</p></div></article>
+    <div class="cards cards--6">
+      <a class="pc" href="#tv" data-go data-anim><img class="pc__ph" src="stills/hisense-2026/tv-ur8s.webp" alt="A Hisense UR8S RGB MiniLED TV" loading="lazy" decoding="async" style="object-position:22% 50%"><div class="pc__txt"><small>01</small><h3>TVs</h3><p>RGB MiniLED, ULED MiniLED, QLED and Laser TV.</p></div></a>
+      <a class="pc" href="#fresh" data-go data-anim><img class="pc__ph" src="stills/hisense-2026/rf-pureview.webp" alt="A Hisense fridge with a PureView glass door in a kitchen" loading="lazy" decoding="async" style="object-position:30% 50%"><div class="pc__txt"><small>02</small><h3>Refrigeration</h3><p>Four-door, side-by-side, top-mount and single-door.</p></div></a>
+      <a class="pc" href="#laundry" data-go data-anim><img class="pc__ph" src="stills/hisense-2026/wm-roman.webp" alt="A mint Hisense Roman Holiday washing machine" loading="lazy" decoding="async"><div class="pc__txt"><small>03</small><h3>Laundry</h3><p>Front-load, top-load and twin-tub washers.</p></div></a>
+      <a class="pc" href="#air" data-go data-anim><img class="pc__ph" src="stills/hisense-2026/ac-cover.webp" alt="A Hisense split air conditioner in a living room" loading="lazy" decoding="async" style="object-position:50% 30%"><div class="pc__txt"><small>04</small><h3>Air conditioning</h3><p>Split, floor-standing, cassette and ducted.</p></div></a>
+      <article class="pc" data-anim style="--bs:420% auto;--bp:78.5% 18.6%"><div class="pc__img" role="img" aria-label="A Hisense microwave above a wine cabinet"></div><div class="pc__txt"><small>05</small><h3>Cooking</h3><p>Ovens, cooktops and microwaves.</p></div></article>
+      <article class="pc" data-anim><canvas id="airCanvas" aria-hidden="true"></canvas><div class="pc__txt"><small>06</small><h3>Ventilation</h3><p>Rangehoods to clear the air.</p></div></article>
+    </div>
+  </section>
+
+  <!-- ================= TV: the screen story ================= -->
+  <section class="sec tvh" id="tv" aria-label="Hisense TV">
+    <div class="wrap center">
+      <p class="eyebrow t-gold" data-anim>Hisense TV</p>
+      <h2 class="t-head" data-anim>All scene-ready excellence.</h2>
+      <p class="t-intro" data-anim>From RGB MiniLED to Laser TV, <b>a screen for every room and every scene.</b></p>
+    </div>
+  </section>
+  <section class="tvs" id="tvStory" aria-label="Hisense TV technology">
+    <div class="tvs__stick">
+      <div class="tvs__layer tvs__layer--card"><div class="tvs__card" id="tvCard"><img src="stills/hisense-2026/tv-ux.webp" alt="The Hisense UX RGB MiniLED TV" decoding="async"></div></div>
+      <div class="tvs__layer"><div class="tvs__iris" id="iris1"><img src="stills/hisense-2026/tv-miniled.webp" alt="Real MiniLED, lit from behind by thousands of tiny LEDs" loading="lazy" decoding="async"></div></div>
+      <div class="tvs__layer"><div class="tvs__iris" id="iris2"><img src="stills/hisense-2026/tv-ai.webp" alt="The Hi-View AI Engine processor" loading="lazy" decoding="async"></div></div>
+      <div class="tvs__layer"><div class="tvs__iris" id="iris3"><img src="stills/hisense-2026/tv-180hz.webp" alt="A racing car at speed, for 180Hz Game Mode" loading="lazy" decoding="async" style="object-position:50% 18%"></div></div>
+      <canvas class="tvs__ring" id="tvRing" aria-hidden="true"></canvas>
+      <div class="tvs__shade" id="tvShade"></div>
+      <div class="tvs__caps">
+        <div class="tvcap"><small>01 · RGB MiniLED</small><h3>Colour, reimagined.</h3><p>RGB MiniLED lights the picture with red, green and blue, for colour with real depth.</p></div>
+        <div class="tvcap tvcap--r"><small>02 · Real MiniLED</small><h3>Deeper blacks. Brighter highlights.</h3><p>Thousands of tiny LEDs behind the screen, dimmed and lit zone by zone.</p></div>
+        <div class="tvcap"><small>03 · Hi-View AI Engine</small><h3>A picture that thinks.</h3><p>An AI processor that tunes picture and sound to whatever you're watching.</p></div>
+        <div class="tvcap"><small>04 · Game Mode</small><h3>Native 180Hz.</h3><p>Smoother, faster gaming on selected models, with a compatible source.</p></div>
+      </div>
+      <ol class="tvs__prog" aria-hidden="true"><li><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li></ol>
+    </div>
+  </section>
+
+  <!-- ================= TV: the range, in a coverflow ================= -->
+  <section class="sec lineup" id="tvRange" aria-label="The Hisense TV range">
+    <div class="wrap wrap--wide lineup__head">
+      <h2 class="t-head" data-anim>The TV range.</h2>
+      <div class="lineup__btns"><button type="button" id="lnPrev" aria-label="Previous TV"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3 5 9l6 6"/></svg></button><button type="button" id="lnNext" aria-label="Next TV"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 3 6 6-6 6"/></svg></button></div>
+    </div>
+    <div class="lineup__track" id="lineup" data-lenis-prevent-horizontal>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-ux.webp" alt="The Hisense UX RGB MiniLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>UX</b><span>RGB MiniLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-ur8s.webp" alt="The Hisense UR8S RGB MiniLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>UR8S</b><span>RGB MiniLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-u7.webp" alt="The Hisense U7S ULED MiniLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>U7S</b><span>ULED MiniLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-u6s.webp" alt="The Hisense U6S ULED MiniLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>U6S</b><span>ULED MiniLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-u6se.webp" alt="The Hisense U6SE ULED MiniLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>U6SE</b><span>ULED MiniLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-q7q.webp" alt="The Hisense Q7Q Hi-QLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>Q7Q</b><span>Hi-QLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-q6q.webp" alt="The Hisense Q6Q QLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>Q6Q</b><span>QLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-a6q.webp" alt="The Hisense A6Q UHD 4K TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>A6Q</b><span>UHD 4K</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-q5s.webp" alt="The Hisense Q5S QLED TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>Q5S</b><span>QLED</span></div></article>
+        <article class="tvc"><div class="tvc__img"><img src="stills/hisense-2026/tv-a4q.webp" alt="The Hisense A4Q Smart TV TV" loading="lazy" decoding="async"></div><div class="tvc__txt"><b>A4Q</b><span>Smart TV</span></div></article>
+    </div>
+  </section>
+
+  <!-- ================= Laser TV ================= -->
+  <section class="sec laser" aria-label="Hisense Laser TV">
+    <div class="laser__grid">
+      <figure class="laser__big" data-anim><div class="ph"><img src="stills/hisense-2026/tv-laser.webp" alt="The Hisense Laser TV family: laser TVs and projectors" loading="lazy" decoding="async"></div><figcaption><small class="t-gold">Laser TV</small><h3>Laser lights. Cinematic nights.</h3></figcaption></figure>
+      <figure class="laser__sm" data-anim><div class="ph"><img src="stills/hisense-2026/tv-cinema.webp" alt="A family watching a big laser projection at home" loading="lazy" decoding="async"></div><figcaption><h3>Home cinema, like never seen before.</h3><p>Ultra-short-throw laser TVs and projectors, for the biggest picture in the room.</p></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ================= Refrigeration ================= -->
+  <section class="sec fresh" id="fresh" aria-label="Hisense refrigeration">
+    <div class="split">
+      <div class="split__img" data-anim><div class="ph" data-par><img src="stills/hisense-2026/rf-pureview.webp" alt="A Hisense four-door fridge with a PureView glass door" loading="lazy" decoding="async"></div></div>
+      <div class="split__txt">
+        <p class="eyebrow t-gold" data-anim>Refrigeration</p>
+        <h2 class="t-head" data-anim>Fresh, on display.</h2>
+        <p class="split__p" data-anim>The PureView door lets you see what's inside before you open it. Four-door, side-by-side, top-mount and single-door, <b>for every kitchen.</b></p>
+        <div class="chipset" data-anim><span>PureView door</span><span>All Zone Purify</span><span>Inverter Pro</span><span>Metal Tech cooling</span><span>Auto ice maker</span></div>
+        <p class="fine" data-anim>Features vary by model.</p>
+      </div>
+    </div>
+    <div class="trio">
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/rf-fourdoor.webp" alt="A dark Hisense four-door fridge in a modern kitchen" loading="lazy" decoding="async" style="object-position:64% 50%"></div><figcaption><h3>Four door</h3><p>Three compartments behind one elegant front.</p></figcaption></figure>
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/rf-sbs.webp" alt="A Hisense side-by-side fridge in a dark kitchen" loading="lazy" decoding="async" style="object-position:72% 50%"></div><figcaption><h3>Side by side</h3><p>Fridge and freezer, each cooled on its own.</p></figcaption></figure>
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/rf-top.webp" alt="A silver Hisense top-mount fridge in a white kitchen" loading="lazy" decoding="async" style="object-position:82% 50%"></div><figcaption><h3>Top-mounted</h3><p>No-frost freezing, sized for every kitchen.</p></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ================= Laundry ================= -->
+  <section class="sec laundry" id="laundry" aria-label="Hisense laundry">
+    <div class="split split--rev">
+      <div class="split__img" data-anim><div class="ph ph--full"><img src="stills/hisense-2026/wm-cover.webp" alt="Two Hisense Roman Holiday washing machines, in white and mint" loading="lazy" decoding="async"></div></div>
+      <div class="split__txt">
+        <p class="eyebrow t-gold" data-anim>Laundry</p>
+        <h2 class="t-head" data-anim>Choose to be different.</h2>
+        <p class="split__p" data-anim>The Roman Holiday series brings retro style to the laundry, in soft pastel finishes with a gold-trimmed door. <b>Alongside front-load, top-load and twin-tub washers.</b></p>
+        <div class="chipset" data-anim><span>AI Wash</span><span>Pure Jet</span><span>Drum Clean</span><span>Quick 15'</span><span>Pause &amp; Add</span><span>Allergy Care</span></div>
+        <p class="fine" data-anim>Features vary by model.</p>
+      </div>
+    </div>
+    <div class="trio">
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/wm-roman.webp" alt="A mint Hisense Roman Holiday front-load washer" loading="lazy" decoding="async"></div><figcaption><h3>Roman Holiday</h3><p>A statement in the laundry.</p></figcaption></figure>
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/wm-front.webp" alt="A dark Hisense front-load washer" loading="lazy" decoding="async"></div><figcaption><h3>Front load</h3><p>Smart washing, easy living.</p></figcaption></figure>
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/wm-twin.webp" alt="A white Hisense twin-tub washer" loading="lazy" decoding="async" style="object-position:40% 50%"></div><figcaption><h3>Twin tub</h3><p>Wash and spin, two in one.</p></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ================= Air conditioning ================= -->
+  <section class="sec air" id="air" aria-label="Hisense air conditioning">
+    <div class="wrap center">
+      <p class="eyebrow air__eyebrow" data-anim>Air conditioning</p>
+      <h2 class="t-head" data-anim>Unlock the power of ultimate cooling.</h2>
+      <p class="t-intro" data-anim>Split, floor-standing, cassette and ducted systems, <b>for homes and workplaces.</b></p>
+    </div>
+    <div class="air__hero" data-anim><img src="stills/hisense-2026/ac-fast.webp" alt="A Hisense split air conditioner cooling a bright living room" loading="lazy" decoding="async"><canvas id="breeze" aria-hidden="true"></canvas></div>
+    <div class="air__feats">
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg></span><b>ConnectLife</b><p>Control it from your phone, anywhere.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M7.5 5.5v13M11.5 5.5v13M15.5 5.5v13"/></svg></span><b>4-in-1 filter</b><p>Four filters in one, for cleaner air.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c2.2-5 4.4-5 6.5 0s4.3 5 6.5 0 3.3-5 5-2"/></svg></span><b>Inverter</b><p>Efficient, steady cooling with less power.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3.5"/></svg></span><b>Self-cleaning</b><p>Frosts and dries the coil to keep it clean.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.2"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/></svg></span><b>I-Feel</b><p>Reads the temperature where you are, from the remote.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16M8 4v16M12 4v16M16 4v16M20 4v16"/></svg></span><b>Golden Fin</b><p>Coated fins that resist corrosion.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c3.5 4 5.5 7 5.5 10a5.5 5.5 0 0 1-11 0c0-3 2-6 5.5-10z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.5"/></svg></span><b>Anti-mildew</b><p>Runs on briefly after switch-off to dry the unit.</p></div>
+        <div class="af" data-anim><span class="af__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h9a4 4 0 0 1 4 4v8"/><path d="M3 12h9"/><path d="M12 20h8"/></svg></span><b>100% copper pipes</b><p>Copper through the evaporator and condenser.</p></div>
+    </div>
+    <p class="air__note" data-anim>Features vary by model. ConnectLife on inverter models.</p>
+    <div class="trio trio--air">
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/ac-inverter.webp" alt="A Hisense inverter split system cooling a lounge" loading="lazy" decoding="async"></div><figcaption><h3>Inverter split</h3><p>Quiet, efficient comfort.</p></figcaption></figure>
+      <figure data-anim><div class="ph"><img src="stills/hisense-2026/ac-floor.webp" alt="Hisense floor-standing air conditioners" loading="lazy" decoding="async"></div><figcaption><h3>Floor standing</h3><p>Powerful cooling for bigger spaces.</p></figcaption></figure>
+      <figure data-anim><div class="ph ph--white"><img src="stills/hisense-2026/ac-filter.webp" alt="The Hisense 4-in-1 filter, cleaning the air as it passes through" loading="lazy" decoding="async" style="object-fit:contain"></div><figcaption><h3>4-in-1 filter</h3><p>Catechin, silver ion, photocatalyst and HEPA.</p></figcaption></figure>
     </div>
   </section>
 
@@ -403,6 +706,34 @@ section{position:relative}
     </div>
   </section>
 
+  <!-- ================= The catalogues: a shelf of books that open into a flipbook ================= -->
+  <section class="sec shelfsec" id="catalogues" aria-label="The Hisense 2026 catalogues">
+    <div class="wrap center">
+      <p class="eyebrow t-gold" data-anim>The 2026 catalogues</p>
+      <h2 class="t-head" data-anim>Turn every page.</h2>
+      <p class="t-intro" data-anim>Hisense's 2026 catalogues for TVs, refrigerators, washing machines and air conditioners. <b>Pick one up and flip through.</b></p>
+    </div>
+    <div class="shelf" id="shelf">
+      <button class="bk" type="button" data-book="tv" style="--t:28px;--c1:#1b1530;--c2:#0b0a14" aria-label="Open the Hisense TV Collection, 52 pages">
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/tv/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense TV Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>TVs</b><small>52 pages</small><em>Flip through</em></span>
+      </button>
+      <button class="bk" type="button" data-book="fridge" style="--t:20px;--c1:#2a2c30;--c2:#121315" aria-label="Open the Hisense Refrigerator Collection, 32 pages">
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/fridge/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Refrigerator Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Refrigerators</b><small>32 pages</small><em>Flip through</em></span>
+      </button>
+      <button class="bk" type="button" data-book="laundry" style="--t:26px;--c1:#bfe3d7;--c2:#8ccab8;--st:#1d5a50" aria-label="Open the Hisense Washing Machine Collection, 48 pages">
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/laundry/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Washing Machine Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Washing machines</b><small>48 pages</small><em>Flip through</em></span>
+      </button>
+      <button class="bk" type="button" data-book="air" style="--t:14px;--c1:#a8dcd8;--c2:#5fb8b2;--st:#0f4f4a" aria-label="Open the Hisense Air Conditioner Collection, 18 pages">
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/air/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Air Conditioner Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Air conditioners</b><small>18 pages</small><em>Flip through</em></span>
+      </button>
+    </div>
+    <p class="shelf__note" data-anim>Catalogue pages are Hisense's 2026 catalogues. Models, specifications and warranties may differ in New Zealand, so ask us for the New Zealand range.</p>
+  </section>
+
   <!-- ================= The film ================= -->
   <section class="film" aria-label="The Hisense film">
     <div class="film__card" id="filmCard">
@@ -419,8 +750,18 @@ section{position:relative}
       <div class="tile" data-anim><p class="tile__big">One programme.</p><p>Delivered with the rest of your build.</p></div>
       <div class="tile" data-anim><p class="tile__big">Nationwide.</p><p>Supplied right across New Zealand.</p></div>
       <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="stills/hisense.webp" width="1800" height="1012" alt="The Hisense range: a fridge with a screen in the door, a dishwasher, a washing machine, a microwave and a wine cabinet" loading="lazy" decoding="async"></div><div class="tile__cap"><h3>Every room that works hard.</h3><p>Kitchen, laundry and beyond.</p></div></div>
-      <div class="tile tile--wide" data-anim><h3>Four categories.</h3><p>From the fridge to the rangehood, and the laundry too.</p><div class="chips4"><span>Refrigeration</span><span>Laundry</span><span>Cooking</span><span>Ventilation</span></div></div>
+      <div class="tile tile--wide" data-anim><h3>Six categories.</h3><p>From the TV to the fridge, the laundry to the air conditioning.</p><div class="chips4"><span>TVs</span><span>Refrigeration</span><span>Laundry</span><span>Air conditioning</span><span>Cooking</span><span>Ventilation</span></div></div>
       <div class="tile" data-anim><h3>See the brands.</h3><p>Pair Hisense with a Bargainhub kitchen, Hanesteel windows and doors, and more.</p><a class="more" href="index.html#brands" style="margin-top:auto;padding-top:24px"><span>Explore the brands</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a></div>
+    </div>
+  </section>
+
+  <!-- ================= Retailers and merchants ================= -->
+  <section class="trade" id="trade" aria-label="Retailers and merchants">
+    <div class="trade__in" data-anim>
+      <p class="eyebrow t-gold">Retailers and merchants</p>
+      <h2>Stock Hisense through Hanes.</h2>
+      <p>Trade pricing, stock and delivery right across New Zealand, with the rest of your order on the same programme.</p>
+      <div class="ctas"><a class="btn btn--gold" href="#enquire" data-go data-trade>Contact us for trade pricing</a><a class="more" href="contact.html"><span>Other ways to reach us</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a></div>
     </div>
   </section>
 
@@ -436,9 +777,9 @@ section{position:relative}
         <div class="fl"><input id="fBiz" name="business" placeholder=" " autocomplete="organization"><label for="fBiz">Business (optional)</label></div>
         <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
         <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
-        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Builder or developer</option><option>Kitchen or interior designer</option><option>Retailer</option><option>Homeowner</option><option>Other</option></select><label for="fType">You are a</label></div>
+        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Retailer</option><option>Merchant</option><option>Builder or developer</option><option>Kitchen or interior designer</option><option>Homeowner</option><option>Other</option></select><label for="fType">You are a</label></div>
         <div class="fl fl--sel"><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select><label for="fRegion">Region</label></div>
-        <fieldset class="fset"><legend>Interested in</legend><div class="chips"><label><input type="checkbox" name="interest" value="Refrigeration" checked><span>Refrigeration</span></label><label><input type="checkbox" name="interest" value="Laundry"><span>Laundry</span></label><label><input type="checkbox" name="interest" value="Cooking"><span>Cooking</span></label><label><input type="checkbox" name="interest" value="Ventilation"><span>Ventilation</span></label></div></fieldset>
+        <fieldset class="fset"><legend>Interested in</legend><div class="chips"><label><input type="checkbox" name="interest" value="TVs"><span>TVs</span></label><label><input type="checkbox" name="interest" value="Refrigeration" checked><span>Refrigeration</span></label><label><input type="checkbox" name="interest" value="Laundry"><span>Laundry</span></label><label><input type="checkbox" name="interest" value="Air conditioning"><span>Air conditioning</span></label><label><input type="checkbox" name="interest" value="Cooking"><span>Cooking</span></label><label><input type="checkbox" name="interest" value="Ventilation"><span>Ventilation</span></label></div></fieldset>
         <div class="fl full"><textarea id="fMsg" name="message" placeholder=" "></textarea><label for="fMsg">Your project, and what you need</label></div>
       </div>
       <button class="btn btn--gold" type="submit">Send enquiry</button>
@@ -450,7 +791,7 @@ section{position:relative}
 
 <footer class="gf gf--dark">
   <div class="gf__in">
-    <div class="gf__note"><p>Hisense home appliances are supplied through <a href="index.html">Hanes Distribution</a>. Hisense is a trade mark of its owner. Ranges, models and availability on request.</p></div>
+    <div class="gf__note"><p>Hisense TVs and home appliances are supplied through <a href="index.html">Hanes Distribution</a>. Hisense is a trade mark of its owner. Product images and catalogue pages are Hisense marketing material; features vary by model, and New Zealand models, specifications and warranties may differ. Ranges, models and availability on request.</p></div>
     <div class="gf__cols">
       <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
       <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="tracking.html">Hanes Track</a></li><li><a href="hisense.html" aria-current="page">Hisense appliances</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li></ul></div>
@@ -465,6 +806,7 @@ section{position:relative}
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="vendor/lenis.min.js"></script>
 <script src="assets/sequence.js"></script>
+<script src="assets/flipbook.js"></script>
 <script src="assets/site.js" defer></script>
 <script>
 (() => {
@@ -571,7 +913,7 @@ section{position:relative}
   }
 
   /* ---------- The statement lights up word by word; the Hisense categories light in gold ---------- */
-  const lit = $('#lit'), GOLD = new Set(['refrigeration,', 'laundry,', 'cooking', 'ventilation']);
+  const lit = $('#lit'), GOLD = new Set(['tvs,', 'refrigeration,', 'laundry,', 'air', 'conditioning,', 'cooking', 'ventilation']);
   lit.innerHTML = lit.textContent.trim().split(/\s+/).map(w => `<span class="w${GOLD.has(w.toLowerCase()) ? ' g' : ''}">${w}</span>`).join(' ');
   const lw = $$('#lit .w'); let litN = -1;
   if (reduce) lw.forEach(w => w.classList.add('on'));
@@ -616,6 +958,127 @@ section{position:relative}
   sizeAir();
   new IntersectionObserver(es => { const v = es[0].isIntersecting && !reduce; if (v && !airOn) { airOn = true; requestAnimationFrame(airFrame); } else if (!v) { airOn = false; if (reduce) airFrame(performance.now()); } }).observe(ac);
   if (reduce) { airOn = true; airFrame(0); airOn = false; }
+
+  /* =========================================================
+     TV: the first picture grows to fill the screen, then each new one opens through a gold iris.
+     The iris scales up from nothing while its picture is scaled back down by the same amount,
+     so the picture holds still and only the opening grows (all of it on the compositor).
+     ========================================================= */
+  const caps = $$('.tvcap'), bars = $$('.tvs__prog i'), irises = $$('.tvs__iris');
+  // the rim of each iris is drawn as a ring of gold light, throwing off sparks as it widens
+  const ring = $('#tvRing'), rx = ring.getContext('2d'), rs = [0, 0, 0];
+  let RW = 0, RH = 0, RD = 1, IR = 0, IX = 0, IY = 0, BT = 0, BB = 0;
+  const tall = matchMedia('(max-aspect-ratio: 1/1)');
+  const sparks = Array.from({ length: 70 }, () => ({ a: Math.random() * 6.2832, o: Math.random(), z: .6 + Math.random() * 2 }));
+  const drawRing = () => {
+    rx.clearRect(0, 0, RW, RH); rx.save(); rx.globalCompositeOperation = 'lighter';
+    // on a tall screen the ring stays within the picture band
+    if (tall.matches) { rx.beginPath(); rx.rect(0, BT * RD, RW, (BB - BT) * RD); rx.clip(); }
+    rs.forEach((s, k) => {
+      if (s < .004 || s > .995) return;
+      const R = IR * s * RD, cx = IX * RD, cy = IY * RD, fade = Math.min(1, (1 - s) * 5, s * 40);
+      for (const [w, a] of [[30, .05], [12, .12], [4, .38], [1.5, .95]]) {
+        rx.lineWidth = w * RD; rx.strokeStyle = `rgba(240,200,120,${(a * fade).toFixed(3)})`; rx.beginPath(); rx.arc(cx, cy, R, 0, 6.2832); rx.stroke();
+      }
+      rx.fillStyle = 'rgba(255,226,160,1)';
+      for (const p of sparks) {
+        const r = R + p.o * p.o * 90 * RD * (.25 + s), a = p.a + s * 1.4 * (p.o - .5);
+        rx.globalAlpha = fade * (1 - p.o) * .9; const z = p.z * RD;
+        rx.fillRect(cx + Math.cos(a) * r - z / 2, cy + Math.sin(a) * r - z / 2, z, z);
+      }
+      rx.globalAlpha = 1;
+    });
+    rx.restore();
+  };
+  const sizeRing = () => { const f = irises[0]; IR = f.offsetWidth / 2; IX = f.offsetLeft + IR; IY = f.offsetTop + IR; const b = $('#tvCard img'); BT = b.offsetTop; BB = BT + b.offsetHeight; RD = Math.min(devicePixelRatio || 1, 1.5); RW = ring.width = Math.round(ring.clientWidth * RD); RH = ring.height = Math.round(ring.clientHeight * RD); drawRing(); };
+  sizeRing();
+  const tv = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#tvStory', start: 'top top', end: 'bottom bottom', scrub: .5 } });
+  tv.fromTo('#tvCard', { scale: () => small() ? .84 : .62, borderRadius: 40 }, { scale: 1, borderRadius: 0, duration: .16, ease: 'power2.inOut' }, 0)
+    .fromTo('#tvCard img', { scale: 1.25 }, { scale: 1, duration: .2 }, 0)
+    .to(['#tvShade', '.tvs__prog'], { opacity: 1, duration: .05 }, .12)
+    .fromTo(caps[0], { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: .05, ease: 'power2.out' }, .14)
+    .fromTo(bars[0], { scaleX: 0 }, { scaleX: 1, duration: .1 }, .14);
+  [.26, .5, .74].forEach((at, k) => {
+    const iris = irises[k], img = iris.querySelector('img'), o = { s: 0 };
+    const draw = () => {
+      rs[k] = o.s; drawRing();
+      if (o.s < .004) { iris.style.visibility = 'hidden'; return; }
+      iris.style.visibility = 'visible';
+      iris.style.transform = `scale(${o.s.toFixed(4)})`;
+      img.style.transform = `scale(${((1 + .3 * (1 - o.s)) / o.s).toFixed(4)})`;
+    };
+    tv.to(caps[k], { autoAlpha: 0, y: -30, duration: .04, ease: 'power2.in' }, at)
+      .to(o, { s: 1, duration: .15, ease: 'power2.inOut', onUpdate: draw }, at + .01)
+      .fromTo(caps[k + 1], { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: .05, ease: 'power2.out' }, at + .12)
+      .fromTo(bars[k + 1], { scaleX: 0 }, { scaleX: 1, duration: .1 }, at + .12);
+  });
+  tv.to({}, { duration: .06 }, .94);
+  // the pictures behind the irises start loading as the TV section comes near
+  new IntersectionObserver((es, ob) => { if (es[0].isIntersecting) { irises.forEach(i => { const im = i.querySelector('img'); im.loading = 'eager'; if (im.decode) im.decode().catch(() => {}); }); ob.disconnect(); } }, { rootMargin: '150% 0px' }).observe($('#tv'));
+
+  /* ---------- The TV range: a coverflow that follows the track as it scrolls ---------- */
+  const track = $('#lineup'), tvcs = $$('.tvc'), tvTxt = tvcs.map(c => c.querySelector('.tvc__txt')), lnPrev = $('#lnPrev'), lnNext = $('#lnNext');
+  let flowRaf = 0;
+  const flow = () => {
+    flowRaf = 0;
+    // read every position first, then write, so the browser lays the track out once per frame
+    const cw = tvcs[0].offsetWidth, mid = track.scrollLeft + track.clientWidth / 2, left = tvcs.map(c => c.offsetLeft), end = track.scrollWidth - track.clientWidth, sl = track.scrollLeft;
+    tvcs.forEach((c, i) => {
+      const d = (left[i] + cw / 2 - mid) / cw, a = Math.abs(d), sg = Math.sign(d);
+      const tx = -d * cw * .28 - sg * Math.max(0, a - 1) * cw * .2, tz = -Math.min(a, 2.5) * 220, ry = -clamp(d, -1, 1) * 48;
+      c.style.transform = `perspective(1400px) translate3d(${tx.toFixed(1)}px,0,${tz.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
+      c.style.zIndex = String(100 - Math.round(a * 10));
+      c.style.opacity = clamp(3.4 - a).toFixed(3);
+      c.style.setProperty('--dk', (Math.min(a, 1.5) * .36).toFixed(3));
+      tvTxt[i].style.opacity = clamp(1 - a * 1.5).toFixed(3);
+    });
+    lnPrev.disabled = sl < 4; lnNext.disabled = sl > end - 4;
+  };
+  const centre = (c, smooth = true) => track.scrollTo({ left: c.offsetLeft + c.offsetWidth / 2 - track.clientWidth / 2, behavior: smooth && !reduce ? 'smooth' : 'auto' });
+  const nearest = () => { const mid = track.scrollLeft + track.clientWidth / 2; return tvcs.reduce((b, c) => Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(b.offsetLeft + b.offsetWidth / 2 - mid) ? c : b); };
+  track.addEventListener('scroll', () => { if (!flowRaf) flowRaf = requestAnimationFrame(flow); }, { passive: true });
+  lnPrev.addEventListener('click', () => { const i = tvcs.indexOf(nearest()); centre(tvcs[Math.max(0, i - 1)]); });
+  lnNext.addEventListener('click', () => { const i = tvcs.indexOf(nearest()); centre(tvcs[Math.min(tvcs.length - 1, i + 1)]); });
+  // drag with a mouse, as you would swipe with a finger; a click on a TV brings it to the centre
+  let tdrag = null, dragged = false;
+  track.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button) return; tdrag = { x: e.clientX, s: track.scrollLeft }; dragged = false; });
+  addEventListener('pointermove', e => {
+    if (!tdrag) return; const dx = e.clientX - tdrag.x;
+    if (!dragged && Math.abs(dx) > 5) { dragged = true; track.classList.add('is-drag'); }
+    if (dragged) track.scrollLeft = tdrag.s - dx;
+  });
+  addEventListener('pointerup', () => { if (!tdrag) return; tdrag = null; if (dragged) { const c = nearest(); track.classList.remove('is-drag'); centre(c); } });
+  tvcs.forEach(c => c.addEventListener('click', () => { if (!dragged) centre(c); }));
+  track.scrollLeft = tvcs[1].offsetLeft + tvcs[1].offsetWidth / 2 - track.clientWidth / 2;
+  flow();
+
+  /* ---------- Photos drift slowly against the scroll ---------- */
+  $$('[data-par]').forEach(box => gsap.fromTo(box.querySelector('img'), { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: box, start: 'top bottom', end: 'bottom top', scrub: true } }));
+
+  /* ---------- Air conditioning: cool air streams out of the unit and fans across the room ---------- */
+  const bz = $('#breeze'), bx = bz.getContext('2d');
+  let BW = 0, BH = 0, BD = 1, bzOn = false, gusts = [];
+  const gust = any => ({ u: any ? Math.random() : 0, x: Math.random(), sp: .6 + Math.random() * .8, len: .05 + Math.random() * .09, w: .7 + Math.random() * 1.6, ph: Math.random() * 6.28, a: .3 + Math.random() * .5 });
+  const sizeBreeze = () => { BD = Math.min(devicePixelRatio || 1, 2); BW = bz.width = Math.round(bz.clientWidth * BD); BH = bz.height = Math.round(bz.clientHeight * BD); gusts = Array.from({ length: small() ? 60 : 130 }, () => gust(true)); };
+  // a path from the vent (x .33 to .56 at y .42) fanning out and down into the room (x .22 to .67 at y .96)
+  const along = (g, u, t) => {
+    const y = .42 + .54 * u, x0 = .33 + .23 * g.x, x1 = .22 + .45 * g.x;
+    return [(x0 + (x1 - x0) * Math.pow(u, 1.25) + Math.sin(t * 1.3 + g.ph + u * 5) * .01 * u) * BW, y * BH];
+  };
+  const breezeFrame = now => {
+    if (!bzOn) return;
+    const t = now / 1000; bx.clearRect(0, 0, BW, BH); bx.lineCap = 'round';
+    for (const g of gusts) {
+      g.u += .0032 * g.sp; if (g.u > 1) Object.assign(g, gust(false));
+      const u0 = Math.max(0, g.u - g.len), um = (u0 + g.u) / 2, [xa, ya] = along(g, u0, t), [xm, ym] = along(g, um, t), [xb, yb] = along(g, g.u, t);
+      const a = g.a * Math.sin(Math.PI * g.u), gr = bx.createLinearGradient(xa, ya, xb, yb);
+      gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, `rgba(245,255,255,${a.toFixed(3)})`);
+      bx.strokeStyle = gr; bx.lineWidth = g.w * BD; bx.beginPath(); bx.moveTo(xa, ya); bx.quadraticCurveTo(xm, ym, xb, yb); bx.stroke();
+    }
+    requestAnimationFrame(breezeFrame);
+  };
+  sizeBreeze();
+  if (!reduce) new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !bzOn) { bzOn = true; requestAnimationFrame(breezeFrame); } else if (!v) bzOn = false; }).observe(bz);
 
   /* =========================================================
      THE WHOLE KITCHEN: cabinetry rises, the benchtop drops on, then each Hisense appliance
@@ -670,6 +1133,33 @@ section{position:relative}
   });
   $$('[data-zoom]').forEach(box => gsap.fromTo(box.querySelector('img'), { scale: 1.16 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: box, start: 'top bottom', end: 'top 20%', scrub: true } }));
 
+  /* =========================================================
+     THE CATALOGUES: the books drop onto the shelf; pick one up and it flies open into the flipbook
+     ========================================================= */
+  const books = $$('.bk'), fType = $('#fType');
+  const asTrade = () => { if (fType && !fType.value) fType.value = 'Retailer'; };
+  books.forEach((b, i) => b.style.setProperty('--i', i));
+  if (!reduce) gsap.from(books, { y: -110, opacity: 0, duration: 1.2, ease: 'back.out(1.6)', stagger: .13, scrollTrigger: { trigger: '#shelf', start: 'top 85%', once: true } });
+  if (window.HanesFlipbook) {
+    HanesFlipbook.init({
+      books: [
+        { key: 'tv', label: 'TVs', title: 'Hisense TV Collection', sub: '2026–2027 catalogue', dir: 'catalogues/tv', n: 52 },
+        { key: 'fridge', label: 'Refrigerators', title: 'Hisense Refrigerator Collection', sub: '2026–2027 catalogue', dir: 'catalogues/fridge', n: 32 },
+        { key: 'laundry', label: 'Washing machines', title: 'Hisense Washing Machine Collection', sub: '2026 catalogue', dir: 'catalogues/laundry', n: 48 },
+        { key: 'air', label: 'Air conditioners', title: 'Hisense Air Conditioner Collection', sub: '2026 catalogue', dir: 'catalogues/air', n: 18 }
+      ],
+      cta: { href: '#enquire', text: 'Retailer or merchant? Contact us' },
+      onCta: () => { asTrade(); go('#enquire'); },
+      onOpen: () => { if (lenis) lenis.stop(); },
+      onClose: () => { if (lenis) lenis.start(); }
+    });
+    books.forEach(b => {
+      b.addEventListener('click', () => HanesFlipbook.open(b.dataset.book, b.querySelector('.bk__f')));
+      b.addEventListener('pointerenter', () => HanesFlipbook.preload(b.dataset.book, 3), { once: true });
+    });
+  }
+  $$('[data-trade]').forEach(a => a.addEventListener('click', asTrade));
+
   /* ---------- Enquire: writes the email for you ---------- */
   const form = $('#hsForm');
   form.addEventListener('submit', e => {
@@ -685,7 +1175,7 @@ section{position:relative}
   let rsz = 0, lastW = innerWidth, lastH = innerHeight;
   addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
     if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return; lastW = innerWidth; lastH = innerHeight;
-    sizeDust(); sizeAir(); applyClip(); if (!small()) setOpen(false); ScrollTrigger.refresh();
+    sizeDust(); sizeAir(); sizeBreeze(); sizeRing(); applyClip(); flow(); if (!small()) setOpen(false); ScrollTrigger.refresh();
   }); });
   addEventListener('load', () => ScrollTrigger.refresh());
 })();
