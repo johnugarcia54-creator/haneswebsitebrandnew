@@ -12,7 +12,8 @@ if (!/^https?:\/\//.test(base)) { console.error('Usage: node scripts/smoke.mjs h
 
 // a deployment behind Vercel's login (Deployment Protection) can't be tested from outside: say so and stop
 const first = await fetch(base + '/', { redirect: 'manual' });
-if (first.status === 401 || (first.status === 403 && /vercel/i.test(first.headers.get('server') || ''))) {
+const loc = first.headers.get('location') || '';
+if (first.status === 401 || (first.status === 403 && /vercel/i.test(first.headers.get('server') || '')) || (first.status >= 300 && first.status < 400 && /vercel\.com\/(sso|login)|_vercel_sso|sso-api/i.test(loc))) {
   console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${first.status}), so it was not tested. Turn protection off for previews, or test the project that serves the site.`);
   process.exit(0);
 }
