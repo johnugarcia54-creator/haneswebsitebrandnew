@@ -1,0 +1,73 @@
+/* =========================================================================================
+   Hanes flipbook: a catalogue reader with real page turns. Each turning page is a chain of
+   thin strips hinged to one another, so the page curls as it lifts; light and shadow follow
+   the angle of every strip. See assets/flipbook.js.
+   ========================================================================================= */
+.fb{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;color:#f5f5f7;font:400 15px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;visibility:hidden;opacity:0;transition:opacity .5s cubic-bezier(.28,.11,.32,1),visibility 0s .5s}
+.fb.is-open{visibility:visible;opacity:1;transition:opacity .5s cubic-bezier(.28,.11,.32,1)}
+.fb__bg{position:absolute;inset:0;background:radial-gradient(80% 70% at 50% 45%,#1b1b1f 0%,#0a0a0b 60%,#000 100%)}
+.fb__bg::after{content:"";position:absolute;inset:0;background:radial-gradient(40% 30% at 50% 88%,rgba(227,187,106,.12),rgba(227,187,106,0) 70%)}
+.fb__bar{position:relative;z-index:3;display:flex;align-items:center;gap:18px;height:60px;padding:0 max(18px,env(safe-area-inset-left));border-bottom:1px solid rgba(255,255,255,.08);background:rgba(10,10,11,.7);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.fb__title{display:flex;flex-direction:column;min-width:0}
+.fb__title b{font-size:16px;font-weight:600;white-space:nowrap}
+.fb__title span{font-size:12px;color:#86868b}
+.fb__tabs{display:flex;gap:4px;margin:0 auto;padding:4px;border-radius:999px;background:rgba(255,255,255,.07)}
+.fb__tabs button{min-height:32px;padding:0 14px;border:0;border-radius:999px;background:none;color:#a1a1a6;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap;transition:background .3s,color .3s}
+.fb__tabs button:hover{color:#f5f5f7}
+.fb__tabs button[aria-pressed="true"]{background:#f5f5f7;color:#1d1d1f}
+.fb__cta{flex:none;display:inline-flex;align-items:center;min-height:34px;padding:0 16px;border-radius:999px;background:linear-gradient(90deg,#f7dfa0,#d6a24c 50%,#f2d38e);color:#1d1d1f;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+.fb__x{flex:none;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#f5f5f7;cursor:pointer;transition:background .2s}
+.fb__x:hover{background:rgba(255,255,255,.2)}
+.fb__x svg{width:14px;height:14px}
+.fb button:focus-visible,.fb a:focus-visible,.fb input:focus-visible{outline:2px solid #e3bb6a;outline-offset:2px}
+.fb__stage{position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;touch-action:none;user-select:none;-webkit-user-select:none}
+.fb__nav{position:absolute;top:50%;z-index:5;display:grid;place-items:center;width:52px;height:52px;margin-top:-26px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#f5f5f7;cursor:pointer;transition:background .2s,opacity .3s}
+.fb__nav:hover{background:rgba(255,255,255,.2)}
+.fb__nav:disabled{opacity:0;pointer-events:none}
+.fb__nav svg{width:18px;height:18px}
+.fb__nav--prev{left:max(18px,2vw)}
+.fb__nav--next{right:max(18px,2vw)}
+.fb__fly{position:relative}
+/* the book: two static pages, the turning leaf above them, stacked page edges and a shadow below */
+.fb__book{position:relative;perspective:2600px;perspective-origin:50% 40%;transition:transform .8s cubic-bezier(.28,.11,.32,1)}
+.fb__book.no-anim{transition:none}
+.fb__drop{position:absolute;left:4%;right:4%;bottom:-26px;height:40px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.65),rgba(0,0,0,0));filter:blur(6px);pointer-events:none}
+.fb__pg{position:absolute;top:0;height:100%;background:#f2f1ee center/100% 100% no-repeat;overflow:hidden}
+.fb__pg--l{left:0;border-radius:6px 0 0 6px}
+.fb__pg--r{border-radius:0 6px 6px 0}
+.fb__pg.is-empty{background:none!important}
+.fb__pg::before{content:"";position:absolute;inset:0;pointer-events:none}
+.fb__pg--l::before{background:linear-gradient(270deg,rgba(0,0,0,.28) 0,rgba(0,0,0,.08) 4%,rgba(0,0,0,0) 12%,rgba(255,255,255,0) 90%,rgba(255,255,255,.06) 100%)}
+.fb__pg--r::before{background:linear-gradient(90deg,rgba(0,0,0,.3) 0,rgba(0,0,0,.08) 4%,rgba(0,0,0,0) 12%)}
+.fb__pg.is-empty::before{display:none}
+.fb__cast{position:absolute;top:0;bottom:0;pointer-events:none;opacity:0}
+.fb__pg--r .fb__cast{left:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.18) 60%,rgba(0,0,0,0))}
+.fb__pg--l .fb__cast{right:0;background:linear-gradient(270deg,rgba(0,0,0,.55),rgba(0,0,0,.18) 60%,rgba(0,0,0,0))}
+.fb__edge{position:absolute;top:1px;bottom:1px;width:var(--e,0px);pointer-events:none;background:repeating-linear-gradient(90deg,#d9d6cf 0 1px,#f4f2ed 1px 2px);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.fb__edge--l{right:100%;border-radius:4px 0 0 4px}
+.fb__edge--r{left:100%;border-radius:0 4px 4px 0}
+.fb__leaf{position:absolute;top:0;height:100%;transform-style:preserve-3d;pointer-events:none;visibility:hidden}
+.fb__leaf.is-on{visibility:visible}
+.fb__s{position:absolute;top:0;height:100%;transform-style:preserve-3d;transform-origin:0 50%}
+.fb__f{position:absolute;inset:0;background-color:#f2f1ee;background-repeat:no-repeat;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.fb__f::after{content:"";position:absolute;inset:0;background:#000;opacity:var(--sh,0)}
+.fb__f--b{transform:rotateY(180deg)}
+.fb__f--b::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,var(--hl,0)),rgba(255,255,255,0))}
+.fb__foot{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;gap:18px;height:64px;padding:0 20px;color:#a1a1a6;font-size:13px}
+.fb__count{min-width:130px;text-align:right;font-variant-numeric:tabular-nums;color:#f5f5f7}
+.fb__scrub{width:min(420px,40vw);accent-color:#e3bb6a}
+.fb__hint{min-width:130px}
+.fb__load{position:absolute;inset:0;display:grid;place-items:center;color:#86868b;font-size:13px;pointer-events:none;opacity:0;transition:opacity .3s}
+.fb.is-loading .fb__load{opacity:1}
+@media (max-width:900px){
+  .fb__bar{flex-wrap:wrap;height:auto;padding:10px 14px;gap:10px}
+  .fb__title{order:1;flex:1}
+  .fb__x{order:2}
+  .fb__tabs{order:3;width:100%;overflow-x:auto;margin:0;scrollbar-width:none}
+  .fb__cta{order:4;width:100%;justify-content:center}
+  .fb__hint{display:none}
+  .fb__nav{width:42px;height:42px;margin-top:-21px;background:rgba(0,0,0,.45)}
+  .fb__nav--prev{left:8px}.fb__nav--next{right:8px}
+  .fb__count{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){.fb,.fb__book{transition:none}}
