@@ -156,6 +156,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .trk__steps{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-top:22px;font-size:14px;font-weight:500}
 .trk__steps li{display:flex;gap:10px;align-items:baseline}
 .trk__steps b{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--accent)}
+.trk__go{margin-top:26px}
 .chip{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 16px;border-radius:999px;background:var(--surface);font-size:13px;font-weight:500}
 .chip i{width:8px;height:8px;border-radius:50%;background:#2fbf5a;box-shadow:0 0 0 4px rgba(47,191,90,.2);animation:pulseg 1.8s infinite}
 @keyframes pulseg{50%{box-shadow:0 0 0 8px rgba(47,191,90,0)}}
@@ -417,13 +418,13 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
 <div class="gb" id="gb">
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html" aria-current="page">Hanes <span>Distribution</span></a>
-    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="index.html#contact">Contact</a></li></ul>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
-    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
   </div>
 </div>
 
@@ -547,6 +548,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
           <li><b>04</b>Arrival</li><li><b>05</b>Warehousing</li><li><b>06</b>Delivery</li>
         </ol>
         <div class="chip" data-reveal="left"><i></i>Shipment on the way</div>
+        <div class="trk__go" data-reveal="left"><a class="btn btn--dark" href="tracking.html">Explore Hanes Track <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
       </div>
       <div class="trk__stage" id="trkStage" data-reveal="right"><canvas id="trkCanvas" aria-hidden="true"></canvas></div>
     </div>
@@ -798,7 +800,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
         <a class="foot__mail" href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
       </div>
       <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
-      <div><h4>What we do</h4><ul><li><a href="#network" data-scroll>International 4PL</a></li><li><a href="#tracking" data-scroll>Live tracking</a></li><li><a href="#warehouse" data-scroll>Warehousing</a></li><li><a href="#hisense" data-scroll>Hisense appliances</a></li><li><a href="#films" data-scroll>Films</a></li></ul></div>
+      <div><h4>What we do</h4><ul><li><a href="#network" data-scroll>International 4PL</a></li><li><a href="tracking.html">Hanes Track</a></li><li><a href="#warehouse" data-scroll>Warehousing</a></li><li><a href="#hisense" data-scroll>Hisense appliances</a></li><li><a href="#films" data-scroll>Films</a></li></ul></div>
       <div><h4>Offices</h4><ul><li>Christchurch · Head Office<br>93 Main South Road</li><li>Hornby Warehouse<br>44 Anchorage Road</li><li>Hong Kong · Asia Branch</li><li>Zhangzhou · China Branch</li></ul></div>
     </div>
     <div class="foot__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch · Hong Kong · Zhangzhou</span></div>
