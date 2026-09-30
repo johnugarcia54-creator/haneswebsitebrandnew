@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanestone — Plasterboard for walls and ceilings</title>
+<meta name="description" content="Hanestone plasterboard for walls and ceilings, made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanestone — Plasterboard for walls and ceilings">
+<meta property="og:description" content="Hanestone plasterboard for walls and ceilings, made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="preload" as="image" href="stills/range/hanestone-1200.webp">
+<script>document.documentElement.classList.add('js')</script>
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-tight-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --line:#d2d2d7; --alt:#f5f5f7;
+  --blue:#0071e3; --blue-h:#0077ed; --link:#0066cc;
+  --wrap:980px; --wide:1260px; --pad:22px; --ln:52px;
+  --ease:cubic-bezier(.28,.11,.32,1);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  --stone:linear-gradient(90deg,#34495e 0%,#7b90a6 55%,#3d5166 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:rgba(0,113,227,.2)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.wrap--wide{max-width:var(--wide)}
+.center{text-align:center}
+.t-grad{background:var(--stone);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);letter-spacing:-.01em;line-height:1.2}
+.t-head{font-family:var(--display);font-weight:600;font-size:clamp(38px,5vw,64px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance}
+.eyebrow + .t-head{margin-top:10px}
+.t-intro{max-width:760px;margin:24px auto 0;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.75vw,24px);line-height:1.33;letter-spacing:-.012em;color:var(--ink-3);text-wrap:pretty}
+.t-intro b{color:var(--ink);font-weight:600}
+section{position:relative}
+.sec{padding:clamp(96px,12vw,160px) 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:980px;background:var(--blue);color:#fff;font-size:17px;line-height:1;white-space:nowrap;transition:background .2s}
+.btn:hover{background:var(--blue-h)}
+.btn:focus-visible,.more:focus-visible,.pill:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.more{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:17px;line-height:1.2}
+.more svg{width:8px;height:14px;flex:none}
+.more:hover span{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:980px;background:var(--blue);color:#fff;font-size:12px;white-space:nowrap;transition:background .2s}
+.pill:hover{background:var(--blue-h)}
+
+/* ---------- Local nav ---------- */
+.ln{position:sticky;top:var(--gbh,0px);z-index:50;height:var(--ln);background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);transition:top .45s var(--ease)}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(0,0,0,.14);opacity:0;transition:opacity .3s}
+.ln.is-stuck::after,.ln.is-open::after{opacity:1}
+.ln__in{max-width:var(--wrap);height:100%;margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.ln__title{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.015em}
+.ln__menu{display:flex;align-items:center;gap:24px;margin-left:auto;font-size:12px;color:rgba(29,29,31,.8)}
+.ln__menu a:hover{color:var(--link)}
+.ln__end{display:flex;align-items:center;gap:14px}
+.ln__chev{display:none;width:28px;height:28px;place-items:center;color:var(--ink)}
+.ln__chev svg{width:12px;height:12px;transition:transform .4s var(--ease)}
+.ln.is-open .ln__chev svg{transform:rotate(180deg)}
+
+/* ---------- Hero ---------- */
+.hero{padding:clamp(48px,8vh,88px) var(--pad) 0;text-align:center}
+.hero__title{font-family:var(--display);font-weight:600;font-size:clamp(60px,9.4vw,124px);line-height:1;letter-spacing:-.035em}
+.hero__tag{margin-top:clamp(10px,1.4vw,18px);font-family:var(--display);font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.08;letter-spacing:-.025em}
+.hero__sub{max-width:600px;margin:18px auto 0;color:var(--ink-2);font-size:clamp(17px,1.5vw,21px);line-height:1.38}
+.ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 28px;margin-top:28px}
+.js .hero [data-in]{opacity:0;transform:translateY(24px)}
+.hc{max-width:var(--wide);margin:clamp(40px,6vh,64px) auto 0;padding:0 var(--pad)}
+.hc__in{position:relative;aspect-ratio:16/9;border-radius:28px;overflow:hidden;background:#111;isolation:isolate}
+.js .hc__in{opacity:0}
+.hc__in img{width:100%;height:100%;object-fit:cover;object-position:50% 45%;will-change:transform}
+.hc__in::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.18) 34%,rgba(0,0,0,0) 56%)}
+.hc__cap{position:absolute;z-index:1;left:0;right:0;bottom:clamp(28px,5vw,56px);padding:0 var(--pad);text-align:center;color:#f5f5f7}
+@media (max-width:640px){.br-d{display:none}}
+.hc__cap p:first-child{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.4vw,19px);color:rgba(245,245,247,.8)}
+.hc__cap p:last-child{text-wrap:balance;margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(28px,3.6vw,52px);line-height:1.06;letter-spacing:-.025em}
+
+/* ---------- The statement ---------- */
+.lit{padding:clamp(110px,15vw,200px) var(--pad)}
+.lit p{max-width:980px;margin:0 auto;font-family:var(--display);font-weight:600;font-size:clamp(30px,4.3vw,58px);line-height:1.12;letter-spacing:-.025em;text-wrap:pretty}
+.js .lit .w{color:rgba(29,29,31,.16);transition:color .45s var(--ease)}
+.js .lit .w.on{color:var(--ink)}
+
+/* ---------- Sheet after sheet: plasterboard drops into a stack, lines up, and is strapped into a pack ---------- */
+.made{background:var(--alt);padding-top:clamp(96px,12vw,160px)}
+.px{height:400vh}
+.px__stick{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(280px,380px) 1fr;align-items:center;gap:clamp(24px,5vw,80px);max-width:var(--wide);margin:0 auto;padding:var(--ln) var(--pad) 0}
+.px__steps{list-style:none;display:grid;gap:2px}
+.px__steps li{position:relative;padding:14px 0 14px 22px}
+.px__steps li::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;border-radius:2px;background:var(--line);transition:background .5s var(--ease)}
+.px__steps li.is-on::before{background:var(--ink)}
+.px__steps h3{font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);line-height:1.2;letter-spacing:-.015em;color:var(--ink-3);transition:color .5s var(--ease)}
+.px__steps li.is-on h3{color:var(--ink)}
+.px__steps p{max-height:0;overflow:hidden;opacity:0;color:var(--ink-2);transition:max-height .6s var(--ease),opacity .6s var(--ease),margin-top .6s var(--ease)}
+.px__steps li.is-on p{max-height:7em;opacity:1;margin-top:8px}
+.st-scene{--S:min(26vw,40vh,360px);--rx:58deg;--rz:-34deg;--t:10px;--strap:0;position:relative;height:min(80svh,720px);perspective:1800px;perspective-origin:50% 36%}
+.st-shadow{position:absolute;left:50%;top:60%;width:calc(var(--S) * 2.1);height:calc(var(--S) * .7);margin:calc(var(--S) * -.35) 0 0 calc(var(--S) * -1.05);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.16),rgba(0,0,0,0));will-change:opacity}
+.st,.sh{transform-style:preserve-3d}
+.st{position:absolute;left:50%;top:56%;width:calc(var(--S) * 1.6);height:calc(var(--S) * .8);margin:calc(var(--S) * -.4) 0 0 calc(var(--S) * -.8);transform:rotateX(var(--rx)) rotateZ(var(--rz))}
+.sh{position:absolute;inset:0;visibility:hidden;will-change:transform}
+/* the face: ivory liner paper, printed with the brand on the top sheet */
+/* only the top sheet carries the liner's sheen and grain: the faces below are covered once the pack is down, and
+   painting that texture on every sheet as it falls costs frames */
+.sh b{position:absolute;inset:0;background:#ecebe5}
+.sh:last-child b{background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,255,255,0) 45%,rgba(0,0,0,.05)),radial-gradient(rgba(120,110,95,.1) .6px,rgba(0,0,0,0) 1.1px) 0 0/4px 4px,#ecebe5}
+.sh b span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--display);font-weight:600;font-size:calc(var(--S) * .09);letter-spacing:-.02em;color:rgba(52,73,94,.55)}
+.sh b u{position:absolute;top:0;bottom:0;width:calc(var(--S) * .05);background:linear-gradient(90deg,#27394b,#3d5166 50%,#27394b);opacity:var(--strap)}
+.sh b u:nth-of-type(1){left:24%}
+.sh b u:nth-of-type(2){right:24%}
+.sh i{position:absolute;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+/* the edges: white gypsum core between two paper liners */
+.sh .eb,.sh .et{left:0;width:100%;height:var(--t);background:linear-gradient(180deg,#d8d4ca 0 12%,#fbfaf7 12% 88%,#cfcbc0 88%)}
+.sh .eb{top:100%;transform-origin:50% 0;transform:rotateX(-90deg)}
+.sh .et{bottom:100%;transform-origin:50% 100%;transform:rotateX(90deg)}
+.sh .el,.sh .er{top:0;width:var(--t);height:100%;background:linear-gradient(90deg,#d8d4ca 0 12%,#f3f2ee 12% 88%,#cfcbc0 88%)}
+.sh .el{right:100%;transform-origin:100% 50%;transform:rotateY(-90deg)}
+.sh .er{left:100%;transform-origin:0 50%;transform:rotateY(90deg)}
+.sh .eb s{position:absolute;top:0;bottom:0;width:calc(var(--S) * .05);background:#34495e;opacity:var(--strap)}
+.sh .eb s:nth-of-type(1){left:24%}
+.sh .eb s:nth-of-type(2){right:24%}
+
+/* ---------- Where it goes ---------- */
+.uses{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);max-width:var(--wide);margin:clamp(48px,6vw,80px) auto 0;padding:0 var(--pad)}
+.use{padding:clamp(24px,2.6vw,36px);border-radius:28px;background:var(--alt)}
+.use svg{width:40px;height:40px;color:var(--ink)}
+.use h3{margin-top:22px;font-family:var(--display);font-weight:600;font-size:24px;line-height:1.16;letter-spacing:-.015em}
+.use p{margin-top:8px;color:var(--ink-2)}
+
+/* ---------- Why stock Hanestone ---------- */
+.why{background:var(--alt)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(300px,auto);gap:20px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad)}
+.tile{position:relative;display:flex;flex-direction:column;border-radius:28px;background:#fff;padding:clamp(28px,3vw,44px);overflow:hidden;isolation:isolate}
+.tile--wide{grid-column:span 2}
+.tile h3{font-family:var(--display);font-weight:600;font-size:clamp(24px,2.3vw,32px);line-height:1.12;letter-spacing:-.02em}
+.tile p{margin-top:10px;color:var(--ink-2)}
+.tile__big{font-family:var(--display);font-weight:700;font-size:clamp(56px,6.4vw,96px);line-height:.95;letter-spacing:-.045em}
+.tile__big + p{margin-top:auto;padding-top:24px}
+.tile--photo{padding:0;color:#fff;min-height:420px;background:#000}
+.tile--photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.tile--photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.2) 38%,rgba(0,0,0,0) 60%)}
+.tile__cap{position:relative;z-index:1;margin-top:auto;padding:clamp(28px,3vw,44px)}
+.tile__cap p{color:rgba(245,245,247,.82)}
+
+/* ---------- Ordering ---------- */
+.order__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad)}
+.ocard{border-radius:28px;background:var(--alt);padding:clamp(28px,3vw,44px)}
+.ocard__n{display:block;font-family:var(--display);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.04em}
+.ocard h3{margin-top:28px;font-family:var(--display);font-weight:600;font-size:24px;line-height:1.16;letter-spacing:-.015em}
+.ocard p{margin-top:8px;color:var(--ink-2)}
+
+/* ---------- Bulk pricing ---------- */
+.price{background:var(--alt)}
+.price .t-intro{max-width:640px}
+.form{max-width:760px;margin:clamp(40px,5vw,64px) auto 0;padding:clamp(24px,4vw,48px);border-radius:28px;background:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{position:relative}
+.fl.full{grid-column:1/-1}
+.fl input,.fl select,.fl textarea{width:100%;height:56px;padding:24px 16px 6px;border:1px solid #d2d2d7;border-radius:12px;background:#fff;font-size:17px;line-height:1.2;outline:none;appearance:none;transition:border-color .2s,box-shadow .2s}
+.fl textarea{height:auto;min-height:128px;padding-top:28px;resize:vertical}
+.fl label{position:absolute;left:17px;top:17px;font-size:17px;line-height:1.2;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.fl input:focus + label,.fl input:not(:placeholder-shown) + label,.fl textarea:focus + label,.fl textarea:not(:placeholder-shown) + label,.fl--sel label{transform:translateY(-9px) scale(.7)}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.fl--sel select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%2386868b' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center/12px;padding-right:40px}
+.fset{grid-column:1/-1;border:0;margin-top:6px}
+.fset legend{font-size:14px;font-weight:600;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips label{position:relative;cursor:pointer}
+.chips input{position:absolute;opacity:0;width:1px;height:1px}
+.chips span{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:12px;box-shadow:inset 0 0 0 1px #86868b;font-size:15px;transition:box-shadow .2s,background .2s}
+.chips input:checked + span{box-shadow:inset 0 0 0 2px var(--blue);background:rgba(0,113,227,.04)}
+.chips input:focus-visible + span{outline:2px solid var(--blue);outline-offset:2px}
+.form .btn{width:100%;min-height:50px;margin-top:22px}
+.form__note{margin-top:12px;font-size:12px;color:var(--ink-3);text-align:center}
+.form__done{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:rgba(0,113,227,.06);font-size:14px}
+.form__done.is-on{display:block}
+
+.js [data-anim]{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+.js [data-anim].in{opacity:1;transform:none}
+
+@media (max-width:1068px){.uses{grid-template-columns:1fr 1fr}}
+@media (max-width:833px){
+  .ln__menu{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px var(--pad) 14px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);font-size:17px;color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.1);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+  .ln__menu a{padding:12px 0;border-bottom:1px solid #e8e8ed}
+  .ln__menu a:last-child{border-bottom:0}
+  .ln.is-open .ln__menu{visibility:visible;opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+  .ln__chev{display:grid}
+  .hc__in{aspect-ratio:4/5}
+  .hc__in img{object-position:62% 50%}
+  .px__stick{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:stretch;gap:0;padding-top:calc(var(--ln) + 20px)}
+  .px__steps li{padding:9px 0 9px 18px}
+  .px__steps li::before{top:9px;bottom:9px}
+  .px__steps h3{font-size:18px}
+  .px__steps p{font-size:15px}
+  .st-scene{--S:min(40vw,24svh,220px);height:auto;overflow:hidden}
+  .uses,.bento,.order__grid{grid-template-columns:1fr}
+  .tile--wide{grid-column:auto}
+  .tile{min-height:240px}
+  .tile--photo{min-height:360px}
+  .fgrid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.js [data-anim]{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html" aria-current="page">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html" aria-current="page">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
+
+<nav class="ln" id="ln" aria-label="Hanestone">
+  <div class="ln__in">
+    <a class="ln__title" href="#top" data-go>Hanestone</a>
+    <div class="ln__menu" id="lnMenu">
+      <a href="#made" data-go>Sheet after sheet</a>
+      <a href="#uses" data-go>Where it goes</a>
+      <a href="#why" data-go>Why stock it</a>
+    </div>
+    <div class="ln__end">
+      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
+      <a class="pill" href="#pricing" data-go>Get pricing</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <section class="hero" aria-label="Hanestone">
+    <h1 class="hero__title" data-in>Hanestone</h1>
+    <p class="hero__tag t-grad" data-in>The same spec. Every sheet.</p>
+    <p class="hero__sub" data-in>Plasterboard for walls and ceilings, made on modern lines and stocked in Christchurch. Priced for bulk.</p>
+    <div class="ctas" data-in>
+      <a class="btn" href="#pricing" data-go>Get bulk pricing</a>
+      <a class="more" href="#made" data-go><span>See it stack up</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+    </div>
+  </section>
+  <div class="hc"><div class="hc__in" id="hcIn">
+    <img id="hcImg" src="stills/range/hanestone-1200.webp" width="1200" height="900" alt="Plasterboard ceiling going up on steel framing, the sun setting through the window" fetchpriority="high" decoding="async">
+    <div class="hc__cap"><p>Walls and ceilings</p><p>Smooth from the first sheet <br class="br-d">to the last.</p></div>
+  </div></div>
+
+  <section class="lit" aria-label="Hanestone in brief">
+    <p id="lit">Hanestone is plasterboard for the walls and ceilings of New Zealand homes. Made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, and priced for merchants and retailers who buy by the pack.</p>
+  </section>
+
+  <section class="made" id="made" aria-label="Sheet after sheet">
+    <div class="wrap center">
+      <p class="eyebrow t-grad" data-anim>Sheet after sheet</p>
+      <h2 class="t-head" data-anim>Consistency, stacked.</h2>
+      <p class="t-intro" data-anim>Every Hanestone sheet is <b>made on modern lines to the same spec</b>, so the hundredth sheet on the job <b>fits and finishes like the first</b>.</p>
+    </div>
+    <div class="px" id="px">
+      <div class="px__stick">
+        <ol class="px__steps" id="pxSteps">
+          <li class="is-on"><h3>Made on modern lines.</h3><p>Plasterboard for walls and ceilings, sheet after sheet.</p></li>
+          <li><h3>The same spec, every sheet.</h3><p>Every sheet lines up with the last, edge to edge.</p></li>
+          <li><h3>Stacked, strapped and ready.</h3><p>Packed for your yard and delivered right across New Zealand.</p></li>
+        </ol>
+        <div class="st-scene" id="stScene" aria-hidden="true">
+          <div class="st-shadow" id="stShadow"></div>
+          <div class="st" id="st"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="uses" aria-label="Where it goes">
+    <div class="wrap center">
+      <h2 class="t-head" data-anim>Where it goes.</h2>
+      <p class="t-intro" data-anim>From the first wall of a new build to a weekend renovation, <b>Hanestone is the board behind the paint.</b></p>
+    </div>
+    <div class="uses">
+      <div class="use" data-anim><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="6" y="6" width="28" height="28" rx="2"/><path d="M6 20h28M20 6v28"/></svg><h3>Walls</h3><p>Flat, smooth walls, ready for stopping and paint.</p></div>
+      <div class="use" data-anim><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 12h32M8 12l4-6h16l4 6"/><path d="M9 12v22M31 12v22" stroke-dasharray="3 3"/></svg><h3>Ceilings</h3><p>Fixed to timber or steel framing overhead.</p></div>
+      <div class="use" data-anim><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M6 18 20 7l14 11v15H6z"/><path d="M16 33v-9h8v9"/></svg><h3>New builds</h3><p>Sheet after sheet for the whole house.</p></div>
+      <div class="use" data-anim><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M9 31 27 13M24 10l6 6M13 27l-4 4"/><path d="M27 13l3-3a2.1 2.1 0 0 0-3-3l-3 3"/></svg><h3>Renovations</h3><p>Easy to cut and fix for alterations.</p></div>
+    </div>
+  </section>
+
+  <section class="sec why" id="why" aria-label="Why stock Hanestone">
+    <div class="wrap wrap--wide"><h2 class="t-head" data-anim>Why stock Hanestone.</h2></div>
+    <div class="bento">
+      <div class="tile tile--wide" data-anim><p class="tile__big t-grad">The same spec.<br>Every sheet.</p><p>Made on modern lines, so what your customers bought last month is what they get this month.</p></div>
+      <div class="tile" data-anim><p class="tile__big">Bulk<br>pricing.</p><p>Built around your volumes, not a price list.</p></div>
+      <div class="tile" data-anim><p class="tile__big t-grad">Stocked</p><p>Held in our Christchurch warehouse, ready when your yard needs it.</p></div>
+      <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="stills/hanewood/truck.webp" width="1672" height="941" alt="A Hanes Distribution truck and trailer at the dock at sunrise" loading="lazy" decoding="async" style="object-position:36% 55%"></div><div class="tile__cap"><h3>Delivered by the truckload.</h3><p>Loaded at our Christchurch dock and delivered right across New Zealand.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec order" aria-label="Ordering">
+    <div class="wrap center"><h2 class="t-head" data-anim>Ordering is simple.</h2></div>
+    <div class="order__grid">
+      <div class="ocard" data-anim><span class="ocard__n t-grad">1</span><h3>Tell us what you move.</h3><p>Your boards, sizes and rough volumes.</p></div>
+      <div class="ocard" data-anim><span class="ocard__n t-grad">2</span><h3>Get your bulk pricing.</h3><p>Pricing built around your volumes, not a price list.</p></div>
+      <div class="ocard" data-anim><span class="ocard__n t-grad">3</span><h3>We load and deliver.</h3><p>Full packs, loaded in Christchurch and delivered nationwide.</p></div>
+    </div>
+  </section>
+
+  <section class="sec price" id="pricing" aria-label="Get bulk pricing">
+    <div class="wrap center">
+      <h2 class="t-head" data-anim>Get bulk pricing.</h2>
+      <p class="t-intro" data-anim>For <b>merchants, retailers and builders' suppliers.</b> Tell us what you move, and we'll come back with pricing built around your volumes.</p>
+    </div>
+    <form class="form" id="priceForm" data-anim novalidate>
+      <div class="fgrid">
+        <div class="fl"><input id="fBiz" name="business" placeholder=" " required autocomplete="organization"><label for="fBiz">Business name</label></div>
+        <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
+        <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
+        <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
+        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Builders' merchant</option><option>Retailer</option><option>Plasterer or fixer</option><option>Builder</option><option>Other</option></select><label for="fType">Your business</label></div>
+        <div class="fl fl--sel"><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select><label for="fRegion">Region</label></div>
+        <fieldset class="fset"><legend>For</legend><div class="chips"><label><input type="checkbox" name="interest" value="Walls" checked><span>Walls</span></label><label><input type="checkbox" name="interest" value="Ceilings" checked><span>Ceilings</span></label></div></fieldset>
+        <div class="fl full"><textarea id="fMsg" name="message" placeholder=" "></textarea><label for="fMsg">Boards, sizes and volumes</label></div>
+      </div>
+      <button class="btn" type="submit">Request pricing</button>
+      <p class="form__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+      <p class="form__done" id="fDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz and we'll take it from there.</p>
+    </form>
+  </section>
+</main>
+
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__note">Hanestone is a <a href="index.html">Hanes Distribution</a> brand, supplied to merchants and retailers. Board types, sizes and pricing are available on request.</div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html" aria-current="page">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="assets/site.js" defer></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const root = document.documentElement;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') { root.classList.remove('js'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = () => innerWidth < 834;
+
+  /* ---------- Smooth scroll, and in-page links that land just below the nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .11, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  }
+  const go = id => {
+    const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
+    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 52)) : 0;
+    if (lenis) lenis.scrollTo(y, { duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  /* ---------- Local nav ---------- */
+  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
+  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
+  chev.addEventListener('click', () => setOpen(!open));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  ScrollTrigger.create({ start: 2, end: 'max', onToggle: s => ln.classList.toggle('is-stuck', s.isActive) });
+  $$('[data-go]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setOpen(false); go(id);
+  }));
+
+  /* ---------- Reveals ---------- */
+  $$('[data-anim]').forEach(el => {
+    const sibs = [...el.parentElement.children].filter(c => c.hasAttribute('data-anim')), i = sibs.indexOf(el);
+    if (i > 0) el.style.setProperty('--d', `${(Math.min(i, 5) * .08).toFixed(2)}s`);
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  $$('[data-anim]').forEach(el => io.observe(el));
+
+  /* ---------- Hero: the words rise in, then the photo; it zooms gently out as you scroll ---------- */
+  const heroIn = () => {
+    gsap.to('.hero [data-in]', { opacity: 1, y: 0, duration: 1.2, stagger: .09, ease: 'power3.out' });
+    gsap.fromTo('#hcIn', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.4, delay: .35, ease: 'power3.out' });
+  };
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 700))]).then(heroIn);
+  gsap.fromTo('#hcImg', { scale: 1.16 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '#hcIn', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+  /* ---------- The statement lights up word by word ---------- */
+  const lit = $('#lit');
+  lit.innerHTML = lit.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
+  const lw = $$('#lit .w'); let litN = -1;
+  if (reduce) lw.forEach(w => w.classList.add('on'));
+  else ScrollTrigger.create({ trigger: '#lit', start: 'top 80%', end: 'bottom 42%', onUpdate: s => {
+    const n = Math.round(s.progress * lw.length); if (n === litN) return; litN = n;
+    lw.forEach((w, i) => w.classList.toggle('on', i < n));
+  } });
+
+  /* =========================================================
+     SHEET AFTER SHEET: plasterboard sheets drop one by one into a stack, each a little out of line. Then they
+     line up exactly, edge to edge (the same spec, every sheet), and two straps close the pack.
+     ========================================================= */
+  const scene = $('#stScene'), st = $('#st'), NS = 9;
+  st.innerHTML = Array.from({ length: NS }, (_, i) =>
+    `<div class="sh"><b>${i === NS - 1 ? '<span>Hanestone</span>' : ''}<u></u><u></u></b><i class="eb"><s></s><s></s></i><i class="et"></i><i class="el"></i><i class="er"></i></div>`).join('');
+  const sheets = $$('#st .sh'), steps = $$('#pxSteps li'), shadow = $('#stShadow');
+  // each sheet lands a little out of line, the way a hand-stacked pile would
+  const jog = sheets.map((_, i) => ({ x: ((i * 37) % 11 - 5) * 1.6, y: ((i * 53) % 9 - 4) * 1.4, r: ((i * 29) % 7 - 3) * 1.1 }));
+  const P = { drop: 0, align: 0, strap: 0, rz: -34 };
+  let T = 10, DROP = 900, step = 0;
+  // only write what changed: a custom property set on the scene restyles every face below it, so the turn goes
+  // straight onto the stack's own transform and the straps' opacity is only touched while they tighten
+  const last = { vis: [], tf: [], strap: '', turn: '', shade: '' };
+  const put = (key, v, set) => { if (last[key] !== v) { last[key] = v; set(v); } };
+  const render = () => {
+    for (let i = 0; i < NS; i++) {
+      const q = Math.min(1, Math.max(0, P.drop * (1 + (NS - 1) * .2) - i * .2)), e = 1 - Math.pow(1 - q, 3), a = 1 - P.align, j = jog[i];
+      const s = sheets[i].style, vis = q > 0 ? 'visible' : 'hidden';
+      const tf = `translate3d(${(j.x * a).toFixed(2)}px,${(j.y * a).toFixed(2)}px,${(i * T + (1 - e) * DROP).toFixed(1)}px) rotateZ(${(j.r * a).toFixed(2)}deg)`;
+      if (last.vis[i] !== vis) { last.vis[i] = vis; s.visibility = vis; }
+      if (last.tf[i] !== tf) { last.tf[i] = tf; s.transform = tf; }
+    }
+    put('strap', P.strap.toFixed(2), v => scene.style.setProperty('--strap', v));
+    put('turn', `rotateX(var(--rx)) rotateZ(${P.rz.toFixed(2)}deg)`, v => { st.style.transform = v; });
+    put('shade', Math.min(1, P.drop * 1.3).toFixed(2), v => { shadow.style.opacity = v; });
+    const t = ST.time(), k = t < 2.3 ? 0 : t < 3.4 ? 1 : 2;
+    if (k !== step) { step = k; steps.forEach((li, i) => li.classList.toggle('is-on', i === k)); }
+  };
+  const size = () => { last.tf = []; T = Math.max(6, $('#st').offsetWidth * .022); DROP = small() ? 700 : 900; scene.style.setProperty('--t', `${(T + .5).toFixed(1)}px`); render(); };
+  const ST = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: render, scrollTrigger: { trigger: '#px', start: 'top top', end: 'bottom bottom', scrub: true } });
+  ST.to(P, { drop: 1, duration: 2.2 }, 0)
+    .to(P, { align: 1, duration: .8, ease: 'power2.inOut' }, 2.4)
+    .to(P, { strap: 1, duration: .6, ease: 'power2.out' }, 3.5)
+    .to(P, { rz: -24, duration: 4.4 }, 0)
+    .to({}, { duration: .5 }, 4.2);
+  size();
+
+  /* ---------- Photos settle as they arrive ---------- */
+  $$('[data-zoom]').forEach(box => gsap.fromTo(box.querySelector('img'), { scale: 1.16 }, { scale: 1, ease: 'none',
+    scrollTrigger: { trigger: box, start: 'top bottom', end: 'top 20%', scrub: true } }));
+
+  /* ---------- Bulk pricing: the form writes the email for you ---------- */
+  const form = $('#priceForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const f = new FormData(form), interest = f.getAll('interest').join(', ') || 'Not specified';
+    const body = [
+      'Hanestone bulk pricing request', '',
+      `Business: ${f.get('business')}`, `Contact: ${f.get('name')}`, `Email: ${f.get('email')}`, `Phone: ${f.get('phone') || '-'}`,
+      `Business type: ${f.get('type')}`, `Region: ${f.get('region')}`, `For: ${interest}`, '',
+      'Boards, sizes and volumes:', f.get('message') || '-',
+    ].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Hanestone bulk pricing request: ' + f.get('business'))}&body=${encodeURIComponent(body)}`;
+    $('#fDone').classList.add('is-on');
+  });
+
+  let rsz = 0, lastW = innerWidth;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (innerWidth === lastW) return; lastW = innerWidth; size(); if (!small()) setOpen(false);
+  }); });
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>

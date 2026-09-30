@@ -6,6 +6,13 @@
 <title>Hanes Distribution — Engineered supply. Delivered nationwide.</title>
 <meta name="description" content="Hanes Distribution runs one connected supply network, from manufacturers in Asia to job sites across New Zealand. International 4PL, live tracking, warehousing in Christchurch and five house brands.">
 <meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanes Distribution — Engineered supply. Delivered nationwide.">
+<meta property="og:description" content="Hanes Distribution runs one connected supply network, from manufacturers in Asia to job sites across New Zealand. International 4PL, live tracking, warehousing in Christchurch and five house brands.">
+<link rel="stylesheet" href="assets/site.css">
 
 <style>
 @font-face{font-family:'Inter Tight';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-tight-latin-400-normal.woff2) format('woff2')}
@@ -57,7 +64,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .loader__pct{font-size:12px;letter-spacing:.14em;color:var(--ink-3);font-variant-numeric:tabular-nums}
 
 /* Nav */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);transition:background .5s var(--ease),box-shadow .5s var(--ease),transform .7s var(--ease)}
+.nav{position:fixed;top:var(--gbh,0px);left:0;right:0;z-index:50;height:var(--nav);transition:background .5s var(--ease),box-shadow .5s var(--ease),transform .7s var(--ease),top .45s cubic-bezier(.28,.11,.32,1)}
 .nav.is-solid{background:rgba(255,255,255,.74);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 14px 34px -30px rgba(0,0,0,.3)}
 .nav.is-hidden{transform:translateY(-110%)}
 .nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
@@ -90,7 +97,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .nav.is-open .nav__menu i::after{top:3.25px;transform:rotate(-45deg)}
 
 /* Menu sheet (tablets & phones) */
-.menu{position:fixed;inset:0;z-index:49;display:flex;flex-direction:column;justify-content:space-between;gap:36px;padding:calc(var(--nav) + 4vh) var(--pad) max(32px,env(safe-area-inset-bottom));overflow-y:auto;background:#fff;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
+.menu{position:fixed;inset:0;z-index:49;display:flex;flex-direction:column;justify-content:space-between;gap:36px;padding:calc(var(--nav) + var(--gbh,0px) + 4vh) var(--pad) max(32px,env(safe-area-inset-bottom));overflow-y:auto;background:#fff;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
 .menu.is-open{opacity:1;visibility:visible}
 .menu__links{display:flex;flex-direction:column}
 .menu__links a{font-family:var(--display);font-size:clamp(30px,7vw,52px);font-weight:600;letter-spacing:-.035em;line-height:1.1;padding:10px 0}
@@ -104,7 +111,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .skip.is-on{opacity:1;visibility:visible;transform:none}
 
 /* ---------- HERO: the truck film plays in a card, no pinning ---------- */
-.hero{padding:calc(var(--nav) + 4vh) 0 clamp(12px,2vh,28px)}
+.hero{padding:calc(var(--nav) + var(--gb,0px) + 4vh) 0 clamp(12px,2vh,28px)}
 .hero__intro{text-align:center;padding:0 var(--pad)}
 .hero__intro .eyebrow{margin-bottom:18px}
 .hero__intro h1{font-size:var(--fs-h)}
@@ -209,6 +216,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .reel__stage{position:relative;aspect-ratio:16/9;border-radius:32px;overflow:hidden;background:var(--dark);box-shadow:0 50px 100px -50px rgba(10,14,30,.45)}
 .reel__tag{position:absolute;left:24px;top:22px;z-index:2;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:center}
 .reel__tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.reel__go{position:absolute;right:20px;bottom:20px;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:10px 14px 10px 18px;border-radius:999px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);color:#fff;font-size:13px;font-weight:600;letter-spacing:-.01em;transition:background .3s var(--ease)}
+.reel__go:hover{background:rgba(255,255,255,.28)}
+.reel__go svg{width:14px;height:14px;transition:transform .3s var(--ease)}
+.reel__go:hover svg{transform:translateX(3px)}
+@media (max-width:600px){.reel__go{right:12px;bottom:12px;padding:7px 11px 7px 13px;font-size:12px}}
 .reel__tabs{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px}
 .reel__glide{position:absolute;z-index:-1;top:0;left:0;height:100%;width:0;border-radius:20px;background:var(--surface);opacity:0;transition:transform .7s var(--ease),width .7s var(--ease),opacity .4s}
 .reel__tab{text-align:left;padding:14px 16px 16px;border-radius:20px;color:var(--ink-3);transition:color .4s var(--ease)}
@@ -402,6 +414,19 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
 </head>
 <body class="is-loading">
 
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html" aria-current="page">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
+
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader__inner">
     <div class="loader__mark">Hanes <span>Distribution</span></div>
@@ -562,12 +587,13 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
           <div class="eyebrow" data-reveal="drop"><span class="dot"></span>The house of Hanes</div>
           <h2 class="h-display" data-reveal="drop">Five brands.<br><span class="muted">One supply line.</span></h2>
         </div>
-        <p data-reveal="right">Windows and doors, plasterboard, timber, insulation and kitchens, engineered to work together and supplied through one network.</p>
+        <p data-reveal="right">Windows and doors, plasterboard, timber, insulation and interiors, engineered to work together and supplied through one network.</p>
       </div>
       <div class="reel">
         <div class="reel__stage" data-zoom>
           <div class="media" data-parallax><video id="bVideo" src="films/brands.mp4" poster="stills/laser.webp" muted loop playsinline preload="metadata" aria-label="Film: the five Hanes brands"></video></div>
           <div class="reel__tag" id="reelTag">The house of Hanes</div>
+          <a class="reel__go" id="reelGo" href="#range" data-scroll><span>Explore the brands</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="reel__tabs" id="reelTabs">
           <span class="reel__glide" id="reelGlide" aria-hidden="true"></span>
@@ -575,7 +601,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
           <button class="reel__tab" type="button" data-reveal="drop" aria-label="Jump to Hanestone in the film"><i></i><b>Hanestone</b><small>Plasterboard</small></button>
           <button class="reel__tab" type="button" data-reveal="drop" aria-label="Jump to Hanewood in the film"><i></i><b>Hanewood</b><small>Timber &amp; engineered wood</small></button>
           <button class="reel__tab" type="button" data-reveal="drop" aria-label="Jump to Hanesulation in the film"><i></i><b>Hanesulation</b><small>Thermal &amp; acoustic insulation</small></button>
-          <button class="reel__tab" type="button" data-reveal="drop" aria-label="Jump to Bargainhub in the film"><i></i><b>Bargainhub</b><small>Kitchens</small></button>
+          <button class="reel__tab" type="button" data-reveal="drop" aria-label="Jump to Bargainhub in the film"><i></i><b>Bargainhub</b><small>Kitchens &amp; interiors</small></button>
         </div>
       </div>
     </div>
@@ -596,43 +622,43 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
           <div class="eyebrow" data-reveal><span class="dot"></span>The range</div>
           <h2 class="h-display" data-reveal>Everything the build needs. <span class="muted">Under one roof.</span></h2>
         </div>
-        <p data-reveal>Windows and doors, plasterboard, timber, insulation and kitchens arrive together, on one order and one truck, from one team that answers the phone.</p>
+        <p data-reveal>Windows and doors, plasterboard, timber, insulation and interiors arrive together, on one order and one truck, from one team that answers the phone.</p>
       </div>
       <div class="range" id="rangeRow">
-        <a href="#contact" data-scroll class="card card--wide" data-reveal>
+        <a href="hanesteel.html" class="card card--wide" data-reveal>
           <div class="card__img">
             <div class="card__media" data-parallax="2.5"><img src="stills/range/hanesteel-720.webp" srcset="stills/range/hanesteel-720.webp 720w, stills/range/hanesteel-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 560px" width="1200" height="900" alt="White uPVC and charcoal aluminium windows and doors" loading="lazy" decoding="async"></div>
             <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
           <div class="card__body"><div class="card__meta"><span class="card__n">01</span><span>Windows &amp; doors</span></div><h3>Hanesteel</h3><p>Windows, sliding and entrance doors in uPVC and aluminium, insulated against heat and noise and built for the weather.</p></div>
         </a>
-        <a href="#contact" data-scroll class="card card--wide" data-reveal>
+        <a href="hanestone.html" class="card card--wide" data-reveal>
           <div class="card__img">
             <div class="card__media" data-parallax="2.5"><img src="stills/range/hanestone-720.webp" srcset="stills/range/hanestone-720.webp 720w, stills/range/hanestone-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 560px" width="1200" height="900" alt="Plasterboard ceiling going up on steel framing, the sun setting through the window" loading="lazy" decoding="async"></div>
             <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
           <div class="card__body"><div class="card__meta"><span class="card__n">02</span><span>Plasterboard</span></div><h3>Hanestone</h3><p>Plasterboard for walls and ceilings, made on modern lines to the same spec, every sheet.</p></div>
         </a>
-        <a href="#contact" data-scroll class="card" data-reveal>
+        <a href="hanewood.html" class="card" data-reveal>
           <div class="card__img">
             <div class="card__media" data-parallax="2.5"><img src="stills/range/hanewood-720.webp" srcset="stills/range/hanewood-720.webp 720w, stills/range/hanewood-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Hanewood plywood sheets and timbers stacked in a timber store" loading="lazy" decoding="async"></div>
             <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
-          <div class="card__body"><div class="card__meta"><span class="card__n">03</span><span>Plywood &amp; timber</span></div><h3>Hanewood</h3><p>Plywood and timbers for structure and finish. Built on strength, crafted to last.</p></div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">03</span><span>Plywood &amp; timber</span></div><h3>Hanewood</h3><p>MDF, HDF, plywood, H3.2 radiata pine plywood and LVL, priced for bulk.</p></div>
         </a>
-        <a href="#contact" data-scroll class="card" data-reveal>
+        <a href="hanesulation.html" class="card" data-reveal>
           <div class="card__img">
             <div class="card__media" data-parallax="2.5"><img src="stills/range/hanesulation-720.webp" srcset="stills/range/hanesulation-720.webp 720w, stills/range/hanesulation-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 46vw, 380px" width="1200" height="900" alt="Insulation roll, slabs and a batt on a concrete floor" loading="lazy" decoding="async"></div>
             <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
           <div class="card__body"><div class="card__meta"><span class="card__n">04</span><span>Insulation</span></div><h3>Hanesulation</h3><p>Thermal and acoustic insulation in rolls, batts and slabs for walls, floors and roofs.</p></div>
         </a>
-        <a href="#contact" data-scroll class="card" data-reveal>
+        <a href="bargainhub.html" class="card" data-reveal>
           <div class="card__img">
             <div class="card__media" data-parallax="2.5"><img src="stills/range/bargainhub-720.webp" srcset="stills/range/bargainhub-720.webp 720w, stills/range/bargainhub-1200.webp 1200w" sizes="(max-width:600px) 80vw, (max-width:1024px) 92vw, 380px" width="1200" height="900" alt="Kitchen with stone-look benchtops and timber-veneer cabinetry" loading="lazy" decoding="async"></div>
             <span class="card__go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
           </div>
-          <div class="card__body"><div class="card__meta"><span class="card__n">05</span><span>Kitchens</span></div><h3>Bargainhub</h3><p>Complete kitchens, from cabinetry to stone-look benchtops, at warehouse-direct value.</p></div>
+          <div class="card__body"><div class="card__meta"><span class="card__n">05</span><span>Kitchens &amp; interiors</span></div><h3>Bargainhub</h3><p>Kitchens, bathrooms and whole-home interiors, designed with you and supplied warehouse-direct.</p></div>
         </a>
       </div>
       <div class="range__dots" id="rangeDots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -771,7 +797,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
         <p>Engineered supply. Delivered nationwide.<br>One connected supply network.</p>
         <a class="foot__mail" href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
       </div>
-      <div><h4>Brands</h4><ul><li><a href="#range" data-scroll>Hanesteel</a></li><li><a href="#range" data-scroll>Hanestone</a></li><li><a href="#range" data-scroll>Hanewood</a></li><li><a href="#range" data-scroll>Hanesulation</a></li><li><a href="#range" data-scroll>Bargainhub</a></li></ul></div>
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
       <div><h4>What we do</h4><ul><li><a href="#network" data-scroll>International 4PL</a></li><li><a href="#tracking" data-scroll>Live tracking</a></li><li><a href="#warehouse" data-scroll>Warehousing</a></li><li><a href="#hisense" data-scroll>Hisense appliances</a></li><li><a href="#films" data-scroll>Films</a></li></ul></div>
       <div><h4>Offices</h4><ul><li>Christchurch · Head Office<br>93 Main South Road</li><li>Hornby Warehouse<br>44 Anchorage Road</li><li>Hong Kong · Asia Branch</li><li>Zhangzhou · China Branch</li></ul></div>
     </div>
@@ -1170,7 +1196,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
      BRANDS — the film loops while on screen; a highlight glides to the brand on screen, tap a brand to jump to it
      ========================================================= */
   const BCUTS = [3.4, 6.2, 8.7, 12.0, 14.7, 17.0].map(t => t / 20.04);
-  const tabsEl = $('#reelTabs'), tabs = $$('.reel__tab'), glide = $('#reelGlide'), rTag = $('#reelTag'), bVideo = $('#bVideo');
+  const tabsEl = $('#reelTabs'), tabs = $$('.reel__tab'), glide = $('#reelGlide'), rTag = $('#reelTag'), rGo = $('#reelGo'), bVideo = $('#bVideo');
   let bCur = -2;
   const placeGlide = () => {
     const t = tabs[bCur]; glide.style.opacity = t ? 1 : 0; if (!t) return;
@@ -1182,6 +1208,8 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     if (i === bCur) return; bCur = i;
     tabs.forEach((t, k) => { t.classList.toggle('is-on', k === i || i === 5); t.toggleAttribute('aria-current', k === i); });
     rTag.textContent = i < 0 ? 'The house of Hanes' : i === 5 ? 'One connected supply network' : tabs[i].querySelector('b').textContent;
+    const bName = tabs[i] ? tabs[i].querySelector('b').textContent : '';
+    rGo.href = bName ? bName.toLowerCase() + '.html' : '#range'; rGo.firstChild.textContent = bName ? 'Visit ' + bName : 'Explore the brands';
     placeGlide();
     if (tabs[i] && tabsEl.scrollWidth > tabsEl.clientWidth) tabsEl.scrollTo({ left: tabs[i].offsetLeft - 20, behavior: 'smooth' });
   };
@@ -1293,5 +1321,6 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   });
 })();
 </script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanesulation — Glass wool insulation, R2 to R7, for retailers and the trade</title>
+<meta name="description" content="Hanesulation glass wool insulation for walls and ceilings, R2 to R7. BRANZ Appraised, R-values to AS/NZS 4859.1, held in Christchurch and delivered nationwide. Retailers and trade: request pricing.">
+<meta name="theme-color" content="#0a0907">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanesulation — Glass wool insulation, R2 to R7, for retailers and the trade">
+<meta property="og:description" content="Hanesulation glass wool insulation for walls and ceilings, R2 to R7. BRANZ Appraised, R-values to AS/NZS 4859.1, held in Christchurch and delivered nationwide. Retailers and trade: request pricing.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="preload" as="image" href="stills/hanesulation/attic-2000.webp">
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-tight-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-tight-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  /* warm cinema black, and the gold of the glass wool itself */
+  --bg:#0a0907; --bg-2:#12100c; --bg-3:#1b1812; --ink:#f7f3ea; --ink-2:#b8b0a0; --ink-3:#7d766a; --ink-4:#3d3930; --line:rgba(255,240,210,.1);
+  --gold:#f2c95a; --gold-2:#d9a63a; --gold-3:#a8781f; --ember:#ff9a4a;
+  --nav:52px; --pad:clamp(20px,4vw,56px); --max:1240px; --radius:28px; --ease:cubic-bezier(.22,1,.36,1);
+  --fs-h:clamp(34px,4.6vw,68px); --fs-big:clamp(48px,8.4vw,132px); --fs-sub:clamp(15px,1.2vw,19px);
+  --display:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --text:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg)}
+body{font-family:var(--text);font-size:17px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.is-loading{overflow:hidden}
+html.lenis-stopped{overflow:hidden}
+img,canvas,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:var(--gold);color:#000}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--gold)}
+.h{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.02;text-wrap:balance;font-size:var(--fs-h)}
+.muted{color:var(--ink-3)}
+.sub{font-size:var(--fs-sub);color:var(--ink-2);max-width:560px}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-weight:500;font-size:16px;transition:background .4s var(--ease),color .4s var(--ease),box-shadow .4s var(--ease)}
+.btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn--gold{background:var(--gold);color:#1a1405}
+.btn--gold:hover{background:#ffd873}
+.btn--line{box-shadow:inset 0 0 0 1px rgba(255,240,210,.3);color:var(--ink)}
+.btn--line:hover{box-shadow:inset 0 0 0 1px rgba(255,240,210,.75)}
+.gold{background:linear-gradient(100deg,#fff1c4 0%,#f2c95a 45%,#c98e22 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Loader */
+.loader{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}
+.loader__inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.loader__mark{font-family:var(--display);font-size:24px;font-weight:600;letter-spacing:-.03em}
+.loader__bar{width:160px;height:2px;border-radius:2px;background:var(--bg-3);overflow:hidden}
+.loader__fill{height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
+
+/* Nav */
+.nav{position:fixed;top:var(--gbh,0px);left:0;right:0;z-index:50;height:var(--nav);background:rgba(10,9,7,.62);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease),top .45s cubic-bezier(.28,.11,.32,1)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.03em}
+.brand small{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:0;color:var(--ink-3)}
+.nav__links{display:flex;gap:28px;font-size:13px;color:var(--ink-2)}
+.nav__links a:hover{color:var(--ink)}
+.nav .btn{height:32px;padding:0 14px;font-size:13px}
+.nav__end{display:flex;align-items:center;gap:6px}
+.burger{display:none;position:relative;width:40px;height:40px;margin-right:-10px}
+.burger::before,.burger::after{content:"";position:absolute;left:11px;right:11px;height:1.5px;border-radius:2px;background:var(--ink);transition:transform .5s var(--ease)}
+.burger::before{top:16px}
+.burger::after{top:23px}
+.nav.is-open .burger::before{transform:translateY(3.5px) rotate(45deg)}
+.nav.is-open .burger::after{transform:translateY(-3.5px) rotate(-45deg)}
+.menu{position:fixed;top:calc(var(--nav) + var(--gbh,0px));left:0;right:0;z-index:49;background:var(--bg);box-shadow:0 40px 60px -30px rgba(0,0,0,.9),0 1px 0 var(--line);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
+.menu a:not(.btn){display:block;padding:13px 0;font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.03em;box-shadow:0 1px 0 var(--line)}
+.menu .btn{margin-top:22px}
+
+/* a photo moved by a camera: one layer, scaled and translated */
+.cam{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;will-change:transform,opacity;visibility:hidden}
+
+/* ---------- Hero: letterboxed like a film, then one take from the attic roll, through its spiral, into the next roll ---------- */
+.hero{position:relative;height:460vh;background:#000}
+.stage{background:#000}
+#shotA{width:2000px;height:1290px}
+#shotB{width:2000px;height:2000px}
+.lb{position:absolute;left:0;right:0;height:12vh;background:#000;z-index:4;will-change:transform}
+.lb--t{top:0;transform-origin:50% 0}
+.lb--b{bottom:0;transform-origin:50% 100%}
+.motes{position:absolute;inset:0;pointer-events:none;overflow:hidden;will-change:opacity}
+.mote{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,rgba(255,238,196,.95),rgba(255,214,140,0) 70%);opacity:0;animation:mote var(--d) linear var(--dl) infinite;will-change:transform,opacity}
+@keyframes mote{0%{transform:translate3d(0,0,0);opacity:0}15%{opacity:.85}80%{opacity:.6}100%{transform:translate3d(var(--dx),var(--dy),0);opacity:0}}
+.h-dark{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;will-change:opacity}
+.h-shade{position:absolute;inset:0;z-index:2;pointer-events:none;will-change:opacity;background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.45) 32%,rgba(0,0,0,0) 58%)}
+.h-copy{position:absolute;z-index:5;left:var(--pad);top:50%;transform:translateY(-48%);max-width:min(620px,48vw);will-change:transform,opacity}
+.h-copy h1{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.92;font-size:var(--fs-big);margin:14px 0 22px}
+.h-copy p{font-size:var(--fs-sub);color:var(--ink-2);max-width:440px}
+.h-copy .btn{margin-top:28px}
+.caps{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:clamp(44px,10vh,100px);pointer-events:none}
+.cap{position:absolute;left:0;bottom:0;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.96;font-size:clamp(36px,5.6vw,86px);max-width:15ch;opacity:0;visibility:hidden;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.cap span{color:var(--ink-2)}
+.cap .gold{text-shadow:none}
+.h-meter{position:absolute;z-index:5;left:var(--pad);right:var(--pad);bottom:clamp(18px,3.5vh,34px);height:2px;border-radius:2px;background:rgba(255,240,210,.12)}
+.h-meter i{position:absolute;inset:0;border-radius:2px;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+.h-flash{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;will-change:opacity;background:radial-gradient(ellipse 60% 55% at 62% 52%,rgba(255,236,180,.95),rgba(255,176,70,.35) 45%,rgba(0,0,0,0) 75%)}
+
+/* ---------- Warmth: one giant word is a window onto the wool, and the camera flies through its H ---------- */
+.warmth{position:relative;height:360vh;background:var(--bg)}
+.warmth .stage{background:var(--bg)}
+#shotW{width:2000px;height:1290px}
+.w-cv{position:absolute;inset:0;width:100%;height:100%;z-index:2}
+.w-ask{position:absolute;z-index:3;left:0;right:0;top:calc(50% - 15vw);text-align:center;font-family:var(--display);font-weight:600;letter-spacing:-.03em;font-size:clamp(18px,2vw,30px);color:var(--ink-2);opacity:0;visibility:hidden}
+.w-shade{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;will-change:opacity;background:linear-gradient(0deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.5) 40%,rgba(0,0,0,0) 68%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 55%)}
+.w-copy{position:absolute;z-index:4;left:var(--pad);right:var(--pad);bottom:clamp(40px,9vh,96px);max-width:700px}
+.w-copy .eyebrow,.w-copy .sub{opacity:0;visibility:hidden}
+.w-copy .sub{margin-top:16px}
+.big{font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.98;text-wrap:balance;font-size:clamp(40px,6vw,96px)}
+.w-copy .big{margin-top:10px}
+
+/* ---------- Rolls: a roll of Hanesulation drops onto the floor and rolls out a blanket as you scroll ---------- */
+.rolls{position:relative;height:320vh;background:var(--bg)}
+.r-stage{--floor:82%;background:radial-gradient(ellipse 70% 30% at 50% var(--floor),rgba(242,201,90,.1),rgba(0,0,0,0) 70%),linear-gradient(180deg,#0a0907 0%,#0c0a08 var(--floor),#17130d var(--floor),#0d0b08 100%)}
+.r-cv{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.r-head{position:absolute;z-index:2;left:var(--pad);right:var(--pad);top:calc(var(--nav) + 5vh)}
+.r-head .eyebrow{opacity:0;visibility:hidden}
+.r-big{margin-top:10px;font-family:var(--display);font-weight:600;letter-spacing:-.05em;line-height:.98;font-size:clamp(44px,6.4vw,108px)}
+.r-big .rw{display:inline-block;opacity:0;transform:translateY(-70%) rotate(-6deg);will-change:transform,opacity}
+.r-head .sub{margin-top:16px;opacity:0;visibility:hidden}
+
+/* ---------- Demand: four short lines slam onto the screen, then the reason to stock it ---------- */
+.demand{position:relative;height:380vh;background:#000}
+.d-stage{display:grid;place-items:center;background:radial-gradient(ellipse 70% 55% at 50% 55%,rgba(242,201,90,.08),rgba(0,0,0,0) 70%),#000}
+.d-shake{position:relative;width:100%;display:grid;place-items:center;will-change:transform}
+.slam{display:grid;justify-items:center;text-align:center;padding:0 var(--pad)}
+.sl{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:1.02;font-size:clamp(34px,7.6vw,128px);white-space:nowrap;opacity:0;visibility:hidden;will-change:transform,opacity}
+.sl span{color:var(--ink-3)}
+.d-flash{position:absolute;inset:0;pointer-events:none;opacity:0;will-change:opacity;background:radial-gradient(ellipse 55% 45% at 50% 50%,rgba(255,222,140,.6),rgba(255,160,60,.14) 45%,rgba(0,0,0,0) 72%)}
+.d-ring{position:absolute;left:50%;top:50%;width:46vmin;height:46vmin;margin:-23vmin 0 0 -23vmin;border-radius:50%;box-shadow:0 0 0 2px rgba(242,201,90,.9),inset 0 0 50px rgba(242,201,90,.35);opacity:0;pointer-events:none;will-change:transform,opacity}
+.d-end{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--pad);pointer-events:none}
+.d-end .eyebrow,.d-end .sub,.d-end .btn{opacity:0;visibility:hidden}
+.d-end.is-on{pointer-events:auto}
+.d-big{margin-top:14px;font-family:var(--display);font-weight:600;letter-spacing:-.06em;line-height:.92;font-size:clamp(58px,11.5vw,200px)}
+.d-end .sub{margin:24px auto 0;max-width:640px}
+.d-end .btn{margin-top:28px}
+
+/* ---------- Marquee: the promises, on two belts that speed up and lean as you scroll ---------- */
+.marq{position:relative;padding:clamp(40px,8vh,90px) 0;background:var(--bg);overflow:hidden;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line)}
+.marq__row{display:flex;white-space:nowrap}
+.marq__track{display:flex;flex:none;will-change:transform}
+.marq__track span{flex:none;display:inline-flex;align-items:center;gap:.36em;padding-right:.36em;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.1;font-size:clamp(52px,9vw,160px)}
+.marq__track i{font-style:normal;color:var(--gold);font-size:.42em}
+.marq__row--o span{color:transparent;letter-spacing:0;-webkit-text-stroke:1.5px rgba(242,201,90,.75)}
+.marq__row--o i{-webkit-text-stroke:0;color:var(--ink-4)}
+
+/* ---------- The range: a house in section; heat escapes until the walls and ceiling fill, and the R-value climbs ---------- */
+.range{position:relative;height:270vh;background:var(--bg)}
+.range .sticky{display:grid;grid-template-columns:minmax(300px,.8fr) 1.2fr;gap:clamp(24px,4vw,64px);align-items:center;padding:calc(var(--nav) + 2vh) var(--pad) 3vh;max-width:1400px;margin:0 auto}
+.range .h{font-size:clamp(30px,3.6vw,56px);margin-top:12px}
+.range .sub{margin-top:16px}
+.rv{display:flex;align-items:baseline;gap:14px;margin-top:clamp(18px,3.5vh,34px)}
+.rv__num{display:flex;font-family:var(--display);font-weight:600;font-size:clamp(80px,9vw,150px);letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.rv__num .r{color:var(--gold)}
+.rv small{font-size:14px;color:var(--ink-3);max-width:120px;line-height:1.3}
+.odo{display:block;height:1em;overflow:hidden}
+.odo__s{display:block;will-change:transform}
+.odo__s span{display:block;height:1em}
+.where{display:flex;gap:10px;margin-top:18px}
+.where span{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line);transition:color .5s var(--ease),background .5s var(--ease),box-shadow .5s var(--ease)}
+.where span i{width:8px;height:8px;border-radius:50%;background:var(--ink-4);transition:background .5s var(--ease),box-shadow .5s var(--ease)}
+.where span.is-on{color:#1a1405;background:var(--gold);box-shadow:none}
+.where span.is-on i{background:#1a1405}
+.house{width:100%;max-height:82svh}
+.house .ln{fill:none;stroke:rgba(255,240,210,.8);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.house .ln2{fill:none;stroke:rgba(255,240,210,.3);stroke-width:1}
+.house .wool{fill:url(#wool);transform-box:fill-box;transform-origin:50% 100%}
+.house .heat{fill:none;stroke:var(--ember);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:6 10;animation:flow 1.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.house .lab{fill:var(--ink-2);font-family:var(--text);font-size:12px;font-weight:600;letter-spacing:.14em}
+
+/* ---------- Certified ---------- */
+.cert{position:relative;padding:clamp(90px,14vh,150px) 0;background:var(--bg)}
+.cert__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
+.seal-card{position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#15130f,#0d0c09);box-shadow:inset 0 0 0 1px rgba(255,240,210,.07);text-align:center}
+.seal{position:relative;width:min(220px,62%);aspect-ratio:1;margin:0 auto 26px}
+.seal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.seal .ring{fill:none;stroke:var(--gold);stroke-width:1.2}
+.seal .ring2{fill:none;stroke:rgba(255,240,210,.22);stroke-width:1}
+.seal .txt{fill:var(--ink-2);font-size:10.5px;font-weight:600;letter-spacing:.24em;font-family:var(--text)}
+.seal__mid{position:absolute;inset:0;display:grid;place-content:center;font-family:var(--display);font-weight:600;letter-spacing:-.04em;line-height:1}
+.seal__mid small{font-size:13px;letter-spacing:.12em;color:var(--ink-3);font-family:var(--text);font-weight:600}
+.seal__mid strong{font-size:clamp(32px,3vw,46px);margin-top:6px}
+.seal__mid .ico{width:46px;height:46px;margin:0 auto;color:var(--gold)}
+.seal-card b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(20px,1.7vw,24px);letter-spacing:-.02em}
+.seal-card p{margin:8px auto 0;font-size:15px;color:var(--ink-2);max-width:320px}
+
+/* ---------- Supply: the camera starts on a roll end in the warehouse and pulls back across the racks ---------- */
+.supply{position:relative;height:210vh;background:#000}
+#shotC{width:2000px;height:2000px}
+.s-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 42%,rgba(0,0,0,0) 65%),linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 50%)}
+.s-copy{position:absolute;z-index:3;left:var(--pad);right:var(--pad);bottom:clamp(40px,9vh,90px);max-width:640px}
+.s-copy > *{opacity:0;visibility:hidden}
+.s-copy .h{margin-top:12px}
+.s-copy .sub{margin-top:14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.pills span{padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:600;background:rgba(18,16,12,.8);box-shadow:inset 0 0 0 1px rgba(255,240,210,.14)}
+.s-tag{position:absolute;z-index:3;right:var(--pad);top:calc(var(--nav) + 22px);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--ink-2);opacity:0}
+.s-tag i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(242,201,90,.2)}
+
+/* ---------- Brand: the photo is revealed as a roll of insulation unrolls off it ---------- */
+.brandsec{position:relative;padding:clamp(90px,14vh,150px) 0;background:var(--bg);overflow:hidden}
+.brand__grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,5vw,80px);align-items:center}
+.unroll{position:relative;aspect-ratio:1;border-radius:24px;overflow:hidden;background:var(--bg-2)}
+.unroll img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.unroll__sheet{position:absolute;top:0;bottom:0;left:0;width:100%;will-change:transform;background:repeating-linear-gradient(96deg,rgba(255,255,255,.07) 0 2px,rgba(0,0,0,0) 2px 7px),repeating-linear-gradient(8deg,rgba(120,80,10,.12) 0 3px,rgba(0,0,0,0) 3px 11px),linear-gradient(180deg,#f6d983,#dcac43 60%,#c3902c)}
+.unroll__roll{position:absolute;top:-2%;bottom:-2%;left:-34px;width:68px;border-radius:34px;background:linear-gradient(90deg,#7a5418 0%,#d7a640 22%,#fbe29a 46%,#e2b24c 64%,#9b6c1f 100%);box-shadow:0 0 40px rgba(0,0,0,.45)}
+.feats{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}
+.feats li{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:var(--bg-2);box-shadow:inset 0 0 0 1px rgba(255,240,210,.07);font-weight:500;font-size:15px}
+.feats svg{width:26px;height:26px;color:var(--gold)}
+
+/* ---------- Pricing ---------- */
+.pricing{position:relative;padding:clamp(90px,14vh,150px) 0 clamp(70px,10vh,110px);background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(242,201,90,.08),rgba(0,0,0,0) 70%),var(--bg)}
+.pricing__grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,80px);align-items:start}
+.pricing .sub{margin-top:18px}
+.ticks{list-style:none;margin-top:28px;display:grid;gap:12px}
+.ticks li{display:flex;gap:12px;align-items:flex-start;color:var(--ink-2)}
+.ticks li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%231a1405' stroke-width='2'/%3E%3C/svg%3E") center/11px no-repeat}
+.ticks b{color:var(--ink);font-weight:600}
+.form{padding:clamp(22px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#16130e,#0e0c09);box-shadow:inset 0 0 0 1px rgba(255,240,210,.09),0 40px 80px -40px rgba(0,0,0,.8)}
+.form h3{font-family:var(--display);font-weight:600;font-size:clamp(22px,2vw,28px);letter-spacing:-.03em}
+.form > p{margin-top:6px;font-size:14.5px;color:var(--ink-2)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label,.field legend{font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-2)}
+.field input,.field select,.field textarea{width:100%;padding:13px 14px;border-radius:14px;border:0;background:#0a0907;box-shadow:inset 0 0 0 1px rgba(255,240,210,.14);outline:none;transition:box-shadow .3s var(--ease)}
+.field textarea{min-height:92px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23b8b0a0' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:12px}
+fieldset.field{border:0}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggles label{position:relative;cursor:pointer}
+.toggles input{position:absolute;opacity:0;width:1px;height:1px}
+.toggles span{display:inline-flex;padding:10px 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2);box-shadow:inset 0 0 0 1px rgba(255,240,210,.18);transition:background .3s var(--ease),color .3s var(--ease)}
+.toggles input:checked + span{background:var(--gold);color:#1a1405;box-shadow:none}
+.toggles input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
+.form .btn{margin-top:20px;width:100%;justify-content:center;height:54px;font-size:17px}
+.form__note{margin-top:12px;font-size:12.5px;color:var(--ink-3);text-align:center}
+.form__done{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(242,201,90,.1);color:var(--gold);font-size:14px;display:none}
+.form__done.is-on{display:block}
+
+/* Footer */
+
+/* reveals */
+[data-reveal]{opacity:0;transform:translateY(30px)}
+[data-drop]{opacity:0}
+.dm{display:inline-block;overflow:hidden;vertical-align:top;padding:.08em 0 .16em;margin:-.08em 0 -.16em}
+.di{display:inline-block}
+.no-js [data-reveal],.no-js [data-drop],.no-js .s-copy > *,.no-js .w-copy *,.no-js .r-head *,.no-js .d-end *,.no-js .sl{opacity:1;visibility:visible;transform:none}
+.no-js .cam{visibility:visible}
+.no-js .unroll__sheet,.no-js .w-cv,.no-js .r-cv,.no-js .w-ask{display:none}
+.no-js .warmth,.no-js .rolls,.no-js .demand{height:auto}
+.no-js .warmth .sticky,.no-js .rolls .sticky,.no-js .demand .sticky{position:relative;height:auto;min-height:100svh}
+.no-js .d-end{position:relative}
+
+html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
+
+@media (max-width:1024px){
+  .nav__links{display:none}
+  .burger{display:block}
+  .range .sticky{grid-template-columns:1fr;align-content:center;gap:10px}
+  .range .sub{display:none}
+  .house{max-height:44svh}
+  .rv{margin-top:14px}
+  .cert__grid{grid-template-columns:1fr}
+  .seal-card{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:center;text-align:left}
+  .seal{width:120px;margin:0;grid-row:span 2}
+  .seal-card p{margin:0}
+  .seal__mid strong{font-size:24px}
+  .seal__mid small{font-size:10px}
+  .seal .txt{font-size:12px}
+  .brand__grid,.pricing__grid{grid-template-columns:1fr}
+  .unroll{max-width:560px;width:100%;margin:0 auto}
+}
+@media (max-width:700px){
+  body{font-size:16px}
+  .nav .btn{display:none}
+  .lb{height:9vh}
+  .h-copy{top:auto;bottom:calc(9vh + 28px);transform:none;max-width:none;right:var(--pad)}
+  .h-copy h1{font-size:clamp(52px,15vw,80px)}
+  .h-copy .btn{margin-top:20px}
+  .h-shade{background:linear-gradient(0deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,0) 65%)}
+  .cap{font-size:clamp(32px,9.6vw,48px)}
+  .range .h{font-size:28px}
+  .rv__num{font-size:clamp(64px,19vw,96px)}
+  .where span{padding:8px 12px;font-size:13px}
+  .feats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .feats li{padding:12px;font-size:13px}
+  .fgrid{grid-template-columns:1fr}
+  .w-ask{top:calc(50% - 26vw)}
+  .big{font-size:clamp(34px,10vw,48px)}
+  .r-stage{--floor:80%}
+  .r-big{font-size:clamp(40px,12vw,58px)}
+  .sl{font-size:clamp(28px,12.2vw,52px)}
+  .d-big{font-size:clamp(52px,17vw,84px)}
+  .marq__track span{font-size:clamp(44px,14vw,72px)}
+  .marq__row--o span{-webkit-text-stroke-width:1px}
+}
+@media (prefers-reduced-motion:reduce){.mote,.house .heat{animation:none}}
+</style>
+</head>
+<body class="is-loading">
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html" aria-current="page">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html" aria-current="page">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__mark">Hanesulation</div>
+    <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" data-scroll>Hanesulation <small>by Hanes Distribution</small></a>
+    <nav class="nav__links" aria-label="Page">
+      <a href="#range" data-scroll>The range</a>
+      <a href="#demand" data-scroll>Why stock it</a>
+      <a href="#certified" data-scroll>Certified</a>
+      <a href="#supply" data-scroll>Supply</a>
+      <a href="#pricing" data-scroll>For retailers</a>
+    </nav>
+    <div class="nav__end">
+      <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing</a>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
+    </div>
+  </div>
+</header>
+<nav class="menu" id="menu" aria-label="Page">
+  <a href="#warmth" data-scroll>Inside the roll</a>
+  <a href="#range" data-scroll>The range</a>
+  <a href="#demand" data-scroll>Why stock it</a>
+  <a href="#certified" data-scroll>Certified</a>
+  <a href="#supply" data-scroll>Supply</a>
+  <a href="#brand" data-scroll>The brand</a>
+  <a href="#pricing" data-scroll>For retailers</a>
+  <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</nav>
+
+<main id="top">
+  <!-- ================= Hero: one take, through the roll ================= -->
+  <section class="hero" id="hero" aria-label="Hanesulation glass wool insulation">
+    <div class="sticky stage" id="hStage">
+      <img class="cam" id="shotA" src="stills/hanesulation/attic-2000.webp" width="2000" height="1290" alt="A roll of glass wool insulation in a sunlit roof space, between timber framing" decoding="async">
+      <img class="cam" id="shotB" src="stills/hanesulation/roll-2000.webp" width="2000" height="2000" alt="A roll of premium glass wool insulation unrolled on a concrete floor under a dramatic sky" decoding="async">
+      <div class="motes" id="motes" aria-hidden="true"></div>
+      <div class="h-flash" id="hFlash" aria-hidden="true"></div>
+      <div class="h-dark" id="hDark" aria-hidden="true"></div>
+      <div class="h-shade" id="hShade" aria-hidden="true"></div>
+      <div class="lb lb--t" id="lbT" aria-hidden="true"></div>
+      <div class="lb lb--b" id="lbB" aria-hidden="true"></div>
+      <div class="h-copy" id="hCopy">
+        <div class="eyebrow">Hanesulation · For retailers and the trade</div>
+        <h1>Warmth,<br><span class="gold">by the roll.</span></h1>
+        <p>Premium glass wool for walls and ceilings, R2 to R7. BRANZ Appraised, stocked in Christchurch and ready to fill your shelves.</p>
+        <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+      <div class="caps" aria-hidden="true">
+        <h2 class="cap" id="cap1">Premium <span class="gold">glass wool.</span></h2>
+        <h2 class="cap" id="cap2">R2 to R7. <span>For walls and ceilings.</span></h2>
+        <h2 class="cap" id="cap3">BRANZ Appraised. <span>R-values to AS/NZS 4859.1.</span></h2>
+      </div>
+      <div class="h-meter" aria-hidden="true"><i id="hMeter"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Warmth: through the word ================= -->
+  <section class="warmth" id="warmth" aria-label="What is inside every roll">
+    <div class="sticky stage" id="wStage">
+      <img class="cam" id="shotW" src="stills/hanesulation/attic-2000.webp" width="2000" height="1290" alt="" loading="lazy" decoding="async">
+      <canvas class="w-cv" id="wCv" aria-hidden="true"></canvas>
+      <p class="w-ask" id="wAsk" aria-hidden="true">What's inside every roll?</p>
+      <div class="w-shade" id="wShade" aria-hidden="true"></div>
+      <div class="w-copy" id="wCopy">
+        <div class="eyebrow">Inside every roll</div>
+        <h2 class="big" id="wBig">Millions of tiny pockets of <span class="gold">still air.</span></h2>
+        <p class="sub">Glass wool is fine glass fibre, spun into a soft blanket that traps still air, and still air is what slows heat down. More wool, more trapped air, a higher R-value. That's how the range climbs from R2 to R7.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= The range ================= -->
+  <section class="range" id="range" aria-label="R2 to R7 for walls and ceilings">
+    <div class="sticky">
+      <div>
+        <div class="eyebrow">The range</div>
+        <h2 class="h">R2 to R7. <span class="muted">Every wall. Every ceiling.</span></h2>
+        <p class="sub">Glass wool rolls and batts across the full range, so your customers can insulate every wall and ceiling with one brand.</p>
+        <div class="rv"><span class="vh" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">R-values from R2 to R7</span>
+          <div class="rv__num" aria-hidden="true"><span class="r">R</span><span class="odo"><span class="odo__s" id="rInt">7</span></span>.<span class="odo"><span class="odo__s" id="rDec">0</span></span></div>
+          <small aria-hidden="true">R-value, as the house fills</small>
+        </div>
+        <div class="where" aria-hidden="true"><span id="wWall"><i></i>Walls</span><span id="wCeil"><i></i>Ceilings</span></div>
+      </div>
+      <svg class="house" id="house" viewBox="0 0 640 470" role="img" aria-label="A house in section: heat escapes through the walls and roof until the walls and ceiling are filled with insulation">
+        <defs>
+          <linearGradient id="wool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe19a"/><stop offset=".55" stop-color="#e7b94f"/><stop offset="1" stop-color="#c7922c"/></linearGradient>
+          <radialGradient id="warm" cx=".5" cy=".7" r=".7"><stop offset="0" stop-color="#ffb35c" stop-opacity=".75"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient>
+          <clipPath id="roofIn"><polygon points="124,202 320,97 516,202"/></clipPath>
+          <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ff9a4a"/></marker>
+        </defs>
+        <rect id="warmIn" x="124" y="214" width="392" height="222" fill="url(#warm)" opacity="0"/>
+        <g id="heat">
+          <path class="heat" d="M220 196 C 212 160, 232 140, 222 104" marker-end="url(#ah)"/>
+          <path class="heat" d="M320 196 C 312 150, 332 120, 320 50" marker-end="url(#ah)"/>
+          <path class="heat" d="M420 196 C 428 160, 408 140, 418 104" marker-end="url(#ah)"/>
+          <path class="heat" d="M150 320 C 110 314, 80 330, 40 320" marker-end="url(#ah)"/>
+          <path class="heat" d="M490 320 C 530 314, 560 330, 600 320" marker-end="url(#ah)"/>
+        </g>
+        <rect class="wool" id="wallL" x="100" y="214" width="20" height="222"/>
+        <rect class="wool" id="wallR" x="520" y="214" width="20" height="222"/>
+        <g clip-path="url(#roofIn)"><rect class="wool" id="ceil" x="124" y="122" width="392" height="80"/></g>
+        <path class="ln draw" d="M20 436 H620"/>
+        <path class="ln draw" d="M96 436 V214 H124 V436 M516 436 V214 H544 V436"/>
+        <path class="ln draw" d="M96 202 H544 V214 H96 Z"/>
+        <path class="ln draw" d="M60 216 L320 60 L580 216"/>
+        <path class="ln2 draw" d="M96 202 L320 84 L544 202"/>
+        <path class="ln2 draw" d="M270 436 V356 H370 V436"/>
+        <text class="lab" x="150" y="300">WALLS</text>
+        <text class="lab" x="320" y="116" text-anchor="middle">CEILING</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= Rolls: a roll drops in and rolls out a blanket ================= -->
+  <section class="rolls" id="rolls" aria-label="Rolls and batts">
+    <div class="sticky stage r-stage" id="rStage">
+      <canvas class="r-cv" id="rCv" role="img" aria-label="A roll of glass wool insulation rolls across the floor, laying a blanket behind it"></canvas>
+      <div class="r-head" id="rHead">
+        <div class="eyebrow">Rolls and batts</div>
+        <h2 class="r-big" id="rBig"><span class="rw">Roll</span> <span class="rw">it</span> <span class="rw">out.</span> <span class="rw gold">Room</span> <span class="rw gold">by</span> <span class="rw gold">room.</span></h2>
+        <p class="sub">Glass wool rolls and batts from R2 to R7, packed to stack neatly on your shelves and easy for your customers to carry to site. Cut to fit, pressed into place, and the room is warmer for it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Demand: why stock it ================= -->
+  <section class="demand" id="demand" aria-label="Why stock Hanesulation">
+    <div class="sticky d-stage" id="dStage">
+      <div class="d-flash" id="dFlash" aria-hidden="true"></div>
+      <div class="d-shake" id="dShake">
+        <div class="d-ring" id="dRing" aria-hidden="true"></div>
+        <div class="slam" id="slam">
+          <p class="sl"><span>Every</span> new build.</p>
+          <p class="sl"><span>Every</span> renovation.</p>
+          <p class="sl"><span>Every</span> ceiling.</p>
+          <p class="sl"><span>Every</span> wall.</p>
+        </div>
+      </div>
+      <div class="d-end" id="dEnd">
+        <div class="eyebrow">Why stock Hanesulation</div>
+        <h2 class="d-big" id="dBig">Demand, <span class="gold">built in.</span></h2>
+        <p class="sub">The Building Code requires insulation in every new home, and every renovation is a chance to top it up. Stock one brand that covers it all: R2 to R7, walls and ceilings.</p>
+        <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Marquee ================= -->
+  <section class="marq" id="marq" aria-label="R2 to R7 for walls and ceilings, BRANZ Appraised, R-values to AS/NZS 4859.1, delivered nationwide">
+    <div class="marq__row" aria-hidden="true" data-dir="1"><div class="marq__track"><span>R2 to R7 <i>✦</i></span><span>Walls <i>✦</i></span><span>Ceilings <i>✦</i></span><span>BRANZ Appraised <i>✦</i></span><span>AS/NZS 4859.1 <i>✦</i></span></div></div>
+    <div class="marq__row marq__row--o" aria-hidden="true" data-dir="-1"><div class="marq__track"><span>Warmth by the roll <i>✦</i></span><span>Stocked in Christchurch <i>✦</i></span><span>Delivered nationwide <i>✦</i></span><span>Pricing for stockists <i>✦</i></span></div></div>
+  </section>
+
+  <!-- ================= Certified ================= -->
+  <section class="cert" id="certified">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>Certified</div>
+      <h2 class="h" style="margin-top:12px">Appraised. <span class="muted">Tested. Ready to sell.</span></h2>
+      <div class="cert__grid">
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp1" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp1">INDEPENDENTLY APPRAISED · NEW ZEALAND · INDEPENDENTLY APPRAISED · NZ ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>APPRAISED</small><strong>BRANZ</strong></div>
+          </div>
+          <b>BRANZ Appraised</b>
+          <p>Independently assessed by BRANZ, so builders, specifiers and councils can accept it with confidence.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp2" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp2">THERMAL INSULATION MATERIALS · R-VALUES · THERMAL INSULATION ·</textPath></text></g></svg>
+            <div class="seal__mid"><small>AS/NZS</small><strong>4859.1</strong></div>
+          </div>
+          <b>R-values to AS/NZS 4859.1</b>
+          <p>The Australian and New Zealand standard for thermal insulation materials in buildings.</p>
+        </div>
+        <div class="seal-card" data-drop="tilt">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
+              <g class="spin"><path id="sp3" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp3">STOCKED IN CHRISTCHURCH · DELIVERED NATIONWIDE · NZ ·</textPath></text></g></svg>
+            <div class="seal__mid"><svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 12h24v20H4zM28 19h8l6 7v6H28z"/><circle cx="12" cy="35" r="4"/><circle cx="34" cy="35" r="4"/></svg></div>
+          </div>
+          <b>Delivered nationwide</b>
+          <p>Held in our Hornby warehouse in Christchurch and delivered right across New Zealand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Supply ================= -->
+  <section class="supply" id="supply" aria-label="Stock and supply">
+    <div class="sticky stage" id="sStage">
+      <img class="cam" id="shotC" src="stills/hanesulation/stock-2000.webp" width="2000" height="2000" alt="Pallets and racks of glass wool insulation rolls and packs in a warehouse" loading="lazy" decoding="async">
+      <div class="s-shade" aria-hidden="true"></div>
+      <div class="s-tag" id="sTag" aria-hidden="true"><i></i>HORNBY · CHRISTCHURCH</div>
+      <div class="s-copy" id="sCopy">
+        <div class="eyebrow">Supply</div>
+        <h2 class="h">Stocked deep. <span class="muted">Shipped nationwide.</span></h2>
+        <p class="sub">Hanesulation is held in our Hornby warehouse in Christchurch and delivered right across New Zealand, so the right R-value is ready when your customers are.</p>
+        <div class="pills"><span>Christchurch warehouse</span><span>Nationwide delivery</span><span>Pricing for stockists</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Brand ================= -->
+  <section class="brandsec" id="brand">
+    <div class="wrap brand__grid">
+      <div class="unroll" id="unroll"><img id="fitImg" src="stills/hanesulation/fit-1600.webp" width="1600" height="1600" alt="An installer fits Hanesulation glass wool batts between wall studs, with a Hanesulation pack in the foreground" loading="lazy" decoding="async">
+        <div class="unroll__sheet" id="uSheet" aria-hidden="true"><i class="unroll__roll"></i></div></div>
+      <div>
+        <div class="eyebrow" data-reveal>Made to sell</div>
+        <h2 class="h" style="margin-top:12px">Branded for the shelf. <span class="muted">Built for the site.</span></h2>
+        <p class="sub" data-reveal style="margin-top:18px">Clean, clearly labelled Hanesulation packs that stand out in store, filled with glass wool made for the walls and ceilings your customers are building.</p>
+        <ul class="feats">
+          <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Thermal comfort</li>
+          <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Energy efficiency</li>
+          <li data-drop><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg>Sound absorption</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Pricing ================= -->
+  <section class="pricing" id="pricing">
+    <div class="wrap pricing__grid">
+      <div>
+        <div class="eyebrow" data-reveal>For retailers and the trade</div>
+        <h2 class="h" style="margin-top:12px">Put warmth on your shelves. <span class="muted">Let's talk pricing.</span></h2>
+        <p class="sub" data-reveal>If you're a retailer, merchant or installer, tell us about your business. We'll come back to you with pricing built around your volumes.</p>
+        <ul class="ticks">
+          <li data-drop><span><b>Pricing for stockists.</b> Built around what you sell, not a price list.</span></li>
+          <li data-drop><span><b>R2 to R7.</b> One brand for every wall and ceiling.</span></li>
+          <li data-drop><span><b>BRANZ Appraised.</b> R-values to AS/NZS 4859.1.</span></li>
+          <li data-drop><span><b>Christchurch stock.</b> Delivered right across New Zealand.</span></li>
+        </ul>
+      </div>
+      <form class="form" id="priceForm" data-drop="tilt" novalidate>
+        <h3>Request pricing</h3>
+        <p>Takes a minute. A member of our team will be in touch.</p>
+        <div class="fgrid">
+          <div class="field"><label for="fBiz">Business name</label><input id="fBiz" name="business" required autocomplete="organization"></div>
+          <div class="field"><label for="fName">Your name</label><input id="fName" name="name" required autocomplete="name"></div>
+          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="fPhone">Phone</label><input id="fPhone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="fType">Your business</label><select id="fType" name="type" required><option value="">Choose one</option><option>Retailer</option><option>Builders' merchant</option><option>Insulation installer</option><option>Builder</option><option>Other</option></select></div>
+          <div class="field"><label for="fRegion">Region</label><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select></div>
+          <fieldset class="field full"><legend>Interested in</legend><div class="toggles"><label><input type="checkbox" name="interest" value="Wall insulation" checked><span>Walls</span></label><label><input type="checkbox" name="interest" value="Ceiling insulation" checked><span>Ceilings</span></label></div></fieldset>
+          <div class="field full"><label for="fMsg">R-values and volumes</label><textarea id="fMsg" name="message" placeholder="For example: R2.6 wall batts and R4.0 ceiling blankets, about 20 packs a week"></textarea></div>
+        </div>
+        <button class="btn btn--gold" type="submit">Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+        <p class="form__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+        <p class="form__done" id="fDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz and we'll take it from there.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="gf gf--dark">
+  <div class="gf__in">
+    <div class="gf__note">Hanesulation is a <a href="index.html">Hanes Distribution</a> brand, supplied to retailers and the trade. Warehouse: 44 Anchorage Road, Hornby, Christchurch.</div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html" aria-current="page">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    document.documentElement.classList.add('no-js'); document.body.classList.remove('is-loading'); $('#loader').remove(); return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite = matchMedia('(pointer: coarse)').matches; document.documentElement.classList.toggle('lite', lite);
+
+  // wraps every word of a heading in its own mask; gradient words carry the gradient themselves
+  const splitDrop = el => {
+    const out = [], box = (t, g) => { const m = document.createElement('span'), i = document.createElement('span'); m.className = 'dm'; i.className = 'di' + g; i.textContent = t; m.append(i); out.push(i); return m; };
+    const walk = n => [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment(), g = [...n.classList].filter(k => k === 'gold').map(k => ' ' + k).join('');
+        c.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) return f.append(' '); f.append(box(t, g)); });
+        c.replaceWith(f);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+    });
+    walk(el); return out;
+  };
+
+  /* ---------- Smooth scroll, menu and nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, wheelMultiplier: 1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+  }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
+  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
+  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
+  const MT = gsap.timeline({ paused: true })
+    .set(menu, { visibility: 'visible' })
+    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
+    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
+  const setMenu = v => {
+    if (v === menuOpen) return; menuOpen = v;
+    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
+    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
+    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  };
+  burger.addEventListener('click', () => setMenu(!menuOpen));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
+  $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
+  }));
+  let lastY = 0;
+  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
+    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
+    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
+    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
+    lastY = y;
+  }});
+
+  // a camera over a photo: cx, cy = the point at the centre of the screen; z = zoom (1 = the photo just covers the screen)
+  const makeCam = (stage, img, iw, ih, c0) => {
+    const c = Object.assign({ cx: .5, cy: .5, z: 1, o: 1 }, c0); let W = 0, H = 0, S0 = 1;
+    const apply = () => {
+      if (c.o <= .001) { if (img.style.visibility !== 'hidden') img.style.visibility = 'hidden'; return; }
+      img.style.visibility = 'visible'; img.style.opacity = c.o >= .999 ? '' : c.o.toFixed(3);
+      const s = S0 * c.z, dw = iw * s, dh = ih * s;
+      let tx = W / 2 - c.cx * dw, ty = H / 2 - c.cy * dh;
+      if (c.z >= 1) { tx = Math.min(0, Math.max(W - dw, tx)); ty = Math.min(0, Math.max(H - dh, ty)); } // never show past the photo's edge
+      img.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(5)})`;
+    };
+    const size = () => { W = stage.clientWidth; H = stage.clientHeight; S0 = Math.max(W / iw, H / ih); apply(); };
+    addEventListener('resize', () => requestAnimationFrame(size));
+    return { c, apply, size };
+  };
+  const capIn = (tl, el, t) => tl.fromTo(el, { autoAlpha: 0, y: -60 }, { autoAlpha: 1, y: 0, duration: .45, ease: 'back.out(1.4)', immediateRender: false }, t);
+  const capOut = (tl, el, t) => tl.to(el, { autoAlpha: 0, y: 50, duration: .3, ease: 'power2.in' }, t);
+
+  /* =========================================================
+     HERO: the film opens letterboxed on a roll in a sunlit roof space, dust drifting in the light. The bars open,
+     the camera drifts to the roll's end and pushes into its spiral, and comes out of the spiral of the next roll,
+     then pulls back to show it whole under the sky.
+     ========================================================= */
+  const hStage = $('#hStage');
+  const A = makeCam(hStage, $('#shotA'), 2000, 1290, { cx: .45, cy: .5, z: 1.12 });
+  const B = makeCam(hStage, $('#shotB'), 2000, 2000, { cx: .89, cy: .55, z: 7, o: 0 });
+  const intro = { z: 1 }, applyA = A.apply;
+  A.apply = () => { const z = A.c.z; A.c.z = z * intro.z; applyA(); A.c.z = z; };
+  const applyHero = () => { A.apply(); B.apply(); };
+  // dust in the sunlight: a few soft motes, each drifting on its own CSS animation (no work for the main thread)
+  if (!reduce) $('#motes').innerHTML = Array.from({ length: 26 }, () => {
+    const r = Math.random, s = 3 + r() * 7;
+    return `<i class="mote" style="--x:${(r() * 100).toFixed(1)}%;--y:${(20 + r() * 70).toFixed(1)}%;--s:${s.toFixed(1)}px;--d:${(7 + r() * 9).toFixed(1)}s;--dl:${(-r() * 16).toFixed(1)}s;--dx:${(40 + r() * 120).toFixed(0)}px;--dy:${(-60 - r() * 160).toFixed(0)}px"></i>`;
+  }).join('');
+  const caps = $$('#hStage .cap');
+  const HT = gsap.timeline({ defaults: { ease: 'power2.inOut' }, onUpdate: applyHero, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: true } });
+  HT.to(['#lbT', '#lbB'], { scaleY: 0, duration: 1.2, ease: 'power2.inOut' }, .2)
+    .to(['#hCopy', '#hShade'], { autoAlpha: 0, y: -50, duration: .8, ease: 'power2.in' }, .3)
+    .to(A.c, { cx: .21, cy: .55, z: 1.9, duration: 3 }, .2)
+    .to(A.c, { z: 10, duration: 1.4, ease: 'power3.in' }, 3.2)
+    .to('#motes', { opacity: 0, duration: .5 }, 3.9)
+    .to('#hDark', { opacity: 1, duration: .5, ease: 'power2.in' }, 4.1)
+    .set(A.c, { o: 0 }, 4.6).set(B.c, { o: 1 }, 4.6)
+    .fromTo(B.c, { cx: .89, cy: .55, z: 7 }, { cx: .62, cy: .52, z: 1.05, duration: 1.2, ease: 'power3.out', immediateRender: false }, 4.6)
+    .to('#hDark', { opacity: 0, duration: .5, ease: 'power2.out' }, 4.6)
+    .fromTo('#hFlash', { opacity: .9 }, { opacity: 0, duration: .9, ease: 'power2.out', immediateRender: false }, 4.6)
+    .to(B.c, { cx: .7, z: 1.18, duration: 4.2, ease: 'none' }, 5.8);
+  capIn(HT, caps[0], 5.3); capOut(HT, caps[0], 6.6);
+  capIn(HT, caps[1], 6.9); capOut(HT, caps[1], 8.2);
+  capIn(HT, caps[2], 8.5); capOut(HT, caps[2], 9.7);
+  HT.fromTo('#hMeter', { scaleX: 0 }, { scaleX: 1, duration: 10, ease: 'none' }, 0);
+  const sizeHero = () => { A.size(); B.size(); };
+  sizeHero();
+  const backOut = q => { const c = 1.70158, u = q - 1; return 1 + (c + 1) * u * u * u + c * u * u; };
+
+  /* =========================================================
+     WARMTH: one giant word, cut out of the dark, with a roll of glass wool glowing through it. The letters drop in,
+     then the camera flies into the H until the wool fills the screen: what's inside every roll.
+     ========================================================= */
+  const wStage = $('#wStage'), wCv = $('#wCv'), wx = wCv.getContext('2d'), wAsk = $('#wAsk');
+  const Wc = makeCam(wStage, $('#shotW'), 2000, 1290, { cx: .39, cy: .5, z: 1.5 });
+  const WORD = 'WARMTH', wm = { drop: 0, zoom: 0 };
+  let wW = 0, wH = 0, wDpr = 1, wFs = 100, wLx = [], wAdv = [], wBase = 0, wCap = 0, wP = { x: 0, y: 0 }, wEnd = 40;
+  const drawW = () => {
+    const z = wm.zoom;
+    if (z >= .999) { if (wCv.style.visibility !== 'hidden') wCv.style.visibility = 'hidden'; return; } // through the H: the wool fills the screen
+    if (wCv.style.visibility) wCv.style.visibility = '';
+    // scale grows exponentially so the flight feels steady; the H's stem glides to the centre of the screen as we go
+    const s = Math.exp(Math.log(wEnd) * z), k = 1 - Math.pow(1 - Math.min(1, z * 1.5), 3);
+    const fx = wP.x + (wW / 2 - wP.x) * k, fy = wP.y + (wH / 2 - wP.y) * k;
+    wx.setTransform(1, 0, 0, 1, 0, 0); wx.globalCompositeOperation = 'source-over'; wx.globalAlpha = 1;
+    wx.fillStyle = '#0a0907'; wx.fillRect(0, 0, wCv.width, wCv.height);
+    wx.setTransform(wDpr * s, 0, 0, wDpr * s, wDpr * (fx - wP.x * s), wDpr * (fy - wP.y * s));
+    wx.font = `600 ${wFs}px "Inter Tight"`;
+    const at = [];
+    for (let i = 0; i < WORD.length; i++) {
+      const q = Math.min(1, Math.max(0, (wm.drop - i * .1) / .5));
+      if (q > 0) { const e = backOut(q); at.push([i, wBase - (1 - e) * wH * .8, (1 - e) * (i % 2 ? .4 : -.32), Math.min(1, q * 2.5)]); }
+    }
+    const each = f => at.forEach(([i, y, r, o]) => { wx.save(); wx.globalAlpha = o; wx.translate(wLx[i] + wAdv[i] / 2, y - wCap / 2); wx.rotate(r); f(WORD[i], -wAdv[i] / 2, wCap / 2); wx.restore(); });
+    // a hairline of gold light around every letter: stroked first, then the letters cut out, so only the outer edge stays
+    wx.lineWidth = 2.6 / s; wx.strokeStyle = 'rgba(242,201,90,.7)';
+    each((t, x, y) => wx.strokeText(t, x, y));
+    wx.globalCompositeOperation = 'destination-out';
+    each((t, x, y) => wx.fillText(t, x, y));
+  };
+  const sizeW = () => {
+    wW = wStage.clientWidth; wH = wStage.clientHeight; wDpr = Math.min(2, devicePixelRatio || 1);
+    wCv.width = Math.round(wW * wDpr); wCv.height = Math.round(wH * wDpr);
+    wx.font = '600 100px "Inter Tight"';
+    const adv = [...WORD].map(ch => wx.measureText(ch).width), tr = -3.5, tw = adv.reduce((a, b) => a + b, 0) + tr * (WORD.length - 1);
+    const cap = wx.measureText('H').actualBoundingBoxAscent || 72;
+    wFs = Math.min(wW * .9 / tw * 100, wH * .4 / cap * 100);
+    const k = wFs / 100; let x = (wW - tw * k) / 2;
+    wAdv = adv.map(a => a * k); wLx = adv.map(a => { const p = x; x += (a + tr) * k; return p; });
+    wCap = cap * k; wBase = wH / 2 + wCap / 2;
+    // find the H's left stem: draw an H, then scan across its middle for the first run of ink
+    const oc = document.createElement('canvas'), ow = Math.ceil(adv[5]) + 4; oc.width = ow; oc.height = 110;
+    const ox = oc.getContext('2d'); ox.font = '600 100px "Inter Tight"'; ox.fillText('H', 0, 100);
+    const row = ox.getImageData(0, Math.round(100 - cap / 2), ow, 1).data; let a0 = -1, a1 = -1;
+    for (let i = 0; i < ow; i++) { const on = row[i * 4 + 3] > 127; if (on && a0 < 0) a0 = i; else if (!on && a0 >= 0) { a1 = i; break; } }
+    if (a0 < 0 || a1 < 0) { a0 = 8; a1 = 22; }
+    wP = { x: wLx[5] + (a0 + a1) / 2 * k, y: wBase - wCap / 2 };
+    wEnd = 1.25 * Math.max(wW / ((a1 - a0) * k), wH / wCap);
+    wAsk.style.top = `${Math.round(wBase - wCap * 1.3 - wAsk.offsetHeight)}px`;
+    Wc.size(); drawW();
+  };
+  const wBig = splitDrop($('#wBig')); gsap.set(wBig, { yPercent: -135 });
+  const WT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: () => { Wc.apply(); drawW(); }, scrollTrigger: { trigger: '#warmth', start: 'top top', end: 'bottom bottom', scrub: true } });
+  WT.to(wm, { drop: 1, duration: 1.3 }, 0)
+    .to(Wc.c, { z: 1.32, duration: 1.8, ease: 'power1.out' }, 0)
+    .fromTo(wAsk, { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .4, ease: 'back.out(1.4)', immediateRender: false }, .95)
+    .to(wAsk, { autoAlpha: 0, y: -30, duration: .3, ease: 'power2.in' }, 1.9)
+    .to(wm, { zoom: 1, duration: 2.1, ease: 'power2.in' }, 1.9)
+    .to(Wc.c, { cx: .34, z: 2.2, duration: 3.1, ease: 'power1.in' }, 1.9)
+    .to('#wShade', { opacity: 1, duration: .6 }, 4)
+    .fromTo('#wCopy .eyebrow', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .35, ease: 'back.out(1.4)', immediateRender: false }, 4.1)
+    .to(wBig, { yPercent: 0, duration: .6, stagger: .05, ease: 'back.out(1.5)' }, 4.15)
+    .fromTo('#wCopy .sub', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .4, ease: 'back.out(1.4)', immediateRender: false }, 4.6)
+    .to({}, { duration: .5 }, 5);
+  sizeW();
+
+  /* ---------- Headings: the words drop into place as each one comes into view ---------- */
+  if (!reduce) {
+    const dropIO = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; dropIO.unobserve(e.target);
+      gsap.to(e.target.__d, { yPercent: 0, duration: 1.15, stagger: .07, ease: 'back.out(1.5)', overwrite: true });
+    }), { rootMargin: '0px 0px -14% 0px' });
+    $$('main .h').forEach(el => { el.__d = splitDrop(el); gsap.set(el.__d, { yPercent: -135 }); dropIO.observe(el); });
+  }
+
+  /* =========================================================
+     THE RANGE: the house draws itself; heat pours out through the walls and roof. The walls fill, then the
+     ceiling blanket thickens, the heat stops escaping, the inside warms up, and the R-value climbs from R2 to R7.
+     ========================================================= */
+  const rInt = $('#rInt'), rDec = $('#rDec');
+  // odometer strips: highest value at the top, so as the R-value rises the digits fall into place
+  rDec.innerHTML = Array.from({ length: 51 }, (_, k) => `<span>${(70 - k) % 10}</span>`).join('');
+  rInt.innerHTML = [7, 6, 5, 4, 3, 2].map(d => `<span>${d}</span>`).join('');
+  const rv = { v: 2 }; let where = '';
+  const setR = () => {
+    const d = rv.v * 10, t = Math.floor(rv.v) + Math.max(0, Math.min(1, d % 10 - 9));
+    rDec.style.transform = `translate3d(0,${(d - 70).toFixed(3)}em,0)`; rInt.style.transform = `translate3d(0,${(t - 7).toFixed(3)}em,0)`;
+    const w = RG.time() < 1.5 ? '' : RG.time() < 4 ? 'w' : 'c';
+    if (w !== where) { where = w; $('#wWall').classList.toggle('is-on', w === 'w'); $('#wCeil').classList.toggle('is-on', w === 'c'); }
+  };
+  $$('#house .draw').forEach(p => p.setAttribute('pathLength', '1'));
+  gsap.set(['#wallL', '#wallR', '#ceil'], { scaleY: 0, transformOrigin: '50% 100%' });
+  const RG = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: setR, scrollTrigger: { trigger: '#range', start: 'top 30%', end: 'bottom bottom', scrub: true } });
+  RG.fromTo('#house .draw', { attr: { 'stroke-dasharray': 1, 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: 1.5, stagger: .12, ease: 'power2.inOut' }, 0)
+    .to(['#wallL', '#wallR'], { scaleY: 1, duration: 2.5, ease: 'power1.inOut' }, 1.5)
+    .to(rv, { v: 3.2, duration: 2.5 }, 1.5)
+    .to('#ceil', { scaleY: 1, duration: 4.5, ease: 'power1.inOut' }, 4)
+    .to(rv, { v: 7, duration: 4.5 }, 4)
+    .to('#warmIn', { attr: { opacity: 1 }, duration: 7 }, 1.5)
+    .to('#heat', { opacity: 0, duration: 7, ease: 'power1.in' }, 1.5)
+    .to({}, { duration: 1.5 });
+  setR();
+
+  /* =========================================================
+     ROLLS: a roll of Hanesulation drops onto the floor, then rolls out a blanket as you scroll. It's drawn to scale:
+     the spiral's pitch is the blanket's thickness, so the roll shrinks by exactly what it lays down, and the headline
+     comes up word by word as the roll passes under it.
+     ========================================================= */
+  const rStage = $('#rStage'), rCv = $('#rCv'), rx = rCv.getContext('2d'), rHead = $('#rHead'), rWords = $$('#rBig .rw');
+  const strip = new Image(); strip.decoding = 'async'; strip.src = 'stills/hanesulation/blanket-strip.webp';
+  const roll = { drop: 0, p: 0 };
+  let rW = 0, rH = 0, rDpr = 1, R0 = 100, T = 20, ra = 9, rb = 3, phiMax = 30, floorY = 0, x0 = 0, x1 = 0, rollTex = null, stripPat = null, rWx = [], rWq = [];
+  const wound = phi => ra * phi + rb * phi * phi / 2; // length of blanket wound from the core out to angle phi
+  const buildRoll = () => {
+    if (!strip.naturalWidth || !rW) return;
+    const sw = strip.naturalWidth, sh = strip.naturalHeight, loop = sw * 2, src = sh / T;
+    // the blanket's texture, mirrored end to end so it repeats without a seam
+    const dbl = document.createElement('canvas'); dbl.width = loop; dbl.height = sh;
+    const dx = dbl.getContext('2d'); dx.drawImage(strip, 0, 0); dx.translate(loop, 0); dx.scale(-1, 1); dx.drawImage(strip, 0, 0);
+    stripPat = rx.createPattern(dbl, 'repeat'); stripPat.setTransform(new DOMMatrix([1 / src, 0, 0, 1 / src, x0, floorY - T]));
+    // the roll's end face: the same blanket wound into a spiral, laid slice by slice along the spiral, once
+    const n = Math.ceil(R0 * 2 * rDpr) + 2; rollTex = document.createElement('canvas'); rollTex.width = rollTex.height = n;
+    const c = rollTex.getContext('2d'); c.translate(n / 2, n / 2); c.scale(rDpr, rDpr);
+    c.fillStyle = '#6b4c17'; c.beginPath(); c.arc(0, 0, R0, 0, Math.PI * 2); c.fill();
+    for (let phi = phiMax; phi > .4;) {
+      const rc = ra + rb * phi - T / 2; if (rc <= 1) break;
+      const st = Math.min(.15, 5 / rc), seg = rc * st * 1.3, sl = Math.min(loop, seg * src);
+      let sx = (wound(phi) * src) % loop; if (sx + sl > loop) sx = loop - sl;
+      c.save(); c.rotate(phi + Math.PI / 2); c.translate(0, -rc); c.drawImage(dbl, sx, 0, sl, sh, -seg / 2, -T / 2, seg, T); c.restore();
+      phi -= st;
+    }
+    // the seams between the layers, a thin catch of light on each, and the core
+    const spiral = off => { c.beginPath(); for (let phi = .6; phi <= phiMax; phi += .05) { const r = ra + rb * phi - off; c.lineTo(r * Math.cos(phi), r * Math.sin(phi)); } };
+    spiral(0); c.lineWidth = Math.max(1, T * .09); c.strokeStyle = 'rgba(56,34,6,.62)'; c.stroke();
+    spiral(T * .16); c.lineWidth = Math.max(.6, T * .05); c.strokeStyle = 'rgba(255,236,190,.2)'; c.stroke();
+    c.fillStyle = '#1b1307'; c.beginPath(); c.arc(0, 0, ra * .85, 0, Math.PI * 2); c.fill();
+  };
+  const drawR = () => {
+    rx.setTransform(1, 0, 0, 1, 0, 0); rx.clearRect(0, 0, rCv.width, rCv.height);
+    if (!rollTex) return;
+    rx.setTransform(rDpr, 0, 0, rDpr, 0, 0);
+    const L = roll.p * (x1 - x0), left = Math.max(0, wound(phiMax) - L);
+    const phiE = (-ra + Math.sqrt(ra * ra + 2 * rb * left)) / rb, R = ra + rb * phiE, rot = Math.PI / 2 - phiE;
+    const land = roll.drop, cx = x0 + L, cy = floorY - R - (1 - land) * (floorY + R * 1.3);
+    // the blanket laid so far, lit along its top edge
+    if (L > .5) {
+      rx.fillStyle = stripPat; rx.fillRect(x0, floorY - T, L, T);
+      const g = rx.createLinearGradient(0, floorY - T, 0, floorY);
+      g.addColorStop(0, 'rgba(255,228,160,.34)'); g.addColorStop(.2, 'rgba(255,228,160,0)'); g.addColorStop(1, 'rgba(0,0,0,.35)');
+      rx.fillStyle = g; rx.fillRect(x0, floorY - T, L, T);
+    }
+    // a pool of warm light travels with it
+    const pg = rx.createRadialGradient(cx, floorY - R, 0, cx, floorY - R, R * 3);
+    pg.addColorStop(0, `rgba(242,190,90,${(.12 * land).toFixed(3)})`); pg.addColorStop(1, 'rgba(242,190,90,0)');
+    rx.fillStyle = pg; rx.fillRect(cx - R * 3, floorY - R * 4, R * 6, R * 6);
+    // its shadow on the floor
+    if (land > .02) {
+      rx.save(); rx.translate(cx, floorY); rx.scale(1, .16);
+      const sg = rx.createRadialGradient(0, 0, 0, 0, 0, R * 1.3); sg.addColorStop(0, `rgba(0,0,0,${(.65 * land * land).toFixed(3)})`); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      rx.fillStyle = sg; rx.beginPath(); rx.arc(0, 0, R * 1.3, 0, Math.PI * 2); rx.fill(); rx.restore();
+    }
+    // the roll: clipped to what is left of its spiral (the outer layer ends right where the blanket leaves it), then turned
+    rx.save(); rx.beginPath();
+    for (let j = 0; j <= 96; j++) { const phi = phiE - Math.PI * 2 * (1 - j / 96), r = ra + rb * phi, a = phi + rot; rx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); }
+    rx.closePath(); rx.clip(); rx.translate(cx, cy);
+    const hs = rollTex.width / rDpr / 2;
+    rx.save(); rx.rotate(rot); rx.drawImage(rollTex, -hs, -hs, hs * 2, hs * 2); rx.restore();
+    // the light stays put while the roll turns: a warm glow up top, the rim falling into shadow
+    const lg = rx.createRadialGradient(-R * .3, -R * .35, 0, 0, 0, R * 1.05);
+    lg.addColorStop(0, 'rgba(255,240,205,.18)'); lg.addColorStop(.55, 'rgba(0,0,0,0)'); lg.addColorStop(1, 'rgba(0,0,0,.5)');
+    rx.fillStyle = lg; rx.fillRect(-R, -R, R * 2, R * 2); rx.restore();
+    // the headline comes up word by word as the roll passes beneath it
+    const front = land >= .999 ? cx + R * .8 : -1e5;
+    rWords.forEach((el, i) => {
+      const q = Math.min(1, Math.max(0, (front - rWx[i]) / (R0 * 1.2)));
+      if (Math.abs(q - rWq[i]) < .002) return; rWq[i] = q;
+      const e = backOut(q);
+      el.style.opacity = Math.min(1, q * 2).toFixed(3);
+      el.style.transform = `translate3d(0,${((1 - e) * -70).toFixed(2)}%,0) rotate(${((1 - e) * -6).toFixed(2)}deg)`;
+    });
+  };
+  const sizeR = () => {
+    rW = rStage.clientWidth; rH = rStage.clientHeight; rDpr = Math.min(2, devicePixelRatio || 1);
+    rCv.width = Math.round(rW * rDpr); rCv.height = Math.round(rH * rDpr);
+    const phone = rW < 700, pad = rHead.offsetLeft;
+    R0 = Math.min(rH * (phone ? .21 : .26), rW * (phone ? .36 : .2)); T = R0 * (phone ? .26 : .22); ra = T * .45; rb = T / (Math.PI * 2); phiMax = (R0 - ra) / rb;
+    floorY = Math.round(rH * (phone ? .76 : .82)); rStage.style.setProperty('--floor', `${floorY}px`);
+    x0 = phone ? R0 * .25 : pad + R0; x1 = rW - pad - R0 * .95;
+    // each word waits for the roll to pass under it; if the headline wraps, the words are spread along the roll's path in reading order
+    const wraps = rWords.some(el => el.offsetTop !== rWords[0].offsetTop);
+    rWx = rWords.map((el, i) => wraps ? x0 - R0 * .2 + (x1 - x0) * .92 * i / (rWords.length - 1) : pad + el.offsetLeft + el.offsetWidth / 2); rWq = rWords.map(() => -1);
+    buildRoll(); drawR();
+  };
+  strip.addEventListener('load', () => { buildRoll(); drawR(); });
+  const RT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: drawR, scrollTrigger: { trigger: '#rolls', start: 'top 35%', end: 'bottom bottom', scrub: true } });
+  RT.fromTo('#rHead .eyebrow', { autoAlpha: 0, y: -24 }, { autoAlpha: 1, y: 0, duration: .12, ease: 'back.out(1.4)', immediateRender: false }, .02)
+    .to(roll, { drop: 1, duration: .38, ease: 'bounce.out' }, .05)
+    .to(roll, { p: 1, duration: 1.6, ease: 'power1.inOut' }, .5)
+    .fromTo('#rHead .sub', { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .2, ease: 'back.out(1.4)', immediateRender: false }, 1.8)
+    .to({}, { duration: .3 }, 2.1);
+  sizeR();
+
+  /* =========================================================
+     DEMAND: four short lines slam onto the screen, one by one, each landing with a flash, a ring and a shake.
+     Then the reason to stock it drops in. The slams play in real time, so they hit hard however fast you scroll.
+     ========================================================= */
+  const SL = $$('.sl'), dEnd = $('#dEnd'), dRing = $('#dRing'), dEndEls = $$('#dEnd .eyebrow, #dEnd .sub, #dEnd .btn');
+  const dBig = splitDrop($('#dBig')); gsap.set(dBig, { yPercent: -135 });
+  const DSTEP = [.001, .17, .33, .49, .68]; let dStep = 0;
+  // the newest line always lands dead centre, pushing the ones before it up the screen
+  const centreOn = el => gsap.to('#slam', { y: $('#slam').offsetHeight / 2 - (el.offsetTop - SL[0].offsetTop + el.offsetHeight / 2), duration: .5, ease: 'power3.out', overwrite: true });
+  const impact = () => {
+    gsap.fromTo(dRing, { scale: .25, opacity: .95 }, { scale: 2.8, opacity: 0, duration: 1, ease: 'power2.out', overwrite: true });
+    gsap.fromTo('#dFlash', { opacity: .95 }, { opacity: 0, duration: .8, ease: 'power2.out', overwrite: true });
+    gsap.fromTo('#dShake', { x: 0, y: 0 }, { keyframes: { x: [18, -14, 10, -6, 3, 0], y: [-10, 8, -5, 3, -1, 0] }, duration: .5, ease: 'none', overwrite: true });
+  };
+  const setD = k => {
+    const prev = dStep; if (k === prev) return; dStep = k;
+    if (k === 5) {
+      dEnd.classList.add('is-on');
+      gsap.to(SL, { y: -90, autoAlpha: 0, duration: .45, stagger: .05, ease: 'power3.in', overwrite: true });
+      gsap.fromTo(dEndEls[0], { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .8, delay: .35, ease: 'back.out(1.4)', overwrite: true });
+      gsap.to(dBig, { yPercent: 0, duration: 1.1, delay: .42, stagger: .08, ease: 'back.out(1.6)', overwrite: true });
+      gsap.fromTo(dEndEls.slice(1), { autoAlpha: 0, y: -30 }, { autoAlpha: 1, y: 0, duration: .9, delay: .75, stagger: .1, ease: 'back.out(1.4)', overwrite: true });
+      gsap.fromTo('#dFlash', { opacity: .8 }, { opacity: 0, duration: 1.2, delay: .5, ease: 'power2.out', overwrite: true });
+      return;
+    }
+    if (prev === 5) {
+      dEnd.classList.remove('is-on');
+      gsap.to(dBig, { yPercent: -135, duration: .4, stagger: .03, ease: 'power2.in', overwrite: true });
+      gsap.to(dEndEls, { autoAlpha: 0, y: -20, duration: .3, overwrite: true });
+    }
+    SL.forEach((el, i) => {
+      if (i >= k) { if (i < prev && prev !== 5) gsap.to(el, { autoAlpha: 0, scale: 1.5, y: 0, duration: .3, ease: 'power2.in', overwrite: true }); return; }
+      const newest = i === k - 1;
+      if (newest) centreOn(el);
+      if (newest && k > prev && prev !== 5) gsap.fromTo(el, { autoAlpha: 0, scale: 2.8, y: 0 }, { autoAlpha: 1, scale: 1, duration: .34, ease: 'power4.in', overwrite: true, onComplete: impact });
+      else gsap.to(el, { autoAlpha: newest ? 1 : .26, scale: 1, y: 0, duration: .45, ease: 'power2.out', overwrite: true });
+    });
+  };
+  ScrollTrigger.create({ trigger: '#demand', start: 'top top', end: 'bottom bottom', onUpdate: s => { let k = 0; while (k < DSTEP.length && s.progress >= DSTEP[k]) k++; setD(k); } });
+
+  /* ---------- Marquee: two belts of promises; they run faster, turn with you, and lean as you scroll ---------- */
+  const belts = $$('.marq__track').map(el => { el.innerHTML += el.innerHTML; return { el, dir: +el.parentNode.dataset.dir, x: 0, w: 0 }; });
+  const sizeBelts = () => belts.forEach(b => { b.w = b.el.scrollWidth / 2; });
+  let mOn = false, mVel = 0, mSkew = 0, mSign = 1;
+  ScrollTrigger.create({ trigger: '.marq', start: 'top bottom', end: 'bottom top', onToggle: s => { mOn = s.isActive; }, onUpdate: s => { mVel = s.getVelocity(); if (mVel) mSign = mVel > 0 ? 1 : -1; } });
+  if (!reduce) gsap.ticker.add((t, dt) => {
+    if (!mOn) return;
+    mVel *= .92;
+    const v = Math.max(-4000, Math.min(4000, mVel));
+    mSkew += (Math.max(-10, Math.min(10, -v / 220)) - mSkew) * .12;
+    const sp = (.07 + Math.abs(v) * .0006) * Math.min(dt, 50) * mSign;
+    belts.forEach(b => {
+      if (!b.w) return;
+      b.x = (b.x - sp * b.dir) % b.w; if (b.x > 0) b.x -= b.w;
+      b.el.style.transform = `translate3d(${b.x.toFixed(1)}px,0,0) skewX(${mSkew.toFixed(2)}deg)`;
+    });
+  });
+  sizeBelts();
+  let rsz = 0;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (wStage.clientWidth !== wW || wStage.clientHeight !== wH) sizeW();
+    if (rStage.clientWidth !== rW || rStage.clientHeight !== rH) sizeR();
+    sizeBelts();
+  }); });
+
+  /* ---------- Reveals: fade-ups, and cards dropped onto the page with a slight tilt ---------- */
+  ScrollTrigger.batch('[data-reveal]', { start: 'top 90%', once: true, onEnter: els => els.forEach((el, i) =>
+    gsap.to(el, { opacity: 1, y: 0, duration: 1.3, delay: i * .07, ease: 'power4.out' })) });
+  $$('[data-drop]').forEach((el, i) => gsap.set(el, el.dataset.drop === 'tilt' ? { y: -110, rotation: i % 2 ? 3 : -2.5, transformOrigin: '50% 0%' } : { y: -26 }));
+  ScrollTrigger.batch('[data-drop]', { start: 'top 92%', once: true, onEnter: els => gsap.to(els, { opacity: 1, y: 0, rotation: 0, duration: 1.1, stagger: .09, ease: 'back.out(1.5)', overwrite: true }) });
+
+  /* ---------- Certified: the seal rings draw themselves and the lettering turns ---------- */
+  $$('.seal').forEach(seal => {
+    gsap.fromTo(seal.querySelector('.ring'), { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top 90%', end: 'top 40%', scrub: true } });
+    gsap.fromTo(seal.querySelector('.spin'), { rotation: -40, svgOrigin: '100 100' }, { rotation: 60, svgOrigin: '100 100', ease: 'none',
+      scrollTrigger: { trigger: seal, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  /* =========================================================
+     SUPPLY: the camera starts on one roll end in the warehouse and pulls back to show the racks, then drifts across
+     ========================================================= */
+  const C = makeCam($('#sStage'), $('#shotC'), 2000, 2000, { cx: .635, cy: .59, z: 3.4 });
+  const ST = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: C.apply, scrollTrigger: { trigger: '#supply', start: 'top top', end: 'bottom bottom', scrub: true } });
+  ST.to(C.c, { cx: .5, cy: .5, z: 1.1, duration: .55, ease: 'power3.out' }, 0)
+    .to(C.c, { cx: .62, z: 1.18, duration: .45 }, .55)
+    .fromTo('#sCopy > *', { autoAlpha: 0, y: -40 }, { autoAlpha: 1, y: 0, duration: .12, stagger: .04, ease: 'back.out(1.4)', immediateRender: false }, .32)
+    .to('#sTag', { opacity: 1, duration: .1 }, .2);
+  C.size();
+
+  /* ---------- Brand: a roll of insulation unrolls off the photo as it comes into view ---------- */
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#unroll', start: 'top 85%', end: 'center 45%', scrub: true } })
+    .fromTo('#uSheet', { xPercent: 0 }, { xPercent: 104, duration: 1, ease: 'power2.inOut' }, 0)
+    .fromTo('#fitImg', { scale: 1.2 }, { scale: 1, duration: 1.2 }, 0);
+
+  /* ---------- Request pricing: the form writes the email for you ---------- */
+  const form = $('#priceForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const f = new FormData(form), interest = f.getAll('interest').join(', ') || 'Not specified';
+    const body = [
+      'Hanesulation pricing request', '',
+      `Business: ${f.get('business')}`, `Contact: ${f.get('name')}`, `Email: ${f.get('email')}`, `Phone: ${f.get('phone') || '-'}`,
+      `Business type: ${f.get('type')}`, `Region: ${f.get('region')}`, `Interested in: ${interest}`, '',
+      'R-values and volumes:', f.get('message') || '-',
+    ].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Hanesulation pricing request: ' + f.get('business'))}&body=${encodeURIComponent(body)}`;
+    $('#fDone').classList.add('is-on');
+  });
+
+  /* ---------- Load: the first shot and the fonts, then the bars, the dust and the title ---------- */
+  const fill = $('#lfill');
+  const need = [$('#shotA').decode().catch(() => {})];
+  if (document.fonts) need.push(document.fonts.load('600 100px "Inter Tight"').catch(() => {}).then(() => document.fonts.ready));
+  let done = 0; need.forEach(p => p.then(() => { fill.style.transform = `scaleX(${++done / need.length})`; }));
+  Promise.all(need).then(() => {
+    $('#shotB').decode().catch(() => {});
+    sizeW(); sizeR(); sizeBelts(); // the canvases measure the real typeface now that it has loaded
+    gsap.timeline({ delay: .2 })
+      .to('#loader', { autoAlpha: 0, duration: .8, ease: 'power2.inOut', onComplete: () => $('#loader').remove() })
+      .from(intro, { z: 1.15, duration: 2.8, ease: 'power3.out', onUpdate: A.apply }, '<')
+      .from('#hCopy > *', { autoAlpha: 0, y: -44, duration: 1.3, stagger: .1, ease: 'back.out(1.4)' }, '<.4')
+      .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); }, '<');
+  });
+})();
+</script>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

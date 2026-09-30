@@ -1,0 +1,70 @@
+/* =========================================================================================
+   Hanes Distribution: the pieces every page shares.
+   A slim global bar that links the home page and every brand (it tucks away once you scroll,
+   and each page's own nav slides up to take its place), and a common footer.
+   ========================================================================================= */
+:root{--gbh:44px;--gb:44px}
+html.gb-off{--gbh:0px}
+.gb{position:fixed;top:0;left:0;right:0;z-index:9990;height:44px;background:rgba(22,22,23,.86);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);color:#e8e8ed;font:400 12px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;transition:transform .45s cubic-bezier(.28,.11,.32,1)}
+html.gb-off:not(.gb-open) .gb{transform:translateY(-100%)}
+.gb__in{position:relative;z-index:2;max-width:1024px;height:100%;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:8px}
+.gb a{color:inherit;text-decoration:none}
+.gb__logo{display:flex;align-items:baseline;gap:5px;flex:none;font-weight:600;font-size:14px;letter-spacing:-.02em;color:#f5f5f7!important}
+.gb__logo span{font-weight:400;color:#a1a1a6}
+.gb__list{display:flex;flex:1;align-items:center;justify-content:space-between;max-width:720px;margin:0 0 0 auto;padding:0;list-style:none}
+.gb__list a{display:block;padding:14px 8px;opacity:.82;transition:opacity .2s}
+.gb__list a:hover,.gb__list a[aria-current="page"]{opacity:1}
+.gb__list a[aria-current="page"]{font-weight:600}
+.gb__burger{display:none;position:relative;width:44px;height:44px;margin:0 -12px 0 auto;background:none;border:0;cursor:pointer;color:inherit}
+.gb__burger::before,.gb__burger::after{content:"";position:absolute;left:15px;right:15px;height:1.2px;border-radius:1px;background:currentColor;transition:transform .4s cubic-bezier(.28,.11,.32,1)}
+.gb__burger::before{top:18px}
+.gb__burger::after{top:25px}
+html.gb-open .gb__burger::before{transform:translateY(3.5px) rotate(45deg)}
+html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
+.gb__panel{display:none}
+.gb a:focus-visible,.gb__burger:focus-visible{outline:2px solid #2997ff;outline-offset:2px;border-radius:4px}
+@media (max-width:833px){
+  .gb__list{display:none}
+  .gb__burger{display:block}
+  .gb__panel{display:block;position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:1;padding:64px 40px 40px;background:#161617;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;opacity:0;transition:opacity .35s cubic-bezier(.28,.11,.32,1),visibility 0s .35s}
+  html.gb-open .gb__panel{visibility:visible;opacity:1;transition:opacity .35s cubic-bezier(.28,.11,.32,1)}
+  .gb__panel small{display:block;margin-bottom:10px;font-size:12px;color:#86868b}
+  .gb__panel a{display:block;padding:9px 0;font:600 28px/1.14 -apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;letter-spacing:-.02em;color:#e8e8ed;opacity:0;transform:translateY(-8px);transition:opacity .4s,transform .4s cubic-bezier(.28,.11,.32,1)}
+  .gb__panel a span{display:block;margin-top:2px;font:400 14px/1.3 -apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:0;color:#86868b}
+  html.gb-open .gb__panel a{opacity:1;transform:none}
+  html.gb-open .gb__panel a:nth-child(3){transition-delay:.03s} html.gb-open .gb__panel a:nth-child(4){transition-delay:.06s}
+  html.gb-open .gb__panel a:nth-child(5){transition-delay:.09s} html.gb-open .gb__panel a:nth-child(6){transition-delay:.12s}
+  html.gb-open .gb__panel a:nth-child(7){transition-delay:.15s} html.gb-open .gb__panel a:nth-child(8){transition-delay:.18s}
+  html.gb-open .gb__panel a:nth-child(9){transition-delay:.21s}
+  .gb__panel .gb__sm{margin-top:26px;padding-top:18px;border-top:1px solid #424245}
+  .gb__panel .gb__sm a{font-size:17px;font-weight:500;padding:7px 0}
+  html.gb-open{overflow:hidden}
+}
+@media (prefers-reduced-motion:reduce){.gb,.gb__panel,.gb__panel a{transition:none!important}}
+
+/* ---------- The common footer ---------- */
+.gf{background:#f5f5f7;color:#6e6e73;font:400 12px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em;padding:0 22px max(28px,env(safe-area-inset-bottom))}
+.gf--dark{background:#000;color:#86868b}
+.gf__in{max-width:1024px;margin:0 auto}
+.gf__note{padding:18px 0;border-bottom:1px solid #d2d2d7}
+.gf--dark .gf__note{border-color:#424245}
+.gf__note a{color:#0066cc}
+.gf--dark .gf__note a{color:#2997ff}
+.gf__cols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:22px 0 26px}
+.gf__cols h4{margin:0 0 10px;font-size:12px;font-weight:600;color:#1d1d1f}
+.gf--dark .gf__cols h4{color:#f5f5f7}
+.gf__cols ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.gf a{color:inherit;text-decoration:none}
+.gf__cols a:hover{color:#1d1d1f;text-decoration:underline}
+.gf--dark .gf__cols a:hover{color:#f5f5f7}
+.gf__cols a[aria-current="page"]{color:#1d1d1f;font-weight:600}
+.gf--dark .gf__cols a[aria-current="page"]{color:#f5f5f7}
+.gf__base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-top:16px;border-top:1px solid #d2d2d7}
+.gf--dark .gf__base{border-color:#424245}
+@media (max-width:833px){.gf__cols{grid-template-columns:1fr 1fr;gap:26px 20px}}
+/* while a page's loading screen is up, the bar waits */
+body.is-loading .gb{opacity:0;pointer-events:none}
+.gb{transition:transform .45s cubic-bezier(.28,.11,.32,1),opacity .6s ease}
+.gf__fn{margin:0 0 10px;padding-left:14px}
+.gf__fn li{margin-bottom:6px}
+.gf__note p{margin:0}

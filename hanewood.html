@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanewood — MDF, HDF, plywood, H3.2 radiata pine plywood and LVL</title>
+<meta name="description" content="Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanewood — MDF, HDF, plywood, H3.2 radiata pine plywood and LVL">
+<meta property="og:description" content="Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="preload" as="image" href="stills/hanewood/truck.webp">
+<script>document.documentElement.classList.add('js')</script>
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-tight-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --line:#d2d2d7; --alt:#f5f5f7;
+  --blue:#0071e3; --blue-h:#0077ed; --link:#0066cc; --link-dark:#2997ff;
+  --wrap:980px; --wide:1260px; --pad:22px; --ln:52px;
+  --ease:cubic-bezier(.28,.11,.32,1);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  --timber:linear-gradient(90deg,#a85f24 0%,#d9914a 55%,#b36a2c 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:rgba(0,113,227,.2)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.wrap--wide{max-width:var(--wide)}
+.center{text-align:center}
+.t-grad{background:var(--timber);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{display:inline-block;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);letter-spacing:-.01em;line-height:1.2}
+.t-head{font-family:var(--display);font-weight:600;font-size:clamp(38px,5vw,64px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance}
+.eyebrow + .t-head{margin-top:10px}
+.t-intro{max-width:760px;margin:24px auto 0;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.75vw,24px);line-height:1.33;letter-spacing:-.012em;color:var(--ink-3);text-wrap:pretty}
+.t-intro b{color:var(--ink);font-weight:600}
+sup{font-size:.55em;line-height:0;vertical-align:.8em;margin-left:1px}
+sup a{color:inherit}
+section{position:relative}
+.sec{padding:clamp(96px,12vw,160px) 0}
+
+/* buttons and links */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:980px;background:var(--blue);color:#fff;font-size:17px;line-height:1;white-space:nowrap;transition:background .2s}
+.btn:hover{background:var(--blue-h)}
+.btn:focus-visible,.more:focus-visible,.pill:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.more{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:17px;line-height:1.2}
+.more svg{width:8px;height:14px;flex:none}
+.more:hover span{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:980px;background:var(--blue);color:#fff;font-size:12px;letter-spacing:-.01em;white-space:nowrap;transition:background .2s}
+.pill:hover{background:var(--blue-h)}
+
+/* ---------- Local nav: product name, sections, and the call to action. Frosted once you scroll ---------- */
+.ln{position:sticky;top:var(--gbh,0px);transition:top .45s var(--ease);z-index:50;height:var(--ln);background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(0,0,0,.14);opacity:0;transition:opacity .3s}
+.ln.is-stuck::after,.ln.is-open::after{opacity:1}
+.ln__in{max-width:var(--wrap);height:100%;margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.ln__title{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.015em}
+.ln__menu{display:flex;align-items:center;gap:24px;margin-left:auto;font-size:12px;color:rgba(29,29,31,.8)}
+.ln__menu a:hover{color:var(--link)}
+.ln__end{display:flex;align-items:center;gap:14px}
+.ln__chev{display:none;width:28px;height:28px;place-items:center;color:var(--ink)}
+.ln__chev svg{width:12px;height:12px;transition:transform .4s var(--ease)}
+.ln.is-open .ln__chev svg{transform:rotate(180deg)}
+
+/* ---------- Hero ---------- */
+.hero{padding:clamp(48px,8vh,88px) var(--pad) 0;text-align:center}
+.hero__title{font-family:var(--display);font-weight:600;font-size:clamp(60px,9.4vw,124px);line-height:1;letter-spacing:-.035em}
+.hero__tag{margin-top:clamp(10px,1.4vw,18px);font-family:var(--display);font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.08;letter-spacing:-.025em}
+.hero__sub{max-width:620px;margin:18px auto 0;color:var(--ink-2);font-size:clamp(17px,1.5vw,21px);line-height:1.38}
+.ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 28px;margin-top:28px}
+.js .hero [data-in]{opacity:0;transform:translateY(24px)}
+
+/* the hero photo: starts as a rounded card, grows to fill the screen as you scroll, then the caption comes up */
+.hm{height:190vh;margin-top:clamp(40px,6vh,64px)}
+.hm__stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.js .hm__stick{opacity:0}
+.hm__card{position:absolute;inset:0;overflow:hidden;background:#000;will-change:transform}
+.hm__card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;will-change:transform}
+.hm__shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.3) 32%,rgba(0,0,0,0) 55%);opacity:0}
+.hm__cap{position:absolute;left:0;right:0;bottom:clamp(44px,9vh,96px);padding:0 var(--pad);text-align:center;color:#f5f5f7}
+.hm__cap > *{opacity:0}
+.hm__eyebrow{font-family:var(--display);font-weight:600;font-size:clamp(17px,1.5vw,21px);color:rgba(245,245,247,.8)}
+.hm__line{margin-top:8px;font-family:var(--display);font-weight:600;font-size:clamp(34px,4.6vw,64px);line-height:1.05;letter-spacing:-.025em}
+
+/* ---------- Get the highlights: a gallery that plays itself, with a progress pill and a pause button ---------- */
+.hl{padding:clamp(88px,11vw,140px) 0 clamp(72px,9vw,120px);background:var(--alt)}
+.gal{--iw:min(1000px,84vw);display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding:clamp(32px,4vw,52px) calc((100vw - var(--iw)) / 2) 4px;outline:none}
+.gal::-webkit-scrollbar{display:none}
+.gal__item{position:relative;flex:none;width:var(--iw);aspect-ratio:16/10;border-radius:28px;overflow:hidden;background:#000;scroll-snap-align:center;isolation:isolate}
+.gal__item img{width:100%;height:100%;object-fit:cover;object-position:var(--op,50% 50%)}
+.gal__item::after{content:"";position:absolute;left:0;right:0;top:0;height:46%;background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0));pointer-events:none}
+.gal__cap{position:absolute;z-index:1;left:0;top:0;max-width:min(560px,86%);padding:clamp(24px,3.4vw,48px);font-family:var(--display);font-weight:600;font-size:clamp(21px,2.3vw,32px);line-height:1.14;letter-spacing:-.015em;color:#fff;opacity:.001;transform:translateY(12px);transition:opacity .8s var(--ease) .15s,transform .8s var(--ease) .15s}
+.gal__item.is-on .gal__cap{opacity:1;transform:none}
+.gal__item--range{background:radial-gradient(ellipse 80% 70% at 50% 62%,#2d2823 0%,#12100e 62%,#050505 100%)}
+.gal__item--range::after{display:none}
+.r3d{position:absolute;inset:0;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;align-content:center;gap:clamp(10px,2.6vw,44px) clamp(18px,3vw,52px);padding:clamp(90px,14%,150px) 5% 6%}
+.r3d__it{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2vw,30px);perspective:800px}
+.r3d{--k:1.34}
+.r3d .bd{--w:calc(var(--bw,118px) * var(--k));--d:calc(var(--bd,92px) * var(--k));--h:calc(var(--bh,14px) * var(--k))}
+.r3d__it span{font-size:clamp(12px,1.1vw,15px);font-weight:600;color:#f5f5f7}
+.r3d__it small{display:block;font-weight:400;color:#86868b;text-align:center}
+.gal__ctl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:28px}
+.dots{display:flex;align-items:center;gap:14px;height:56px;padding:0 26px;border-radius:999px;background:rgba(210,210,215,.64);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.dot{position:relative;width:8px;height:8px;border-radius:999px;background:rgba(0,0,0,.42);overflow:hidden;transition:width .5s var(--ease),background .5s var(--ease)}
+.dot::before{content:"";position:absolute;inset:-12px -4px}
+.dot.is-on{width:48px;background:rgba(0,0,0,.2)}
+.dot i{position:absolute;inset:0;border-radius:inherit;background:var(--ink);transform-origin:0 50%;transform:scaleX(var(--p,0));opacity:0}
+.dot.is-on i{opacity:1}
+.gal__play{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:rgba(210,210,215,.64);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:var(--ink);transition:background .2s}
+.gal__play:hover{background:rgba(223,223,227,.9)}
+.gal__play svg{width:18px;height:18px}
+.gal__play .i-play{display:none}
+.gal__play.is-paused .i-play{display:block}
+.gal__play.is-paused .i-pause{display:none}
+
+/* ---------- The statement: words light up as you read down ---------- */
+.lit{padding:clamp(110px,15vw,200px) var(--pad)}
+.lit p{max-width:980px;margin:0 auto;font-family:var(--display);font-weight:600;font-size:clamp(30px,4.3vw,58px);line-height:1.12;letter-spacing:-.025em;text-wrap:pretty}
+.js .lit .w{color:rgba(29,29,31,.16);transition:color .45s var(--ease)}
+.js .lit .w.on{color:var(--ink)}
+
+/* ---------- Boards, rendered: a top face and two edges in 3D, each with its own material ---------- */
+.bd{--w:150px;--d:118px;--h:16px;--rz:-38deg;position:relative;width:var(--w);height:var(--d);transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(var(--rz))}
+.bd i{position:absolute;display:block}
+.bd .t{inset:0;transform:translateZ(var(--h))}
+.bd .f{left:0;top:100%;width:100%;height:var(--h);transform-origin:50% 0;transform:translateZ(var(--h)) rotateX(-90deg)}
+.bd .l{right:100%;top:0;width:var(--h);height:100%;transform-origin:100% 50%;transform:translateZ(var(--h)) rotateY(-90deg)}
+.bd--mdf .t{background:radial-gradient(rgba(120,78,36,.26) .6px,rgba(0,0,0,0) 1.1px) 0 0/3px 3px,radial-gradient(rgba(255,244,228,.26) .6px,rgba(0,0,0,0) 1.1px) 1px 2px/4px 4px,linear-gradient(135deg,#dfb888,#c69966)}
+.bd--mdf .f{background:radial-gradient(rgba(90,56,22,.32) .6px,rgba(0,0,0,0) 1.1px) 0 0/3px 3px,linear-gradient(180deg,#c49464,#ad7f50)}
+.bd--mdf .l{background:radial-gradient(rgba(80,48,18,.32) .6px,rgba(0,0,0,0) 1.1px) 0 0/3px 3px,linear-gradient(90deg,#a47547,#8f653b)}
+.bd--hdf{--h:9px}
+.bd--hdf .t{background:radial-gradient(rgba(40,22,8,.3) .6px,rgba(0,0,0,0) 1.1px) 0 0/3px 3px,radial-gradient(rgba(255,226,196,.14) .6px,rgba(0,0,0,0) 1.1px) 1px 2px/4px 4px,linear-gradient(135deg,#91623f,#6f472b)}
+.bd--hdf .f{background:linear-gradient(180deg,#6c4529,#58371f)}
+.bd--hdf .l{background:linear-gradient(90deg,#53331c,#452a16)}
+.bd--ply .t,.bd--h32 .t,.bd--lvl .t{background-image:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,0) 50%,rgba(60,30,0,.06)),url(stills/hanewood/veneer-light.webp);background-size:100% 100%,300% 100%;background-position:0 0,22% 0}
+.bd--ply{--h:18px}
+.bd--ply .f{background:repeating-linear-gradient(180deg,#f2dfbd 0,#f2dfbd calc(var(--h) / 7 - 1px),#b88d5e calc(var(--h) / 7 - 1px),#b88d5e calc(var(--h) / 7))}
+.bd--ply .l{background:linear-gradient(rgba(40,20,0,.14),rgba(40,20,0,.14)),repeating-linear-gradient(90deg,#f2dfbd 0,#f2dfbd calc(var(--h) / 7 - 1px),#b88d5e calc(var(--h) / 7 - 1px),#b88d5e calc(var(--h) / 7))}
+.bd--h32{--h:20px}
+.bd--h32 .t{background-image:radial-gradient(ellipse 7% 5.5% at 31% 36%,#7a4c22 0,#7a4c22 35%,rgba(122,76,34,.35) 62%,rgba(0,0,0,0) 78%),radial-gradient(ellipse 5% 4% at 70% 66%,#80522a 0,#80522a 30%,rgba(128,82,42,.3) 60%,rgba(0,0,0,0) 76%),linear-gradient(rgba(255,232,150,.24),rgba(255,232,150,.24)),linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,0) 50%),url(stills/hanewood/veneer-light.webp);background-size:100% 100%,100% 100%,100% 100%,100% 100%,300% 100%;background-position:0 0,0 0,0 0,0 0,64% 0}
+.bd--h32 .t b{position:absolute;right:9%;bottom:10%;padding:3px 5px 2px;border:1.5px solid rgba(34,22,10,.72);border-radius:3px;font-family:var(--display);font-weight:700;font-size:11px;line-height:1;letter-spacing:0;color:rgba(34,22,10,.78)}
+.bd--h32 .f{background:repeating-linear-gradient(180deg,#f4e5bd 0,#f4e5bd calc(var(--h) / 7 - 1px),#c09a60 calc(var(--h) / 7 - 1px),#c09a60 calc(var(--h) / 7))}
+.bd--h32 .l{background:linear-gradient(rgba(40,20,0,.14),rgba(40,20,0,.14)),repeating-linear-gradient(90deg,#f4e5bd 0,#f4e5bd calc(var(--h) / 7 - 1px),#c09a60 calc(var(--h) / 7 - 1px),#c09a60 calc(var(--h) / 7))}
+.bd--lvl{--w:214px;--d:50px;--h:40px;--rz:-30deg}
+.bd--lvl .t{background-size:100% 100%,200% 100%}
+.bd--lvl .f{background:repeating-linear-gradient(180deg,#f0dab2 0,#f0dab2 3px,#bb9163 3px,#bb9163 4px)}
+.bd--lvl .l{background:linear-gradient(rgba(40,20,0,.18),rgba(40,20,0,.18)),repeating-linear-gradient(90deg,#f0dab2 0,#f0dab2 3px,#bb9163 3px,#bb9163 4px)}
+@keyframes bob{50%{translate:0 -7px}}
+
+/* ---------- Which board is right for the job ---------- */
+.lu{padding:clamp(96px,12vw,160px) 0;border-top:1px solid #f0f0f2}
+.lu__grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(16px,2vw,28px);max-width:var(--wide);margin:clamp(48px,6vw,80px) auto 0;padding:0 var(--pad)}
+.lu__col{display:flex;flex-direction:column;align-items:center;text-align:center}
+.lu__img{position:relative;display:grid;place-items:center;width:100%;height:190px;perspective:900px}
+.lu__img::after{content:"";position:absolute;left:50%;bottom:22px;width:78%;height:26px;margin-left:-39%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.2),rgba(0,0,0,0))}
+.lu__img .bd{animation:bob 6s ease-in-out infinite}
+.lu__col:nth-child(2) .bd{animation-delay:-1.2s}
+.lu__col:nth-child(3) .bd{animation-delay:-2.4s}
+.lu__col:nth-child(4) .bd{animation-delay:-3.6s}
+.lu__col:nth-child(5) .bd{animation-delay:-4.8s}
+.lu__name{margin-top:22px;font-family:var(--display);font-weight:600;font-size:24px;line-height:1.16;letter-spacing:-.015em}
+.lu__sub{margin-top:6px;min-height:2.86em;font-size:14px;line-height:1.43;color:var(--ink-2)}
+.lu__col .more{margin-top:14px;font-size:14px}
+.lu__rows{list-style:none;width:100%;margin-top:30px;border-top:1px solid var(--line)}
+.lu__rows li{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 4px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.43}
+.lu__rows li:last-child{border-bottom:0}
+.lu__rows svg{width:30px;height:30px;color:var(--ink)}
+.lu__rows b{font-weight:600}
+
+/* ---------- H3.2: on black, the name glows in ---------- */
+.h32{background:#000;color:#f5f5f7;padding:clamp(110px,14vw,190px) 0}
+.h32__eyebrow{font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);color:var(--ink-3)}
+.h32__big{margin-top:6px;font-family:var(--display);font-weight:700;font-size:clamp(132px,23vw,320px);line-height:.95;letter-spacing:-.05em;background:linear-gradient(100deg,#f3fbe4 0%,#b9e59c 22%,#5fb57c 44%,#2f8a64 62%,#d6f2b8 82%,#f3fbe4 100%) 100% 0/300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.js .h32 .h32__big.in{transition:opacity 1.2s var(--ease),transform 1.2s var(--ease),background-position 2.6s var(--ease) .2s;background-position:0 0}
+.h32__tag{margin-top:4px;font-family:var(--display);font-weight:600;font-size:clamp(32px,4vw,56px);line-height:1.08;letter-spacing:-.025em}
+.h32__p{max-width:660px;margin:22px auto 0;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.6vw,22px);line-height:1.36;color:var(--ink-3)}
+.h32__p b{color:#f5f5f7}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);max-width:var(--wrap);margin:clamp(56px,7vw,96px) auto 0;padding:0 var(--pad);text-align:left}
+.spec{padding-top:18px;border-top:1px solid #424245}
+.spec b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(26px,2.8vw,40px);line-height:1.1;letter-spacing:-.02em}
+.spec span{display:block;margin-top:6px;color:var(--ink-3)}
+.uses{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:var(--wrap);margin:clamp(40px,5vw,64px) auto 0;padding:0 var(--pad)}
+.uses span{padding:9px 16px;border-radius:999px;background:#1d1d1f;color:#d2d2d7;font-size:14px}
+
+/* ---------- How it's made: a plywood sample, exploded, then lined up into LVL ---------- */
+.ply{background:var(--alt);padding-top:clamp(96px,12vw,160px)}
+.px{height:440vh}
+.px__stick{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(280px,380px) 1fr;align-items:center;gap:clamp(24px,5vw,80px);max-width:var(--wide);margin:0 auto;padding:var(--ln) var(--pad) 0}
+.px__steps{list-style:none;display:grid;gap:2px}
+.px__steps li{position:relative;padding:14px 0 14px 22px}
+.px__steps li::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;border-radius:2px;background:var(--line);transition:background .5s var(--ease)}
+.px__steps li.is-on::before{background:var(--ink)}
+.px__steps h3{font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);line-height:1.2;letter-spacing:-.015em;color:var(--ink-3);transition:color .5s var(--ease)}
+.px__steps li.is-on h3{color:var(--ink)}
+.px__steps p{max-height:0;overflow:hidden;opacity:0;color:var(--ink-2);transition:max-height .6s var(--ease),opacity .6s var(--ease),margin-top .6s var(--ease)}
+.px__steps li.is-on p{max-height:7em;opacity:1;margin-top:8px}
+.lam-scene{--S:min(30vw,42vh,400px);--rx:58deg;--rz:-38deg;--t:18px;position:relative;height:min(80svh,720px);perspective:1800px;perspective-origin:50% 38%}
+.lam-shadow{position:absolute;left:50%;top:58%;width:calc(var(--S) * 1.5);height:calc(var(--S) * .5);margin:calc(var(--S) * -.25) 0 0 calc(var(--S) * -.75);border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.16),rgba(0,0,0,0));will-change:transform,opacity}
+.lam-shake,.lam,.lam-in,.lay,.ven{transform-style:preserve-3d}
+.lam-shake{position:absolute;inset:0}
+.lam{position:absolute;left:50%;top:55%;width:var(--S);height:var(--S);margin:calc(var(--S) / -2) 0 0 calc(var(--S) / -2);transform:rotateX(var(--rx)) rotateZ(var(--rz))}
+.lam-in{position:absolute;inset:0;will-change:transform}
+.lay{position:absolute;inset:0;visibility:hidden;will-change:transform}
+.ven{position:absolute;inset:0}
+/* the face is one flat layer, so the 3D sort has a single plane per veneer face */
+.face{position:absolute;inset:0;background:url(stills/hanewood/veneer-light.webp) 0 0/400% 100% no-repeat,#e6cfa9}
+.face::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(120,76,30,.1) 0 1px,rgba(120,76,30,0) 1px 6px,rgba(120,76,30,.05) 6px 7px,rgba(120,76,30,0) 7px 11px),linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,0) 45%,rgba(60,30,0,.06))}
+.ven i{position:absolute;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.ven .eb{left:0;top:100%;width:100%;height:var(--t);transform-origin:50% 0;transform:rotateX(-90deg);background:linear-gradient(180deg,#f2e0c0 0%,#d8b88c 80%,#8f6940 100%)}
+.ven .et{left:0;bottom:100%;width:100%;height:var(--t);transform-origin:50% 100%;transform:rotateX(90deg);background:linear-gradient(0deg,#f2e0c0 0%,#d8b88c 80%,#8f6940 100%)}
+.ven .er{left:100%;top:0;width:var(--t);height:100%;transform-origin:0 50%;transform:rotateY(90deg);background:linear-gradient(90deg,#e3c69e 0%,#c49f73 80%,#7f5a36 100%)}
+.ven .el{right:100%;top:0;width:var(--t);height:100%;transform-origin:100% 50%;transform:rotateY(-90deg);background:linear-gradient(270deg,#e3c69e 0%,#c49f73 80%,#7f5a36 100%)}
+.lab{position:absolute;left:0;top:0;transform-origin:0 0;transform:rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--rx) * -1)) translate(calc(-100% - 6px),-50%);display:flex;align-items:center;gap:10px;white-space:nowrap;font-size:12px;font-weight:600;letter-spacing:0;color:var(--ink);opacity:0}
+.lab::after{content:"";width:36px;height:1px;background:var(--ink-3)}
+
+/* ---------- LVL ---------- */
+.pc{max-width:var(--wide);margin:clamp(44px,6vw,80px) auto 0;padding:0 var(--pad)}
+.pc__in{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:16/9;background:#000;isolation:isolate}
+.pc__in img{width:100%;height:100%;object-fit:cover;will-change:transform}
+.feats3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,4vw,56px);max-width:var(--wrap);margin:clamp(52px,6vw,88px) auto 0;padding:0 var(--pad)}
+.feat svg{width:38px;height:38px;color:var(--ink)}
+.feat h3{margin-top:16px;font-family:var(--display);font-weight:600;font-size:21px;line-height:1.19;letter-spacing:-.012em}
+.feat p{margin-top:6px;color:var(--ink-2)}
+
+/* ---------- Why stock Hanewood: a bento of tiles ---------- */
+.why{background:var(--alt)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(320px,auto);gap:20px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad)}
+.tile{position:relative;display:flex;flex-direction:column;border-radius:28px;background:#fff;padding:clamp(28px,3vw,44px);overflow:hidden;isolation:isolate}
+.tile--wide{grid-column:span 2}
+.tile--full{grid-column:1/-1;min-height:0}
+.tile h3{font-family:var(--display);font-weight:600;font-size:clamp(24px,2.3vw,32px);line-height:1.12;letter-spacing:-.02em}
+.tile p{margin-top:10px;color:var(--ink-2)}
+.tile__big{font-family:var(--display);font-weight:700;font-size:clamp(96px,10vw,148px);line-height:.9;letter-spacing:-.05em}
+.tile__big + h3{margin-top:auto;padding-top:24px}
+.tile__sm{font-size:14px}
+.tile--photo{padding:0;color:#fff;min-height:440px;background:#000}
+.tile--photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.tile--photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.2) 38%,rgba(0,0,0,0) 60%)}
+.tile__cap{position:relative;z-index:1;margin-top:auto;padding:clamp(28px,3vw,44px)}
+.tile__cap p{color:rgba(245,245,247,.82)}
+.tile--price h3{font-size:clamp(44px,5vw,72px);line-height:1;letter-spacing:-.035em}
+.tile--price p{margin-top:auto;padding-top:24px}
+.stds{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+.stds span{display:block;padding-top:16px;border-top:1px solid var(--line);color:var(--ink-2)}
+.stds b{display:block;font-family:var(--display);font-weight:600;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.02em;color:var(--ink)}
+
+/* ---------- Ordering ---------- */
+.order__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad)}
+.ocard{border-radius:28px;background:var(--alt);padding:clamp(28px,3vw,44px)}
+.ocard__n{display:block;font-family:var(--display);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.04em}
+.ocard h3{margin-top:28px;font-family:var(--display);font-weight:600;font-size:24px;line-height:1.16;letter-spacing:-.015em}
+.ocard p{margin-top:8px;color:var(--ink-2)}
+
+/* ---------- Bulk pricing ---------- */
+.price{background:var(--alt)}
+.price .t-intro{max-width:640px}
+.form{max-width:760px;margin:clamp(40px,5vw,64px) auto 0;padding:clamp(24px,4vw,48px);border-radius:28px;background:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{position:relative}
+.fl.full{grid-column:1/-1}
+.fl input,.fl select,.fl textarea{width:100%;height:56px;padding:24px 16px 6px;border:1px solid #d2d2d7;border-radius:12px;background:#fff;font-size:17px;line-height:1.2;outline:none;appearance:none;transition:border-color .2s,box-shadow .2s}
+.fl textarea{height:auto;min-height:128px;padding-top:28px;resize:vertical}
+.fl label{position:absolute;left:17px;top:17px;font-size:17px;line-height:1.2;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.fl input:focus + label,.fl input:not(:placeholder-shown) + label,.fl textarea:focus + label,.fl textarea:not(:placeholder-shown) + label,.fl--sel label{transform:translateY(-9px) scale(.7)}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.fl--sel select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%2386868b' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center/12px;padding-right:40px}
+.fset{grid-column:1/-1;border:0;margin-top:6px}
+.fset legend{font-size:14px;font-weight:600;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips label{position:relative;cursor:pointer}
+.chips input{position:absolute;opacity:0;width:1px;height:1px}
+.chips span{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:12px;box-shadow:inset 0 0 0 1px #86868b;font-size:15px;transition:box-shadow .2s,background .2s}
+.chips input:checked + span{box-shadow:inset 0 0 0 2px var(--blue);background:rgba(0,113,227,.04)}
+.chips input:focus-visible + span{outline:2px solid var(--blue);outline-offset:2px}
+.form .btn{width:100%;min-height:50px;margin-top:22px}
+.form__note{margin-top:12px;font-size:12px;color:var(--ink-3);text-align:center}
+.form__done{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:rgba(0,113,227,.06);color:var(--ink);font-size:14px}
+.form__done.is-on{display:block}
+
+/* ---------- Footer, with footnotes ---------- */
+
+/* reveals: a short rise and fade, the way product pages do it */
+.js [data-anim]{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+.js [data-anim].in{opacity:1;transform:none}
+
+@media (max-width:1068px){
+  .lu__grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(220px,40vw);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px}
+  .lu__grid::-webkit-scrollbar{display:none}
+  .lu__col{scroll-snap-align:start}
+}
+@media (max-width:833px){
+  .ln__menu{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px var(--pad) 14px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);font-size:17px;color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.1);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+  .ln__menu a{padding:12px 0;border-bottom:1px solid #e8e8ed}
+  .ln__menu a:last-child{border-bottom:0}
+  .ln.is-open .ln__menu{visibility:visible;opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+  .ln__chev{display:grid}
+  .gal__item{aspect-ratio:4/5}
+  .gal__item img{object-position:var(--op-m,var(--op,50% 50%))}
+  .hm__card img{object-position:34% 50%}
+  .r3d{--k:.72;padding:22% 4% 10%}
+  .px__stick{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:stretch;gap:0;padding-top:calc(var(--ln) + 20px)}
+  .px__steps li{padding:9px 0 9px 18px}
+  .px__steps li::before{top:9px;bottom:9px}
+  .px__steps h3{font-size:18px}
+  .px__steps p{font-size:15px}
+  .lam-scene{--S:min(56vw,30svh,320px);height:auto;overflow:hidden}
+  .lab{display:none}
+  .specs,.feats3,.order__grid{grid-template-columns:1fr}
+  .spec{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .spec span{margin-top:0;text-align:right}
+  .bento{grid-template-columns:1fr}
+  .tile--wide,.tile--full{grid-column:auto}
+  .tile{min-height:260px}
+  .tile--photo{min-height:380px}
+  .stds{grid-template-columns:1fr;gap:14px;margin-top:22px}
+  .pc__in{aspect-ratio:4/5}
+  .pc__in img{object-position:30% 50%}
+  .fgrid{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .hero__sub{font-size:17px}
+  .lu__grid{grid-auto-columns:minmax(210px,64vw)}
+}
+@media (prefers-reduced-motion:reduce){
+  .lu__img .bd{animation:none}
+  .js [data-anim]{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html" aria-current="page">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html" aria-current="page">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
+
+<nav class="ln" id="ln" aria-label="Hanewood">
+  <div class="ln__in">
+    <a class="ln__title" href="#top" data-go>Hanewood</a>
+    <div class="ln__menu" id="lnMenu">
+      <a href="#range" data-go>The range</a>
+      <a href="#h32" data-go>H3.2 plywood</a>
+      <a href="#plywood" data-go>How it's made</a>
+      <a href="#lvl" data-go>LVL</a>
+      <a href="#supply" data-go>Supply</a>
+    </div>
+    <div class="ln__end">
+      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
+      <a class="pill" href="#pricing" data-go>Get pricing</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <!-- ================= Hero ================= -->
+  <section class="hero" aria-label="Hanewood">
+    <h1 class="hero__title" data-in>Hanewood</h1>
+    <p class="hero__tag t-grad" data-in>From board to beam.</p>
+    <p class="hero__sub" data-in>MDF, HDF, plywood, H3.2 radiata pine plywood and LVL. Stocked deep in Christchurch and priced for bulk.</p>
+    <div class="ctas" data-in>
+      <a class="btn" href="#pricing" data-go>Get bulk pricing</a>
+      <a class="more" href="#range" data-go><span>Explore the range</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+    </div>
+  </section>
+
+  <section class="hm" id="hm" aria-label="Loaded in Christchurch, delivered nationwide">
+    <div class="hm__stick">
+      <div class="hm__card" id="hmCard">
+        <img id="hmImg" src="stills/hanewood/truck.webp" width="1672" height="941" alt="A Hanes Distribution truck and trailer being loaded with packs of plywood by forklift at sunrise" fetchpriority="high" decoding="async">
+        <div class="hm__shade" id="hmShade"></div>
+        <div class="hm__cap" id="hmCap">
+          <p class="hm__eyebrow">Hanewood, from Hanes Distribution</p>
+          <p class="hm__line">Loaded in Christchurch.<br>Delivered nationwide.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Highlights ================= -->
+  <section class="hl" id="highlights" aria-label="Highlights">
+    <div class="wrap wrap--wide"><h2 class="t-head" data-anim>Get the highlights.</h2></div>
+    <div class="gal" id="gal" data-lenis-prevent-horizontal tabindex="0" role="region" aria-roledescription="carousel" aria-label="Hanewood highlights">
+      <figure class="gal__item is-on" aria-label="1 of 4"><img src="stills/hanewood/stack.webp" width="1254" height="1254" alt="A pack of H3.2 radiata pine plywood" loading="lazy" decoding="async" style="--op:60% 56%;--op-m:74% 56%"><figcaption class="gal__cap">H3.2 radiata pine plywood, made for outside.</figcaption></figure>
+      <figure class="gal__item gal__item--range" aria-label="2 of 4">
+        <div class="r3d" aria-hidden="true">
+          <div class="r3d__it"><div class="bd bd--mdf" style="--bh:14px"><i class="t"></i><i class="f"></i><i class="l"></i></div><span>MDF</span></div>
+          <div class="r3d__it"><div class="bd bd--hdf" style="--bh:8px"><i class="t"></i><i class="f"></i><i class="l"></i></div><span>HDF</span></div>
+          <div class="r3d__it"><div class="bd bd--ply" style="--bh:15px"><i class="t"></i><i class="f"></i><i class="l"></i></div><span>Plywood</span></div>
+          <div class="r3d__it"><div class="bd bd--h32" style="--bh:16px"><i class="t"><b>H3.2</b></i><i class="f"></i><i class="l"></i></div><span>H3.2 plywood</span></div>
+          <div class="r3d__it"><div class="bd bd--lvl" style="--bw:170px;--bd:40px;--bh:32px"><i class="t"></i><i class="f"></i><i class="l"></i></div><span>LVL</span></div>
+        </div>
+        <figcaption class="gal__cap">Five product lines. One supplier.</figcaption>
+      </figure>
+      <figure class="gal__item" aria-label="3 of 4"><img src="stills/hanewood/lvl.webp" width="1672" height="941" alt="Builders guide an LVL beam onto its posts on a timber-framed house above a lake" loading="lazy" decoding="async" style="--op:40% 50%;--op-m:30% 50%"><figcaption class="gal__cap">LVL for beams, lintels and headers.</figcaption></figure>
+      <figure class="gal__item" aria-label="4 of 4"><img src="stills/hanewood/yard.webp" width="1672" height="941" alt="A forklift carries a pack of plywood through a warehouse stacked with sheet packs" loading="lazy" decoding="async" style="--op:62% 55%;--op-m:44% 55%"><figcaption class="gal__cap">Stocked deep in our Christchurch warehouse.</figcaption></figure>
+    </div>
+    <div class="gal__ctl">
+      <div class="dots" id="dots">
+        <button class="dot is-on" type="button" aria-label="Show highlight 1 of 4" aria-current="true"><i></i></button>
+        <button class="dot" type="button" aria-label="Show highlight 2 of 4"><i></i></button>
+        <button class="dot" type="button" aria-label="Show highlight 3 of 4"><i></i></button>
+        <button class="dot" type="button" aria-label="Show highlight 4 of 4"><i></i></button>
+      </div>
+      <button class="gal__play" id="galPlay" type="button" aria-label="Pause the highlights"><svg class="i-pause" viewBox="0 0 18 18" fill="currentColor"><rect x="4" y="3" width="3.2" height="12" rx="1"/><rect x="10.8" y="3" width="3.2" height="12" rx="1"/></svg><svg class="i-play" viewBox="0 0 18 18" fill="currentColor"><path d="M5.5 3.2v11.6c0 .6.7 1 1.2.7l9-5.8c.5-.3.5-1 0-1.4l-9-5.8c-.5-.3-1.2.1-1.2.7Z"/></svg></button>
+    </div>
+  </section>
+
+  <!-- ================= The statement ================= -->
+  <section class="lit" aria-label="Hanewood in brief">
+    <p id="lit">Hanewood brings MDF, HDF, plywood, H3.2 radiata pine plywood and LVL under one roof. Stocked deep in Christchurch. Loaded by the pack. Delivered right across New Zealand, at bulk pricing built around what you sell.</p>
+  </section>
+
+  <!-- ================= The range ================= -->
+  <section class="lu" id="range" aria-label="The range">
+    <div class="wrap center"><h2 class="t-head" data-anim>Which board is right<br>for the job?</h2></div>
+    <div class="lu__grid" data-lenis-prevent-horizontal>
+      <article class="lu__col" data-anim>
+        <div class="lu__img" aria-hidden="true"><div class="bd bd--mdf"><i class="t"></i><i class="f"></i><i class="l"></i></div></div>
+        <h3 class="lu__name">MDF</h3>
+        <p class="lu__sub">Medium-density fibreboard</p>
+        <a class="more" href="#pricing" data-go data-interest="MDF"><span>Get pricing</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        <ul class="lu__rows">
+          <li><svg viewBox="0 0 30 30" fill="currentColor"><circle cx="8" cy="8" r="1.6"/><circle cx="15" cy="8" r="1.6"/><circle cx="22" cy="8" r="1.6"/><circle cx="8" cy="15" r="1.6"/><circle cx="15" cy="15" r="1.6"/><circle cx="22" cy="15" r="1.6"/><circle cx="8" cy="22" r="1.6"/><circle cx="15" cy="22" r="1.6"/><circle cx="22" cy="22" r="1.6"/></svg><p>Fine wood fibre, pressed flat</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 4.5l2.6 7.9 7.9 2.6-7.9 2.6L15 25.5l-2.6-7.9L4.5 15l7.9-2.6z"/></svg><p>A smooth face that machines and paints cleanly</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="20" height="19" rx="2"/><path d="M5 15.5h20M15 6v19M11.5 11h0M18.5 11h0M11.5 20h0M18.5 20h0" stroke-linecap="round" stroke-width="2.2"/></svg><p>Joinery, cabinetry, shelving and furniture</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 14 15 5.5 25 14M8 12v12.5h14V12"/><path d="M13 24.5v-6h4v6"/></svg><p><b>Interior</b></p></li>
+        </ul>
+      </article>
+      <article class="lu__col" data-anim>
+        <div class="lu__img" aria-hidden="true"><div class="bd bd--hdf"><i class="t"></i><i class="f"></i><i class="l"></i></div></div>
+        <h3 class="lu__name">HDF</h3>
+        <p class="lu__sub">High-density fibreboard</p>
+        <a class="more" href="#pricing" data-go data-interest="HDF"><span>Get pricing</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        <ul class="lu__rows">
+          <li><svg viewBox="0 0 30 30" fill="currentColor"><circle cx="7" cy="7" r="1.5"/><circle cx="12.3" cy="7" r="1.5"/><circle cx="17.6" cy="7" r="1.5"/><circle cx="23" cy="7" r="1.5"/><circle cx="7" cy="12.3" r="1.5"/><circle cx="12.3" cy="12.3" r="1.5"/><circle cx="17.6" cy="12.3" r="1.5"/><circle cx="23" cy="12.3" r="1.5"/><circle cx="7" cy="17.6" r="1.5"/><circle cx="12.3" cy="17.6" r="1.5"/><circle cx="17.6" cy="17.6" r="1.5"/><circle cx="23" cy="17.6" r="1.5"/><circle cx="7" cy="23" r="1.5"/><circle cx="12.3" cy="23" r="1.5"/><circle cx="17.6" cy="23" r="1.5"/><circle cx="23" cy="23" r="1.5"/></svg><p>Wood fibre, pressed denser</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 4.5l2.6 7.9 7.9 2.6-7.9 2.6L15 25.5l-2.6-7.9L4.5 15l7.9-2.6z"/></svg><p>Hard, thin and stable</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="20" height="19" rx="2"/><path d="M5 15.5h20M15 6v19M11.5 11h0M18.5 11h0M11.5 20h0M18.5 20h0" stroke-linecap="round" stroke-width="2.2"/></svg><p>Cabinet backs, drawer bases and door skins</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 14 15 5.5 25 14M8 12v12.5h14V12"/><path d="M13 24.5v-6h4v6"/></svg><p><b>Interior</b></p></li>
+        </ul>
+      </article>
+      <article class="lu__col" data-anim>
+        <div class="lu__img" aria-hidden="true"><div class="bd bd--ply"><i class="t"></i><i class="f"></i><i class="l"></i></div></div>
+        <h3 class="lu__name">Plywood</h3>
+        <p class="lu__sub">Cross-laminated veneers</p>
+        <a class="more" href="#pricing" data-go data-interest="Plywood"><span>Get pricing</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        <ul class="lu__rows">
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 5 26 10.5 15 16 4 10.5z"/><path d="M4 15l11 5.5L26 15M4 19.5 15 25l11-5.5"/></svg><p>Thin veneers, each turned across the last</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 4.5l2.6 7.9 7.9 2.6-7.9 2.6L15 25.5l-2.6-7.9L4.5 15l7.9-2.6z"/></svg><p>Strong both ways, and holds its fixings</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="20" height="19" rx="2"/><path d="M5 15.5h20M15 6v19M11.5 11h0M18.5 11h0M11.5 20h0M18.5 20h0" stroke-linecap="round" stroke-width="2.2"/></svg><p>Fit-out, furniture and general building</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 14 15 5.5 25 14M8 12v12.5h14V12"/><path d="M13 24.5v-6h4v6"/></svg><p><b>Interior</b></p></li>
+        </ul>
+      </article>
+      <article class="lu__col" data-anim>
+        <div class="lu__img" aria-hidden="true"><div class="bd bd--h32"><i class="t"><b>H3.2</b></i><i class="f"></i><i class="l"></i></div></div>
+        <h3 class="lu__name">H3.2 plywood</h3>
+        <p class="lu__sub">Radiata pine plywood, treated</p>
+        <a class="more" href="#pricing" data-go data-interest="H3.2 radiata pine plywood"><span>Get pricing</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        <ul class="lu__rows">
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 5 26 10.5 15 16 4 10.5z"/><path d="M4 15l11 5.5L26 15M4 19.5 15 25l11-5.5"/></svg><p>Radiata pine veneers, cross-laminated</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 4.5c-4 5-6.5 8.6-6.5 12a6.5 6.5 0 0 0 13 0c0-3.4-2.5-7-6.5-12z"/></svg><p>Treated to H3.2 to face the weather</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="20" height="19" rx="2"/><path d="M5 15.5h20M15 6v19M11.5 11h0M18.5 11h0M11.5 20h0M18.5 20h0" stroke-linecap="round" stroke-width="2.2"/></svg><p>Cladding, soffits, fences and outdoor jobs</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="15" cy="15" r="5"/><path d="M15 3.5v3M15 23.5v3M3.5 15h3M23.5 15h3M6.9 6.9l2.1 2.1M21 21l2.1 2.1M6.9 23.1 9 21M21 9l2.1-2.1"/></svg><p><b>Exterior, above ground</b><br>Made to AS/NZS 2269<sup><a href="#fn1">1</a></sup></p></li>
+        </ul>
+      </article>
+      <article class="lu__col" data-anim>
+        <div class="lu__img" aria-hidden="true"><div class="bd bd--lvl"><i class="t"></i><i class="f"></i><i class="l"></i></div></div>
+        <h3 class="lu__name">LVL</h3>
+        <p class="lu__sub">Laminated veneer lumber</p>
+        <a class="more" href="#pricing" data-go data-interest="LVL"><span>Get pricing</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        <ul class="lu__rows">
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3.5 11h23M3.5 15h23M3.5 19h23"/><rect x="3.5" y="8" width="23" height="14" rx="1.5"/></svg><p>Veneers laid along its length</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M15 4.5l2.6 7.9 7.9 2.6-7.9 2.6L15 25.5l-2.6-7.9L4.5 15l7.9-2.6z"/></svg><p>Long, straight and consistent</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5" y="6" width="20" height="19" rx="2"/><path d="M5 15.5h20M15 6v19M11.5 11h0M18.5 11h0M11.5 20h0M18.5 20h0" stroke-linecap="round" stroke-width="2.2"/></svg><p>Beams, lintels and headers</p></li>
+          <li><svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 9h22M7 9v16M23 9v16M4 25h6M20 25h6"/></svg><p><b>Structural</b><br>Made to AS/NZS 4357<sup><a href="#fn1">1</a></sup></p></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= H3.2 ================= -->
+  <section class="h32" id="h32" aria-label="H3.2 radiata pine plywood">
+    <div class="wrap center">
+      <p class="h32__eyebrow" data-anim>H3.2 radiata pine plywood</p>
+      <p class="h32__big" data-anim aria-hidden="true">H3.2</p>
+      <h2 class="h32__tag" data-anim>Made for outside.</h2>
+      <p class="h32__p" data-anim>Radiata pine plywood, <b>treated to hazard class H3.2</b> for exterior use above ground, where timber faces the weather. <b>Structural plywood, made to AS/NZS&nbsp;2269.</b><sup><a href="#fn1">1</a></sup></p>
+    </div>
+    <div class="specs">
+      <div class="spec" data-anim><b>Exterior</b><span>Use above ground</span></div>
+      <div class="spec" data-anim><b>Radiata pine</b><span>Veneers, cross-laminated</span></div>
+      <div class="spec" data-anim><b>AS/NZS 2269</b><span>Structural plywood</span></div>
+    </div>
+    <div class="uses" data-anim><span>Cladding</span><span>Soffits</span><span>Fences</span><span>Boxing and outdoor projects</span></div>
+  </section>
+
+  <!-- ================= How it's made ================= -->
+  <section class="ply" id="plywood" aria-label="How plywood and LVL are made">
+    <div class="wrap center">
+      <p class="eyebrow t-grad" data-anim>How it's made</p>
+      <h2 class="t-head" data-anim>Strength, crossed.</h2>
+      <p class="t-intro" data-anim>Plywood is made from <b>thin veneers of timber</b>, laid with the grain of each layer <b>running across the one below</b>, then <b>bonded into one solid sheet</b>. It's what keeps a sheet stable, stops it splitting and makes it strong in both directions.</p>
+    </div>
+    <div class="px" id="px">
+      <div class="px__stick">
+        <ol class="px__steps" id="pxSteps">
+          <li class="is-on"><h3>Peeled into veneers.</h3><p>Logs are peeled into thin, continuous sheets of veneer.</p></li>
+          <li><h3>Turned 90°, layer by layer.</h3><p>Every other veneer is laid across the grain of the one below it.</p></li>
+          <li><h3>Bonded into one sheet.</h3><p>The veneers are glued and pressed under heat and pressure into a single panel.</p></li>
+          <li><h3>Line them up, and it's LVL.</h3><p>Lay every veneer the same way and you get laminated veneer lumber: long, straight and strong along its length.</p></li>
+        </ol>
+        <div class="lam-scene" id="lamScene" aria-hidden="true">
+          <div class="lam-shadow" id="lamShadow"></div>
+          <div class="lam-shake"><div class="lam" id="lam"><div class="lam-in" id="lamIn"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LVL ================= -->
+  <section class="sec lvl" id="lvl" aria-label="LVL">
+    <div class="wrap center">
+      <p class="eyebrow t-grad" data-anim>LVL</p>
+      <h2 class="t-head" data-anim>Beams you can build on.</h2>
+      <p class="t-intro" data-anim>Laminated veneer lumber lays every veneer <b>along its length</b>, so each beam comes out <b>long, straight and consistent</b>, from one length to the next. <b>Made to AS/NZS&nbsp;4357.</b><sup><a href="#fn1">1</a></sup></p>
+    </div>
+    <div class="pc" data-anim><div class="pc__in" data-zoom><img src="stills/hanewood/lvl.webp" width="1672" height="941" alt="Builders guide an LVL beam, lifted by crane, onto its posts on a timber-framed house above a lake" loading="lazy" decoding="async"></div></div>
+    <div class="feats3">
+      <div class="feat" data-anim><svg viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="13" width="32" height="12" rx="2"/><path d="M8 13v4M13 13v6M18 13v4M23 13v6M28 13v4"/></svg><h3>Long and straight.</h3><p>Veneers laminated along the length make LVL less prone to twist and bow than sawn timber.</p></div>
+      <div class="feat" data-anim><svg viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="5" y="7" width="28" height="6" rx="1.5"/><rect x="5" y="16" width="28" height="6" rx="1.5"/><rect x="5" y="25" width="28" height="6" rx="1.5"/></svg><h3>Consistent.</h3><p>Engineered from veneers, so one length performs like the next.</p></div>
+      <div class="feat" data-anim><svg viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 12h30M8 12v20M30 12v20M4 32h8M26 32h8"/><path d="M12 8h14" stroke-linecap="round"/></svg><h3>Made for spans.</h3><p>For beams, lintels and headers across wide openings.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= Why stock Hanewood ================= -->
+  <section class="sec why" id="supply" aria-label="Why stock Hanewood">
+    <div class="wrap wrap--wide"><h2 class="t-head" data-anim>Why stock Hanewood.</h2></div>
+    <div class="bento">
+      <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="stills/hanewood/yard.webp" width="1672" height="941" alt="Packs of plywood stacked high in a warehouse, with a forklift at work" loading="lazy" decoding="async" style="object-position:60% 60%"></div><div class="tile__cap"><h3>Stocked deep in Christchurch.</h3><p>Full packs of board, plywood and LVL, ready when your yard needs them.</p></div></div>
+      <div class="tile" data-anim><p class="tile__big t-grad">5</p><h3>Product lines, one supplier.</h3><p class="tile__sm">MDF · HDF · Plywood · H3.2 plywood · LVL</p></div>
+      <div class="tile tile--price" data-anim><h3>Bulk<br>pricing.</h3><p>Built around your volumes, not a price list.</p></div>
+      <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="stills/hanewood/truck.webp" width="1672" height="941" alt="A Hanes Distribution truck and trailer being loaded with plywood at sunrise" loading="lazy" decoding="async" style="object-position:36% 55%"></div><div class="tile__cap"><h3>Delivered by the truckload.</h3><p>Loaded at our Christchurch dock and delivered right across New Zealand.</p></div></div>
+      <div class="tile tile--full" data-anim><h3>Made to the standard.</h3><div class="stds"><span><b>AS/NZS 2269</b>Structural plywood</span><span><b>AS/NZS 4357</b>Structural LVL</span><span><b>H3.2</b>Exterior, above ground</span></div></div>
+    </div>
+  </section>
+
+  <!-- ================= Ordering ================= -->
+  <section class="sec order" aria-label="Ordering">
+    <div class="wrap center"><h2 class="t-head" data-anim>Ordering is simple.</h2></div>
+    <div class="order__grid">
+      <div class="ocard" data-anim><span class="ocard__n t-grad">1</span><h3>Tell us what you move.</h3><p>Your products, sizes and rough volumes.</p></div>
+      <div class="ocard" data-anim><span class="ocard__n t-grad">2</span><h3>Get your bulk pricing.</h3><p>Pricing built around your volumes, not a price list.</p></div>
+      <div class="ocard" data-anim><span class="ocard__n t-grad">3</span><h3>We load and deliver.</h3><p>Full packs, loaded in Christchurch and delivered nationwide.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= Bulk pricing ================= -->
+  <section class="sec price" id="pricing" aria-label="Get bulk pricing">
+    <div class="wrap center">
+      <h2 class="t-head" data-anim>Get bulk pricing.</h2>
+      <p class="t-intro" data-anim>For <b>timber merchants, retailers and builders' suppliers.</b> Tell us what you move, and we'll come back with pricing built around your volumes.</p>
+    </div>
+    <form class="form" id="priceForm" data-anim novalidate>
+      <div class="fgrid">
+        <div class="fl"><input id="fBiz" name="business" placeholder=" " required autocomplete="organization"><label for="fBiz">Business name</label></div>
+        <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
+        <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
+        <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
+        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Timber merchant</option><option>Retailer</option><option>Builders' merchant</option><option>Joinery or cabinet maker</option><option>Builder</option><option>Other</option></select><label for="fType">Your business</label></div>
+        <div class="fl fl--sel"><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select><label for="fRegion">Region</label></div>
+        <fieldset class="fset"><legend>Interested in</legend><div class="chips"><label><input type="checkbox" name="interest" value="MDF"><span>MDF</span></label><label><input type="checkbox" name="interest" value="HDF"><span>HDF</span></label><label><input type="checkbox" name="interest" value="Plywood"><span>Plywood</span></label><label><input type="checkbox" name="interest" value="H3.2 radiata pine plywood" checked><span>H3.2 plywood</span></label><label><input type="checkbox" name="interest" value="LVL"><span>LVL</span></label></div></fieldset>
+        <div class="fl full"><textarea id="fMsg" name="message" placeholder=" "></textarea><label for="fMsg">Products, sizes and volumes</label></div>
+      </div>
+      <button class="btn" type="submit">Request pricing</button>
+      <p class="form__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+      <p class="form__done" id="fDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz and we'll take it from there.</p>
+    </form>
+  </section>
+</main>
+
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__note"><ol class="gf__fn">
+      <li id="fn1">Structural plywood made to AS/NZS 2269. LVL made to AS/NZS 4357. H3.2 radiata pine plywood is treated to hazard class H3.2 for exterior use above ground.</li>
+      <li>Products, sizes and pricing are available on request and depend on stock.</li>
+    </ol><p>Hanewood is a <a href="index.html">Hanes Distribution</a> brand, supplied to merchants and retailers.</p></div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html" aria-current="page">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const root = document.documentElement;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') { root.classList.remove('js'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = () => innerWidth < 834;
+
+  /* ---------- Smooth scroll, and in-page links that land below the nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .11, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  }
+  // the target is worked out here and handed over as a number, so every section lands just below the nav
+  const go = id => {
+    const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
+    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 52)) : 0;
+    if (lenis) lenis.scrollTo(y, { duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  /* ---------- Local nav: frosted with a hairline once you scroll; a chevron opens the sections on small screens ---------- */
+  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
+  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
+  chev.addEventListener('click', () => setOpen(!open));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  ScrollTrigger.create({ start: 2, end: 'max', onToggle: s => ln.classList.toggle('is-stuck', s.isActive) });
+  // "Get pricing" under a product picks that product in the form
+  const pick = v => $$('#priceForm input[name="interest"]').forEach(c => { c.checked = c.value === v; });
+  $$('[data-go]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setOpen(false); if (a.dataset.interest) pick(a.dataset.interest); go(id);
+  }));
+
+  /* ---------- Reveals: each block rises and fades in once, with a short stagger among its siblings ---------- */
+  $$('[data-anim]').forEach(el => {
+    const sibs = [...el.parentElement.children].filter(c => c.hasAttribute('data-anim')), i = sibs.indexOf(el);
+    if (i > 0) el.style.setProperty('--d', `${(Math.min(i, 5) * .08).toFixed(2)}s`);
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  $$('[data-anim]').forEach(el => io.observe(el));
+
+  /* =========================================================
+     HERO: the name and the line rise in; the photo below starts as a rounded card, grows to fill the screen as you
+     scroll, zooms gently out, and then the caption comes up.
+     ========================================================= */
+  const card = $('#hmCard');
+  const s0 = () => Math.min(1260, innerWidth - (small() ? 32 : 88)) / innerWidth;
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hm', start: 'top bottom', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } })
+    .fromTo(card, { scale: () => s0(), borderRadius: () => 28 / s0() }, { scale: 1, borderRadius: 0, duration: .6 }, 0)
+    .fromTo('#hmImg', { scale: 1.24 }, { scale: 1, duration: 1 }, 0)
+    .fromTo('#hmShade', { opacity: 0 }, { opacity: 1, duration: .16 }, .66)
+    .fromTo('#hmCap > *', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .16, stagger: .06, ease: 'power2.out' }, .7);
+  const heroIn = () => {
+    gsap.to('.hero [data-in]', { opacity: 1, y: 0, duration: 1.2, stagger: .09, ease: 'power3.out' });
+    gsap.to('.hm__stick', { opacity: 1, duration: 1.4, delay: .35, ease: 'power2.out' });
+  };
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 700))]).then(heroIn);
+
+  /* =========================================================
+     HIGHLIGHTS: a gallery that advances on its own while it's on screen. The active dot stretches into a pill and
+     fills as the slide plays; swiping or scrolling it by hand pauses it, and the button plays or pauses.
+     ========================================================= */
+  const gal = $('#gal'), items = $$('.gal__item'), dots = $$('#dots .dot'), play = $('#galPlay'), DUR = 5500;
+  let gi = 0, elapsed = 0, playing = !reduce, galSeen = false, snapT = 0;
+  const setDot = i => {
+    dots.forEach((d, k) => { d.classList.toggle('is-on', k === i); if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); if (k !== i) d.style.setProperty('--p', 0); });
+    items.forEach((it, k) => it.classList.toggle('is-on', k === i));
+  };
+  const centreOf = i => items[i].offsetLeft - (gal.clientWidth - items[i].clientWidth) / 2;
+  const goTo = (i, smooth = true) => { gi = i; elapsed = 0; setDot(i); gal.scrollTo({ left: centreOf(i), behavior: smooth && !reduce ? 'smooth' : 'auto' }); };
+  const setPlaying = v => { playing = v; play.classList.toggle('is-paused', !v); play.setAttribute('aria-label', v ? 'Pause the highlights' : 'Play the highlights'); };
+  play.addEventListener('click', () => { if (!playing && gi === items.length - 1 && elapsed >= DUR) goTo(0); setPlaying(!playing); });
+  dots.forEach((d, i) => d.addEventListener('click', () => { goTo(i); }));
+  // a hand on the gallery pauses it
+  gal.addEventListener('pointerdown', () => setPlaying(false), { passive: true });
+  gal.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setPlaying(false); }, { passive: true });
+  gal.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setPlaying(false); goTo(Math.max(0, Math.min(items.length - 1, gi + (e.key === 'ArrowRight' ? 1 : -1)))); } });
+  // the slide nearest the middle is the active one
+  gal.addEventListener('scroll', () => { cancelAnimationFrame(snapT); snapT = requestAnimationFrame(() => {
+    const mid = gal.scrollLeft + gal.clientWidth / 2; let best = 0, bd = Infinity;
+    items.forEach((it, k) => { const d = Math.abs(it.offsetLeft + it.clientWidth / 2 - mid); if (d < bd) { bd = d; best = k; } });
+    if (best !== gi) { gi = best; elapsed = 0; setDot(best); }
+  }); }, { passive: true });
+  new IntersectionObserver(es => { galSeen = es[0].isIntersecting; }, { threshold: .45 }).observe(gal);
+  gsap.ticker.add((t, dt) => {
+    if (!playing || !galSeen) return;
+    elapsed += Math.min(dt, 60);
+    dots[gi].style.setProperty('--p', Math.min(1, elapsed / DUR).toFixed(3));
+    if (elapsed >= DUR) { if (gi < items.length - 1) goTo(gi + 1); else { elapsed = DUR; setPlaying(false); } }
+  });
+  if (reduce) setPlaying(false);
+
+  /* ---------- The statement: each word lights up as you scroll down to it ---------- */
+  const lit = $('#lit');
+  lit.innerHTML = lit.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
+  const lw = $$('#lit .w'); let litN = -1;
+  if (reduce) lw.forEach(w => w.classList.add('on'));
+  else ScrollTrigger.create({ trigger: '#lit', start: 'top 80%', end: 'bottom 42%', onUpdate: s => {
+    const n = Math.round(s.progress * lw.length); if (n === litN) return; litN = n;
+    lw.forEach((w, i) => w.classList.toggle('on', i < n));
+  } });
+
+  /* ---------- The range: the boards turn a little as the row passes ---------- */
+  gsap.fromTo('.lu .bd', { '--rz': (i, el) => el.classList.contains('bd--lvl') ? '-44deg' : '-52deg' }, { '--rz': (i, el) => el.classList.contains('bd--lvl') ? '-20deg' : '-26deg', ease: 'none',
+    scrollTrigger: { trigger: '.lu__grid', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+  /* =========================================================
+     HOW IT'S MADE: a plywood sample in 3D. Veneers settle into place with a gap between each, the cross bands turn
+     90°, the lot is pressed into one sheet, and finally every veneer is lined up and drawn out into a beam: LVL.
+     ========================================================= */
+  const lamScene = $('#lamScene'), lamIn = $('#lamIn'), NV = 7;
+  const LAB = { 6: 'Face veneer', 5: 'Cross band', 0: 'Back veneer' };
+  lamIn.innerHTML = Array.from({ length: NV }, (_, i) =>
+    `<div class="lay"><div class="ven"><b class="face" style="background-position:${(i * 29 + 7) % 100}% 0"></b><i class="eb"></i><i class="et"></i><i class="el"></i><i class="er"></i></div>${LAB[i] ? `<b class="lab">${LAB[i]}</b>` : ''}</div>`).join('');
+  const lays = $$('#lamIn .lay'), cross = lays.filter((_, i) => i % 2).map(l => l.firstElementChild), labs = $$('#lamIn .lab'), steps = $$('#pxSteps li'), shadow = $('#lamShadow');
+  const L = { drop: 0, spread: 1, spin: 0, lab: 0, beam: 0, rx: 58, rz: -38 };
+  let T = 18, GAP = 48, DROP = 900, BEAM = .72, step = 0;
+  const renderLam = () => {
+    for (let i = 0; i < NV; i++) {
+      const q = Math.min(1, Math.max(0, L.drop * (1 + (NV - 1) * .22) - i * .22)), e = 1 - Math.pow(1 - q, 3);
+      const st = lays[i].style;
+      st.visibility = q > 0 ? 'visible' : 'hidden';
+      st.transform = `translate3d(0,0,${(i * T + L.spread * i * GAP + (1 - e) * DROP).toFixed(1)}px)`;
+    }
+    const spin = `rotateZ(${L.spin.toFixed(2)}deg)`; cross.forEach(v => { v.style.transform = spin; });
+    lamScene.style.setProperty('--rx', `${L.rx.toFixed(2)}deg`); lamScene.style.setProperty('--rz', `${L.rz.toFixed(2)}deg`);
+    labs.forEach(b => { b.style.opacity = L.lab.toFixed(3); });
+    lamIn.style.transform = `scale3d(${(1 + L.beam * BEAM).toFixed(4)},${(1 - L.beam * .56).toFixed(4)},1)`;
+    shadow.style.transform = `scale(${(1 + L.beam * .55).toFixed(3)},${(1 - L.beam * .3).toFixed(3)})`;
+    shadow.style.opacity = Math.min(1, L.drop * 1.4).toFixed(3);
+    const t = LT.time(), k = t < 1.6 ? 0 : t < 2.85 ? 1 : t < 3.95 ? 2 : 3;
+    if (k !== step) { step = k; steps.forEach((li, i) => li.classList.toggle('is-on', i === k)); }
+  };
+  const sizeLam = () => {
+    const S = $('#lam').offsetWidth; T = S * .045; GAP = S * (small() ? .09 : .1); DROP = small() ? 760 : 900; BEAM = small() ? .42 : .72;
+    lamScene.style.setProperty('--t', `${(T + .6).toFixed(1)}px`);
+    renderLam();
+  };
+  const LT = gsap.timeline({ defaults: { ease: 'none' }, onUpdate: renderLam, scrollTrigger: { trigger: '#px', start: 'top top', end: 'bottom bottom', scrub: true } });
+  LT.to(L, { drop: 1, duration: 1.4 }, 0)
+    .to(L, { lab: 1, duration: .3 }, 1.1)
+    .to(L, { rz: -30, rx: 56, duration: 5 }, 0)
+    .to(L, { spin: 90, duration: 1, ease: 'power2.inOut' }, 1.7)
+    .to(L, { lab: 0, duration: .3 }, 2.75)
+    .to(L, { spread: 0, duration: .8, ease: 'power3.inOut' }, 2.9)
+    .to(L, { spread: .4, duration: .5, ease: 'power2.out' }, 4)
+    .to(L, { spin: 180, duration: .7, ease: 'power2.inOut' }, 4.3)
+    .to(L, { spread: 0, duration: .5, ease: 'power2.inOut' }, 5)
+    .to(L, { beam: 1, rz: -22, rx: 60, duration: .9, ease: 'power2.inOut' }, 5.3)
+    .to({}, { duration: .5 }, 6.2);
+  sizeLam();
+
+  /* ---------- Photos settle as they arrive: a gentle zoom out ---------- */
+  $$('[data-zoom]').forEach(box => gsap.fromTo(box.querySelector('img'), { scale: 1.16 }, { scale: 1, ease: 'none',
+    scrollTrigger: { trigger: box, start: 'top bottom', end: 'top 20%', scrub: true } }));
+
+  /* ---------- Bulk pricing: the form writes the email for you ---------- */
+  const form = $('#priceForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const f = new FormData(form), interest = f.getAll('interest').join(', ') || 'Not specified';
+    const body = [
+      'Hanewood bulk pricing request', '',
+      `Business: ${f.get('business')}`, `Contact: ${f.get('name')}`, `Email: ${f.get('email')}`, `Phone: ${f.get('phone') || '-'}`,
+      `Business type: ${f.get('type')}`, `Region: ${f.get('region')}`, `Interested in: ${interest}`, '',
+      'Products, sizes and volumes:', f.get('message') || '-',
+    ].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Hanewood bulk pricing request: ' + f.get('business'))}&body=${encodeURIComponent(body)}`;
+    $('#fDone').classList.add('is-on');
+  });
+
+  let rsz = 0, lastW = innerWidth;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (innerWidth === lastW) return; lastW = innerWidth; // a phone's toolbar isn't a real resize
+    sizeLam(); goTo(gi, false); if (!small()) setOpen(false);
+  }); });
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+<script src="assets/site.js" defer></script>
+</body>
+</html>
