@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hanestone — Plasterboard for walls and ceilings</title>
-<meta name="description" content="Hanestone plasterboard for walls and ceilings, made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<title>Hanestone — Trusus gypsum board for walls and ceilings</title>
+<meta name="description" content="Hanestone Trusus gypsum board for walls and ceilings, an MBIE-recognised substitute for GIB® plasterboard. Stocked in Christchurch. Bulk orders only, for retailers and merchants.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hanes Distribution">
-<meta property="og:title" content="Hanestone — Plasterboard for walls and ceilings">
-<meta property="og:description" content="Hanestone plasterboard for walls and ceilings, made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<meta property="og:title" content="Hanestone — Trusus gypsum board for walls and ceilings">
+<meta property="og:description" content="Hanestone Trusus gypsum board for walls and ceilings, an MBIE-recognised substitute for GIB® plasterboard. Stocked in Christchurch. Bulk orders only, for retailers and merchants.">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="preload" as="image" href="stills/range/hanestone-1200.webp">
 <script>document.documentElement.classList.add('js')</script>
@@ -75,9 +75,10 @@ section{position:relative}
 
 /* ---------- Hero ---------- */
 .hero{padding:clamp(48px,8vh,88px) var(--pad) 0;text-align:center}
+.hero__eyebrow{margin-bottom:6px;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.6vw,21px);letter-spacing:-.01em;color:var(--ink-3)}
 .hero__title{font-family:var(--display);font-weight:600;font-size:clamp(60px,9.4vw,124px);line-height:1;letter-spacing:-.035em}
-.hero__tag{margin-top:clamp(10px,1.4vw,18px);font-family:var(--display);font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.08;letter-spacing:-.025em}
-.hero__sub{max-width:600px;margin:18px auto 0;color:var(--ink-2);font-size:clamp(17px,1.5vw,21px);line-height:1.38}
+.hero__tag{text-wrap:balance;margin-top:clamp(10px,1.4vw,18px);font-family:var(--display);font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.08;letter-spacing:-.025em}
+.hero__sub{max-width:640px;margin:18px auto 0;color:var(--ink-2);font-size:clamp(17px,1.5vw,21px);line-height:1.38}
 .ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 28px;margin-top:28px}
 .js .hero [data-in]{opacity:0;transform:translateY(24px)}
 .hc{max-width:var(--wide);margin:clamp(40px,6vh,64px) auto 0;padding:0 var(--pad)}
@@ -91,10 +92,22 @@ section{position:relative}
 .hc__cap p:last-child{text-wrap:balance;margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(28px,3.6vw,52px);line-height:1.06;letter-spacing:-.025em}
 
 /* ---------- The statement ---------- */
-.lit{padding:clamp(110px,15vw,200px) var(--pad)}
+.lit{padding:clamp(110px,15vw,200px) var(--pad) clamp(72px,9vw,120px)}
 .lit p{max-width:980px;margin:0 auto;font-family:var(--display);font-weight:600;font-size:clamp(30px,4.3vw,58px);line-height:1.12;letter-spacing:-.025em;text-wrap:pretty}
 .js .lit .w{color:rgba(29,29,31,.16);transition:color .45s var(--ease)}
 .js .lit .w.on{color:var(--ink)}
+
+/* ---------- At a glance ---------- */
+.facts{padding:0 var(--pad) clamp(96px,12vw,160px)}
+.facts__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,56px);max-width:var(--wrap);margin:0 auto}
+.fact{padding-top:24px;border-top:1px solid var(--line)}
+.fact__big{padding-bottom:.08em;font-family:var(--display);font-weight:700;font-size:clamp(44px,5vw,68px);line-height:1;letter-spacing:-.04em}
+.fact__big + p{max-width:290px;margin-top:12px;color:var(--ink-2)}
+.fact__big + p b{color:var(--ink);font-weight:600}
+sup{font-size:.6em;line-height:0;vertical-align:.75em;margin-left:1px}
+sup a{color:inherit}
+sup a:hover{color:var(--link)}
+.price__terms{margin-top:14px;font-size:14px;color:var(--ink-2)}
 
 /* ---------- Sheet after sheet: plasterboard drops into a stack, lines up, and is strapped into a pack ---------- */
 .made{background:var(--alt);padding-top:clamp(96px,12vw,160px)}
@@ -118,11 +131,12 @@ section{position:relative}
    painting that texture on every sheet as it falls costs frames */
 .sh b{position:absolute;inset:0;background:#ecebe5}
 .sh:last-child b{background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,255,255,0) 45%,rgba(0,0,0,.05)),radial-gradient(rgba(120,110,95,.1) .6px,rgba(0,0,0,0) 1.1px) 0 0/4px 4px,#ecebe5}
-.sh b span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--display);font-weight:600;font-size:calc(var(--S) * .09);letter-spacing:-.02em;color:rgba(52,73,94,.55)}
+.sh b span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;text-align:center;font-family:var(--display);font-weight:600;font-size:calc(var(--S) * .09);letter-spacing:-.02em;color:rgba(52,73,94,.55)}
 .sh b u{position:absolute;top:0;bottom:0;width:calc(var(--S) * .05);background:linear-gradient(90deg,#27394b,#3d5166 50%,#27394b);opacity:var(--strap)}
 .sh b u:nth-of-type(1){left:24%}
 .sh b u:nth-of-type(2){right:24%}
 .sh i{position:absolute;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.sh b small{display:block;margin-top:.35em;font-size:.3em;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
 /* the edges: white gypsum core between two paper liners */
 .sh .eb,.sh .et{left:0;width:100%;height:var(--t);background:linear-gradient(180deg,#d8d4ca 0 12%,#fbfaf7 12% 88%,#cfcbc0 88%)}
 .sh .eb{top:100%;transform-origin:50% 0;transform:rotateX(-90deg)}
@@ -193,6 +207,7 @@ section{position:relative}
 .js [data-anim].in{opacity:1;transform:none}
 
 @media (max-width:1068px){.uses{grid-template-columns:1fr 1fr}}
+@media (max-width:833px){.facts__grid{grid-template-columns:1fr;gap:28px}.fact__big + p{max-width:none}}
 @media (max-width:833px){
   .ln__menu{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px var(--pad) 14px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);font-size:17px;color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.1);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
   .ln__menu a{padding:12px 0;border-bottom:1px solid #e8e8ed}
@@ -248,9 +263,10 @@ section{position:relative}
 
 <main id="top">
   <section class="hero" aria-label="Hanestone">
+    <p class="hero__eyebrow" data-in>Trusus gypsum board</p>
     <h1 class="hero__title" data-in>Hanestone</h1>
     <p class="hero__tag t-grad" data-in>The same spec. Every sheet.</p>
-    <p class="hero__sub" data-in>Plasterboard for walls and ceilings, made on modern lines and stocked in Christchurch. Priced for bulk.</p>
+    <p class="hero__sub" data-in>Gypsum board for walls and ceilings, and an MBIE-recognised substitute for GIB&reg; plasterboard.<sup><a href="#fn1" data-go>1</a></sup> Stocked in Christchurch. Bulk orders only, for retailers and merchants.</p>
     <div class="ctas" data-in>
       <a class="btn" href="#pricing" data-go>Get bulk pricing</a>
       <a class="more" href="#made" data-go><span>See it stack up</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
@@ -262,7 +278,14 @@ section{position:relative}
   </div></div>
 
   <section class="lit" aria-label="Hanestone in brief">
-    <p id="lit">Hanestone is plasterboard for the walls and ceilings of New Zealand homes. Made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, and priced for merchants and retailers who buy by the pack.</p>
+    <p id="lit">Hanestone is Trusus gypsum board for the walls and ceilings of New Zealand homes. Made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, and sold in bulk to retailers and merchants.</p>
+  </section>
+  <section class="facts" aria-label="Hanestone at a glance">
+    <div class="facts__grid">
+      <div class="fact" data-anim><p class="fact__big t-grad">Trusus</p><p><b>Gypsum board</b> for walls and ceilings, made on modern lines.</p></div>
+      <div class="fact" data-anim><p class="fact__big t-grad">MBIE</p><p>Recognised as a <b>substitute for GIB&reg; plasterboard.</b><sup><a href="#fn1" data-go>1</a></sup></p></div>
+      <div class="fact" data-anim><p class="fact__big t-grad">Bulk only</p><p>Orders for <b>retailers and merchants.</b> Terms and conditions apply.<sup><a href="#fn2" data-go>2</a></sup></p></div>
+    </div>
   </section>
 
   <section class="made" id="made" aria-label="Sheet after sheet">
@@ -274,7 +297,7 @@ section{position:relative}
     <div class="px" id="px">
       <div class="px__stick">
         <ol class="px__steps" id="pxSteps">
-          <li class="is-on"><h3>Made on modern lines.</h3><p>Plasterboard for walls and ceilings, sheet after sheet.</p></li>
+          <li class="is-on"><h3>Made on modern lines.</h3><p>Trusus gypsum board for walls and ceilings, sheet after sheet.</p></li>
           <li><h3>The same spec, every sheet.</h3><p>Every sheet lines up with the last, edge to edge.</p></li>
           <li><h3>Stacked, strapped and ready.</h3><p>Packed for your yard and delivered right across New Zealand.</p></li>
         </ol>
@@ -303,7 +326,7 @@ section{position:relative}
     <div class="wrap wrap--wide"><h2 class="t-head" data-anim>Why stock Hanestone.</h2></div>
     <div class="bento">
       <div class="tile tile--wide" data-anim><p class="tile__big t-grad">The same spec.<br>Every sheet.</p><p>Made on modern lines, so what your customers bought last month is what they get this month.</p></div>
-      <div class="tile" data-anim><p class="tile__big">Bulk<br>pricing.</p><p>Built around your volumes, not a price list.</p></div>
+      <div class="tile" data-anim><p class="tile__big">Bulk<br>pricing.</p><p>Bulk orders only, for retailers and merchants. Built around your volumes, not a price list.</p></div>
       <div class="tile" data-anim><p class="tile__big t-grad">Stocked</p><p>Held in our Christchurch warehouse, ready when your yard needs it.</p></div>
       <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="stills/hanewood/truck.webp" width="1672" height="941" alt="A Hanes Distribution truck and trailer at the dock at sunrise" loading="lazy" decoding="async" style="object-position:36% 55%"></div><div class="tile__cap"><h3>Delivered by the truckload.</h3><p>Loaded at our Christchurch dock and delivered right across New Zealand.</p></div></div>
     </div>
@@ -321,7 +344,8 @@ section{position:relative}
   <section class="sec price" id="pricing" aria-label="Get bulk pricing">
     <div class="wrap center">
       <h2 class="t-head" data-anim>Get bulk pricing.</h2>
-      <p class="t-intro" data-anim>For <b>merchants, retailers and builders' suppliers.</b> Tell us what you move, and we'll come back with pricing built around your volumes.</p>
+      <p class="t-intro" data-anim><b>Bulk orders only, for retailers and merchants.</b> Tell us what you move, and we'll come back with pricing built around your volumes.</p>
+      <p class="price__terms" data-anim>Terms and conditions apply.</p>
     </div>
     <form class="form" id="priceForm" data-anim novalidate>
       <div class="fgrid">
@@ -329,7 +353,7 @@ section{position:relative}
         <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
         <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
         <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
-        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Builders' merchant</option><option>Retailer</option><option>Plasterer or fixer</option><option>Builder</option><option>Other</option></select><label for="fType">Your business</label></div>
+        <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Builders' merchant</option><option>Building supplies retailer</option><option>Hardware retailer</option><option>Other merchant or retailer</option></select><label for="fType">Your business</label></div>
         <div class="fl fl--sel"><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select><label for="fRegion">Region</label></div>
         <fieldset class="fset"><legend>For</legend><div class="chips"><label><input type="checkbox" name="interest" value="Walls" checked><span>Walls</span></label><label><input type="checkbox" name="interest" value="Ceilings" checked><span>Ceilings</span></label></div></fieldset>
         <div class="fl full"><textarea id="fMsg" name="message" placeholder=" "></textarea><label for="fMsg">Boards, sizes and volumes</label></div>
@@ -343,7 +367,10 @@ section{position:relative}
 
 <footer class="gf">
   <div class="gf__in">
-    <div class="gf__note">Hanestone is a <a href="index.html">Hanes Distribution</a> brand, supplied to merchants and retailers. Board types, sizes and pricing are available on request.</div>
+    <div class="gf__note"><ol class="gf__fn">
+      <li id="fn1">Hanestone Trusus gypsum board is recognised by MBIE as a substitute for GIB&reg; plasterboard. Check the product documentation for the systems and uses it covers. GIB&reg; is a registered trade mark of Winstone Wallboards Limited, which is not connected with Hanes Distribution.</li>
+      <li id="fn2">Bulk orders only, for retailers and merchants. Board types, sizes and pricing are available on request and depend on stock. Terms and conditions apply.</li>
+    </ol><p>Hanestone is a <a href="index.html">Hanes Distribution</a> brand.</p></div>
     <div class="gf__cols">
       <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html" aria-current="page">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
       <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
@@ -426,7 +453,7 @@ section{position:relative}
      ========================================================= */
   const scene = $('#stScene'), st = $('#st'), NS = 9;
   st.innerHTML = Array.from({ length: NS }, (_, i) =>
-    `<div class="sh"><b>${i === NS - 1 ? '<span>Hanestone</span>' : ''}<u></u><u></u></b><i class="eb"><s></s><s></s></i><i class="et"></i><i class="el"></i><i class="er"></i></div>`).join('');
+    `<div class="sh"><b>${i === NS - 1 ? '<span>Hanestone<small>Trusus gypsum board</small></span>' : ''}<u></u><u></u></b><i class="eb"><s></s><s></s></i><i class="et"></i><i class="el"></i><i class="er"></i></div>`).join('');
   const sheets = $$('#st .sh'), steps = $$('#pxSteps li'), shadow = $('#stShadow');
   // each sheet lands a little out of line, the way a hand-stacked pile would
   const jog = sheets.map((_, i) => ({ x: ((i * 37) % 11 - 5) * 1.6, y: ((i * 53) % 9 - 4) * 1.4, r: ((i * 29) % 7 - 3) * 1.1 }));
