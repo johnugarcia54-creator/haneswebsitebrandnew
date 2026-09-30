@@ -10,6 +10,13 @@ const base = (process.argv[2] || '').replace(/\/+$/, '');
 const local = process.argv.includes('--local');
 if (!/^https?:\/\//.test(base)) { console.error('Usage: node scripts/smoke.mjs https://deployment-url [--local]'); process.exit(2); }
 
+// a deployment behind Vercel's login (Deployment Protection) can't be tested from outside: say so and stop
+const first = await fetch(base + '/', { redirect: 'manual' });
+if (first.status === 401 || (first.status === 403 && /vercel/i.test(first.headers.get('server') || ''))) {
+  console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${first.status}), so it was not tested. Turn protection off for previews, or test the project that serves the site.`);
+  process.exit(0);
+}
+
 const pages = ['/', '/hanesteel.html', '/hanestone.html', '/hanewood.html', '/hanesulation.html', '/bargainhub.html', '/hisense.html', '/tracking.html', '/contact.html'];
 let failed = 0;
 const ok = (cond, what) => { console.log(`${cond ? 'pass' : 'FAIL'}  ${what}`); if (!cond) failed++; };
@@ -18,7 +25,7 @@ const post = (body, headers = {}) => get('/api/enquiry', { method: 'POST', heade
 
 for (const p of pages) {
   const r = await get(p), html = r.ok ? await r.text() : '';
-  ok(r.status === 200 && html.includes('<link rel="canonical"') && html.includes('application/ld+json') && html.includes('assets/enquiry.js'), `${p} loads with its SEO tags and the enquiry script`);
+  ok(r.status === 200 && html.includes('<link rel="canonical"') && html.includes('application/ld+json') && html.includes('assets/enquiry.js'), `${p} loads with its SEO tags and the enquiry script (HTTP ${r.status})`);
 }
 for (const [p, type] of [['/robots.txt', 'text/plain'], ['/sitemap.xml', 'xml'], ['/og/index.jpg', 'image/jpeg'], ['/og/logo.png', 'image/png'], ['/assets/enquiry.js', 'javascript']]) {
   const r = await get(p);
