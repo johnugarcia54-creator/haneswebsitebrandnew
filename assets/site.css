@@ -68,3 +68,8 @@ body.is-loading .gb{opacity:0;pointer-events:none}
 .gf__fn{margin:0 0 10px;padding-left:14px}
 .gf__fn li{margin-bottom:6px}
 .gf__note p{margin:0}
+
+/* ---------- The Hanes globe's planet (see assets/globe.js): its body and atmosphere, moved and scaled by the GPU ---------- */
+.hg-planet{position:absolute;left:0;top:0;width:1160px;height:1160px;margin:-580px 0 0 -580px;border-radius:50%;pointer-events:none;transform-origin:50% 50%;will-change:transform;
+  background:radial-gradient(closest-side,rgba(41,151,255,0) 74%,rgba(41,151,255,.09) 86.3%,rgba(120,190,255,.3) 87.6%,rgba(41,151,255,.1) 89.7%,rgba(41,151,255,0) 100%)}
+.hg-planet i{position:absolute;inset:80px;border-radius:50%;background:radial-gradient(farthest-corner at 32% 27%,#0d1420 0%,#05080d 58%,#020305 100%)}

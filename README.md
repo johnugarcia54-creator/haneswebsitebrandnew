@@ -13,7 +13,11 @@ Static site with no build step. Open `index.html`, or serve the folder with GitH
 - `hanesulation.html`: Hanesulation insulation
 - `bargainhub.html`: Bargainhub kitchens and interiors
 - `tracking.html`: Hanes Track, following one shipment through all six milestones on a live-rendered globe (land dots in `assets/globe-dots.js`)
+- `hisense.html`: Hisense home appliances, supplied through Hanes Distribution
+- `contact.html`: Contact, with the offices on a live globe and an enquiry form
 - `404.html`: page not found (served by Vercel for unknown addresses)
+
+Shared engines: `assets/globe.js` (the dotted globe on the Contact and home pages, with `assets/globe-dots.js`) and `assets/sequence.js` (scroll-scrubbed frame sequences, used by the Hisense page).
 
 Every page shares `assets/site.css` and `assets/site.js`: the global bar that links the home page and every brand (it tucks away on scroll, and opens a full menu on phones) and the common footer.
 

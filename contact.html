@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact Hanes Distribution — Let's talk</title>
+<meta name="description" content="Contact Hanes Distribution. Head office and showroom at 93 Main South Road, Sockburn; warehouse at 44 Anchorage Road, Hornby; branches in Hong Kong and Zhangzhou. Enquiry@hanesdistribution.co.nz.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Contact Hanes Distribution — Let's talk">
+<meta property="og:description" content="Three offices, two hemispheres, one team. Christchurch, Hong Kong and Zhangzhou.">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-tight-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --line:#d2d2d7; --alt:#f5f5f7;
+  --blue:#0071e3; --blue-h:#0077ed; --link:#0066cc; --sky:#2997ff; --green:#30d158;
+  --wrap:980px; --wide:1260px; --pad:22px; --ln:52px;
+  --ease:cubic-bezier(.28,.11,.32,1);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  --route:linear-gradient(90deg,#2997ff 0%,#5ac8fa 55%,#7ee0c3 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#000;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img,svg,canvas{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:rgba(0,113,227,.25)}
+main{background:#fff}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.wrap--wide{max-width:var(--wide)}
+.center{text-align:center}
+.t-route{background:var(--route);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-head{font-family:var(--display);font-weight:600;font-size:clamp(38px,5vw,64px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance}
+.t-intro{max-width:720px;margin:22px auto 0;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.75vw,24px);line-height:1.33;letter-spacing:-.012em;color:var(--ink-3);text-wrap:pretty}
+.t-intro b{color:var(--ink);font-weight:600}
+section{position:relative}
+.sec{padding:clamp(96px,12vw,160px) 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:980px;background:var(--blue);color:#fff;font-size:17px;line-height:1;white-space:nowrap;transition:background .2s}
+.btn:hover{background:var(--blue-h)}
+.btn--glass{background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.btn--glass:hover{background:rgba(255,255,255,.2)}
+.btn:focus-visible,.more:focus-visible,.pill:focus-visible{outline:2px solid var(--sky);outline-offset:3px}
+.more{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:17px;line-height:1.2}
+.more--dark{color:var(--sky)}
+.more svg{width:8px;height:14px;flex:none}
+.more:hover span{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:980px;background:var(--blue);color:#fff;font-size:12px;white-space:nowrap;transition:background .2s}
+.pill:hover{background:var(--blue-h)}
+
+/* ---------- Local nav: dark over the globe, light over the light sections ---------- */
+.ln{position:sticky;top:var(--gbh,0px);z-index:50;height:var(--ln);background:rgba(22,22,23,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);color:#f5f5f7;transition:top .45s var(--ease),background-color .5s var(--ease),color .5s var(--ease)}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(255,255,255,.12);transition:background-color .5s var(--ease)}
+.ln__in{max-width:var(--wrap);height:100%;margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.ln__title{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.015em}
+.ln__menu{display:flex;align-items:center;gap:24px;margin-left:auto;font-size:12px;color:rgba(245,245,247,.8)}
+.ln__menu a:hover{color:#fff}
+.ln__end{display:flex;align-items:center;gap:14px}
+.ln__chev{display:none;width:28px;height:28px;place-items:center;color:inherit}
+.ln__chev svg{width:12px;height:12px;transition:transform .4s var(--ease)}
+.ln.is-open .ln__chev svg{transform:rotate(180deg)}
+.ln--light{background:rgba(255,255,255,.72);color:var(--ink)}
+.ln--light::after{background:rgba(0,0,0,.14)}
+.ln--light .ln__menu{color:rgba(29,29,31,.8)}
+.ln--light .ln__menu a:hover{color:var(--link)}
+
+/* =========================================================================================
+   THE OFFICES: a live globe stays pinned while the page scrolls past it. Each office card
+   flies the camera to that office, with the local time in each city.
+   ========================================================================================= */
+.ct{background:#000;color:#f5f5f7}
+.ct__stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
+.ct__stick canvas{position:absolute;inset:0;width:100%;height:100%}
+.ct__stick::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 30%,rgba(0,0,0,0) 52%);opacity:var(--shade,0)}
+.ct__blocks{position:relative;z-index:2;margin-top:-100vh;margin-top:-100svh}
+.blk{min-height:100vh;min-height:100svh;display:flex;align-items:center;max-width:1180px;margin:0 auto;padding:calc(var(--ln) + 24px) var(--pad) 40px}
+.hero{align-items:center}
+.hero__in{max-width:520px}
+.hero__eyebrow{font-family:var(--display);font-weight:600;font-size:clamp(19px,1.8vw,24px);letter-spacing:-.01em}
+.hero h1{margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(56px,8vw,112px);line-height:1;letter-spacing:-.035em}
+.hero p{margin-top:20px;color:#a1a1a6;font-size:clamp(17px,1.5vw,21px);line-height:1.4;text-wrap:pretty}
+.hero .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;margin-top:28px}
+.js .hero [data-in]{opacity:0;transform:translateY(24px)}
+.clocks{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px;list-style:none}
+.clocks li{display:flex;flex-direction:column;gap:2px;padding:10px 14px 11px;border-radius:14px;background:rgba(28,28,30,.82);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.clocks small{font-size:12px;color:#86868b}
+.clocks b{font-family:var(--display);font-size:19px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.oc{width:min(440px,100%);padding:clamp(26px,3vw,36px);border-radius:28px;background:rgba(20,20,22,.86);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 40px 80px -40px rgba(0,0,0,.8);opacity:.25;transform:translateY(30px) scale(.98);transition:opacity .7s var(--ease),transform .9s var(--ease)}
+.oc.is-on{opacity:1;transform:none}
+.oc__role{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#86868b}
+.oc__role b{display:inline-grid;place-items:center;min-width:26px;height:20px;padding:0 6px;border-radius:6px;background:rgba(41,151,255,.16);color:var(--sky);font-size:12px}
+.oc h2{margin-top:10px;font-family:var(--display);font-weight:600;font-size:clamp(40px,4.6vw,60px);line-height:1;letter-spacing:-.03em}
+.oc__time{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:15px;color:#a1a1a6}
+.oc__time i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(48,209,88,.6);animation:ping 2s ease-out infinite}
+.oc__time b{color:#f5f5f7;font-weight:600;font-variant-numeric:tabular-nums}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(48,209,88,0)}100%{box-shadow:0 0 0 0 rgba(48,209,88,0)}}
+.oc address{margin-top:18px;font-style:normal;font-size:19px;line-height:1.35;color:#f5f5f7}
+.oc__note{margin-top:12px;color:#a1a1a6;font-size:16px;line-height:1.45}
+.oc__acts{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:24px}
+.oc__acts .btn{min-height:40px;font-size:15px;padding:0 18px}
+.oc__acts .more{font-size:15px}
+
+/* ---------- How can we help ---------- */
+.help{background:#fff}
+.topics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad);perspective:1200px}
+.topic{position:relative;display:flex;flex-direction:column;min-height:220px;padding:26px 24px 22px;border-radius:24px;background:var(--alt);text-align:left;overflow:hidden;transform-style:preserve-3d;transition:transform .5s var(--ease),box-shadow .5s var(--ease),background .4s var(--ease)}
+.topic::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.75),rgba(255,255,255,0) 45%);opacity:0;transition:opacity .4s var(--ease)}
+.topic:hover{background:#fff;box-shadow:0 30px 60px -30px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.05)}
+.topic:hover::after{opacity:1}
+.topic__ic{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 8px 20px -10px rgba(0,0,0,.25);transform:translateZ(30px);transition:background .4s var(--ease),color .4s var(--ease)}
+.topic:hover .topic__ic{background:var(--ink);color:#fff}
+.topic__ic svg{width:24px;height:24px}
+.topic b{display:block;margin-top:auto;padding-top:26px;font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.015em;transform:translateZ(20px)}
+.topic span{display:block;margin-top:4px;font-size:15px;color:var(--ink-2);transform:translateZ(14px)}
+.topic em{display:inline-flex;align-items:center;gap:4px;margin-top:14px;font-style:normal;font-size:14px;color:var(--link)}
+.topic em svg{width:8px;height:12px;transition:transform .3s var(--ease)}
+.topic:hover em svg{transform:translateX(3px)}
+.topic:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* ---------- Enquiry ---------- */
+.enq{background:var(--alt)}
+.enq__grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;max-width:1060px;margin:clamp(40px,5vw,64px) auto 0;padding:0 var(--pad);align-items:start}
+.form{padding:clamp(24px,4vw,44px);border-radius:28px;background:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{position:relative}
+.fl.full{grid-column:1/-1}
+.fl input,.fl select,.fl textarea{width:100%;height:56px;padding:24px 16px 6px;border:1px solid #d2d2d7;border-radius:12px;background:#fff;font-size:17px;line-height:1.2;outline:none;appearance:none;transition:border-color .2s,box-shadow .2s}
+.fl textarea{height:auto;min-height:140px;padding-top:28px;resize:vertical}
+.fl label{position:absolute;left:17px;top:17px;font-size:17px;line-height:1.2;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.fl input:focus + label,.fl input:not(:placeholder-shown) + label,.fl textarea:focus + label,.fl textarea:not(:placeholder-shown) + label,.fl--sel label{transform:translateY(-9px) scale(.7)}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.fl--sel select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%2386868b' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 16px center/12px;padding-right:40px}
+.fl.flash select{animation:flash 1.2s var(--ease)}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(0,113,227,0)}30%{box-shadow:0 0 0 6px rgba(0,113,227,.25);border-color:var(--blue)}}
+.form .btn{width:100%;min-height:50px;margin-top:22px}
+.form__note{margin-top:12px;font-size:12px;color:var(--ink-3);text-align:center}
+.form__done{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:rgba(0,113,227,.06);font-size:14px}
+.form__done.is-on{display:block}
+.form__err{display:none;margin-top:12px;font-size:14px;color:#e30000;text-align:center}
+.form__err.is-on{display:block}
+.side{display:grid;gap:20px}
+.card{padding:26px 24px;border-radius:24px;background:#fff}
+.card h3{font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.015em}
+.card p{margin-top:6px;color:var(--ink-2);font-size:15px}
+.mail{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:12px 12px 12px 14px;border-radius:14px;background:var(--alt);font-size:14px;font-weight:500;overflow-wrap:anywhere}
+.mail button{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink-2);box-shadow:0 0 0 1px rgba(0,0,0,.08);transition:color .2s}
+.mail button:hover{color:var(--ink)}
+.mail button svg{width:15px;height:15px}
+.mail button.is-done{color:var(--green)}
+.card--photo{position:relative;min-height:260px;padding:0;overflow:hidden;background:#000;color:#fff;display:flex;flex-direction:column;justify-content:flex-end}
+.card--photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card--photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.72),rgba(0,0,0,0) 62%)}
+.card--photo div{position:relative;z-index:1;padding:22px 24px}
+.card--photo p{color:rgba(245,245,247,.82)}
+.card--photo a{display:inline-flex;margin-top:10px;font-size:15px;color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+.js [data-anim]{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+.js [data-anim].in{opacity:1;transform:none}
+
+@media (max-width:1068px){.topics{grid-template-columns:repeat(2,1fr)}.enq__grid{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}}
+@media (max-width:833px){
+  .ln__menu{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px var(--pad) 14px;background:rgba(22,22,23,.96);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);font-size:17px;color:#f5f5f7;visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+  .ln__menu a{padding:12px 0;border-bottom:1px solid #333336}
+  .ln__menu a:last-child{border-bottom:0}
+  .ln--light .ln__menu{background:rgba(255,255,255,.96);color:var(--ink)}
+  .ln--light .ln__menu a{border-color:#e8e8ed}
+  .ln.is-open .ln__menu{visibility:visible;opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+  .ln__chev{display:grid}
+  .ct__stick::after{background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 38%,rgba(0,0,0,0) 60%)}
+  .blk{align-items:flex-end;padding-bottom:28px}
+  .hero{align-items:flex-start;padding-top:calc(var(--ln) + 40px)}
+  .hero__in{max-width:none;text-align:center}
+  .hero .ctas{justify-content:center}
+  .clocks{justify-content:center;margin-top:24px}
+  .clocks li{padding:8px 11px 9px}
+  .clocks b{font-size:16px}
+  .oc{padding:22px 20px;border-radius:22px}
+  .oc address{font-size:17px}
+  .oc__note{font-size:15px}
+  .fgrid{grid-template-columns:1fr}
+  .side{grid-template-columns:1fr}
+  .topic{min-height:190px;padding:22px 20px 18px}
+}
+@media (max-width:480px){.topics{grid-template-columns:1fr 1fr;gap:12px}.topic{min-height:170px;padding:18px 16px}.topic b{font-size:18px;padding-top:18px}.topic span{font-size:13px}.topic em{display:none}}
+@media (prefers-reduced-motion:reduce){.js [data-anim]{transition:none}.oc__time i{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html" aria-current="page">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html" aria-current="page">Contact us</a></div>
+  </div>
+</div>
+
+<nav class="ln" id="ln" aria-label="Contact">
+  <div class="ln__in">
+    <a class="ln__title" href="#top" data-go>Contact</a>
+    <div class="ln__menu" id="lnMenu">
+      <a href="#offices" data-go data-at="1">Offices</a>
+      <a href="#help" data-go>How we can help</a>
+      <a href="#enquiry" data-go>Send an enquiry</a>
+    </div>
+    <div class="ln__end">
+      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
+      <a class="pill" href="#enquiry" data-go>Enquire</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top">
+  <!-- ================= Offices, on the globe ================= -->
+  <section class="ct" id="offices" aria-label="Our offices">
+    <div class="ct__stick" id="ctStick">
+      <div class="hg-planet" id="planet" aria-hidden="true"><i></i></div>
+      <canvas id="globe" aria-hidden="true"></canvas>
+    </div>
+    <div class="ct__blocks">
+      <div class="blk hero">
+        <div class="hero__in">
+          <p class="hero__eyebrow t-route" data-in>Contact Hanes</p>
+          <h1 data-in>Let's talk.</h1>
+          <p data-in>Three offices, two hemispheres, one team. Here's where to find us, and how to reach us.</p>
+          <div class="ctas" data-in>
+            <a class="btn" href="#enquiry" data-go>Send an enquiry</a>
+            <a class="more more--dark" href="mailto:Enquiry@hanesdistribution.co.nz"><span>Email us</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+          </div>
+          <ul class="clocks" data-in aria-label="Local time in each office">
+            <li><small>Christchurch</small><b data-tz="Pacific/Auckland">--:--</b></li>
+            <li><small>Hong Kong</small><b data-tz="Asia/Hong_Kong">--:--</b></li>
+            <li><small>Zhangzhou</small><b data-tz="Asia/Shanghai">--:--</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="blk"><article class="oc" aria-labelledby="o1">
+        <p class="oc__role"><b>01</b>Head office and showroom</p>
+        <h2 id="o1">Christchurch</h2>
+        <p class="oc__time"><i></i><b data-tz="Pacific/Auckland">--:--</b> local time</p>
+        <address>93 Main South Road<br>Sockburn, Christchurch</address>
+        <p class="oc__note">Our head office, and the showroom for Hanesteel windows and doors and Bargainhub interiors.</p>
+        <div class="oc__acts"><a class="btn btn--glass" href="https://www.google.com/maps/search/?api=1&amp;query=93+Main+South+Road%2C+Sockburn%2C+Christchurch" target="_blank" rel="noopener">Get directions</a><a class="more more--dark" href="#enquiry" data-go><span>Send an enquiry</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a></div>
+      </article></div>
+
+      <div class="blk"><article class="oc" aria-labelledby="o2">
+        <p class="oc__role"><b>02</b>Warehouse</p>
+        <h2 id="o2">Hornby</h2>
+        <p class="oc__time"><i></i><b data-tz="Pacific/Auckland">--:--</b> local time</p>
+        <address>44 Anchorage Road<br>Hornby, Christchurch</address>
+        <p class="oc__note">Twenty minutes from the Port of Lyttelton. Stock is received, held and dispatched from here.</p>
+        <div class="oc__acts"><a class="btn btn--glass" href="https://www.google.com/maps/search/?api=1&amp;query=44+Anchorage+Road%2C+Hornby%2C+Christchurch" target="_blank" rel="noopener">Get directions</a><a class="more more--dark" href="tracking.html"><span>Track a shipment</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a></div>
+      </article></div>
+
+      <div class="blk"><article class="oc" aria-labelledby="o3">
+        <p class="oc__role"><b>03</b>Asia branch</p>
+        <h2 id="o3">Hong Kong</h2>
+        <p class="oc__time"><i></i><b data-tz="Asia/Hong_Kong">--:--</b> local time</p>
+        <address>Suite C, Level 7 &amp; 19, World Trust Tower<br>50 Stanley Street, Central, Hong Kong SAR</address>
+        <p class="oc__note">Sourcing, freight forwarding and our relationships with manufacturers across Asia.</p>
+        <div class="oc__acts"><a class="btn btn--glass" href="https://www.google.com/maps/search/?api=1&amp;query=World+Trust+Tower%2C+50+Stanley+Street%2C+Central%2C+Hong+Kong" target="_blank" rel="noopener">Get directions</a></div>
+      </article></div>
+
+      <div class="blk"><article class="oc" aria-labelledby="o4">
+        <p class="oc__role"><b>04</b>China branch</p>
+        <h2 id="o4">Zhangzhou</h2>
+        <p class="oc__time"><i></i><b data-tz="Asia/Shanghai">--:--</b> local time</p>
+        <address>301/13 Huayuan, Yan'an Square<br>Zhangzhou, Fujian, China</address>
+        <p class="oc__note">On the ground in Fujian, where many of our materials are made.</p>
+        <div class="oc__acts"><a class="btn btn--glass" href="https://www.google.com/maps/search/?api=1&amp;query=Yan%27an+Square%2C+Zhangzhou%2C+Fujian" target="_blank" rel="noopener">Get directions</a></div>
+      </article></div>
+    </div>
+  </section>
+
+  <main>
+    <!-- ================= How can we help ================= -->
+    <section class="sec help" id="help" aria-label="How can we help">
+      <div class="wrap center">
+        <h2 class="t-head" data-anim>How can we help?</h2>
+        <p class="t-intro" data-anim>Pick a topic and <b>we'll point your enquiry to the right team.</b></p>
+      </div>
+      <div class="topics" id="topics">
+        <button class="topic" type="button" data-topic="Hanesteel windows and doors" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="1"/><path d="M12 3.5v17M4.5 12h15"/></svg></span><b>Hanesteel</b><span>Windows and doors</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Hanestone plasterboard" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 9.5 12 5l9 4.5-9 4.5z"/><path d="M3 12.5l9 4.5 9-4.5M3 15.5l9 4.5 9-4.5"/></svg></span><b>Hanestone</b><span>Plasterboard</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Hanewood plywood, board and LVL" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M6.5 9c3 1.2 8 1.2 11 0M6.5 12c3 1.2 8 1.2 11 0M6.5 15c3 1.2 8 1.2 11 0"/></svg></span><b>Hanewood</b><span>Plywood, board and LVL</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Hanesulation insulation" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="12" r="5"/><circle cx="8" cy="12" r="2"/><path d="M8 7h11v10H8"/></svg></span><b>Hanesulation</b><span>Insulation</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Bargainhub kitchens and interiors" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3.5 11.5h17v8h-17zM3.5 11.5V9h17v2.5M12 11.5v8M7 15h2M15 15h2"/><path d="M8 9V5.5h8V9"/></svg></span><b>Bargainhub</b><span>Kitchens and interiors</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Hisense appliances" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="5.5" y="2.5" width="13" height="19" rx="2"/><path d="M5.5 10h13M12 2.5V10M9 13.5v3M15 13.5v3"/></svg></span><b>Hisense</b><span>Home appliances</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Shipment tracking" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.4-6.5-11a6.5 6.5 0 0 1 13 0c0 5.6-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg></span><b>Hanes Track</b><span>Where's my shipment?</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+        <button class="topic" type="button" data-topic="Something else" data-anim><span class="topic__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 5.5h16v10H10l-4.5 3.5v-3.5H4z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01" stroke-width="2.2" stroke-linecap="round"/></svg></span><b>Something else</b><span>Anything at all</span><em>Enquire <svg viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6 6l-4.5 4.5"/></svg></em></button>
+      </div>
+    </section>
+
+    <!-- ================= Enquiry ================= -->
+    <section class="sec enq" id="enquiry" aria-label="Send an enquiry">
+      <div class="wrap center">
+        <h2 class="t-head" data-anim>Send an enquiry.</h2>
+        <p class="t-intro" data-anim>Tell us what you're building or what you need, and <b>the right person will come back to you.</b></p>
+      </div>
+      <div class="enq__grid">
+        <form class="form" id="enqForm" data-anim novalidate>
+          <div class="fgrid">
+            <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
+            <div class="fl"><input id="fBiz" name="business" placeholder=" " autocomplete="organization"><label for="fBiz">Business (optional)</label></div>
+            <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
+            <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
+            <div class="fl fl--sel" id="fTopicWrap"><select id="fTopic" name="topic" required><option value="">Choose one</option><option>Hanesteel windows and doors</option><option>Hanestone plasterboard</option><option>Hanewood plywood, board and LVL</option><option>Hanesulation insulation</option><option>Bargainhub kitchens and interiors</option><option>Hisense appliances</option><option>Shipment tracking</option><option>Something else</option></select><label for="fTopic">Topic</label></div>
+            <div class="fl fl--sel"><select id="fRegion" name="region"><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option><option>Outside New Zealand</option></select><label for="fRegion">Region (optional)</label></div>
+            <div class="fl full"><textarea id="fMsg" name="message" placeholder=" " required></textarea><label for="fMsg">How can we help?</label></div>
+          </div>
+          <button class="btn" type="submit">Send enquiry</button>
+          <p class="form__err" id="fErr" role="alert">Please add your name, email, a topic and a message.</p>
+          <p class="form__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+          <p class="form__done" id="fDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz and we'll take it from there.</p>
+        </form>
+        <div class="side">
+          <div class="card" data-anim>
+            <h3>Prefer to email?</h3>
+            <p>Write to us directly, any time.</p>
+            <div class="mail"><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a><button type="button" id="copyMail" aria-label="Copy the email address"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg></button></div>
+          </div>
+          <div class="card card--photo" data-anim>
+            <img src="stills/bargainhub/studio-800.webp" alt="Designing a kitchen with a Bargainhub consultant" loading="lazy" decoding="async">
+            <div><h3>Visit the showroom.</h3><p>93 Main South Road, Sockburn, Christchurch.</p><a href="https://www.google.com/maps/search/?api=1&amp;query=93+Main+South+Road%2C+Sockburn%2C+Christchurch" target="_blank" rel="noopener">Get directions</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__note"><p>Hanes Distribution: head office and showroom in Sockburn, warehouse in Hornby, and branches in Hong Kong and Zhangzhou.</p></div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="tracking.html">Hanes Track</a></li><li><a href="hisense.html">Hisense appliances</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="contact.html#enquiry" aria-current="page">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="assets/globe-dots.js"></script>
+<script src="assets/globe.js"></script>
+<script src="assets/site.js" defer></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const root = document.documentElement;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || !window.HanesGlobe || !window.HANES_DOTS) { root.classList.remove('js'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const { Globe, vec, arc, mixCam, clamp, ease } = HanesGlobe;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = () => innerWidth < 834;
+
+  /* ---------- Smooth scroll, and in-page links that land just below the nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  }
+  const ct = $('#offices');
+  const go = (id, at) => {
+    const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
+    let y = el ? el.getBoundingClientRect().top + scrollY - 52 : 0;
+    if (el === ct) y = ct.getBoundingClientRect().top + scrollY + innerHeight * (+at || 0);
+    y = Math.max(0, Math.round(y));
+    if (lenis) lenis.scrollTo(y, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  /* ---------- Local nav ---------- */
+  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
+  ScrollTrigger.create({ trigger: 'main', start: 'top 52px', end: 'max', toggleClass: { targets: ln, className: 'ln--light' } });
+  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
+  chev.addEventListener('click', () => setOpen(!open));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  $$('[data-go]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setOpen(false); go(id, a.dataset.at);
+  }));
+
+  /* ---------- Reveals ---------- */
+  $$('[data-anim]').forEach(el => {
+    const sibs = [...el.parentElement.children].filter(c => c.hasAttribute('data-anim')), i = sibs.indexOf(el);
+    if (i > 0) el.style.setProperty('--d', `${(Math.min(i, 7) * .06).toFixed(2)}s`);
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  $$('[data-anim]').forEach(el => io.observe(el));
+
+  /* ---------- Local time in each office ---------- */
+  const fmt = {};
+  const tick = () => $$('[data-tz]').forEach(b => {
+    const z = b.dataset.tz, f = fmt[z] || (fmt[z] = new Intl.DateTimeFormat('en-NZ', { hour: 'numeric', minute: '2-digit', timeZone: z }));
+    b.textContent = f.format(new Date()).replace(/\s?([ap])\.?m\.?/i, (m, x) => ` ${x.toLowerCase()}m`);
+  });
+  tick(); setInterval(tick, 15000);
+  const now = z => (fmt[z] || (fmt[z] = new Intl.DateTimeFormat('en-NZ', { hour: 'numeric', minute: '2-digit', timeZone: z }))).format(new Date()).replace(/\s?([ap])\.?m\.?/i, (m, x) => ` ${x.toLowerCase()}m`);
+
+  /* =========================================================
+     THE GLOBE: flies to each office as its card comes into view
+     ========================================================= */
+  const G = new Globe({ canvas: $('#globe'), planet: $('#planet') });
+  const OFF = {
+    chc: { name: 'Christchurch', sub: 'Head office', lat: -43.538, lon: 172.556, tz: 'Pacific/Auckland' },
+    hor: { name: 'Hornby', sub: 'Warehouse', lat: -43.544, lon: 172.525, tz: 'Pacific/Auckland' },
+    hk: { name: 'Hong Kong', sub: 'Asia branch', lat: 22.281, lon: 114.157, tz: 'Asia/Hong_Kong' },
+    zz: { name: 'Zhangzhou', sub: 'China branch', lat: 24.513, lon: 117.647, tz: 'Asia/Shanghai' }
+  };
+  Object.values(OFF).forEach(o => { o.v = vec(o.lat, o.lon); });
+  const ARCS = [arc(OFF.chc.v, OFF.hk.v, 90, .18), arc(OFF.chc.v, OFF.zz.v, 90, .2), arc(OFF.hk.v, OFF.zz.v, 24, .5)];
+  const cams = () => {
+    const cx = small() ? .5 : .68, cy = small() ? .36 : .5;
+    return [
+      small() ? { lon: 146, lat: -10, R: .4, cx: .5, cy: .74 } : { lon: 144, lat: -10, R: .44, cx: .7, cy: .52 },
+      { lon: OFF.chc.lon, lat: OFF.chc.lat, R: 4.2, cx, cy },
+      { lon: OFF.hor.lon + .15, lat: OFF.hor.lat - .05, R: 5.4, cx, cy },
+      { lon: OFF.hk.lon + .6, lat: OFF.hk.lat + .4, R: 3.3, cx, cy },
+      { lon: OFF.zz.lon - .2, lat: OFF.zz.lat, R: 3.6, cx, cy }
+    ];
+  };
+  const HOP = [0, 0, .8, 0]; // the long hop from New Zealand to Hong Kong pulls back to show the ocean
+  const view = t => {
+    const K = cams(), i = Math.min(3, Math.floor(t)), f = t - i;
+    // the camera rests while a card is centred, and travels between cards
+    const k = ease(clamp((f - .18) / .64));
+    return mixCam(K[i], K[i + 1], k, HOP[i]);
+  };
+  const cards = $$('.oc'), stick = $('#ctStick');
+  let active = -2;
+  const draw = (t, time) => {
+    const cam = view(t);
+    if (t < 1 && !reduce) cam.lon += (1 - clamp(t)) * Math.sin(time * .15) * 6;
+    const P = G.render(cam), D = G.DPR, c = G.ctx;
+    // routes between the offices, with packets travelling them
+    const aR = clamp(1.2 - (cam.R - .44) / 1.2) * .9 + .1;
+    ARCS.forEach((a, i) => {
+      G.line(a, 0, a.length - 1, `rgba(41,151,255,${(.14 * aR).toFixed(3)})`, 6 * D);
+      G.line(a, 0, a.length - 1, `rgba(90,200,250,${(.75 * aR).toFixed(3)})`, 1.3 * D);
+      if (!reduce) for (let k = 0; k < 2; k++) {
+        const u = ((time * (i === 2 ? .35 : .11) + k * .5 + i * .23) % 1), q = P(a[Math.round(u * (a.length - 1))]);
+        if (q[2] > -.2) { G.halo(q[0], q[1], 10 * D, '126,224,195', .6 * aR); c.fillStyle = `rgba(255,255,255,${aR.toFixed(3)})`; c.beginPath(); c.arc(q[0], q[1], 2.2 * D, 0, 6.2832); c.fill(); }
+      }
+    });
+    // the offices: the one on screen pulses, and every pin carries its local time
+    const cur = t < .5 ? -1 : Math.round(t) - 1;
+    const keys = ['chc', 'hor', 'hk', 'zz'];
+    keys.forEach((key, i) => {
+      const o = OFF[key], q = P(o.v);
+      if (q[2] <= 0) return;
+      const on = cur === i;
+      // Hornby and Sockburn sit a few kilometres apart: at a distance only one Christchurch pin is drawn
+      if (key === 'hor' && cur !== 1) return;
+      if (key === 'chc' && cur === 1) return;
+      G.marker(q, on ? 1 : .8, time, on ? '126,224,195' : '41,151,255', on || cur < 0);
+      const left = key !== 'hk';
+      G.label(o.name, q[0] + (left ? 16 : -16) * D, q[1] - 12 * D, on ? 1 : .8, left ? 'left' : 'right', `${o.sub} · ${now(o.tz)}`);
+    });
+    if (cur !== active) { active = cur; cards.forEach((el, i) => el.classList.toggle('is-on', i === cur)); }
+    stick.style.setProperty('--shade', clamp(t / .6).toFixed(3));
+  };
+
+  let target = 0, T = 0, running = false, visible = true;
+  ScrollTrigger.create({ trigger: ct, start: 'top top', end: 'bottom bottom', onUpdate: s => { target = s.progress * 4; } });
+  const t0 = performance.now();
+  const loop = now2 => {
+    if (!visible) { running = false; return; }
+    T += (target - T) * (reduce ? 1 : .12); if (Math.abs(target - T) < 1e-4) T = target;
+    draw(T, (now2 - t0) / 1000);
+    requestAnimationFrame(loop);
+  };
+  const start = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) start(); }).observe(ct);
+  start();
+  const heroIn = () => gsap.to('.hero [data-in]', { opacity: 1, y: 0, duration: 1.3, stagger: .1, ease: 'power3.out', delay: .15 });
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 700))]).then(heroIn);
+
+  /* ---------- Topics: tilt towards the pointer, and a click sets the form's topic ---------- */
+  const fine = matchMedia('(pointer: fine)').matches;
+  $$('.topic').forEach(tp => {
+    if (fine && !reduce) {
+      tp.addEventListener('pointermove', e => {
+        const r = tp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        tp.style.transform = `rotateX(${((.5 - y) * 10).toFixed(2)}deg) rotateY(${((x - .5) * 12).toFixed(2)}deg) translateZ(0)`;
+        tp.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); tp.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+      });
+      tp.addEventListener('pointerleave', () => { tp.style.transform = ''; });
+    }
+    tp.addEventListener('click', () => {
+      const sel = $('#fTopic'); sel.value = tp.dataset.topic;
+      const w = $('#fTopicWrap'); w.classList.remove('flash'); void w.offsetWidth; w.classList.add('flash');
+      go('#enquiry');
+      setTimeout(() => $('#fName').focus({ preventScroll: true }), 1400);
+    });
+  });
+
+  /* ---------- Enquiry: writes the email for you ---------- */
+  const form = $('#enqForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(form), need = ['name', 'email', 'topic', 'message'];
+    const ok = need.every(k => String(f.get(k) || '').trim()) && $('#fEmail').checkValidity();
+    $('#fErr').classList.toggle('is-on', !ok);
+    if (!ok) { form.reportValidity(); return; }
+    const body = [
+      `Topic: ${f.get('topic')}`, '',
+      `Name: ${f.get('name')}`, `Business: ${f.get('business') || '-'}`, `Email: ${f.get('email')}`, `Phone: ${f.get('phone') || '-'}`, `Region: ${f.get('region') || '-'}`, '',
+      String(f.get('message'))
+    ].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Enquiry: ' + f.get('topic'))}&body=${encodeURIComponent(body)}`;
+    $('#fDone').classList.add('is-on');
+  });
+  const cm = $('#copyMail');
+  cm.addEventListener('click', () => {
+    (navigator.clipboard ? navigator.clipboard.writeText('Enquiry@hanesdistribution.co.nz') : Promise.reject()).then(() => {
+      cm.classList.add('is-done'); cm.setAttribute('aria-label', 'Copied');
+      setTimeout(() => { cm.classList.remove('is-done'); cm.setAttribute('aria-label', 'Copy the email address'); }, 1600);
+    }).catch(() => {});
+  });
+
+  // arriving from another page with #enquiry or #help lands there once the page has settled
+  if (location.hash && $(location.hash) && location.hash !== '#top') setTimeout(() => go(location.hash), 300);
+
+  let rsz = 0, lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return; lastW = innerWidth; lastH = innerHeight; G.resize(); if (!small()) setOpen(false);
+  }); });
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
