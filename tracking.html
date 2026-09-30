@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hanes Track — Know where it is</title>
+<meta name="description" content="Hanes Track follows every order through six milestones, from the factory floor in Asia to the front gate in New Zealand. Manufacturing, port of origin, in transit, arrival, warehousing and delivery.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanes Track — Know where it is">
+<meta property="og:description" content="Every order, every milestone, from the factory floor in Asia to the front gate in New Zealand.">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+
+<style>
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-tight-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format('woff2')}
+
+:root{
+  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --line:#d2d2d7; --alt:#f5f5f7;
+  --blue:#0071e3; --blue-h:#0077ed; --link:#0066cc; --sky:#2997ff; --green:#30d158;
+  --wrap:980px; --wide:1260px; --pad:22px; --ln:52px;
+  --ease:cubic-bezier(.28,.11,.32,1);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  --route:linear-gradient(90deg,#2997ff 0%,#5ac8fa 55%,#7ee0c3 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#000;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img,svg,canvas{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;cursor:pointer}
+::selection{background:rgba(0,113,227,.25)}
+main{background:#fff}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.wrap--wide{max-width:var(--wide)}
+.center{text-align:center}
+.t-route{background:var(--route);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-head{font-family:var(--display);font-weight:600;font-size:clamp(38px,5vw,64px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance}
+.t-intro{max-width:720px;margin:22px auto 0;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.75vw,24px);line-height:1.33;letter-spacing:-.012em;color:var(--ink-3);text-wrap:pretty}
+.t-intro b{color:var(--ink);font-weight:600}
+section{position:relative}
+.sec{padding:clamp(96px,12vw,160px) 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border-radius:980px;background:var(--blue);color:#fff;font-size:17px;line-height:1;white-space:nowrap;transition:background .2s}
+.btn:hover{background:var(--blue-h)}
+.btn:focus-visible,.more:focus-visible,.pill:focus-visible{outline:2px solid var(--sky);outline-offset:3px}
+.more{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:17px;line-height:1.2}
+.more--dark{color:var(--sky)}
+.more svg{width:8px;height:14px;flex:none}
+.more:hover span{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:980px;background:var(--blue);color:#fff;font-size:12px;white-space:nowrap;transition:background .2s}
+.pill:hover{background:var(--blue-h)}
+.ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 28px;margin-top:28px}
+
+/* ---------- Local nav (dark, over the globe) ---------- */
+.ln{position:sticky;top:var(--gbh,0px);z-index:50;height:var(--ln);background:rgba(22,22,23,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);color:#f5f5f7;transition:top .45s var(--ease)}
+.ln::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(255,255,255,.12)}
+.ln__in{max-width:var(--wrap);height:100%;margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.ln__title{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.015em}
+.ln__menu{display:flex;align-items:center;gap:24px;margin-left:auto;font-size:12px;color:rgba(245,245,247,.8)}
+.ln__menu a:hover{color:#fff}
+.ln__end{display:flex;align-items:center;gap:14px}
+.ln__chev{display:none;width:28px;height:28px;place-items:center;color:inherit}
+.ln,.ln::after{transition:top .45s var(--ease),background-color .5s var(--ease),color .5s var(--ease)}
+.ln--light{background:rgba(255,255,255,.72);color:var(--ink)}
+.ln--light::after{background:rgba(0,0,0,.14)}
+.ln--light .ln__menu{color:rgba(29,29,31,.8)}
+.ln--light .ln__menu a:hover{color:var(--link)}
+.ln__chev svg{width:12px;height:12px;transition:transform .4s var(--ease)}
+.ln.is-open .ln__chev svg{transform:rotate(180deg)}
+
+/* =========================================================================================
+   THE JOURNEY: a dotted globe, rendered live. Scroll follows one shipment through all six
+   milestones, from Zhangzhou to a front gate in New Zealand.
+   ========================================================================================= */
+.jr{height:900vh;background:#000;color:#f5f5f7}
+.jr__stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
+.jr__globe{position:absolute;inset:0;width:100%;height:100%}
+/* the planet's body and atmosphere are a layer the GPU scales, so the canvas only has to draw the dots */
+.jr__planet{position:absolute;left:0;top:0;width:1160px;height:1160px;margin:-580px 0 0 -580px;border-radius:50%;pointer-events:none;transform-origin:50% 50%;will-change:transform;
+  background:radial-gradient(closest-side,rgba(41,151,255,0) 74%,rgba(41,151,255,.09) 86.3%,rgba(120,190,255,.3) 87.6%,rgba(41,151,255,.1) 89.7%,rgba(41,151,255,0) 100%)}
+.jr__planet i{position:absolute;inset:80px;border-radius:50%;background:radial-gradient(farthest-corner at 32% 27%,#0d1420 0%,#05080d 58%,#020305 100%)}
+.jr__stick::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(100% 85% at 0% 100%,rgba(0,0,0,.9) 0%,rgba(0,0,0,.66) 30%,rgba(0,0,0,0) 58%),linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 22%),linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 20%);opacity:var(--shade,0)}
+.jr__hero{position:absolute;z-index:2;left:0;right:0;top:calc(var(--ln) + clamp(36px,8vh,92px));padding:0 var(--pad);text-align:center}
+.jr__eyebrow{font-family:var(--display);font-weight:600;font-size:clamp(19px,1.8vw,24px);letter-spacing:-.01em}
+.jr__title .nw{white-space:nowrap}
+.jr__title{margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(56px,8.4vw,120px);line-height:1;letter-spacing:-.035em}
+.jr__sub{max-width:600px;margin:20px auto 0;color:#a1a1a6;font-size:clamp(17px,1.5vw,21px);line-height:1.4;text-wrap:pretty}
+.js .jr__hero [data-in]{opacity:0;transform:translateY(24px)}
+.jr__cue{position:absolute;z-index:2;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:12px;color:#86868b;letter-spacing:.02em}
+.jr__cue i{position:relative;display:block;width:1px;height:36px;background:rgba(255,255,255,.16);overflow:hidden}
+.jr__cue i::after{content:"";position:absolute;left:0;top:-40%;width:100%;height:40%;background:#f5f5f7;animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{to{top:100%}}
+
+.jr__caps{position:absolute;z-index:2;left:max(var(--pad),calc((100vw - 1180px) / 2));bottom:clamp(118px,17vh,176px);width:min(460px,calc(100% - var(--pad) * 2));height:210px;pointer-events:none}
+.cap{position:absolute;left:0;right:0;bottom:0;opacity:0;transform:translateY(26px);transition:opacity .6s var(--ease),transform .8s var(--ease)}
+.cap.is-on{opacity:1;transform:none}
+.cap.is-past{transform:translateY(-22px)}
+.cap__n{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#86868b;letter-spacing:.01em}
+.cap__n b{display:inline-grid;place-items:center;min-width:26px;height:20px;padding:0 6px;border-radius:6px;background:rgba(41,151,255,.16);color:var(--sky);font-size:12px;font-variant-numeric:tabular-nums}
+.cap h2{margin-top:10px;font-family:var(--display);font-weight:600;font-size:clamp(32px,3.6vw,52px);line-height:1.06;letter-spacing:-.028em;text-wrap:balance}
+.cap p{margin-top:12px;max-width:400px;color:#a1a1a6;font-size:clamp(17px,1.3vw,19px);line-height:1.42}
+
+.jr__hud{position:absolute;z-index:2;right:max(var(--pad),calc((100vw - 1180px) / 2));top:calc(var(--ln) + 30px);display:flex;gap:clamp(22px,3vw,40px);opacity:0;transform:translateY(-10px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.jr__hud.is-on{opacity:1;transform:none}
+.jr__hud small{display:block;font-size:12px;color:#86868b;letter-spacing:.01em}
+.jr__hud b{display:flex;align-items:center;gap:8px;margin-top:4px;font-family:var(--display);font-weight:600;font-size:clamp(19px,1.7vw,24px);letter-spacing:-.015em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat i{width:8px;height:8px;border-radius:50%;background:var(--sky);box-shadow:0 0 0 0 rgba(41,151,255,.6);animation:ping 1.8s ease-out infinite}
+.stat.is-done i{background:var(--green);box-shadow:0 0 0 0 rgba(48,209,88,.6)}
+@keyframes ping{70%{box-shadow:0 0 0 9px rgba(41,151,255,0)}100%{box-shadow:0 0 0 0 rgba(41,151,255,0)}}
+
+.jr__rail{position:absolute;z-index:2;left:max(var(--pad),calc((100vw - 1180px) / 2));right:max(var(--pad),calc((100vw - 1180px) / 2));bottom:clamp(28px,5vh,48px);display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(8px,1.4vw,18px);list-style:none;opacity:0;transition:opacity .6s var(--ease)}
+.jr__rail.is-on{opacity:1}
+.jr__rail li{font-size:12px;color:#6e6e73;transition:color .4s var(--ease)}
+.jr__rail li i{display:block;height:2px;margin-bottom:10px;border-radius:2px;background:rgba(255,255,255,.16);overflow:hidden}
+.jr__rail li i::after{content:"";display:block;height:100%;background:var(--route);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.jr__rail li.is-on{color:#f5f5f7}
+.jr__rail li.is-done{color:#a1a1a6}
+.jr__rail b{font-weight:600;margin-right:6px;font-variant-numeric:tabular-nums}
+
+/* ---------- Every milestone: the tracker from the old site, as a live ring ---------- */
+.ms{height:360vh;background:var(--alt)}
+.ms__stick{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--ln) + 12px) var(--pad) 24px;overflow:hidden}
+.ms__head{text-align:center}
+.ms__head .t-head{font-size:clamp(34px,4.2vw,56px)}
+.ms__head p{margin-top:10px;color:var(--ink-2);font-size:clamp(17px,1.4vw,19px)}
+.ms__body{position:relative;display:flex;align-items:center;justify-content:center;gap:32px;width:100%;max-width:1400px;margin-top:clamp(14px,2.6vh,32px)}
+.ring-wrap{padding:60px 222px 44px;flex:none}
+.ring{--sz:min(520px,56vh);position:relative;width:var(--sz);height:var(--sz)}
+.ring svg.ring__track{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ring__base{fill:none;stroke:#d2d2d7;stroke-width:2}
+.ring__prog{fill:none;stroke:url(#ringGrad);stroke-width:4;stroke-linecap:round}
+.node{position:absolute;width:calc(var(--sz) * .15);height:calc(var(--sz) * .15);margin:calc(var(--sz) * -.075) 0 0 calc(var(--sz) * -.075);border-radius:50%;background:#fff;box-shadow:0 10px 30px -12px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.04);display:grid;place-items:center;color:#86868b;transition:background .5s var(--ease),color .5s var(--ease),transform .6s var(--ease),box-shadow .5s var(--ease)}
+.node svg{width:42%;height:42%}
+.node::after{content:"";position:absolute;right:-2px;top:-2px;width:22px;height:22px;border-radius:50%;background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2 5 8.2 9 4' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;box-shadow:0 0 0 3px var(--alt);transform:scale(0);transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.node.is-done{background:var(--ink);color:#fff}
+.node.is-done::after{transform:scale(1)}
+.node.is-on{background:var(--blue);color:#fff;transform:scale(1.12);box-shadow:0 16px 40px -14px rgba(0,113,227,.7),0 0 0 8px rgba(0,113,227,.12)}
+.nlab{position:absolute;width:170px;font-size:14px;line-height:1.35;color:var(--ink-3);transition:color .4s var(--ease)}
+.nlab b{display:block;font-family:var(--display);font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink-2)}
+.nlab b span{margin-right:6px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.nlab.is-on b,.nlab.is-done b{color:var(--ink)}
+.nlab.is-on{color:var(--ink-2)}
+.ring__mid{position:absolute;left:50%;top:50%;width:62%;transform:translate(-50%,-50%);text-align:center}
+.ring__mid small{display:block;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.ring__status{position:relative;height:2.3em;margin-top:6px;font-family:var(--display);font-weight:600;font-size:clamp(18px,1.8vh + .5vw,24px);letter-spacing:-.02em;line-height:1.15}
+.ring__status span{position:absolute;left:0;right:0;top:50%;opacity:0;transform:translateY(-30%);transition:opacity .45s var(--ease),transform .55s var(--ease);text-wrap:balance}
+.ring__status span.is-on{transform:translateY(-50%)}
+.ring__status span.is-on{opacity:1}
+.eta{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:250px;margin:18px auto 0;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 12px 30px -16px rgba(0,0,0,.25),0 0 0 1px rgba(0,0,0,.04);text-align:left}
+.eta small{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+.eta small i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.eta b{display:block;margin-top:3px;font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.015em}
+.eta svg{width:26px;height:26px;color:var(--ink-3);flex:none}
+.tid{display:inline-flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px 8px 14px;border-radius:999px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.08);font-size:13px;color:var(--ink-2)}
+.tid b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.tid button{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:var(--ink-3);transition:background .2s,color .2s}
+.tid button:hover{background:var(--alt);color:var(--ink)}
+.tid button svg{width:14px;height:14px}
+.ring__ex{display:block;margin-top:10px;font-size:12px;color:var(--ink-3)}
+.notes{position:relative;width:340px;height:260px;flex:none}
+.note{position:absolute;left:0;right:0;top:0;display:flex;gap:12px;padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.82);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);box-shadow:0 18px 40px -20px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.05);opacity:0;transform:translateY(-24px) scale(.96);transform-origin:50% 0;transition:opacity .5s var(--ease),transform .6s var(--ease)}
+.note__ic{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--ink);color:#fff;flex:none}
+.note__ic svg{width:20px;height:20px}
+.note__tx{min-width:0;flex:1}
+.note__tx small{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+.note__tx b{display:block;margin-top:2px;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.note__tx span{display:block;font-size:14px;color:var(--ink-2);line-height:1.3}
+
+/* ---------- Track a shipment ---------- */
+.trk{background:#fff}
+.tf{max-width:680px;margin:clamp(36px,5vw,56px) auto 0;padding:0 var(--pad)}
+.tf__field{position:relative}
+.tf__field input{width:100%;height:68px;padding:26px 76px 8px 22px;border:1px solid #d2d2d7;border-radius:18px;background:#fff;font-size:19px;outline:none;transition:border-color .2s,box-shadow .2s}
+.tf__field label{position:absolute;left:23px;top:23px;font-size:19px;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.tf__field input:focus + label,.tf__field input:not(:placeholder-shown) + label{transform:translateY(-12px) scale(.66)}
+.tf__field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.tf__go{position:absolute;right:12px;top:12px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;transition:background .2s,transform .3s var(--ease)}
+.tf__go:hover{background:var(--blue-h);transform:translateX(2px)}
+.tf__go svg{width:18px;height:18px}
+.tf__go:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.tf__note{margin-top:14px;font-size:14px;color:var(--ink-2);text-align:center}
+.tf__done{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(0,113,227,.06);font-size:14px;text-align:center}
+.tf__done.is-on{display:block}
+.tf__err{display:none;margin-top:10px;font-size:14px;color:#e30000;text-align:center}
+.tf__err.is-on{display:block}
+
+/* ---------- The network, in numbers ---------- */
+.net{background:var(--alt)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(300px,auto);gap:20px;max-width:var(--wide);margin:clamp(44px,6vw,72px) auto 0;padding:0 var(--pad)}
+.tile{position:relative;display:flex;flex-direction:column;border-radius:28px;background:#fff;padding:clamp(28px,3vw,44px);overflow:hidden;isolation:isolate}
+.tile--wide{grid-column:span 2}
+.tile h3{font-family:var(--display);font-weight:600;font-size:clamp(24px,2.3vw,32px);line-height:1.12;letter-spacing:-.02em}
+.tile p{margin-top:10px;color:var(--ink-2)}
+.tile__big{font-family:var(--display);font-weight:700;font-size:clamp(64px,7.6vw,112px);line-height:.95;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.tile__big small{font-size:.42em;letter-spacing:-.02em;margin-left:.12em}
+.tile__big + h3{margin-top:8px}
+.tile__foot{margin-top:auto;padding-top:24px}
+.tile--photo{padding:0;color:#fff;min-height:420px;background:#000}
+.tile--photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.tile--photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.2) 38%,rgba(0,0,0,0) 60%)}
+.tile__cap{position:relative;z-index:1;margin-top:auto;padding:clamp(28px,3vw,44px)}
+.tile__cap p{color:rgba(245,245,247,.82)}
+.tile--nz{min-height:400px;background:#000;color:#f5f5f7;flex-direction:row;align-items:stretch;gap:12px}
+.tile--nz .tile__txt{display:flex;flex-direction:column;flex:1;min-width:0;position:relative;z-index:1}
+.tile--nz p{color:#a1a1a6}
+.tile--nz canvas{position:absolute;right:0;top:0;width:62%;height:100%}
+.offices{display:grid;gap:4px;margin-top:auto;padding-top:24px;font-size:15px;color:var(--ink-2)}
+.offices b{color:var(--ink);font-weight:600}
+
+/* ---------- Close ---------- */
+.end{background:#000;color:#f5f5f7;text-align:center}
+.end .t-intro{color:#86868b}
+.end .t-intro b{color:#f5f5f7}
+
+.js [data-anim]{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+.js [data-anim].in{opacity:1;transform:none}
+
+@media (min-width:834px) and (max-width:1399px){.notes{display:none}}
+@media (max-width:1068px){.ring-wrap{padding:44px 180px}.nlab{width:140px;font-size:13px}.nlab b{font-size:15px}}
+@media (max-width:833px){
+  .ln__menu{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;padding:4px var(--pad) 14px;background:rgba(22,22,23,.96);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);font-size:17px;color:#f5f5f7;visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+  .ln__menu a{padding:12px 0;border-bottom:1px solid #333336}
+  .ln__menu a:last-child{border-bottom:0}
+  .ln--light .ln__menu{background:rgba(255,255,255,.96);color:var(--ink)}
+  .ln--light .ln__menu a{border-color:#e8e8ed}
+  .ln.is-open .ln__menu{visibility:visible;opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+  .ln__chev{display:grid}
+  .jr__caps{left:var(--pad);right:var(--pad);width:auto;bottom:86px;height:190px}
+  .jr__stick::after{background:linear-gradient(0deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.8) 26%,rgba(0,0,0,0) 50%),linear-gradient(180deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 17%)}
+  .cap h2{font-size:30px}
+  .cap p{font-size:16px}
+  .jr__hud{left:var(--pad);right:var(--pad);top:calc(var(--ln) + 16px);justify-content:space-between}
+  .jr__hud b{font-size:18px}
+  .jr__rail{bottom:26px;gap:6px}
+  .jr__rail li{font-size:0}
+  .jr__rail li i{margin:0}
+  .nlab{display:none}
+  .ring-wrap{padding:8px 0}
+  .ms__body{flex-direction:column;gap:18px}
+  .ring{--sz:min(90vw,48vh)}
+  .ring__mid{width:56%}
+  .ring__status{font-size:17px}
+  .tid{display:none}
+  .eta{max-width:none}
+  .notes{width:min(360px,100%);height:96px}
+  .note{padding:10px 12px;border-radius:16px}
+  .note__ic{width:32px;height:32px;border-radius:8px}
+  .eta{margin-top:10px;padding:10px 12px}
+  .eta b{font-size:17px}
+  .eta svg{width:22px;height:22px}
+  .tid{margin-top:8px;font-size:12px}
+  .ring__ex{margin-top:6px}
+  .node::after{width:16px;height:16px;background-size:9px;right:-3px;top:-3px}
+  .bento{grid-template-columns:1fr}
+  .tile--wide{grid-column:auto}
+  .tile{min-height:250px}
+  .tile--photo{min-height:360px}
+  .tile--nz{min-height:380px}
+  .tile--nz canvas{width:100%;height:62%;top:auto;bottom:0}
+}
+@media (max-width:833px) and (max-height:700px){.ms__head p{display:none}}
+@media (prefers-reduced-motion:reduce){.js [data-anim]{transition:none}.jr__cue i::after,.stat i{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="tracking.html" aria-current="page">Tracking</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html" aria-current="page">Hanes Track</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
+
+<nav class="ln" id="ln" aria-label="Hanes Track">
+  <div class="ln__in">
+    <a class="ln__title" href="#top" data-go>Hanes Track</a>
+    <div class="ln__menu" id="lnMenu">
+      <a href="#journey" data-go data-at="1">The journey</a>
+      <a href="#milestones" data-go>Milestones</a>
+      <a href="#network" data-go>Network</a>
+    </div>
+    <div class="ln__end">
+      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
+      <a class="pill" href="#track" data-go>Track</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top">
+  <!-- ================= The journey ================= -->
+  <section class="jr" id="journey" aria-label="The journey of a Hanes shipment">
+    <div class="jr__stick" id="jrStick">
+      <div class="jr__planet" id="planet" aria-hidden="true"><i></i></div>
+      <canvas class="jr__globe" id="globe" aria-hidden="true"></canvas>
+
+      <div class="jr__hero" id="jrHero">
+        <p class="jr__eyebrow t-route" data-in>Hanes Track</p>
+        <h1 class="jr__title" data-in><span class="nw">Know where</span> <span class="nw">it is.</span></h1>
+        <p class="jr__sub" data-in>Every order, every milestone, from the factory floor in Asia to the front gate in New Zealand.</p>
+        <div class="ctas" data-in>
+          <a class="btn" href="#track" data-go>Track a shipment</a>
+          <a class="more more--dark" href="#journey" data-go data-at="1"><span>Follow a shipment</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
+        </div>
+      </div>
+      <div class="jr__cue" id="jrCue" aria-hidden="true"><span>Scroll to follow a shipment</span><i></i></div>
+
+      <div class="jr__caps" id="jrCaps">
+        <div class="cap"><span class="cap__n"><b>01</b>Manufacturing</span><h2>Your order is being prepared.</h2><p>Engineered at the source in Asia, then checked and packed for the journey.</p></div>
+        <div class="cap"><span class="cap__n"><b>02</b>Port of origin</span><h2>Shipment received at port.</h2><p>Through our teams in Zhangzhou and Hong Kong, loaded and ready to sail.</p></div>
+        <div class="cap"><span class="cap__n"><b>03</b>In transit</span><h2>Your shipment is on the way.</h2><p>Across the Pacific to New Zealand, and tracked the whole way.</p></div>
+        <div class="cap"><span class="cap__n"><b>04</b>Arrival</span><h2>Arrived in New Zealand.</h2><p>Landed in Christchurch and ready for the last leg.</p></div>
+        <div class="cap"><span class="cap__n"><b>05</b>Warehousing</span><h2>Shipment is being processed.</h2><p>Received, checked and stocked at our Hornby warehouse.</p></div>
+        <div class="cap"><span class="cap__n"><b>06</b>Delivery</span><h2>Out for delivery to your address.</h2><p>Delivered right across New Zealand, from Northland to Southland.</p></div>
+      </div>
+
+      <div class="jr__hud" id="jrHud" aria-hidden="true">
+        <div><small>Distance travelled</small><b><span id="km">0</span>&nbsp;km</b></div>
+        <div><small>Status</small><b class="stat" id="jrStat"><i></i><span>Preparing</span></b></div>
+      </div>
+
+      <ol class="jr__rail" id="jrRail" aria-hidden="true">
+        <li><i></i><b>01</b>Manufacturing</li><li><i></i><b>02</b>Port of origin</li><li><i></i><b>03</b>In transit</li>
+        <li><i></i><b>04</b>Arrival</li><li><i></i><b>05</b>Warehousing</li><li><i></i><b>06</b>Delivery</li>
+      </ol>
+    </div>
+  </section>
+
+  <main>
+    <!-- ================= Every milestone ================= -->
+    <section class="ms" id="milestones" aria-label="Every milestone, in one live view">
+      <div class="ms__stick">
+        <div class="ms__head">
+          <h2 class="t-head">Every milestone. One live view.</h2>
+          <p>No chasing. No guessing. Six milestones, tracked end to end.</p>
+        </div>
+        <div class="ms__body">
+          <div class="ring-wrap"><div class="ring" id="ring">
+            <svg class="ring__track" viewBox="0 0 600 600" aria-hidden="true">
+              <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0071e3"/><stop offset=".6" stop-color="#2997ff"/><stop offset="1" stop-color="#34c7a4"/></linearGradient></defs>
+              <circle class="ring__base" cx="300" cy="300" r="240"/>
+              <circle class="ring__prog" id="ringProg" cx="300" cy="300" r="240" transform="rotate(-90 300 300)"/>
+            </svg>
+            <div class="ring__mid">
+              <small>Tracking</small>
+              <div class="ring__status" id="ringStatus" aria-live="polite">
+                <span class="is-on">Your order is being prepared</span><span>Shipment received at port</span><span>Your shipment is on the way</span><span>Arrived in New Zealand</span><span>Shipment is being processed</span><span>Out for delivery</span><span>Delivered</span>
+              </div>
+              <div class="eta"><div><small><i></i><span id="etaLab">Estimated delivery</span></small><b>Thu 12 Nov</b></div><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5.5" width="19" height="17" rx="3.5"/><path d="M3.5 10.5h19M8.5 3v5M17.5 3v5"/><circle cx="9" cy="15" r=".9" fill="currentColor" stroke="none"/><circle cx="13" cy="15" r=".9" fill="currentColor" stroke="none"/><circle cx="17" cy="15" r=".9" fill="currentColor" stroke="none"/><circle cx="9" cy="18.6" r=".9" fill="currentColor" stroke="none"/><circle cx="13" cy="18.6" r=".9" fill="currentColor" stroke="none"/></svg></div>
+              <div class="tid">Tracking ID <b id="tidVal">HAN-240917-NZ</b><button type="button" id="tidCopy" aria-label="Copy the tracking ID"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></svg></button></div>
+              <span class="ring__ex">Example shipment</span>
+            </div>
+          </div></div>
+          <div class="notes" id="notes" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Track a shipment ================= -->
+    <section class="sec trk" id="track" aria-label="Track a shipment">
+      <div class="wrap center">
+        <h2 class="t-head" data-anim>Track a shipment.</h2>
+        <p class="t-intro" data-anim>Enter your tracking ID or order number, and <b>we'll come back to you with where it is and when it's due.</b></p>
+      </div>
+      <form class="tf" id="trackForm" data-anim novalidate>
+        <div class="tf__field">
+          <input id="tfId" name="id" placeholder=" " required autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="60">
+          <label for="tfId">Tracking ID or order number</label>
+          <button class="tf__go" type="submit" aria-label="Track this shipment"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h12M10 4l5 5-5 5"/></svg></button>
+        </div>
+        <p class="tf__err" id="tfErr" role="alert">Enter a tracking ID or order number to continue.</p>
+        <p class="tf__note">Opens your email with the details filled in, ready to send to Enquiry@hanesdistribution.co.nz.</p>
+        <p class="tf__done" id="tfDone" role="status">Thanks. Your email is ready to send. If it didn't open, email Enquiry@hanesdistribution.co.nz with your tracking ID.</p>
+      </form>
+    </section>
+
+    <!-- ================= The network ================= -->
+    <section class="sec net" id="network" aria-label="The Hanes network">
+      <div class="wrap wrap--wide"><h2 class="t-head" data-anim>One connected supply network.</h2></div>
+      <div class="bento">
+        <div class="tile tile--wide" data-anim><p class="tile__big t-route" id="kmBig">0<small>km</small></p><h3>Factory floor to front gate.</h3><p class="tile__foot">From a production line in Asia to a job site in New Zealand, one order at a time.</p></div>
+        <div class="tile" data-anim><p class="tile__big">3</p><h3>Offices.</h3><div class="offices"><span><b>Christchurch</b> · Head office</span><span><b>Hong Kong</b> · Asia branch</span><span><b>Zhangzhou</b> · China branch</span></div></div>
+        <div class="tile" data-anim><p class="tile__big">6</p><h3>Milestones.</h3><p class="tile__foot">Manufacturing, port of origin, in transit, arrival, warehousing and delivery.</p></div>
+        <div class="tile tile--photo tile--wide" data-anim><div data-zoom style="position:absolute;inset:0"><img src="frames2/warehouse/lg/060.webp" width="2560" height="1440" alt="An aisle of racking stacked with timber and building products in the Hanes warehouse" loading="lazy" decoding="async"></div><div class="tile__cap"><h3>Stocked in Hornby.</h3><p>Received into our Christchurch warehouse at 44 Anchorage Road, and ready to go.</p></div></div>
+        <div class="tile tile--photo" data-anim><div data-zoom style="position:absolute;inset:0"><img src="frames2/truck/lg/121.webp" width="2560" height="1440" alt="A Hanes Distribution truck and trailer" loading="lazy" decoding="async" style="object-position:60% 50%"></div><div class="tile__cap"><h3>On the road.</h3><p>From our dock to your door.</p></div></div>
+        <div class="tile tile--nz tile--wide" data-anim><div class="tile__txt"><h3>Nationwide.</h3><p>From Northland to Southland, delivered from Christchurch.</p></div><canvas id="nzMap" aria-hidden="true"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ================= Close ================= -->
+    <section class="sec end" aria-label="Ship with Hanes">
+      <div class="wrap">
+        <h2 class="t-head" data-anim>Ship with Hanes.</h2>
+        <p class="t-intro" data-anim>Tell us what you need, and <b>we'll follow it from the factory floor to your front gate.</b></p>
+        <div class="ctas" data-anim><a class="btn" href="index.html#contact">Make an enquiry</a><a class="more more--dark" href="index.html#brands"><span>Explore the brands</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="gf gf--dark">
+  <div class="gf__in">
+    <div class="gf__note"><p>Hanes Track is part of <a href="index.html">Hanes Distribution</a>. The shipment shown on this page, including its tracking ID and delivery date, is an example.</p></div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="tracking.html" aria-current="page">Hanes Track</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="assets/globe-dots.js"></script>
+<script src="assets/site.js" defer></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const root = document.documentElement;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || !window.HANES_DOTS) { root.classList.remove('js'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = () => innerWidth < 834;
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const D2R = Math.PI / 180;
+
+  /* ---------- Smooth scroll, and in-page links that land just below the nav ---------- */
+  let lenis = null;
+  if (!reduce) {
+    lenis = new Lenis({ lerp: .1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  }
+  const jr = $('#journey');
+  const go = (id, at) => {
+    const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
+    let y = el ? el.getBoundingClientRect().top + scrollY - 52 : 0;
+    // "The journey" lands where the first milestone begins, not on the hero
+    if (el === jr && at) y = jr.getBoundingClientRect().top + scrollY + (jr.offsetHeight - innerHeight) * (+at / T_END);
+    if (el && el.classList.contains('ms')) y = el.getBoundingClientRect().top + scrollY;
+    y = Math.max(0, Math.round(y));
+    if (lenis) lenis.scrollTo(y, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  /* ---------- Local nav ---------- */
+  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
+  // over the dark globe the nav is dark; over the light sections below, it turns light
+  ScrollTrigger.create({ trigger: 'main', start: 'top 52px', endTrigger: '.end', end: 'top 52px', toggleClass: { targets: ln, className: 'ln--light' } });
+  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
+  chev.addEventListener('click', () => setOpen(!open));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
+  $$('[data-go]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
+    e.preventDefault(); setOpen(false); go(id, a.dataset.at);
+  }));
+
+  /* ---------- Reveals ---------- */
+  $$('[data-anim]').forEach(el => {
+    const sibs = [...el.parentElement.children].filter(c => c.hasAttribute('data-anim')), i = sibs.indexOf(el);
+    if (i > 0) el.style.setProperty('--d', `${(Math.min(i, 5) * .08).toFixed(2)}s`);
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  $$('[data-anim]').forEach(el => io.observe(el));
+
+  /* =========================================================
+     THE GLOBE: about 18,000 land dots on an orthographic sphere, drawn to a canvas every frame.
+     Finer dot grids for New Zealand and the south China coast take over as the camera closes in.
+     ========================================================= */
+  const cvs = $('#globe'), ctx = cvs.getContext('2d');
+  const decode = gr => {
+    const s = atob(gr.b64), out = [];
+    let i = 0;
+    for (let r = 0; r < gr.rows.length; r++) {
+      const lat = gr.lat0 + gr.D / 2 + r * gr.D, cnt = gr.rows[r];
+      for (let k = 0; k < cnt; k++, i++) if (s.charCodeAt(i >> 3) >> (i & 7) & 1) out.push(lat, gr.lon0 + (k + .5) * (gr.lon1 - gr.lon0) / cnt);
+    }
+    return out;
+  };
+  // each dot keeps sin/cos of its latitude and longitude, so turning the globe is a few multiplies
+  const pack = (ll, box) => {
+    const n = ll.length / 2, a = new Float32Array(n * 4), inBox = box ? new Uint8Array(n) : null;
+    for (let j = 0; j < n; j++) {
+      const la = ll[2 * j] * D2R, lo = ll[2 * j + 1] * D2R;
+      a[4 * j] = Math.sin(la); a[4 * j + 1] = Math.cos(la); a[4 * j + 2] = Math.sin(lo); a[4 * j + 3] = Math.cos(lo);
+      if (box) inBox[j] = box.some(b => ll[2 * j] >= b[0] && ll[2 * j] <= b[1] && ll[2 * j + 1] >= b[2] && ll[2 * j + 1] <= b[3]) ? 1 : 0;
+    }
+    return { n, a, inBox };
+  };
+  const DOTS = window.HANES_DOTS;
+  const BOX_NZ = [-47.8, -34.2, 165.8, 179], BOX_CN = [8, 42, 98, 134];
+  const W0 = pack(decode(DOTS.world), [BOX_NZ, BOX_CN]), NZ = pack(decode(DOTS.nz)), CN = pack(decode(DOTS.cn));
+
+  const vec = (lat, lon) => { const la = lat * D2R, lo = lon * D2R; return [Math.cos(la) * Math.cos(lo), Math.cos(la) * Math.sin(lo), Math.sin(la)]; };
+  const norm = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const toLL = v => [Math.asin(clamp(v[2], -1, 1)) / D2R, Math.atan2(v[1], v[0]) / D2R];
+  // a smooth sea route through waypoints: Catmull-Rom on the sphere, then resampled evenly by length
+  const spline = (pts, N) => {
+    const V = pts.map(p => vec(p[0], p[1])), raw = [];
+    for (let i = 0; i < V.length - 1; i++) {
+      const p0 = V[Math.max(0, i - 1)], p1 = V[i], p2 = V[i + 1], p3 = V[Math.min(V.length - 1, i + 2)];
+      for (let s = 0; s < 24; s++) {
+        const t = s / 24, t2 = t * t, t3 = t2 * t;
+        raw.push(norm([0, 1, 2].map(k => .5 * (2 * p1[k] + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3))));
+      }
+    }
+    raw.push(V[V.length - 1]);
+    const cum = [0];
+    for (let i = 1; i < raw.length; i++) cum.push(cum[i - 1] + Math.acos(clamp(raw[i][0] * raw[i - 1][0] + raw[i][1] * raw[i - 1][1] + raw[i][2] * raw[i - 1][2], -1, 1)));
+    const L = cum[cum.length - 1], out = [];
+    for (let j = 0, i = 1; j <= N; j++) {
+      const d = L * j / N; while (i < cum.length - 1 && cum[i] < d) i++;
+      const f = (d - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1), a = raw[i - 1], b = raw[i];
+      out.push(norm([lerp(a[0], b[0], f), lerp(a[1], b[1], f), lerp(a[2], b[2], f)]));
+    }
+    return out;
+  };
+  const PLACES = {
+    zz: [24.51, 117.65], hk: [22.32, 114.17], chc: [-43.53, 172.64]
+  };
+  const ROUTE = spline([[24.51, 117.65], [24.2, 118.9], [22.1, 120.1], [20.8, 122.4], [14, 130], [4, 141], [-1, 150], [-4.3, 157], [-12, 162.5], [-23, 169.3], [-31, 172.2], [-36.4, 176.6], [-38.6, 179.3], [-41.8, 176.2], [-43.4, 173.4], [-43.6, 172.72], [-43.53, 172.64]], 700);
+  const FEED = spline([[22.32, 114.17], [21.6, 116.6], [21.1, 119.6], [20.8, 122.4]], 120);
+  const CITIES = [['Auckland', -36.85, 174.76], ['Wellington', -41.29, 174.78], ['Hamilton', -37.79, 175.28], ['Tauranga', -37.69, 176.17], ['Dunedin', -45.87, 170.5], ['Nelson', -41.27, 173.28], ['Napier', -39.49, 176.91], ['Queenstown', -45.03, 168.66], ['Invercargill', -46.41, 168.35], ['Palmerston North', -40.35, 175.61], ['New Plymouth', -39.06, 174.08], ['Whangārei', -35.72, 174.32], ['Timaru', -44.4, 171.25], ['Greymouth', -42.45, 171.21], ['Rotorua', -38.14, 176.25], ['Gisborne', -38.66, 178.02]];
+  const CHC = vec(...PLACES.chc);
+  const CITY_V = CITIES.map(c => vec(c[1], c[2]));
+
+  /* ---------- The camera: where the globe looks, and how close, at each point of the story (t runs 0 to 9) ---------- */
+  const T_END = 9;
+  const STEP_AT = [1, 2, 3, 5, 6, 7], STEP_END = [2, 3, 5, 6, 7, 8.4];
+  const shipAt = p => { const f = clamp(p) * (ROUTE.length - 1), i = Math.min(ROUTE.length - 2, Math.floor(f)), k = f - i, a = ROUTE[i], b = ROUTE[i + 1];
+    return norm([lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]); };
+  let W = 0, H = 0, DPR = 1, MIN = 1;
+  const view = t => {
+    // R is the globe's radius as a share of the shorter screen side; cy is its centre as a share of the height
+    const hero = small() ? { lon: 124, lat: -22, R: 1.45, cy: .6 } : { lon: 123, lat: -25, R: 1.25, cy: .53 };
+    const full = { lon: 142, lat: -6, R: .44, cy: .5 };
+    const zz = { lon: 118.2, lat: 22.8, R: 2.2, cy: .5 };
+    const port = { lon: 117.2, lat: 22.4, R: 2.6, cy: .5 };
+    const arr = { lon: 172.6, lat: -43.5, R: 4.2, cy: .5 };
+    const wh = { lon: 172.55, lat: -43.53, R: 5.4, cy: .5 };
+    const nz = { lon: 173.4, lat: -41.2, R: small() ? 2.7 : 3.1, cy: small() ? .47 : .5 };
+    const mix = (a, b, k) => ({ lon: lerp(a.lon, b.lon, k), lat: lerp(a.lat, b.lat, k), R: Math.exp(lerp(Math.log(a.R), Math.log(b.R), k)), cy: lerp(a.cy, b.cy, k) });
+    if (t <= 1) {
+      // the hero is a horizon: the planet sits low and huge; pulling back reveals the whole globe
+      const hy = hero.cy + hero.R * MIN / H;
+      const k = ease(clamp(t)); const m = mix(hero, full, k); m.cy = lerp(hy, full.cy, k); return m;
+    }
+    if (t <= 2) return mix(full, zz, ease(t - 1));
+    if (t <= 3) return mix(zz, port, ease(t - 2));
+    if (t <= 5) {
+      const p = ease((t - 3) / 2), [la, lo] = toLL(shipAt(p));
+      // follow the ship, pulling out over the open ocean and back in as it closes on New Zealand
+      const out = Math.sin(Math.PI * clamp((t - 3) / 2));
+      const fol = { lon: lo, lat: la, R: Math.exp(lerp(Math.log(port.R), Math.log(1.7), clamp((t - 3) / 2))) * (1 - .62 * out), cy: .5 };
+      const k = clamp((t - 3) / .35);
+      return k < 1 ? mix(port, fol, ease(k)) : fol;
+    }
+    if (t <= 6) { const [la, lo] = toLL(shipAt(1)); const from = { lon: lo, lat: la, R: 1.7, cy: .5 }; return mix(from, arr, ease(t - 5)); }
+    if (t <= 7) return mix(arr, wh, ease(t - 6));
+    if (t <= 8) return mix(wh, nz, ease(t - 7));
+    return nz;
+  };
+
+  /* ---------- Drawing ---------- */
+  const DOT_RGB = '232,237,245';
+  const planet = $('#planet'); let planetTf = '';
+  const project = (cam, cx, cy, R) => {
+    const C0 = Math.cos(cam.lon * D2R), S0 = Math.sin(cam.lon * D2R), Cl = Math.cos(cam.lat * D2R), Sl = Math.sin(cam.lat * D2R);
+    return v => { // v is [x,y,z] on (or just above) the unit sphere
+      const r = Math.hypot(v[0], v[1], v[2]), sinLat = v[2] / r, cosLat = Math.hypot(v[0], v[1]) / r;
+      const cosLon = v[0] / (Math.hypot(v[0], v[1]) || 1), sinLon = v[1] / (Math.hypot(v[0], v[1]) || 1);
+      const cl = cosLon * C0 + sinLon * S0, sl = sinLon * C0 - cosLon * S0;
+      const x = cosLat * sl, y = Cl * sinLat - Sl * cosLat * cl, z = Sl * sinLat + Cl * cosLat * cl;
+      return [cx + R * r * x, cy - R * r * y, z, r];
+    };
+  };
+  const drawDots = (set, cam, cx, cy, R, size, alpha, only) => { // only: undefined = every dot, 1 = outside the fine boxes, 2 = inside them
+    const C0 = Math.cos(cam.lon * D2R), S0 = Math.sin(cam.lon * D2R), Cl = Math.cos(cam.lat * D2R), Sl = Math.sin(cam.lat * D2R);
+    const a = set.a, n = set.n, m = size * 2, round = size >= 3.2;
+    const paths = [new Path2D(), new Path2D(), new Path2D(), new Path2D()], half = size / 2;
+    let count = 0;
+    for (let j = 0; j < n; j++) {
+      if (only && (set.inBox[j] ? 2 : 1) !== only) continue;
+      const o = j * 4, sLa = a[o], cLa = a[o + 1], sLo = a[o + 2], cLo = a[o + 3];
+      const cl = cLo * C0 + sLo * S0;
+      const z = Sl * sLa + Cl * cLa * cl; if (z <= 0) continue;
+      const sl = sLo * C0 - cLo * S0;
+      const X = cx + R * cLa * sl, Y = cy - R * (Cl * sLa - Sl * cLa * cl);
+      if (X < -m || Y < -m || X > W + m || Y > H + m) continue;
+      const b = z < .22 ? 0 : z < .45 ? 1 : z < .7 ? 2 : 3;
+      if (round) { paths[b].moveTo(X + half, Y); paths[b].arc(X, Y, half, 0, 6.2832); } else paths[b].rect(X - half, Y - half, size, size);
+      count++;
+    }
+    const A = [.26, .46, .66, .9];
+    for (let b = 0; b < 4; b++) { ctx.fillStyle = `rgba(${DOT_RGB},${(A[b] * alpha).toFixed(3)})`; ctx.fill(paths[b]); }
+    return count;
+  };
+  const strokePath = (pts, P, from, to, style, width) => {
+    ctx.beginPath(); let pen = false;
+    const i0 = Math.max(0, Math.floor(from)), i1 = Math.min(pts.length - 1, Math.ceil(to));
+    for (let i = i0; i <= i1; i++) {
+      const q = P(pts[i]);
+      if (q[2] < -.02) { pen = false; continue; }
+      pen ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); pen = true;
+    }
+    ctx.strokeStyle = style; ctx.lineWidth = width; ctx.stroke();
+  };
+  const halo = (x, y, r, rgb, a) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); };
+  const label = (text, x, y, a, align = 'left', sub) => {
+    if (a <= .01) return;
+    ctx.globalAlpha = a; ctx.textAlign = align; ctx.textBaseline = 'middle';
+    ctx.font = `600 ${13 * DPR}px -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif`;
+    ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 8 * DPR;
+    ctx.fillStyle = '#f5f5f7'; ctx.fillText(text, x, y);
+    if (sub) { ctx.font = `500 ${11 * DPR}px -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif`; ctx.fillStyle = '#a1a1a6'; ctx.fillText(sub, x, y + 16 * DPR); }
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  };
+  const marker = (q, a, time, rgb = '41,151,255', ring = true) => {
+    if (a <= .01 || q[2] < 0) return;
+    const [x, y] = q;
+    ctx.globalAlpha = a;
+    halo(x, y, 18 * DPR, rgb, .55);
+    if (ring && !reduce) { const ph = (time % 1.8) / 1.8; ctx.strokeStyle = `rgba(${rgb},${(.8 * (1 - ph)).toFixed(3)})`; ctx.lineWidth = 1.5 * DPR; ctx.beginPath(); ctx.arc(x, y, (5 + 22 * easeOut(ph)) * DPR, 0, 6.2832); ctx.stroke(); }
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, 3.6 * DPR, 0, 6.2832); ctx.fill();
+    ctx.globalAlpha = 1;
+  };
+  const band = (t, a, b, fade = .25) => clamp((t - a) / fade) * (1 - clamp((t - b) / fade));
+
+  const draw = (t, time) => {
+    const cam = view(t);
+    const spin = reduce ? 0 : (1 - clamp(t)) * time * 2.2;
+    cam.lon += spin;
+    const R = cam.R * MIN, cx = W / 2, cy = cam.cy * H;
+    ctx.clearRect(0, 0, W, H);
+
+    // the planet: a deep body with a thin blue atmosphere at the rim (a CSS layer, moved and scaled to match)
+    const tf = `translate(${(cx / DPR).toFixed(1)}px,${(cy / DPR).toFixed(1)}px) scale(${(R / DPR / 500).toFixed(4)})`;
+    if (tf !== planetTf) { planet.style.transform = tf; planetTf = tf; }
+
+    // land: the world grid, handing over to the fine grids near Zhangzhou and New Zealand as the camera closes in
+    const k = R / (MIN * .44);
+    const fine = clamp((k - 3.2) / 1.6);
+    // dots are sized to their spacing, so the land reads as a fine matrix at every distance
+    const sz = clamp(DOTS.world.D * D2R * R * .3, 1.3 * DPR, 3.6 * DPR);
+    if (fine > 0) {
+      const fz = D => clamp(D * D2R * R * .42, 1.2 * DPR, 4.2 * DPR);
+      drawDots(W0, cam, cx, cy, R, sz, 1, 1);
+      if (fine < 1) drawDots(W0, cam, cx, cy, R, sz, 1 - fine, 2);
+      drawDots(NZ, cam, cx, cy, R, fz(DOTS.nz.D), fine);
+      drawDots(CN, cam, cx, cy, R, fz(DOTS.cn.D), fine);
+    } else drawDots(W0, cam, cx, cy, R, sz, 1);
+
+    const P = project(cam, cx, cy, R);
+    // the feeder from Hong Kong, then the sea route, drawn as the ship sails it
+    const feed = clamp((t - 2.15) / .7);
+    if (feed > 0) {
+      strokePath(FEED, P, 0, feed * (FEED.length - 1), 'rgba(41,151,255,.18)', 7 * DPR);
+      strokePath(FEED, P, 0, feed * (FEED.length - 1), 'rgba(90,200,250,.9)', 1.6 * DPR);
+    }
+    const sail = t < 3 ? 0 : ease(clamp((t - 3) / 2));
+    const routeOn = clamp((t - 2.6) / .4);
+    if (routeOn > 0) {
+      // the whole route, faint, so the way ahead is always clear
+      ctx.setLineDash([2 * DPR, 6 * DPR]);
+      strokePath(ROUTE, P, sail * (ROUTE.length - 1), ROUTE.length - 1, `rgba(245,245,247,${(.28 * routeOn).toFixed(3)})`, 1.2 * DPR);
+      ctx.setLineDash([]);
+    }
+    if (sail > 0) {
+      const end = sail * (ROUTE.length - 1);
+      strokePath(ROUTE, P, 0, end, 'rgba(41,151,255,.16)', 9 * DPR);
+      const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#2997ff'); g.addColorStop(.6, '#5ac8fa'); g.addColorStop(1, '#7ee0c3');
+      strokePath(ROUTE, P, 0, end, g, 2.2 * DPR);
+      if (t < 5.4) {
+        const q = P(shipAt(sail));
+        if (q[2] > 0) { halo(q[0], q[1], 26 * DPR, '90,200,250', .7); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(q[0], q[1], 4.2 * DPR, 0, 6.2832); ctx.fill(); }
+      }
+    }
+
+    // places
+    const qZ = P(vec(...PLACES.zz)), qH = P(vec(...PLACES.hk)), qC = P(CHC);
+    const aZ = band(t, .75, 3.3, .3), aH = band(t, 1.9, 3.3, .3), aC = clamp((t - 4.6) / .4);
+    marker(qZ, Math.max(aZ, .0), time);
+    marker(qH, aH, time);
+    if (qZ[2] > 0) label('Zhangzhou', qZ[0] + 14 * DPR, qZ[1] - 12 * DPR, aZ, 'left', t < 2 ? 'Manufacturing' : 'Port of origin');
+    if (qH[2] > 0) label('Hong Kong', qH[0] - 14 * DPR, qH[1] + 14 * DPR, aH, 'right', 'Port of origin');
+    if (aC > 0 && qC[2] > 0) {
+      const wh = band(t, 6, 7.2, .3);
+      if (wh > 0) { // the warehouse: a square beacon
+        ctx.globalAlpha = wh; ctx.strokeStyle = 'rgba(126,224,195,.9)'; ctx.lineWidth = 1.6 * DPR;
+        const s = (14 + 6 * Math.sin(time * 3)) * DPR; ctx.strokeRect(qC[0] - s, qC[1] - s, s * 2, s * 2); ctx.globalAlpha = 1;
+      }
+      marker(qC, aC, time, t > 6 && t < 7.2 ? '126,224,195' : '41,151,255');
+      const lab = t < 6 ? ['Christchurch', 'Arrived'] : t < 7.1 ? ['Hornby warehouse', '44 Anchorage Road'] : ['Christchurch', 'Dispatch'];
+      label(lab[0], qC[0] + 16 * DPR, qC[1] - 12 * DPR, aC, 'left', lab[1]);
+    }
+    // delivery: the network fans out from Christchurch
+    const fan = clamp((t - 7) / 1.3);
+    if (fan > 0 && qC[2] > 0) {
+      CITY_V.forEach((v, i) => {
+        const q = clamp(fan * 1.8 - i * .05);
+        const e = P(v); if (q <= 0 || e[2] <= 0) return;
+        // a gentle curve, always bending the same way, so the legs fan out like a network
+        const dx = e[0] - qC[0], dy = e[1] - qC[1], mx = (qC[0] + e[0]) / 2 + dy * .22, my = (qC[1] + e[1]) / 2 - dx * .22;
+        const N = Math.max(2, Math.round(28 * q));
+        ctx.beginPath(); ctx.moveTo(qC[0], qC[1]);
+        for (let k = 1; k <= N; k++) { const u = q * k / N; ctx.lineTo((1 - u) * (1 - u) * qC[0] + 2 * (1 - u) * u * mx + u * u * e[0], (1 - u) * (1 - u) * qC[1] + 2 * (1 - u) * u * my + u * u * e[1]); }
+        ctx.strokeStyle = 'rgba(126,224,195,.16)'; ctx.lineWidth = 6 * DPR; ctx.stroke();
+        ctx.strokeStyle = 'rgba(126,224,195,.95)'; ctx.lineWidth = 1.4 * DPR; ctx.stroke();
+        if (q >= 1) {
+          const ph = reduce ? .5 : ((time * .6 + i * .37) % 1);
+          ctx.fillStyle = `rgba(126,224,195,${(.45 * (1 - ph)).toFixed(3)})`; ctx.beginPath(); ctx.arc(e[0], e[1], (3 + 12 * ph) * DPR, 0, 6.2832); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e[0], e[1], 2.6 * DPR, 0, 6.2832); ctx.fill();
+          if (!small() && ['Auckland', 'Wellington', 'Dunedin', 'Queenstown', 'Tauranga'].includes(CITIES[i][0])) label(CITIES[i][0], e[0] + 10 * DPR, e[1], clamp(fan * 3 - 1.2) * .9);
+        }
+      });
+    }
+  };
+
+  /* ---------- The story around the globe: captions, distance, status and the milestone rail ---------- */
+  const caps = $$('#jrCaps .cap'), rail = $$('#jrRail li'), hud = $('#jrHud'), railEl = $('#jrRail'), stick = $('#jrStick');
+  const kmEl = $('#km'), statEl = $('#jrStat'), statTx = statEl.querySelector('span'), hero = $('#jrHero'), cue = $('#jrCue');
+  const STAT = ['Preparing', 'At port', 'On the way', 'Arrived', 'Processing', 'Out for delivery'];
+  let lastStep = -2, lastKm = -1, lastStat = '';
+  const story = t => {
+    const step = t < 1 ? -1 : STEP_AT.reduce((s, a, i) => t >= a ? i : s, 0);
+    if (step !== lastStep) {
+      caps.forEach((c, i) => { c.classList.toggle('is-on', i === step); c.classList.toggle('is-past', i < step); });
+      rail.forEach((li, i) => { li.classList.toggle('is-on', i === step); li.classList.toggle('is-done', i < step); });
+      lastStep = step;
+    }
+    rail.forEach((li, i) => li.style.setProperty('--p', clamp((t - STEP_AT[i]) / (STEP_END[i] - STEP_AT[i])).toFixed(3)));
+    const km = Math.round(9400 * (ease(clamp((t - 3) / 2)) * .93 + clamp((t - 7) / 1.3) * .07) / 10) * 10;
+    if (km !== lastKm) { kmEl.textContent = km.toLocaleString('en-NZ'); lastKm = km; }
+    const st = t >= 8.4 ? 'Delivered' : STAT[Math.max(0, step)];
+    if (st !== lastStat) { statTx.textContent = st; statEl.classList.toggle('is-done', st === 'Delivered'); lastStat = st; }
+    const on = t > .92;
+    hud.classList.toggle('is-on', on); railEl.classList.toggle('is-on', on);
+    const h = clamp(1 - t / .5);
+    hero.style.opacity = h.toFixed(3); hero.style.transform = `translateY(${(-60 * (1 - h)).toFixed(1)}px)`; hero.style.visibility = h > 0 ? 'visible' : 'hidden';
+    cue.style.opacity = clamp(1 - t / .15).toFixed(3);
+    stick.style.setProperty('--shade', clamp((t - .8) / .4).toFixed(3));
+  };
+
+  const size = () => {
+    const r = stick.getBoundingClientRect();
+    // sharp on retina screens, but never more than about four million pixels a frame
+    DPR = Math.min(devicePixelRatio || 1, 2, Math.sqrt(4.2e6 / (r.width * r.height)));
+    W = Math.round(r.width * DPR); H = Math.round(r.height * DPR); MIN = Math.min(W, H);
+    cvs.width = W; cvs.height = H; planetTf = '';
+  };
+  size();
+
+  let target = 0, T = 0, running = false, visible = true;
+  ScrollTrigger.create({ trigger: jr, start: 'top top', end: 'bottom bottom', onUpdate: s => { target = s.progress * T_END; } });
+  const t0 = performance.now();
+  const loop = now => {
+    if (!visible) { running = false; return; }
+    T += (target - T) * (reduce ? 1 : .14); if (Math.abs(target - T) < 1e-4) T = target;
+    draw(T, (now - t0) / 1000); story(T);
+    requestAnimationFrame(loop);
+  };
+  const start = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) start(); }).observe(jr);
+  start();
+
+  const heroIn = () => gsap.to('#jrHero [data-in]', { opacity: 1, y: 0, duration: 1.3, stagger: .1, ease: 'power3.out', delay: .15 });
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 700))]).then(heroIn);
+
+  /* =========================================================
+     EVERY MILESTONE: the tracker ring. As you scroll, the progress arc sweeps round, each milestone
+     lights and ticks, the status changes, and a notification arrives for every step.
+     ========================================================= */
+  const ICONS = [
+    '<path d="M3 20.5V11l5.5 3.5V11l5.5 3.5V6.5h2.5V3.5h2v3h2.5v14z"/><path d="M7 17.5h2M12 17.5h2"/>',
+    '<path d="M3.5 20.5h17M7 20.5V4.5h9.5l3 4.5M7 8.5h12.5M11.5 8.5v5M9.5 13.5h4v3h-4z"/>',
+    '<path d="M2.5 14.5h19l-2.6 5h-13.8z"/><path d="M5.5 14.5v-5h13v5M9 9.5v-4h6v4"/><path d="M2 21.5c1.5 0 1.5-.8 3-.8s1.5.8 3 .8 1.5-.8 3-.8 1.5.8 3 .8 1.5-.8 3-.8 1.5.8 3 .8"/>',
+    '<circle cx="12" cy="5" r="2"/><path d="M12 7v13.5M5 13.5a7 7 0 0 0 14 0M8.5 10.5h7"/>',
+    '<path d="M3 20.5V9l9-5 9 5v11.5"/><path d="M7 20.5v-8h10v8M7 15h10M7 17.8h10"/>',
+    '<path d="M2 6.5h11.5v10H2zM13.5 10h4.2l3.3 3.6v2.9h-7.5"/><circle cx="6" cy="18.3" r="1.9"/><circle cx="17.2" cy="18.3" r="1.9"/>'
+    , '<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+  ].map(p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`);
+  const MS = [['Manufacturing', 'Your order is being prepared'], ['Port of origin', 'Shipment received at port'], ['In transit', 'Your shipment is on the way'], ['Arrival', 'Arrived in New Zealand'], ['Warehousing', 'Shipment is being processed'], ['Delivery', 'Out for delivery to your address']];
+  const ring = $('#ring'), prog = $('#ringProg'), CIRC = 2 * Math.PI * 240;
+  prog.style.strokeDasharray = CIRC; prog.style.strokeDashoffset = CIRC;
+  const nodes = [], labs = [];
+  MS.forEach(([name, desc], i) => {
+    const a = (-90 + i * 60) * D2R, x = 50 + 40 * Math.cos(a), y = 50 + 40 * Math.sin(a);
+    const n = document.createElement('div'); n.className = 'node'; n.style.left = x + '%'; n.style.top = y + '%'; n.innerHTML = ICONS[i]; ring.append(n); nodes.push(n);
+    const l = document.createElement('div'); l.className = 'nlab'; l.innerHTML = `<b><span>0${i + 1}</span>${name}</b>${desc}`;
+    // labels sit outside the ring: above the top node, below the bottom one, and out to each side for the rest
+    const off = 'calc(var(--sz) * .1)';
+    if (i === 0) Object.assign(l.style, { left: x + '%', bottom: `calc(${100 - y}% + ${off})`, transform: 'translateX(-50%)', textAlign: 'center' });
+    else if (i === 3) Object.assign(l.style, { left: x + '%', top: `calc(${y}% + ${off})`, transform: 'translateX(-50%)', textAlign: 'center' });
+    else if (i < 3) Object.assign(l.style, { left: `calc(${x}% + ${off})`, top: y + '%', transform: 'translateY(-50%)' });
+    else Object.assign(l.style, { right: `calc(${100 - x}% + ${off})`, top: y + '%', transform: 'translateY(-50%)', textAlign: 'right' });
+    ring.append(l); labs.push(l);
+  });
+  const notes = $('#notes');
+  const noteEls = [...MS, ['Delivered', 'Your order has arrived']].map(([name, desc], i) => {
+    const d = document.createElement('div'); d.className = 'note';
+    d.innerHTML = `<span class="note__ic">${ICONS[i]}</span><span class="note__tx"><small><span>HANES TRACK</span><span>now</span></small><b>${name}</b><span>${desc}.</span></span>`;
+    notes.append(d); return d;
+  });
+  const statusEls = $$('#ringStatus span'), etaLab = $('#etaLab');
+  let msCur = -2;
+  const msSet = s => {
+    // seven beats: the six milestones, then delivered; the arc reaches each node as its milestone begins
+    const u = clamp(s) * 7, cur = Math.min(6, Math.floor(u)), p = clamp(u / 5);
+    prog.style.strokeDashoffset = (CIRC * (1 - p)).toFixed(1);
+    if (cur === msCur) return; msCur = cur;
+    nodes.forEach((n, i) => { n.classList.toggle('is-on', i === cur); n.classList.toggle('is-done', i < cur); });
+    labs.forEach((l, i) => { l.classList.toggle('is-on', i === cur); l.classList.toggle('is-done', i < cur); });
+    statusEls.forEach((s, i) => s.classList.toggle('is-on', i === cur));
+    etaLab.textContent = cur === 6 ? 'Delivered' : 'Estimated delivery';
+    noteEls.forEach((d, i) => {
+      const depth = cur - i;
+      if (i > cur || depth > 2) { d.style.opacity = 0; d.style.transform = i > cur ? 'translateY(-24px) scale(.96)' : 'translateY(44px) scale(.86)'; return; }
+      d.style.opacity = (1 - depth * .3).toFixed(2); d.style.zIndex = 10 - depth;
+      d.style.transform = small() ? `translateY(${depth * 9}px) scale(${1 - depth * .05})` : `translateY(${depth * 92}px) scale(${1 - depth * .04})`;
+    });
+  };
+  msSet(0);
+  ScrollTrigger.create({ trigger: '#milestones', start: 'top top', end: 'bottom bottom', onUpdate: s => msSet((s.progress - .04) / .9) });
+  $('#tidCopy').addEventListener('click', () => {
+    const v = $('#tidVal').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(() => {
+      const b = $('#tidCopy'); b.setAttribute('aria-label', 'Copied'); b.style.color = 'var(--green)';
+      setTimeout(() => { b.setAttribute('aria-label', 'Copy the tracking ID'); b.style.color = ''; }, 1600);
+    }).catch(() => {});
+  });
+
+  /* ---------- Track a shipment: writes the email for you ---------- */
+  const tf = $('#trackForm'), tfId = $('#tfId');
+  tf.addEventListener('submit', e => {
+    e.preventDefault();
+    const id = tfId.value.trim();
+    $('#tfErr').classList.toggle('is-on', !id);
+    if (!id) { tfId.focus(); return; }
+    const body = ['Hanes Track: shipment status request', '', `Tracking ID or order number: ${id}`, '', 'Please send me the latest status and delivery date for this shipment.'].join('\n');
+    location.href = `mailto:Enquiry@hanesdistribution.co.nz?subject=${encodeURIComponent('Tracking request: ' + id)}&body=${encodeURIComponent(body)}`;
+    $('#tfDone').classList.add('is-on');
+  });
+
+  /* ---------- The network: the distance counts up, photos settle, and New Zealand lights up ---------- */
+  const kmBig = $('#kmBig');
+  ScrollTrigger.create({ trigger: kmBig, start: 'top 85%', once: true, onEnter: () => {
+    const o = { v: 0 };
+    gsap.to(o, { v: 9400, duration: reduce ? 0 : 2.2, ease: 'power3.out', onUpdate: () => { kmBig.firstChild.textContent = (Math.round(o.v / 10) * 10).toLocaleString('en-NZ'); } });
+  } });
+  $$('[data-zoom]').forEach(box => gsap.fromTo(box.querySelector('img'), { scale: 1.16 }, { scale: 1, ease: 'none',
+    scrollTrigger: { trigger: box, start: 'top bottom', end: 'top 20%', scrub: true } }));
+
+  const nzC = $('#nzMap'), nzX = nzC.getContext('2d');
+  const nzLL = decode(DOTS.nz);
+  let nzOn = false, nzT0 = 0;
+  const nzDraw = now => {
+    const r = nzC.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    if (nzC.width !== Math.round(r.width * d)) { nzC.width = Math.round(r.width * d); nzC.height = Math.round(r.height * d); }
+    const w = nzC.width, h = nzC.height;
+    const lat0 = -47.6, lat1 = -34.2, lonC = 172.6, cosM = Math.cos(41 * D2R);
+    const sc = Math.min(h * .88 / (lat1 - lat0), w * .9 / (13.5 * cosM)), ox = w / 2, oy = h / 2;
+    const px = (la, lo) => [ox + (lo - lonC) * cosM * sc, oy - (la - (lat0 + lat1) / 2) * sc];
+    nzX.clearRect(0, 0, w, h);
+    const s = Math.max(1.6 * d, sc * .16 * .42);
+    nzX.fillStyle = 'rgba(222,228,238,.42)';
+    nzX.beginPath();
+    for (let j = 0; j < nzLL.length; j += 2) { const [x, y] = px(nzLL[j], nzLL[j + 1]); nzX.moveTo(x + s / 2, y); nzX.arc(x, y, s / 2, 0, 6.2832); }
+    nzX.fill();
+    const tt = (now - nzT0) / 1000, c = px(...PLACES.chc);
+    CITIES.forEach((city, i) => {
+      const q = clamp((tt - i * .07) / .6); if (q <= 0) return;
+      const e = px(city[1], city[2]), mx = (c[0] + e[0]) / 2, my = (c[1] + e[1]) / 2 - Math.hypot(e[0] - c[0], e[1] - c[1]) * .22;
+      nzX.strokeStyle = 'rgba(126,224,195,.85)'; nzX.lineWidth = 1.3 * d; nzX.beginPath(); nzX.moveTo(c[0], c[1]);
+      // draw the curve only as far as it has travelled
+      const N = 24; for (let k = 1; k <= Math.round(N * q); k++) { const u = k / N, x = (1 - u) * (1 - u) * c[0] + 2 * (1 - u) * u * mx + u * u * e[0], y = (1 - u) * (1 - u) * c[1] + 2 * (1 - u) * u * my + u * u * e[1]; nzX.lineTo(x, y); }
+      nzX.stroke();
+      if (q >= 1) { const ph = reduce ? 0 : ((tt + i * .31) % 2) / 2; nzX.fillStyle = `rgba(126,224,195,${(.5 * (1 - ph)).toFixed(3)})`; nzX.beginPath(); nzX.arc(e[0], e[1], (3 + 9 * ph) * d, 0, 6.2832); nzX.fill(); nzX.fillStyle = '#fff'; nzX.beginPath(); nzX.arc(e[0], e[1], 2.2 * d, 0, 6.2832); nzX.fill(); }
+    });
+    nzX.fillStyle = '#2997ff'; nzX.beginPath(); nzX.arc(c[0], c[1], 4 * d, 0, 6.2832); nzX.fill();
+    if (nzOn) requestAnimationFrame(nzDraw);
+  };
+  new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !nzOn) { nzOn = true; if (!nzT0) nzT0 = performance.now(); requestAnimationFrame(nzDraw); } else if (!v) nzOn = false; }, { threshold: .2 }).observe(nzC);
+
+  let rsz = 0, lastW = innerWidth, lastH = innerHeight;
+  addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return; lastW = innerWidth; lastH = innerHeight; size(); if (!small()) setOpen(false);
+  }); });
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>

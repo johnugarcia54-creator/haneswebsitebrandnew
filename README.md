@@ -12,6 +12,7 @@ Static site with no build step. Open `index.html`, or serve the folder with GitH
 - `hanewood.html`: Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL
 - `hanesulation.html`: Hanesulation insulation
 - `bargainhub.html`: Bargainhub kitchens and interiors
+- `tracking.html`: Hanes Track, following one shipment through all six milestones on a live-rendered globe (land dots in `assets/globe-dots.js`)
 - `404.html`: page not found (served by Vercel for unknown addresses)
 
 Every page shares `assets/site.css` and `assets/site.js`: the global bar that links the home page and every brand (it tucks away on scroll, and opens a full menu on phones) and the common footer.
