@@ -58,5 +58,7 @@ Optional: `ENQUIRY_TO` sends enquiries somewhere else (separate several addresse
 - `npm test`: the enquiry API tests (sends through stand-in Resend and SMTP servers, so nothing leaves your machine)
 - `npm run check`: every link, anchor, image and file, one `<h1>` per page, alt text, and the SEO tags, sitemap and robots.txt
 
-Both run on every push and pull request in GitHub Actions (`.github/workflows/ci.yml`).
+- `node scripts/smoke.mjs <url>`: tests a deployed site (pages, sitemap, short URLs, headers, and the enquiry API without sending an email)
+
+`npm test` and `npm run check` run on every push and pull request in GitHub Actions (`.github/workflows/ci.yml`), and the smoke test runs against every Vercel deployment (`.github/workflows/smoke.yml`).
 
