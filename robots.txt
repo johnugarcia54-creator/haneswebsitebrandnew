@@ -1,0 +1,6 @@
+# Hanes Distribution
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://hanes-the-website-new.vercel.app/sitemap.xml

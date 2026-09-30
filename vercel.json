@@ -1,0 +1,36 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/enquiry.js": { "maxDuration": 20 }
+  },
+  "redirects": [
+    { "source": "/index", "destination": "/", "permanent": true },
+    { "source": "/:page(hanesteel|hanestone|hanewood|hanesulation|bargainhub|hisense|tracking|contact)", "destination": "/:page.html", "permanent": true },
+    { "source": "/(contact-us|enquiry|enquire|quote)", "destination": "/contact.html", "permanent": true },
+    { "source": "/track", "destination": "/tracking.html", "permanent": true },
+    { "source": "/catalogues", "destination": "/hisense.html#catalogues", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
+      ]
+    },
+    {
+      "source": "/(frames2|stills|catalogues|films|og)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }]
+    },
+    {
+      "source": "/(fonts|vendor)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }, { "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}
