@@ -6,6 +6,13 @@
 <title>Hanewood — MDF, HDF, plywood, H3.2 radiata pine plywood and LVL</title>
 <meta name="description" content="Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Stocked in Christchurch, delivered nationwide, priced for bulk.">
 <meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanewood — MDF, HDF, plywood, H3.2 radiata pine plywood and LVL">
+<meta property="og:description" content="Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Stocked in Christchurch, delivered nationwide, priced for bulk.">
+<link rel="stylesheet" href="assets/site.css">
 <link rel="preload" as="image" href="stills/hanewood/truck.webp">
 <script>document.documentElement.classList.add('js')</script>
 
@@ -27,7 +34,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
-body{font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
@@ -58,7 +65,7 @@ section{position:relative}
 .pill:hover{background:var(--blue-h)}
 
 /* ---------- Local nav: product name, sections, and the call to action. Frosted once you scroll ---------- */
-.ln{position:sticky;top:0;z-index:50;height:var(--ln);background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.ln{position:sticky;top:var(--gbh,0px);transition:top .45s var(--ease);z-index:50;height:var(--ln);background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
 .ln::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(0,0,0,.14);opacity:0;transition:opacity .3s}
 .ln.is-stuck::after,.ln.is-open::after{opacity:1}
 .ln__in{max-width:var(--wrap);height:100%;margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:20px}
@@ -286,17 +293,6 @@ section{position:relative}
 .form__done.is-on{display:block}
 
 /* ---------- Footer, with footnotes ---------- */
-.foot{background:var(--alt);color:var(--ink-2);font-size:12px;line-height:1.33;letter-spacing:-.01em;padding:0 var(--pad) 36px}
-.foot__in{max-width:var(--wrap);margin:0 auto;border-top:1px solid var(--line)}
-.foot__notes{padding:18px 0 14px;border-bottom:1px solid var(--line)}
-.foot__notes li{margin:0 0 8px 14px}
-.foot__crumb{display:flex;gap:8px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);color:var(--ink)}
-.foot__crumb svg{width:6px;height:10px;color:var(--ink-3)}
-.foot__cols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
-.foot__cols h4{font-weight:600;color:var(--ink);margin-bottom:8px}
-.foot__cols ul{list-style:none;display:grid;gap:8px}
-.foot__cols a:hover{text-decoration:underline;color:var(--ink)}
-.foot__legal{padding-top:14px}
 
 /* reveals: a short rise and fade, the way product pages do it */
 .js [data-anim]{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
@@ -335,12 +331,10 @@ section{position:relative}
   .pc__in{aspect-ratio:4/5}
   .pc__in img{object-position:30% 50%}
   .fgrid{grid-template-columns:1fr}
-  .foot__cols{grid-template-columns:1fr 1fr}
 }
 @media (max-width:480px){
   .hero__sub{font-size:17px}
   .lu__grid{grid-auto-columns:minmax(210px,64vw)}
-  .foot__cols{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){
   .lu__img .bd{animation:none}
@@ -349,6 +343,19 @@ section{position:relative}
 </style>
 </head>
 <body>
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html" aria-current="page">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html" aria-current="page">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
 
 <nav class="ln" id="ln" aria-label="Hanewood">
   <div class="ln__in">
@@ -593,19 +600,19 @@ section{position:relative}
   </section>
 </main>
 
-<footer class="foot">
-  <div class="foot__in">
-    <ol class="foot__notes">
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__note"><ol class="gf__fn">
       <li id="fn1">Structural plywood made to AS/NZS 2269. LVL made to AS/NZS 4357. H3.2 radiata pine plywood is treated to hazard class H3.2 for exterior use above ground.</li>
       <li>Products, sizes and pricing are available on request and depend on stock.</li>
-    </ol>
-    <div class="foot__crumb"><a href="index.html">Hanes Distribution</a><svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="m1 1 4 4-4 4"/></svg><span>Hanewood</span></div>
-    <div class="foot__cols">
-      <div><h4>Hanewood</h4><ul><li><a href="#range" data-go>The range</a></li><li><a href="#h32" data-go>H3.2 plywood</a></li><li><a href="#lvl" data-go>LVL</a></li><li><a href="#pricing" data-go>Bulk pricing</a></li></ul></div>
-      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li>93 Main South Road, Sockburn</li><li>Warehouse: 44 Anchorage Road, Hornby, Christchurch</li></ul></div>
+    </ol><p>Hanewood is a <a href="index.html">Hanes Distribution</a> brand, supplied to merchants and retailers.</p></div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html" aria-current="page">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
     </div>
-    <p class="foot__legal">Hanewood is a Hanes Distribution brand, supplied to merchants and retailers.</p>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
   </div>
 </footer>
 
@@ -798,5 +805,6 @@ section{position:relative}
   addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

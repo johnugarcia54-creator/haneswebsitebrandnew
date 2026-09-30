@@ -6,6 +6,13 @@
 <title>Hanesulation — Glass wool insulation, R2 to R7, for retailers and the trade</title>
 <meta name="description" content="Hanesulation glass wool insulation for walls and ceilings, R2 to R7. BRANZ Appraised, R-values to AS/NZS 4859.1, held in Christchurch and delivered nationwide. Retailers and trade: request pricing.">
 <meta name="theme-color" content="#0a0907">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hanes Distribution">
+<meta property="og:title" content="Hanesulation — Glass wool insulation, R2 to R7, for retailers and the trade">
+<meta property="og:description" content="Hanesulation glass wool insulation for walls and ceilings, R2 to R7. BRANZ Appraised, R-values to AS/NZS 4859.1, held in Christchurch and delivered nationwide. Retailers and trade: request pricing.">
+<link rel="stylesheet" href="assets/site.css">
 <link rel="preload" as="image" href="stills/hanesulation/attic-2000.webp">
 
 <style>
@@ -58,7 +65,7 @@ button{background:none;border:0;cursor:pointer}
 .loader__fill{height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0);transition:transform .5s var(--ease)}
 
 /* Nav */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav);background:rgba(10,9,7,.62);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease)}
+.nav{position:fixed;top:var(--gbh,0px);left:0;right:0;z-index:50;height:var(--nav);background:rgba(10,9,7,.62);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 var(--line);transition:transform .7s var(--ease),top .45s cubic-bezier(.28,.11,.32,1)}
 .nav.is-hidden{transform:translateY(-100%)}
 .nav__in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.03em}
@@ -73,7 +80,7 @@ button{background:none;border:0;cursor:pointer}
 .burger::after{top:23px}
 .nav.is-open .burger::before{transform:translateY(3.5px) rotate(45deg)}
 .nav.is-open .burger::after{transform:translateY(-3.5px) rotate(-45deg)}
-.menu{position:fixed;top:var(--nav);left:0;right:0;z-index:49;background:var(--bg);box-shadow:0 40px 60px -30px rgba(0,0,0,.9),0 1px 0 var(--line);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
+.menu{position:fixed;top:calc(var(--nav) + var(--gbh,0px));left:0;right:0;z-index:49;background:var(--bg);box-shadow:0 40px 60px -30px rgba(0,0,0,.9),0 1px 0 var(--line);padding:6px var(--pad) 26px;visibility:hidden;clip-path:inset(0 0 100% 0)}
 .menu a:not(.btn){display:block;padding:13px 0;font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.03em;box-shadow:0 1px 0 var(--line)}
 .menu .btn{margin-top:22px}
 
@@ -250,10 +257,6 @@ fieldset.field{border:0}
 .form__done.is-on{display:block}
 
 /* Footer */
-.foot{background:var(--bg);color:var(--ink-3);font-size:12.5px;padding:26px 0 max(26px,env(safe-area-inset-bottom));box-shadow:0 -1px 0 var(--line)}
-.foot .wrap{display:flex;justify-content:space-between;gap:12px 30px;flex-wrap:wrap}
-.foot a{color:var(--ink-2)}
-.foot a:hover{color:var(--ink)}
 
 /* reveals */
 [data-reveal]{opacity:0;transform:translateY(30px)}
@@ -314,6 +317,19 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
 </style>
 </head>
 <body class="is-loading">
+
+<div class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
+    <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html" aria-current="page">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="index.html#hisense">Hisense</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
+  </nav>
+  <div class="gb__panel" id="gbPanel">
+    <small>Hanes brands</small>
+    <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html" aria-current="page">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="index.html#hisense">Hisense appliances</a><a href="index.html#contact">Contact us</a></div>
+  </div>
+</div>
 
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader__inner">
@@ -579,10 +595,16 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   </section>
 </main>
 
-<footer class="foot">
-  <div class="wrap">
-    <span>Hanesulation is a <a href="index.html">Hanes Distribution</a> brand, supplied to retailers and the trade · 93 Main South Road, Sockburn · Warehouse: 44 Anchorage Road, Hornby, Christchurch</span>
-    <a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
+<footer class="gf gf--dark">
+  <div class="gf__in">
+    <div class="gf__note">Hanesulation is a <a href="index.html">Hanes Distribution</a> brand, supplied to retailers and the trade. Warehouse: 44 Anchorage Road, Hornby, Christchurch.</div>
+    <div class="gf__cols">
+      <div><h4>Brands</h4><ul><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html" aria-current="page">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li></ul></div>
+      <div><h4>Hanes Distribution</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#network">The network</a></li><li><a href="index.html#warehouse">Warehousing</a></li><li><a href="index.html#hisense">Hisense appliances</a></li><li><a href="index.html#offices">Offices</a></li></ul></div>
+      <div><h4>Visit</h4><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="index.html#contact">Make an enquiry</a></li></ul></div>
+    </div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
   </div>
 </footer>
 
@@ -1036,5 +1058,6 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   });
 })();
 </script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>
