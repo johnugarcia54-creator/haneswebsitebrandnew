@@ -1347,7 +1347,14 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
       .to('#heroFrame', { yPercent: 0, duration: 1.6, ease: 'expo.out' }, '<-.3')
       .add(() => { document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); })
       .add(heroFilm, '-=1');
-    seq.hero.done.then(() => seq.trk.load()).then(() => seq.wh.load()).then(() => seq.hs.load());
+    // wide screens on a good connection queue every film once the hero is in; phones, slow connections and data saver
+    // fetch each film only as its section comes within a few screens, so nobody downloads a film they never scroll to
+    const net = navigator.connection || {}, lean = isNarrow() || net.saveData || /(^|-)(2|3)g$/.test(net.effectiveType || '');
+    if (!lean) seq.hero.done.then(() => seq.trk.load()).then(() => seq.wh.load()).then(() => seq.hs.load());
+    else [['#trkStage', seq.trk], ['#warehouse', seq.wh], ['#hisense', seq.hs]].forEach(([sel, s]) => {
+      const el = $(sel); if (!el) return s.load();
+      new IntersectionObserver((es, ob) => { if (es[0].isIntersecting) { ob.disconnect(); seq.hero.done.then(() => s.load()); } }, { rootMargin: '150% 0px' }).observe(el);
+    });
   });
 })();
 </script>
