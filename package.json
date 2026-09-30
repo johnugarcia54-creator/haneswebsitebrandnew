@@ -1,0 +1,16 @@
+{
+  "name": "hanes-distribution-website",
+  "private": true,
+  "description": "Hanes Distribution website: static pages plus the /api/enquiry email function, hosted on Vercel.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "check": "node scripts/check.mjs",
+    "seo": "node scripts/seo.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "nodemailer": "^10.0.13"
+  },
+  "homepage": "https://hanes-the-website-new.vercel.app"
+}

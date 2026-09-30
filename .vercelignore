@@ -1,0 +1,6 @@
+# not needed on the live site
+scripts/
+tests/
+.github/
+README.md
+AGENTS.md

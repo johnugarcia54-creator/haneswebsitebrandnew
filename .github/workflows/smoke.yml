@@ -1,0 +1,22 @@
+name: Deployment smoke test
+
+# Vercel reports each preview and production deployment to GitHub; this tests the live URL.
+on: deployment_status
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pages, SEO files, redirects, headers and the enquiry API
+        env:
+          DEPLOY_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+        run: node scripts/smoke.mjs "$DEPLOY_URL"
