@@ -252,7 +252,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .media > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* ---------- Marquee ---------- */
-.marquee{padding:clamp(24px,5vh,56px) 0;overflow:hidden}
+.marquee{padding:clamp(24px,5vh,56px) 0;max-width:100%;overflow:clip;contain:inline-size}
 .marquee__track{display:flex;width:max-content;will-change:transform}
 .marquee span{font-family:var(--display);font-weight:600;font-size:clamp(40px,6.4vw,100px);letter-spacing:-.045em;line-height:1;padding:0 .35em;color:transparent;-webkit-text-stroke:1.2px rgba(29,29,31,.28);white-space:nowrap}
 .marquee span.fill{color:var(--ink);-webkit-text-stroke:0}
@@ -260,6 +260,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ---------- Section heads ---------- */
 .sec{padding:clamp(64px,10vh,112px) 0}
+/* slide-in text starts off to the side; keep that motion inside the section so the page does not grow */
+.net,.trk,.brands,.hero{max-width:100%;overflow:clip}
 .sec__head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:clamp(28px,5vh,52px)}
 .sec__head > div{flex:1 1 auto;min-width:0}
 .sec__head > p{flex:0 1 380px;color:var(--ink-2);font-size:var(--fs-sub)}
@@ -1233,10 +1235,10 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
         const end = cl(draw * 1.25 - i * .12) * (a.length - 1); if (end <= 0) return;
         G.line(a, 0, end, 'rgba(215,38,30,.18)', 6 * D);
         G.line(a, 0, end, 'rgba(255,90,70,.95)', 1.6 * D);
-        if (end >= a.length - 1 && !reduce) { const q = P(a[Math.round(((t * .12 + i * .45) % 1) * (a.length - 1))]); if (q[2] > -.3) { G.halo(q[0], q[1], 11 * D, '255,90,70', .7); c.fillStyle = '#fff'; c.beginPath(); c.arc(q[0], q[1], 2.4 * D, 0, 6.2832); c.fill(); } }
+        if (end >= a.length - 1 && !reduce) { const u = (((t * .12 + i * .45) % 1) + 1) % 1; const q = P(a[Math.round(u * (a.length - 1))]); if (q && q[2] > -.3) { G.halo(q[0], q[1], 11 * D, '255,90,70', .7); c.fillStyle = '#fff'; c.beginPath(); c.arc(q[0], q[1], 2.4 * D, 0, 6.2832); c.fill(); } }
       });
       Object.entries(OFF).forEach(([k, o]) => {
-        const q = P(o.v); if (q[2] <= 0) return;
+        const q = P(o.v); if (!q || q[2] <= 0) return;
         const hq = k === 'chc', act = focus === k;
         G.marker(q, 1, t, hq || act ? '255,90,70' : '41,151,255', true);
         const lft = k !== 'hk';

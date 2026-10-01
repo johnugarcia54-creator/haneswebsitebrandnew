@@ -178,7 +178,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .studio li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--brass);transform:translateY(-2px)}
 
 /* ---------- Details ---------- */
-.details{padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
+.details{max-width:100%;overflow:clip;padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
 .details__head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
 .dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px);margin-top:44px}
 .dcard__img{position:relative;aspect-ratio:4/5;border-radius:22px;overflow:hidden;background:var(--bg-2)}

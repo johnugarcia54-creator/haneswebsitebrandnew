@@ -470,8 +470,10 @@ section{position:relative}
       G.line(a, 0, a.length - 1, `rgba(41,151,255,${(.14 * aR).toFixed(3)})`, 6 * D);
       G.line(a, 0, a.length - 1, `rgba(90,200,250,${(.75 * aR).toFixed(3)})`, 1.3 * D);
       if (!reduce) for (let k = 0; k < 2; k++) {
-        const u = ((time * (i === 2 ? .35 : .11) + k * .5 + i * .23) % 1), q = P(a[Math.round(u * (a.length - 1))]);
-        if (q[2] > -.2) { G.halo(q[0], q[1], 10 * D, '126,224,195', .6 * aR); c.fillStyle = `rgba(255,255,255,${aR.toFixed(3)})`; c.beginPath(); c.arc(q[0], q[1], 2.2 * D, 0, 6.2832); c.fill(); }
+        // keep the sample in range: a clock that runs behind the page makes (n % 1) negative, and a[-1] is missing
+        const u = (((time * (i === 2 ? .35 : .11) + k * .5 + i * .23) % 1) + 1) % 1;
+        const q = P(a[Math.round(u * (a.length - 1))]);
+        if (q && q[2] > -.2) { G.halo(q[0], q[1], 10 * D, '126,224,195', .6 * aR); c.fillStyle = `rgba(255,255,255,${aR.toFixed(3)})`; c.beginPath(); c.arc(q[0], q[1], 2.2 * D, 0, 6.2832); c.fill(); }
       }
     });
     // the offices: the one on screen pulses, and every pin carries its local time
@@ -479,7 +481,7 @@ section{position:relative}
     const keys = ['chc', 'hor', 'hk', 'zz'];
     keys.forEach((key, i) => {
       const o = OFF[key], q = P(o.v);
-      if (q[2] <= 0) return;
+      if (!q || q[2] <= 0) return;
       const on = cur === i;
       // Hornby and Sockburn sit a few kilometres apart: at a distance only one Christchurch pin is drawn
       if (key === 'hor' && cur !== 1) return;
