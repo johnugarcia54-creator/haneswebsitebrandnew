@@ -1,16 +1,8 @@
-/* Hanes Distribution: the global bar. It tucks away once you scroll past it (each page's own nav slides up
-   into its place), comes back at the top of the page, and opens a full list of the brands on small screens. */
+/* Hanes Distribution: the global bar stays on screen. On a small screen it opens the full
+   list of sections, and Get a quote, and closes again once a link is chosen. */
 (() => {
   const root = document.documentElement, gb = document.getElementById('gb');
   if (!gb) return;
-  let off = false, queued = false;
-  const update = () => {
-    queued = false;
-    const o = scrollY > 44;
-    if (o !== off) { off = o; root.classList.toggle('gb-off', o); }
-  };
-  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
-  update();
   const btn = gb.querySelector('.gb__burger');
   if (!btn) return;
   const setOpen = v => {

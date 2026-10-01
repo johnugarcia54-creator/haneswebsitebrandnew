@@ -48,7 +48,7 @@
   --stone:linear-gradient(90deg,#34495e 0%,#7b90a6 55%,#3d5166 100%);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--gb-offset,60px)}
 body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -252,29 +252,16 @@ sup a:hover{color:var(--link)}
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html" aria-current="page">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__quote" href="#pricing" data-go>Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html" aria-current="page">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <a class="gb__quote" href="#pricing" data-go>Get a quote</a>
   </div>
 </div>
-
-<nav class="ln" id="ln" aria-label="Hanestone">
-  <div class="ln__in">
-    <a class="ln__title" href="#top" data-go>Hanestone</a>
-    <div class="ln__menu" id="lnMenu">
-      <a href="#made" data-go>Sheet after sheet</a>
-      <a href="#uses" data-go>Where it goes</a>
-      <a href="#why" data-go>Why stock it</a>
-    </div>
-    <div class="ln__end">
-      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
-      <a class="pill" href="#pricing" data-go>Get pricing</a>
-    </div>
-  </div>
-</nav>
 
 <main id="top">
   <section class="hero" aria-label="Hanestone">
@@ -291,6 +278,14 @@ sup a:hover{color:var(--link)}
     <img id="hcImg" src="stills/range/hanestone-1200.webp" width="1200" height="900" alt="Plasterboard ceiling going up on steel framing, the sun setting through the window" fetchpriority="high" decoding="async">
     <div class="hc__cap"><p>Walls and ceilings</p><p>Smooth from the first sheet <br class="br-d">to the last.</p></div>
   </div></div>
+
+  <nav class="subnav" aria-label="On this page">
+    <ul>
+      <li><a href="#made" data-go>Sheet after sheet</a></li>
+      <li><a href="#uses" data-go>Where it goes</a></li>
+      <li><a href="#why" data-go>Why stock it</a></li>
+    </ul>
+  </nav>
 
   <section class="lit" aria-label="Hanestone in brief">
     <p id="lit">Hanestone is Trusus gypsum board for the walls and ceilings of New Zealand homes. Made on modern lines to the same spec, every sheet. Stocked in Christchurch, delivered nationwide, and sold in bulk to retailers and merchants.</p>
@@ -421,20 +416,14 @@ sup a:hover{color:var(--link)}
   }
   const go = id => {
     const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
-    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 52)) : 0;
+    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 60)) : 0;
     if (lenis) lenis.scrollTo(y, { duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
     else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   };
 
-  /* ---------- Local nav ---------- */
-  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
-  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
-  chev.addEventListener('click', () => setOpen(!open));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
-  ScrollTrigger.create({ start: 2, end: 'max', onToggle: s => ln.classList.toggle('is-stuck', s.isActive) });
   $$('[data-go]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); setOpen(false); go(id);
+    e.preventDefault(); go(id);
   }));
 
   /* ---------- Reveals ---------- */
@@ -518,7 +507,7 @@ sup a:hover{color:var(--link)}
 
   let rsz = 0, lastW = innerWidth;
   addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
-    if (innerWidth === lastW) return; lastW = innerWidth; size(); if (!small()) setOpen(false);
+    if (innerWidth === lastW) return; lastW = innerWidth; size();
   }); });
   addEventListener('load', () => ScrollTrigger.refresh());
 })();

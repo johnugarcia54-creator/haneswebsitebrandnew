@@ -126,7 +126,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .skip.is-on{opacity:1;visibility:visible;transform:none}
 
 /* ---------- HERO: the truck film plays in a card, no pinning ---------- */
-.hero{padding:calc(var(--nav) + var(--gb,0px) + 4vh) 0 clamp(12px,2vh,28px)}
+.hero{padding:calc(var(--gbh,44px) + 4vh) 0 clamp(12px,2vh,28px)}
 .hero__intro{text-align:center;padding:0 var(--pad)}
 .hero__intro .eyebrow{margin-bottom:18px}
 .hero__intro h1{font-size:var(--fs-h)}
@@ -287,7 +287,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* Offices */
 .offices{background:linear-gradient(180deg,var(--bg) 0,var(--surface) 160px,var(--surface) calc(100% - 160px),var(--bg) 100%)}
 .off{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
-.map{position:sticky;top:calc(var(--nav) + 24px);background:#fff;border-radius:32px;padding:clamp(16px,2vw,28px);box-shadow:0 30px 80px -40px rgba(20,30,50,.25)}
+.map{position:sticky;top:calc(var(--gbh,44px) + 24px);background:#fff;border-radius:32px;padding:clamp(16px,2vw,28px);box-shadow:0 30px 80px -40px rgba(20,30,50,.25)}
 .map__art{position:relative}
 .map--dark{background:#000;box-shadow:0 30px 80px -40px rgba(10,14,30,.55)}
 .map__art--globe{aspect-ratio:1/1;border-radius:22px;overflow:hidden;background:#000;isolation:isolate}
@@ -425,12 +425,14 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html" aria-current="page">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__quote" href="contact.html#enquiry">Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <a class="gb__quote" href="contact.html#enquiry">Get a quote</a>
   </div>
 </div>
 
@@ -439,40 +441,6 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     <div class="loader__mark">Hanes <span>Distribution</span></div>
     <div class="loader__bar"><div class="loader__fill" id="loaderFill"></div></div>
     <div class="loader__pct" id="loaderPct">0%</div>
-  </div>
-</div>
-
-<header class="nav" id="nav">
-  <div class="nav__in">
-    <a href="#top" class="brand" data-scroll>Hanes <span>Distribution</span></a>
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#network" data-scroll>Network</a>
-      <a href="#tracking" data-scroll>Tracking</a>
-      <a href="#warehouse" data-scroll>Warehousing</a>
-      <a href="#brands" data-scroll>Brands</a>
-      <a href="#hisense" data-scroll>Hisense</a>
-      <a href="#offices" data-scroll>Offices</a>
-    </nav>
-    <div class="nav__cta">
-      <a href="contact.html#enquiry" class="btn btn--dark">Enquire now</a>
-      <button class="nav__menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span>Menu</span><i aria-hidden="true"></i></button>
-    </div>
-  </div>
-</header>
-
-<div class="menu" id="menu" inert>
-  <nav class="menu__links" aria-label="Sections">
-    <a href="#network" data-scroll>Network</a>
-    <a href="#tracking" data-scroll>Tracking</a>
-    <a href="#warehouse" data-scroll>Warehousing</a>
-    <a href="#brands" data-scroll>Brands</a>
-    <a href="#hisense" data-scroll>Hisense</a>
-    <a href="#offices" data-scroll>Offices</a>
-    <a href="#films" data-scroll>Films</a>
-  </nav>
-  <div class="menu__foot">
-    <a class="btn btn--dark btn--lg" href="contact.html#enquiry">Make an enquiry <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-    <a class="menu__mail" href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a>
   </div>
 </div>
 
@@ -503,6 +471,18 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
       <div class="hero__loc">Sourced in Asia · Stocked in Christchurch</div>
     </div>
   </section>
+
+  <nav class="subnav" aria-label="On this page">
+    <ul>
+      <li><a href="#network" data-scroll>Network</a></li>
+      <li><a href="#tracking" data-scroll>Tracking</a></li>
+      <li><a href="#warehouse" data-scroll>Warehousing</a></li>
+      <li><a href="#brands" data-scroll>Brands</a></li>
+      <li><a href="#hisense" data-scroll>Hisense</a></li>
+      <li><a href="#offices" data-scroll>Offices</a></li>
+      <li><a href="#films" data-scroll>Films</a></li>
+    </ul>
+  </nav>
 
   <!-- ================= Statement ================= -->
   <section class="statement">
@@ -998,12 +978,14 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
   $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    const el = id === '#top' ? 0 : $(id); if (el === null) return;
+    const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
     e.preventDefault();
-    if (lenis) lenis.scrollTo(el, { duration: 1.8, easing: t => 1 - Math.pow(1 - t, 4) });
-    else el === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : el.scrollIntoView({ behavior: 'smooth' });
+    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 60)) : 0;
+    if (lenis) lenis.scrollTo(y, { duration: 1.8, easing: easeOut });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   }));
 
   /* ---------- Split text helper ---------- */
@@ -1023,37 +1005,6 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     });
     walk(el); return el.querySelectorAll('.ch');
   };
-
-  /* ---------- Nav: hides while scrolling down, comes back as soon as you scroll up (inside the films too) ---------- */
-  const nav = $('#nav'); let lastY = 0;
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
-    const y = s.scroll();
-    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
-    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
-    nav.classList.toggle('is-solid', y > 40);
-    lastY = y;
-  }});
-
-  /* ---------- Menu (tablets & phones, where the section links don't fit in the bar) ---------- */
-  const menu = $('#menu'), menuBtn = $('#menuBtn');
-  const setMenu = open => {
-    if (open === nav.classList.contains('is-open')) return;
-    nav.classList.toggle('is-open', open); menu.classList.toggle('is-open', open);
-    menuBtn.setAttribute('aria-expanded', open); menuBtn.querySelector('span').textContent = open ? 'Close' : 'Menu';
-    if (open) {
-      menu.removeAttribute('inert'); nav.classList.remove('is-hidden');
-      lenis ? lenis.stop() : document.documentElement.style.overflow = 'hidden';
-      menu.querySelector('a').focus({ preventScroll: true });
-    } else {
-      if (menu.contains(document.activeElement)) menuBtn.focus({ preventScroll: true });
-      menu.setAttribute('inert', '');
-      lenis ? lenis.start() : document.documentElement.style.overflow = '';
-    }
-  };
-  menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
-  menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); }, true); // capture: close (and restart scrolling) before the link scrolls
-  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
-  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
 
   /* ---------- Skip: fast-forward to the end of a pinned film ---------- */
   const skip = $('#skip'); let skipEl = null;
