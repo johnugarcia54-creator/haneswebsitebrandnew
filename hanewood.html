@@ -48,7 +48,7 @@
   --timber:linear-gradient(90deg,#a85f24 0%,#d9914a 55%,#b36a2c 100%);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--gb-offset,60px)}
 body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -363,31 +363,16 @@ section{position:relative}
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html" aria-current="page">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__quote" href="#pricing" data-go>Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html" aria-current="page">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <a class="gb__quote" href="#pricing" data-go>Get a quote</a>
   </div>
 </div>
-
-<nav class="ln" id="ln" aria-label="Hanewood">
-  <div class="ln__in">
-    <a class="ln__title" href="#top" data-go>Hanewood</a>
-    <div class="ln__menu" id="lnMenu">
-      <a href="#range" data-go>The range</a>
-      <a href="#h32" data-go>H3.2 plywood</a>
-      <a href="#plywood" data-go>How it's made</a>
-      <a href="#lvl" data-go>LVL</a>
-      <a href="#supply" data-go>Supply</a>
-    </div>
-    <div class="ln__end">
-      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
-      <a class="pill" href="#pricing" data-go>Get pricing</a>
-    </div>
-  </div>
-</nav>
 
 <main id="top">
   <!-- ================= Hero ================= -->
@@ -400,6 +385,16 @@ section{position:relative}
       <a class="more" href="#range" data-go><span>Explore the range</span><svg viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg></a>
     </div>
   </section>
+
+  <nav class="subnav" aria-label="On this page">
+    <ul>
+      <li><a href="#range" data-go>The range</a></li>
+      <li><a href="#h32" data-go>H3.2 plywood</a></li>
+      <li><a href="#plywood" data-go>How it's made</a></li>
+      <li><a href="#lvl" data-go>LVL</a></li>
+      <li><a href="#supply" data-go>Supply</a></li>
+    </ul>
+  </nav>
 
   <section class="hm" id="hm" aria-label="Loaded in Christchurch, delivered nationwide">
     <div class="hm__stick">
@@ -655,22 +650,16 @@ section{position:relative}
   // the target is worked out here and handed over as a number, so every section lands just below the nav
   const go = id => {
     const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
-    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 52)) : 0;
+    const y = el ? Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 60)) : 0;
     if (lenis) lenis.scrollTo(y, { duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
     else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   };
 
-  /* ---------- Local nav: frosted with a hairline once you scroll; a chevron opens the sections on small screens ---------- */
-  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
-  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
-  chev.addEventListener('click', () => setOpen(!open));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
-  ScrollTrigger.create({ start: 2, end: 'max', onToggle: s => ln.classList.toggle('is-stuck', s.isActive) });
   // "Get pricing" under a product picks that product in the form
   const pick = v => $$('#priceForm input[name="interest"]').forEach(c => { c.checked = c.value === v; });
   $$('[data-go]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); setOpen(false); if (a.dataset.interest) pick(a.dataset.interest); go(id);
+    e.preventDefault(); if (a.dataset.interest) pick(a.dataset.interest); go(id);
   }));
 
   /* ---------- Reveals: each block rises and fades in once, with a short stagger among its siblings ---------- */
@@ -809,7 +798,7 @@ section{position:relative}
   let rsz = 0, lastW = innerWidth;
   addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
     if (innerWidth === lastW) return; lastW = innerWidth; // a phone's toolbar isn't a real resize
-    sizeLam(); goTo(gi, false); if (!small()) setOpen(false);
+    sizeLam(); goTo(gi, false);
   }); });
   addEventListener('load', () => ScrollTrigger.refresh());
 })();

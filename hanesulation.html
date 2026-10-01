@@ -62,7 +62,7 @@ button{background:none;border:0;cursor:pointer}
 .h{font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.02;text-wrap:balance;font-size:var(--fs-h)}
 .muted{color:var(--ink-3)}
 .sub{font-size:var(--fs-sub);color:var(--ink-2);max-width:560px}
-.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;max-width:100%;overflow:clip}
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-weight:500;font-size:16px;transition:background .4s var(--ease),color .4s var(--ease),box-shadow .4s var(--ease)}
 .btn svg{width:14px;height:14px;transition:transform .4s var(--ease)}
 .btn:hover svg{transform:translateX(3px)}
@@ -110,7 +110,7 @@ button{background:none;border:0;cursor:pointer}
 .lb{position:absolute;left:0;right:0;height:12vh;background:#000;z-index:4;will-change:transform}
 .lb--t{top:0;transform-origin:50% 0}
 .lb--b{bottom:0;transform-origin:50% 100%}
-.motes{position:absolute;inset:0;pointer-events:none;overflow:hidden;will-change:opacity}
+.motes{position:absolute;inset:0;pointer-events:none;max-width:100%;overflow:clip;will-change:opacity}
 .mote{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,rgba(255,238,196,.95),rgba(255,214,140,0) 70%);opacity:0;animation:mote var(--d) linear var(--dl) infinite;will-change:transform,opacity}
 @keyframes mote{0%{transform:translate3d(0,0,0);opacity:0}15%{opacity:.85}80%{opacity:.6}100%{transform:translate3d(var(--dx),var(--dy),0);opacity:0}}
 .h-dark{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;will-change:opacity}
@@ -167,7 +167,7 @@ button{background:none;border:0;cursor:pointer}
 .d-end .btn{margin-top:28px}
 
 /* ---------- Marquee: the promises, on two belts that speed up and lean as you scroll ---------- */
-.marq{position:relative;padding:clamp(40px,8vh,90px) 0;background:var(--bg);overflow:hidden;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line)}
+.marq{position:relative;max-width:100%;padding:clamp(40px,8vh,90px) 0;background:var(--bg);overflow:clip;contain:inline-size;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line)}
 .marq__row{display:flex;white-space:nowrap}
 .marq__track{display:flex;flex:none;will-change:transform}
 .marq__track span{flex:none;display:inline-flex;align-items:center;gap:.36em;padding-right:.36em;font-family:var(--display);font-weight:600;letter-spacing:-.045em;line-height:1.1;font-size:clamp(52px,9vw,160px)}
@@ -201,7 +201,7 @@ button{background:none;border:0;cursor:pointer}
 .house .lab{fill:var(--ink-2);font-family:var(--text);font-size:12px;font-weight:600;letter-spacing:.14em}
 
 /* ---------- Certified ---------- */
-.cert{position:relative;padding:clamp(90px,14vh,150px) 0;background:var(--bg)}
+.cert{position:relative;max-width:100%;overflow:clip;padding:clamp(90px,14vh,150px) 0;background:var(--bg)}
 .cert__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
 .seal-card{position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#15130f,#0d0c09);box-shadow:inset 0 0 0 1px rgba(255,240,210,.07);text-align:center}
 .seal{position:relative;width:min(220px,62%);aspect-ratio:1;margin:0 auto 26px}
@@ -230,7 +230,7 @@ button{background:none;border:0;cursor:pointer}
 .s-tag i{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(242,201,90,.2)}
 
 /* ---------- Brand: the photo is revealed as a roll of insulation unrolls off it ---------- */
-.brandsec{position:relative;padding:clamp(90px,14vh,150px) 0;background:var(--bg);overflow:hidden}
+.brandsec{position:relative;max-width:100%;padding:clamp(90px,14vh,150px) 0;background:var(--bg);overflow:clip}
 .brand__grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,5vw,80px);align-items:center}
 .unroll{position:relative;aspect-ratio:1;border-radius:24px;overflow:hidden;background:var(--bg-2)}
 .unroll img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
@@ -241,7 +241,7 @@ button{background:none;border:0;cursor:pointer}
 .feats svg{width:26px;height:26px;color:var(--gold)}
 
 /* ---------- Pricing ---------- */
-.pricing{position:relative;padding:clamp(90px,14vh,150px) 0 clamp(70px,10vh,110px);background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(242,201,90,.08),rgba(0,0,0,0) 70%),var(--bg)}
+.pricing{position:relative;max-width:100%;overflow:clip;padding:clamp(90px,14vh,150px) 0 clamp(70px,10vh,110px);background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(242,201,90,.08),rgba(0,0,0,0) 70%),var(--bg)}
 .pricing__grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,80px);align-items:start}
 .pricing .sub{margin-top:18px}
 .ticks{list-style:none;margin-top:28px;display:grid;gap:12px}
@@ -337,12 +337,14 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html" aria-current="page">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__quote" href="#pricing" data-scroll>Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html" aria-current="page">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <a class="gb__quote" href="#pricing" data-scroll>Get a quote</a>
   </div>
 </div>
 
@@ -352,33 +354,6 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
     <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
   </div>
 </div>
-
-<header class="nav" id="nav">
-  <div class="wrap nav__in">
-    <a class="brand" href="#top" data-scroll>Hanesulation <small>by Hanes Distribution</small></a>
-    <nav class="nav__links" aria-label="Page">
-      <a href="#range" data-scroll>The range</a>
-      <a href="#demand" data-scroll>Why stock it</a>
-      <a href="#certified" data-scroll>Certified</a>
-      <a href="#supply" data-scroll>Supply</a>
-      <a href="#pricing" data-scroll>For retailers</a>
-    </nav>
-    <div class="nav__end">
-      <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing</a>
-      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
-    </div>
-  </div>
-</header>
-<nav class="menu" id="menu" aria-label="Page">
-  <a href="#warmth" data-scroll>Inside the roll</a>
-  <a href="#range" data-scroll>The range</a>
-  <a href="#demand" data-scroll>Why stock it</a>
-  <a href="#certified" data-scroll>Certified</a>
-  <a href="#supply" data-scroll>Supply</a>
-  <a href="#brand" data-scroll>The brand</a>
-  <a href="#pricing" data-scroll>For retailers</a>
-  <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-</nav>
 
 <main id="top">
   <!-- ================= Hero: one take, through the roll ================= -->
@@ -406,6 +381,18 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
       <div class="h-meter" aria-hidden="true"><i id="hMeter"></i></div>
     </div>
   </section>
+
+  <nav class="subnav subnav--dark" aria-label="On this page">
+    <ul>
+      <li><a href="#warmth" data-scroll>Inside the roll</a></li>
+      <li><a href="#range" data-scroll>The range</a></li>
+      <li><a href="#demand" data-scroll>Why stock it</a></li>
+      <li><a href="#certified" data-scroll>Certified</a></li>
+      <li><a href="#supply" data-scroll>Supply</a></li>
+      <li><a href="#brand" data-scroll>The brand</a></li>
+      <li><a href="#pricing" data-scroll>For retailers</a></li>
+    </ul>
+  </nav>
 
   <!-- ================= Warmth: through the word ================= -->
   <section class="warmth" id="warmth" aria-label="What is inside every roll">
@@ -661,32 +648,23 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
-  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
-  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
-  const MT = gsap.timeline({ paused: true })
-    .set(menu, { visibility: 'visible' })
-    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
-    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
-  const setMenu = v => {
-    if (v === menuOpen) return; menuOpen = v;
-    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
-    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
-    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
+  const go = target => {
+    if (target === 0) {
+      if (lenis) lenis.scrollTo(0, { duration: 1.6, easing: easeOut });
+      else scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      return;
+    }
+    const el = typeof target === 'string' ? $(target) : target;
+    if (!el) return;
+    const y = Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 60));
+    if (lenis) lenis.scrollTo(y, { duration: 1.6, easing: easeOut });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   };
-  burger.addEventListener('click', () => setMenu(!menuOpen));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
-  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
   $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
+    e.preventDefault(); go(id === '#top' ? 0 : id);
   }));
-  let lastY = 0;
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
-    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
-    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
-    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
-    lastY = y;
-  }});
 
   // a camera over a photo: cx, cy = the point at the centre of the screen; z = zoom (1 = the photo just covers the screen)
   const makeCam = (stage, img, iw, ih, c0) => {

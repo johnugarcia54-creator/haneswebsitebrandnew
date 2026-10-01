@@ -47,7 +47,7 @@
   --route:linear-gradient(90deg,#2997ff 0%,#5ac8fa 55%,#7ee0c3 100%);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--ln)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:var(--gb-offset,60px)}
 body{padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#000;-webkit-font-smoothing:antialiased;overflow-x:clip}
 img,svg,canvas{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -219,29 +219,16 @@ section{position:relative}
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html" aria-current="page">Contact</a></li></ul>
+    <a class="gb__quote" href="#enquiry" data-go>Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html" aria-current="page">Contact us</a></div>
+    <a class="gb__quote" href="#enquiry" data-go>Get a quote</a>
   </div>
 </div>
-
-<nav class="ln" id="ln" aria-label="Contact">
-  <div class="ln__in">
-    <a class="ln__title" href="#top" data-go>Contact</a>
-    <div class="ln__menu" id="lnMenu">
-      <a href="#offices" data-go data-at="1">Offices</a>
-      <a href="#help" data-go>How we can help</a>
-      <a href="#enquiry" data-go>Send an enquiry</a>
-    </div>
-    <div class="ln__end">
-      <button class="ln__chev" id="lnChev" type="button" aria-label="Show sections" aria-expanded="false" aria-controls="lnMenu"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 4 6 8.5 10.5 4"/></svg></button>
-      <a class="pill" href="#enquiry" data-go>Enquire</a>
-    </div>
-  </div>
-</nav>
 
 <div id="top">
   <!-- ================= Offices, on the globe ================= -->
@@ -305,6 +292,14 @@ section{position:relative}
       </article></div>
     </div>
   </section>
+
+  <nav class="subnav" aria-label="On this page">
+    <ul>
+      <li><a href="#offices" data-go data-at="1">Offices</a></li>
+      <li><a href="#help" data-go>How we can help</a></li>
+      <li><a href="#enquiry" data-go>Send an enquiry</a></li>
+    </ul>
+  </nav>
 
   <main>
     <!-- ================= How can we help ================= -->
@@ -405,22 +400,16 @@ section{position:relative}
   const ct = $('#offices');
   const go = (id, at) => {
     const el = id === '#top' ? null : $(id); if (id !== '#top' && !el) return;
-    let y = el ? el.getBoundingClientRect().top + scrollY - 52 : 0;
+    let y = el ? el.getBoundingClientRect().top + scrollY - 60 : 0;
     if (el === ct) y = ct.getBoundingClientRect().top + scrollY + innerHeight * (+at || 0);
     y = Math.max(0, Math.round(y));
     if (lenis) lenis.scrollTo(y, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) });
     else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   };
 
-  /* ---------- Local nav ---------- */
-  const ln = $('#ln'), chev = $('#lnChev'); let open = false;
-  ScrollTrigger.create({ trigger: 'main', start: 'top 52px', end: 'max', toggleClass: { targets: ln, className: 'ln--light' } });
-  const setOpen = v => { open = v; ln.classList.toggle('is-open', v); chev.setAttribute('aria-expanded', String(v)); chev.setAttribute('aria-label', v ? 'Hide sections' : 'Show sections'); };
-  chev.addEventListener('click', () => setOpen(!open));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
   $$('[data-go]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); setOpen(false); go(id, a.dataset.at);
+    e.preventDefault(); go(id, a.dataset.at);
   }));
 
   /* ---------- Reveals ---------- */
@@ -481,8 +470,10 @@ section{position:relative}
       G.line(a, 0, a.length - 1, `rgba(41,151,255,${(.14 * aR).toFixed(3)})`, 6 * D);
       G.line(a, 0, a.length - 1, `rgba(90,200,250,${(.75 * aR).toFixed(3)})`, 1.3 * D);
       if (!reduce) for (let k = 0; k < 2; k++) {
-        const u = ((time * (i === 2 ? .35 : .11) + k * .5 + i * .23) % 1), q = P(a[Math.round(u * (a.length - 1))]);
-        if (q[2] > -.2) { G.halo(q[0], q[1], 10 * D, '126,224,195', .6 * aR); c.fillStyle = `rgba(255,255,255,${aR.toFixed(3)})`; c.beginPath(); c.arc(q[0], q[1], 2.2 * D, 0, 6.2832); c.fill(); }
+        // keep the sample in range: a clock that runs behind the page makes (n % 1) negative, and a[-1] is missing
+        const u = (((time * (i === 2 ? .35 : .11) + k * .5 + i * .23) % 1) + 1) % 1;
+        const q = P(a[Math.round(u * (a.length - 1))]);
+        if (q && q[2] > -.2) { G.halo(q[0], q[1], 10 * D, '126,224,195', .6 * aR); c.fillStyle = `rgba(255,255,255,${aR.toFixed(3)})`; c.beginPath(); c.arc(q[0], q[1], 2.2 * D, 0, 6.2832); c.fill(); }
       }
     });
     // the offices: the one on screen pulses, and every pin carries its local time
@@ -490,7 +481,7 @@ section{position:relative}
     const keys = ['chc', 'hor', 'hk', 'zz'];
     keys.forEach((key, i) => {
       const o = OFF[key], q = P(o.v);
-      if (q[2] <= 0) return;
+      if (!q || q[2] <= 0) return;
       const on = cur === i;
       // Hornby and Sockburn sit a few kilometres apart: at a distance only one Christchurch pin is drawn
       if (key === 'hor' && cur !== 1) return;
@@ -561,7 +552,7 @@ section{position:relative}
 
   let rsz = 0, lastW = innerWidth, lastH = innerHeight;
   addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
-    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return; lastW = innerWidth; lastH = innerHeight; G.resize(); if (!small()) setOpen(false);
+    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return; lastW = innerWidth; lastH = innerHeight; G.resize();
   }); });
   addEventListener('load', () => ScrollTrigger.refresh());
 })();

@@ -93,6 +93,7 @@ window.HanesGlobe = (() => {
       const C0 = Math.cos(cam.lon * D2R), S0 = Math.sin(cam.lon * D2R), Cl = Math.cos(cam.lat * D2R), Sl = Math.sin(cam.lat * D2R);
       // project a point on (or above) the unit sphere to [x, y, facing, height]
       this.P = v => {
+        if (!v) return null;
         const r = Math.hypot(v[0], v[1], v[2]), h = Math.hypot(v[0], v[1]) || 1;
         const sinLat = v[2] / r, cosLat = h / r, cosLon = v[0] / h, sinLon = v[1] / h;
         const cl = cosLon * C0 + sinLon * S0, sl = sinLon * C0 - cosLon * S0;
@@ -122,6 +123,8 @@ window.HanesGlobe = (() => {
       const i0 = Math.max(0, Math.floor(from)), i1 = Math.min(pts.length - 1, Math.ceil(to));
       for (let i = i0; i <= i1; i++) {
         const q = P(pts[i]);
+        // a sample can be missing when the playback clock runs behind the page clock
+        if (!q) { pen = false; continue; }
         // hidden only when behind the planet: a lifted point past the horizon can still clear the rim
         if (q[2] < -.01 && q[2] * q[2] > 1 - 1 / (q[3] * q[3])) { pen = false; continue; }
         pen ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); pen = true;
@@ -130,7 +133,7 @@ window.HanesGlobe = (() => {
     }
     halo(x, y, r, rgb, a) { const c = this.ctx, g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
     marker(q, a, time, rgb = '41,151,255', pulse = true) {
-      if (a <= .01 || q[2] < 0) return;
+      if (!q || a <= .01 || q[2] < 0) return;
       const c = this.ctx, D = this.DPR, [x, y] = q;
       c.globalAlpha = a;
       this.halo(x, y, 18 * D, rgb, .55);

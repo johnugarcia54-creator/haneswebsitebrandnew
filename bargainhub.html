@@ -178,7 +178,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .studio li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--brass);transform:translateY(-2px)}
 
 /* ---------- Details ---------- */
-.details{padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
+.details{max-width:100%;overflow:clip;padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
 .details__head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
 .dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.4vw,20px);margin-top:44px}
 .dcard__img{position:relative;aspect-ratio:4/5;border-radius:22px;overflow:hidden;background:var(--bg-2)}
@@ -357,12 +357,14 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html" aria-current="page">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__quote" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html" aria-current="page">Bargainhub<span>Kitchens and interiors</span></a>
     <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <a class="gb__quote" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Get a quote</a>
   </div>
 </div>
 
@@ -372,32 +374,6 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     <div class="loader__bar"><div class="loader__fill" id="lfill"></div></div>
   </div>
 </div>
-
-<header class="nav" id="nav">
-  <div class="wrap nav__in">
-    <a class="brand" href="#top" data-scroll>Bargainhub <small>by Hanes Distribution</small></a>
-    <nav class="nav__links" aria-label="Page">
-      <a href="#rooms" data-scroll>Rooms</a>
-      <a href="#design" data-scroll>Design</a>
-      <a href="#packages" data-scroll>Packages</a>
-      <a href="#reviews" data-scroll>Reviews</a>
-      <a href="#showroom" data-scroll>Showroom</a>
-    </nav>
-    <div class="nav__end">
-      <a class="btn btn--dark" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Get a quote</a>
-      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"></button>
-    </div>
-  </div>
-</header>
-<nav class="menu" id="menu" aria-label="Page">
-  <a href="#rooms" data-scroll>Rooms</a>
-  <a href="#design" data-scroll>Design</a>
-  <a href="#details" data-scroll>Materials</a>
-  <a href="#packages" data-scroll>Packages</a>
-  <a href="#reviews" data-scroll>Reviews</a>
-  <a href="#showroom" data-scroll>Showroom</a>
-  <a class="btn btn--dark" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-</nav>
 
 <main id="top">
   <!-- ================= Build ================= -->
@@ -425,6 +401,16 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
       <div class="b-meter" id="bMeter" aria-hidden="true"><i id="bMeterFill"></i></div>
     </div>
   </section>
+
+  <nav class="subnav" aria-label="On this page">
+    <ul>
+      <li><a href="#rooms" data-scroll>Rooms</a></li>
+      <li><a href="#design" data-scroll>Design</a></li>
+      <li><a href="#packages" data-scroll>Packages</a></li>
+      <li><a href="#reviews" data-scroll>Reviews</a></li>
+      <li><a href="#showroom" data-scroll>Showroom</a></li>
+    </ul>
+  </nav>
 
   <!-- ================= Intro ================= -->
   <section class="intro" id="intro">
@@ -819,38 +805,24 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
-  const go = target => lenis ? lenis.scrollTo(target, { duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : (target === 0 ? scrollTo({ top: 0, behavior: 'smooth' }) : $(target).scrollIntoView({ behavior: 'smooth' }));
-
-  /* ---------- Menu (tablets and phones): the panel drops down from the bar and the links fall in after it ---------- */
-  const nav = $('#nav'), menu = $('#menu'), burger = $('#burger'); let menuOpen = false;
-  const MT = gsap.timeline({ paused: true })
-    .set(menu, { visibility: 'visible' })
-    .fromTo(menu, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' })
-    .fromTo('#menu > *', { y: -28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, stagger: .045, ease: 'back.out(1.6)' }, .18);
-  const setMenu = v => {
-    if (v === menuOpen) return; menuOpen = v;
-    nav.classList.toggle('is-open', v); burger.setAttribute('aria-expanded', String(v));
-    if (v) { nav.classList.remove('is-hidden'); lenis && lenis.stop(); MT.timeScale(1).play(); }
-    else { lenis && lenis.start(); MT.timeScale(1.8).reverse(); }
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
+  const go = target => {
+    if (target === 0) {
+      if (lenis) lenis.scrollTo(0, { duration: 1.6, easing: easeOut });
+      else scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      return;
+    }
+    const el = typeof target === 'string' ? $(target) : target;
+    if (!el) return;
+    const y = Math.max(0, Math.round(el.getBoundingClientRect().top + scrollY - 60));
+    if (lenis) lenis.scrollTo(y, { duration: 1.6, easing: easeOut });
+    else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   };
-  burger.addEventListener('click', () => setMenu(!menuOpen));
-  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
-  addEventListener('resize', () => { if (innerWidth > 1024) setMenu(false); });
 
   $$('[data-scroll]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href'); if (!id || id[0] !== '#') return;
-    e.preventDefault(); setMenu(false); go(id === '#top' ? 0 : id);
+    e.preventDefault(); go(id === '#top' ? 0 : id);
   }));
-  $$('#menu a:not([data-scroll])').forEach(a => a.addEventListener('click', () => setMenu(false)));
-
-  /* ---------- Nav: out of the way while scrolling down, back as soon as you scroll up ---------- */
-  let lastY = 0;
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: s => {
-    const y = s.scroll(); if (menuOpen) { lastY = y; return; }
-    if (y > lastY + 4 && y > innerHeight * .3) nav.classList.add('is-hidden');
-    else if (y < lastY - 4 || y <= innerHeight * .3) nav.classList.remove('is-hidden');
-    lastY = y;
-  }});
 
   /* =========================================================
      BUILD: the blueprint is drawn, the pieces arrive as an untextured model, the materials and lights come on,
