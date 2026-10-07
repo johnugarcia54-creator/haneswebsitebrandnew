@@ -217,12 +217,12 @@ test('BOOKINGS_LIVE is false: Book a consultant keeps opening the enquiry dialog
 });
 
 test('Milli: loaded after load and idle (4 s timeout) only when shipped, never on /auth/ or /studio/', () => {
-  // not shipped (today): nothing is requested, so no failed request is ever logged
-  assert.match(SITE_JS, /MILLI_SHIPPED = false/);
+  // shipped (W3 merged): the committed site.js has it on; switched off, nothing is requested
+  assert.match(SITE_JS, /MILLI_SHIPPED = true/);
+  const shipped = SITE_JS, off = SITE_JS.replace('MILLI_SHIPPED = true', 'MILLI_SHIPPED = false');
   let p = page();
-  boot(p);
+  boot(p, off);
   assert.equal(p.added.length + p.idles.length + p.listeners.filter(l => l[0] === 'load').length, 0);
-  const shipped = SITE_JS.replace('MILLI_SHIPPED = false', 'MILLI_SHIPPED = true');
   // page still loading: waits for load, then for idle, then adds the script
   p = page({ readyState: 'interactive' });
   boot(p, shipped);
@@ -260,17 +260,18 @@ test('check.mjs keeps MILLI_SHIPPED honest', () => {
       return { code: r.status, out: r.stdout + r.stderr };
     } finally { rmSync(dir, { recursive: true, force: true }); }
   };
-  const on = SITE_JS.replace('MILLI_SHIPPED = false', 'MILLI_SHIPPED = true');
-  assert.equal(run({ 'assets/site.js': SITE_JS }).code, 0);
+  const on = SITE_JS, OFF = SITE_JS.replace('MILLI_SHIPPED = true', 'MILLI_SHIPPED = false');
+  assert.equal(run({ 'assets/site.js': OFF }).code, 0);
+  assert.equal(run({ 'assets/site.js': on, 'assets/guide/milli.js': '' }).code, 0);
   let r = run({ 'assets/site.js': on });
   assert.equal(r.code, 1);
   assert.match(r.out, /MILLI_SHIPPED is true but assets\/guide\/milli\.js does not exist/);
   // the guide merged without switching it on: an error, so Milli can never silently stay off
-  r = run({ 'assets/site.js': SITE_JS, 'assets/guide/milli.js': '' });
+  r = run({ 'assets/site.js': OFF, 'assets/guide/milli.js': '' });
   assert.equal(r.code, 1);
   assert.match(r.out, /ERROR {4}assets\/site\.js: assets\/guide\/milli\.js exists but MILLI_SHIPPED is false/);
   // only an explicit hold makes it a warning
-  r = run({ 'assets/site.js': SITE_JS.replace('MILLI_SHIPPED = false;', 'MILLI_SHIPPED = false; // held'), 'assets/guide/milli.js': '' });
+  r = run({ 'assets/site.js': OFF.replace('MILLI_SHIPPED = false;', 'MILLI_SHIPPED = false; // held'), 'assets/guide/milli.js': '' });
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /warning {2}assets\/guide\/milli\.js exists but is held/);
   assert.equal(run({ 'assets/site.js': on, 'assets/guide/milli.js': '' }).code, 0);

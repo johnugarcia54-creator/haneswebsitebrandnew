@@ -18,7 +18,7 @@
   const BOOKINGS_LIVE = false;
   const BOOKING_HREF = 'studio/#/book';
   const ACCOUNT_HREF = '/studio/#/account';
-  const MILLI_SRC = '/assets/guide/milli.js', MILLI_SHIPPED = false;
+  const MILLI_SRC = '/assets/guide/milli.js', MILLI_SHIPPED = true;
   const SB_TOKEN = /^sb-[a-z0-9]+-auth-token$/;
 
   /* ---- bhAuthHygiene: the shared contract (ADDENDUM §3.3.4) ----------------------------------
