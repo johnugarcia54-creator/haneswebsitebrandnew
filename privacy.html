@@ -71,7 +71,7 @@ main{flex:1;padding:clamp(56px,9vh,110px) 22px clamp(64px,10vh,120px)}
 .tbl thead th{border-top:0;background:var(--alt);font-weight:600}
 .tbl tbody th{font-weight:600;white-space:nowrap}
 .tbl caption{padding:0;text-align:left;font-size:0;height:0;overflow:hidden}
-@media (max-width:640px){.pv__toc ol{columns:1}}
+@media (max-width:640px){.pv__toc ol{columns:1}/* phones: each row becomes a card, every column visible without sideways scrolling */.tbl table{min-width:0}.tbl table,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block}.tbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.tbl tbody tr{padding:14px 16px;border-top:1px solid var(--line)}.tbl tbody tr:first-child{border-top:0}.tbl tbody th,.tbl td{padding:0;border-top:0}.tbl tbody th{white-space:normal;overflow-wrap:anywhere}.tbl td{margin-top:8px}.tbl td::before{display:block;font-size:13px;font-weight:600;color:var(--ink-2);content:attr(data-label);content:attr(data-label) / ""}}
 </style>
 </head>
 <body>
@@ -148,17 +148,17 @@ main{flex:1;padding:clamp(56px,9vh,110px) 22px clamp(64px,10vh,120px)}
       <h2 class="pv__h" id="processors-h">3. Where it is held and who processes it for us</h2>
       <p>We use these providers to run our services. Each one holds or handles information for us.</p>
       <div class="tbl" role="region" aria-labelledby="processors-h" tabindex="0">
-        <table>
+        <table role="table">
           <caption>Our providers, what each handles, and where</caption>
-          <thead><tr><th scope="col">Provider</th><th scope="col">What it handles for us</th><th scope="col">Where</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Fly.io</th><td>The studio server: accounts, designs, files, bookings, intakes, and the queue of details waiting to go to our customer system</td><td>Sydney, Australia (a US company)</td></tr>
-            <tr><th scope="row">Supabase</th><td>Sign-in (email, password hash, sessions) and encrypted backups</td><td>Sydney, Australia (a US company)</td></tr>
-            <tr><th scope="row">Base44 (Wix group)</th><td>Our customer follow-up system: lead and client contact details</td><td>United States, with US sub-processors including AI providers</td></tr>
-            <tr><th scope="row">SpaceXAI (xAI)</th><td>Milli’s answers, when you type a question (we remove contact details first)</td><td>United States; zero data retention; not used for training</td></tr>
-            <tr><th scope="row">Resend</th><td>Email delivery</td><td>United States</td></tr>
-            <tr><th scope="row">Vercel</th><td>Website hosting, and the relay for every studio and account request: sign-in tokens during sign-in, designs, intake details and enquiries pass through it on the way to our server</td><td>Global edge network; functions in Sydney; request logs (including page addresses, such as the one-time link in a confirmation email) in the United States</td></tr>
-            <tr><th scope="row">Cloudflare (Turnstile)</th><td>Checks that sign-ups are not bots</td><td>Global</td></tr>
+          <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Provider</th><th scope="col" role="columnheader">What it handles for us</th><th scope="col" role="columnheader">Where</th></tr></thead>
+          <tbody role="rowgroup">
+            <tr role="row"><th scope="row" role="rowheader">Fly.io</th><td role="cell" data-label="What it handles for us">The studio server: accounts, designs, files, bookings, intakes, and the queue of details waiting to go to our customer system</td><td role="cell" data-label="Where">Sydney, Australia</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Supabase</th><td role="cell" data-label="What it handles for us">Sign-in (email, password hash, sessions) and encrypted backups</td><td role="cell" data-label="Where">Sydney, Australia (a US company)</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Base44 (Wix group)</th><td role="cell" data-label="What it handles for us">Our customer follow-up system: lead and client contact details</td><td role="cell" data-label="Where">United States, with US sub-processors including AI providers</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">SpaceXAI (xAI)</th><td role="cell" data-label="What it handles for us">Milli’s answers, when you type a question (we remove contact details first)</td><td role="cell" data-label="Where">United States; zero data retention; not used for training</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Resend</th><td role="cell" data-label="What it handles for us">Email delivery</td><td role="cell" data-label="Where">United States</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Vercel</th><td role="cell" data-label="What it handles for us">Website hosting, and the relay for every studio and account request: sign-in tokens during sign-in, designs, intake details and enquiries pass through it on the way to our server</td><td role="cell" data-label="Where">Global edge network; functions in Sydney; request logs (including page addresses, such as the one-time link in a confirmation email) in the United States</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Cloudflare (Turnstile)</th><td role="cell" data-label="What it handles for us">Checks that sign-ups are not bots</td><td role="cell" data-label="Where">Global</td></tr>
           </tbody>
         </table>
       </div>
@@ -189,7 +189,7 @@ main{flex:1;padding:clamp(56px,9vh,110px) 22px clamp(64px,10vh,120px)}
 
     <section id="rights" aria-labelledby="rights-h">
       <h2 class="pv__h" id="rights-h">7. Your rights</h2>
-      <p>You can ask to see the personal information we hold about you or to correct it (IPP 6 and IPP 7), or ask us to delete it. We reply within 20 working days. Deletion covers our server, our sign-in provider (Supabase) and our customer system (Base44).</p>
+      <p>You can ask to see the personal information we hold about you or to correct it (IPP 6 and IPP 7), or ask us to delete it. We reply within 20 working days. Deletion covers our server, our sign-in provider (Supabase) and our customer system (Base44). Each enquiry is also emailed to our enquiry inbox, and we delete it there too. Copies in our encrypted backups are not changed, and expire within 13 months. <span class="ph">[To be confirmed in legal review]</span></p>
       <p>Until you can do this yourself in your account, email our privacy officer (see <a href="#who">section 1</a>).</p>
     </section>
 
@@ -202,16 +202,16 @@ main{flex:1;padding:clamp(56px,9vh,110px) 22px clamp(64px,10vh,120px)}
       <h2 class="pv__h" id="cookies-h">9. Cookies and browser storage</h2>
       <p>We don’t use analytics or advertising cookies. What we do keep in your browser:</p>
       <div class="tbl" role="region" aria-labelledby="cookies-h" tabindex="0">
-        <table>
+        <table role="table">
           <caption>Cookies and browser storage we use</caption>
-          <thead><tr><th scope="col">Name</th><th scope="col">What it does</th><th scope="col">How long</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">__Host-bh_session</th><td>Our sign-in cookie, so the studio knows it’s you. Your browser can’t read it from scripts, and it only goes back to this site.</td><td>Up to 12 hours</td></tr>
-            <tr><th scope="row">bh_live</th><td>Remembers that you chose not to stay signed in</td><td>Until you close the browser</td></tr>
-            <tr><th scope="row">sb-…-auth-token</th><td>Your sign-in with our sign-in provider (kept in local storage)</td><td>Until you sign out</td></tr>
-            <tr><th scope="row">bh_remember, bh_milli_nudged</th><td>Your choices, such as “keep me signed in”, and whether Milli has said hello</td><td>Until you clear them</td></tr>
-            <tr><th scope="row">bh_next, bh_milli_history</th><td>Where to take you after you sign in, and your last few questions to Milli</td><td>Until you close the tab</td></tr>
-            <tr><th scope="row">Studio drafts</th><td>Designs you make before you sign in, kept only in this browser</td><td>Until you clear them</td></tr>
+          <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Name</th><th scope="col" role="columnheader">What it does</th><th scope="col" role="columnheader">How long</th></tr></thead>
+          <tbody role="rowgroup">
+            <tr role="row"><th scope="row" role="rowheader">__Host-bh_session</th><td role="cell" data-label="What it does">Our sign-in cookie, so the studio knows it’s you. Your browser can’t read it from scripts, and it only goes back to this site.</td><td role="cell" data-label="How long">Up to 12 hours</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">bh_live</th><td role="cell" data-label="What it does">Remembers that you chose not to stay signed in</td><td role="cell" data-label="How long">Until you close the browser</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">sb-…-auth-token</th><td role="cell" data-label="What it does">Your sign-in with our sign-in provider (kept in local storage)</td><td role="cell" data-label="How long">Until you sign out</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">bh_remember, bh_milli_nudged</th><td role="cell" data-label="What it does">Your choices, such as “keep me signed in”, and whether Milli has said hello</td><td role="cell" data-label="How long">Until you clear them</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">bh_next, bh_milli_history</th><td role="cell" data-label="What it does">Where to take you after you sign in, and your last few questions to Milli</td><td role="cell" data-label="How long">Until you close the tab</td></tr>
+            <tr role="row"><th scope="row" role="rowheader">Studio drafts</th><td role="cell" data-label="What it does">Designs you make before you sign in, kept only in this browser</td><td role="cell" data-label="How long">Until you clear them</td></tr>
           </tbody>
         </table>
       </div>
@@ -221,7 +221,7 @@ main{flex:1;padding:clamp(56px,9vh,110px) 22px clamp(64px,10vh,120px)}
       <h2 class="pv__h" id="milli-h">10. Using Milli, our guide</h2>
       <ul>
         <li>Milli’s answers are general information. A person confirms prices, timing and terms.</li>
-        <li>Please don’t share personal details with Milli. Use the enquiry form instead.</li>
+        <li>Please don’t share personal details with Milli. Use the enquiry or booking form instead.</li>
         <li>No unlawful or abusive use.</li>
         <li>Milli is for people aged 13 and over. If you are under 18, please ask a parent first.</li>
       </ul>
