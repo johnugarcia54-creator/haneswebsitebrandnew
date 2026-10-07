@@ -11,6 +11,13 @@
    Base44 row, and never asks the guide a question (no Grok tokens are spent).
    --local         skip what only Vercel and the studio provide (redirects, headers, rewrites)
    --production    also require what only production promises (DEPLOY_ENV=Production does the same)
+
+   A production deployment's own address (hanes-the-website-new-<hash>-<team>.vercel.app, the
+   URL Vercel reports) matches no production rule in vercel.json, so its /studio/ and /api/*
+   go to STAGING Fly with x-studio-edge: not-this-environment and are refused there (ADDENDUM
+   §2.3). For such a deployment the studio and API checks therefore run against the production
+   address (PRODUCTION_HOST), which is the one that reaches production Fly, and the deployment
+   address itself must fail closed: /studio/ and /api/auth/health answer 403 edge_only.
    ========================================================================================= */
 import { pathToFileURL } from 'node:url';
 
@@ -18,6 +25,15 @@ export const PAGES = ['/', '/hanesteel.html', '/hanestone.html', '/hanewood.html
 export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html'];
 export const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
 export const PRODUCTION_HOST = 'hanes-the-website-new.vercel.app';
+export const PRODUCTION_BASE = `https://${PRODUCTION_HOST}`;
+
+/* Where the studio and API checks run. On production they must go through the production
+   address; any other address of a production build only reaches staging and must be refused. */
+export function rewriteBases(base, { production = false, productionBase } = {}) {
+  const prod = (productionBase || (new URL(base).host === PRODUCTION_HOST ? base : PRODUCTION_BASE)).replace(/\/+$/, '');
+  if (!production || prod === base) return { studio: base, failClosed: null };
+  return { studio: prod, failClosed: base };
+}
 
 /* The only posts the smoke test makes. Each is refused by /api/enquiry before the CRM forward
    and before any email (api/enquiry.js: origin, then validation and the spam trap), and each
@@ -43,10 +59,13 @@ export function looksSecret(value, key = '') {
   return /\b(sk|pk|rk|sb_secret|sb_publishable|re|xai)[-_][A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|[A-Za-z0-9+/_-]{40,}/.test(value);
 }
 
-export async function smoke(base, { local = false, production = false, log = console.log } = {}) {
+export async function smoke(base, { local = false, production = false, productionBase, log = console.log } = {}) {
   let failed = 0;
   const ok = (cond, what) => { log(`${cond ? 'pass' : 'FAIL'}  ${what}`); if (!cond) failed++; };
-  const get = (p, o = {}) => fetch(base + p, { redirect: 'manual', ...o });
+  const at = b => (p, o = {}) => fetch(b + p, { redirect: 'manual', ...o });
+  const get = at(base);
+  const bases = rewriteBases(base, { production, productionBase });
+  const sget = at(bases.studio), via = bases.failClosed ? ` via ${bases.studio}` : '';
   const json = r => r.json().catch(() => null);
 
   for (const p of PAGES) {
@@ -87,24 +106,29 @@ export async function smoke(base, { local = false, production = false, log = con
     const og = await get('/og/index.jpg');
     ok((og.headers.get('cache-control') || '').includes('max-age=604800'), 'images are cached');
 
-    // ---------- the studio and its API, through the rewrite (all reads)
-    const st = await get('/studio');
-    ok([307, 308].includes(st.status) && /\/studio\/$/.test(st.headers.get('location') || ''), `/studio redirects to /studio/ (HTTP ${st.status})`);
-    const sr = await get('/studio/');
-    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex (HTTP ${sr.status})`);
+    // ---------- the studio and its API, through the rewrite (all reads; on the production address for production)
+    const st = await sget('/studio');
+    ok([307, 308].includes(st.status) && /\/studio\/$/.test(st.headers.get('location') || ''), `/studio redirects to /studio/${via} (HTTP ${st.status})`);
+    const sr = await sget('/studio/');
+    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex${via} (HTTP ${sr.status})`);
     for (const p of ['/api/health', '/api/auth/health']) {
-      const r = await get(p), j = await json(r);
-      ok(r.status === 200 && j && j.ok === true, `${p} answers ok through the rewrite (HTTP ${r.status})`);
+      const r = await sget(p), j = await json(r);
+      ok(r.status === 200 && j && j.ok === true, `${p} answers ok through the rewrite${via} (HTTP ${r.status})`);
     }
-    const crm = await get('/api/crm/health'), cj = await json(crm);
-    ok(crm.status === 200 && cj !== null && !looksSecret(cj), `/api/crm/health answers without secrets (HTTP ${crm.status})`);
+    const crm = await sget('/api/crm/health'), cj = await json(crm);
+    ok(crm.status === 200 && cj !== null && !looksSecret(cj), `/api/crm/health answers without secrets${via} (HTTP ${crm.status})`);
     // the guide: only once G1 is deployed, and only its GET (it never posts a question)
-    const gd = await get('/api/guide');
-    if (gd.status === 404) log('skip  /api/guide is not deployed yet');
-    else { const gj = await json(gd); ok(gd.status === 200 && gj && typeof gj.mode === 'string' && !looksSecret(gj), `GET /api/guide answers its mode (HTTP ${gd.status})`); }
+    const gd = await sget('/api/guide');
+    if (gd.status === 404) log(`skip  /api/guide is not deployed yet${via}`);
+    else { const gj = await json(gd); ok(gd.status === 200 && gj && typeof gj.mode === 'string' && !looksSecret(gj), `GET /api/guide answers its mode${via} (HTTP ${gd.status})`); }
     if (production) {
-      const ie = await get('/api/ops/ip-echo');
-      ok(ie.status === 404, `/api/ops/ip-echo is hidden on production (HTTP ${ie.status})`);
+      const ie = await sget('/api/ops/ip-echo');
+      ok(ie.status === 404, `/api/ops/ip-echo is hidden on production${via} (HTTP ${ie.status})`);
+    }
+    // a production build on its own deployment address reaches only staging, without the production secret
+    if (bases.failClosed) for (const p of ['/studio/', '/api/auth/health']) {
+      const r = await get(p), j = await json(r);
+      ok(r.status === 403 && j?.error?.code === 'edge_only', `${p} on the deployment address fails closed: 403 edge_only, the production secret is not sent (HTTP ${r.status})`);
     }
   }
 
@@ -126,14 +150,24 @@ async function main() {
   const production = process.argv.includes('--production') || /^production$/i.test(process.env.DEPLOY_ENV || '') || new URL(base).host === PRODUCTION_HOST;
 
   // a deployment behind Vercel's login (Deployment Protection) can't be tested from outside: say so and stop
-  const first = await fetch(base + '/', { redirect: 'manual' });
-  const loc = first.headers.get('location') || '';
-  if (first.status === 401 || (first.status === 403 && /vercel/i.test(first.headers.get('server') || '')) || (first.status >= 300 && first.status < 400 && /vercel\.com\/(sso|login)|_vercel_sso|sso-api/i.test(loc))) {
-    console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${first.status}), so it was not tested. Turn protection off for previews, or test the project that serves the site.`);
+  const protectedAt = async b => {
+    const first = await fetch(b + '/', { redirect: 'manual' });
+    const loc = first.headers.get('location') || '';
+    return (first.status === 401 || (first.status === 403 && /vercel/i.test(first.headers.get('server') || '')) || (first.status >= 300 && first.status < 400 && /vercel\.com\/(sso|login)|_vercel_sso|sso-api/i.test(loc))) ? first.status : 0;
+  };
+  let target = base;
+  const shut = await protectedAt(base);
+  if (shut && production && new URL(base).host !== PRODUCTION_HOST) {
+    // Deployment Protection covers a production build's own address but not the production address: test that instead
+    console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${shut}), so the checks run against ${PRODUCTION_BASE}; the fail-closed check of the deployment address is skipped.`);
+    target = PRODUCTION_BASE;
+  } else if (shut) {
+    console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${shut}), so it was not tested. Turn protection off for previews, or test the project that serves the site.`);
     process.exit(0);
   }
-  const failed = await smoke(base, { local, production });
-  console.log(`\n${failed ? `${failed} check(s) failed` : 'All checks passed'} for ${base}${production ? ' (production)' : ''}`);
+  if (target !== base && await protectedAt(target)) { console.log(`::error::${target} is behind Vercel Deployment Protection too, so production was not tested.`); process.exit(1); }
+  const failed = await smoke(target, { local, production });
+  console.log(`\n${failed ? `${failed} check(s) failed` : 'All checks passed'} for ${target}${production ? ' (production)' : ''}`);
   process.exit(failed ? 1 : 0);
 }
 

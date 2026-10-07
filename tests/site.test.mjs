@@ -397,7 +397,7 @@ test('BOOKINGS_LIVE flips only links: hisense.html\'s catalogue buttons (button[
 
 /* ---------- scripts/smoke.mjs: reads only, and its enquiry posts can never create a lead ---------- */
 import http from 'node:http';
-import { ENQUIRY_PROBES, smoke, looksSecret, AUTH_PAGES } from '../scripts/smoke.mjs';
+import { ENQUIRY_PROBES, smoke, looksSecret, AUTH_PAGES, rewriteBases, PRODUCTION_BASE } from '../scripts/smoke.mjs';
 import enquiryHandler from '../api/enquiry.js';
 import { validate } from '../api/_lib/enquiry.js';
 import { createDevServer } from '../scripts/dev.mjs';
@@ -459,7 +459,9 @@ test('smoke.mjs against scripts/dev.mjs with a stub studio behind the rewrite: e
   await new Promise(r => site.listen(0, '127.0.0.1', r));
   const lines = [];
   try {
-    const failed = await smoke(`http://127.0.0.1:${site.address().port}`, { production: true, log: l => lines.push(l) });
+    const base = `http://127.0.0.1:${site.address().port}`;
+    // this server plays the production address itself
+    const failed = await smoke(base, { production: true, productionBase: base, log: l => lines.push(l) });
     const fails = lines.filter(l => l.startsWith('FAIL'));
     const missing = AUTH_PAGES.filter(p => !existsSync(root + p.slice(1)));
     assert.equal(failed, fails.length);
@@ -471,4 +473,57 @@ test('smoke.mjs against scripts/dev.mjs with a stub studio behind the rewrite: e
     assert.ok(studioSeen.length >= 5);
     for (const s of studioSeen) assert.match(s, /^GET .* edge=stub-edge$/, s);
   } finally { site.close(); studio.close(); }
+});
+
+test('rewriteBases: production checks the studio on the production address; previews on their own', () => {
+  const dep = 'https://hanes-the-website-new-abc123-team.vercel.app';
+  assert.deepEqual(rewriteBases(dep, { production: true }), { studio: PRODUCTION_BASE, failClosed: dep });
+  assert.deepEqual(rewriteBases(PRODUCTION_BASE, { production: true }), { studio: PRODUCTION_BASE, failClosed: null });
+  assert.deepEqual(rewriteBases(dep, { production: false }), { studio: dep, failClosed: null });
+  assert.equal(PRODUCTION_BASE, 'https://hanes-the-website-new.vercel.app');
+});
+
+test('smoke.mjs on a production deployment address: studio and API checks use the production address, the deployment address fails closed', async () => {
+  // a stub edge gate: only the production value passes; header-less GET /api/health is answered by the gate itself
+  const seen = [];
+  const studio = http.createServer((req, res) => {
+    const edge = req.headers['x-studio-edge'] || '';
+    seen.push(`${req.method} ${req.url} edge=${edge}`);
+    res.setHeader('Content-Type', 'application/json');
+    if (edge !== 'prod-edge') {
+      if (req.url === '/api/health' && !edge) return res.end('{"ok":true}');
+      res.statusCode = 403; return res.end('{"error":{"code":"edge_only"}}');
+    }
+    const answers = { '/api/health': { ok: true }, '/api/auth/health': { ok: true }, '/api/crm/health': { ok: true, state: 'held' } };
+    if (req.url === '/') { res.setHeader('Content-Type', 'text/html'); return res.end('<!doctype html><title>studio</title>'); }
+    if (answers[req.url]) return res.end(JSON.stringify(answers[req.url]));
+    res.statusCode = 404; res.end('{"error":{"code":"not_found"}}');
+  });
+  await new Promise(r => studio.listen(0, '127.0.0.1', r));
+  const studioUrl = `http://127.0.0.1:${studio.address().port}`, quiet = { warn() {}, error() {} };
+  // the production address sends the production value; the deployment address only "not-this-environment" (§2.3)
+  const prodSite = createDevServer({ env: { STUDIO_EDGE_SECRET_STAGING: 'prod-edge' }, studioUrl, log: quiet });
+  const depSite = createDevServer({ env: { STUDIO_EDGE_SECRET_STAGING: 'not-this-environment' }, studioUrl, log: quiet });
+  await Promise.all([prodSite, depSite].map(s => new Promise(r => s.listen(0, '127.0.0.1', r))));
+  const prodBase = `http://127.0.0.1:${prodSite.address().port}`, depBase = `http://127.0.0.1:${depSite.address().port}`;
+  const lines = [];
+  try {
+    await smoke(depBase, { production: true, productionBase: prodBase, log: l => lines.push(l) });
+    const fails = lines.filter(l => l.startsWith('FAIL'));
+    const missing = AUTH_PAGES.filter(p => !existsSync(root + p.slice(1)));
+    for (const f of fails) assert.ok(missing.some(p => f.includes(p)), `only a sign-in page not built yet may fail: ${f}`);
+    for (const want of ['/studio redirects to /studio/', '/studio/ loads and is noindex', '/api/health answers ok', '/api/auth/health answers ok', '/api/crm/health answers without secrets', '/api/ops/ip-echo is hidden on production'])
+      assert.ok(lines.some(l => l.startsWith('pass') && l.includes(want) && l.includes(`via ${prodBase}`)), want);
+    for (const p of ['/studio/', '/api/auth/health'])
+      assert.ok(lines.some(l => l.startsWith('pass') && l.includes(`${p} on the deployment address fails closed: 403 edge_only`)), p);
+    // which base each check used: every studio read with the production value, plus exactly the two fail-closed reads
+    const prodReads = seen.filter(s => s.endsWith('edge=prod-edge')).map(s => s.split(' ')[1]).sort();
+    assert.deepEqual(prodReads, ['/', '/api/auth/health', '/api/crm/health', '/api/guide', '/api/health', '/api/ops/ip-echo']);
+    const depReads = seen.filter(s => !s.endsWith('edge=prod-edge'));
+    assert.deepEqual(depReads.sort(), ['GET / edge=not-this-environment', 'GET /api/auth/health edge=not-this-environment']);
+    // and the same deployment address, if it wrongly carried the production value, would fail the check
+    const bad = [];
+    await smoke(prodBase, { production: true, productionBase: prodBase.replace(/:\d+$/, ':' + depSite.address().port), log: l => bad.push(l) });
+    assert.ok(bad.some(l => l.startsWith('FAIL') && l.includes('/studio/ on the deployment address fails closed')));
+  } finally { prodSite.close(); depSite.close(); studio.close(); }
 });
