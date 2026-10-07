@@ -37,9 +37,9 @@ const MARKETING = {
   'Permissions-Policy': PERMISSIONS,
   'Content-Security-Policy': "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
 };
-// W1a ships the wildcard until the Supabase ref is wired in; W1b narrows this one constant to
-// 'self' https://mputtezdhevwwjgwktvi.supabase.co and adds a test that refuses any wildcard.
-const AUTH_CONNECT_SRC = "'self' https://*.supabase.co";
+// exactly the one Supabase project production and staging share (integrator decision 1, 2026-10-07)
+const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
+const AUTH_CONNECT_SRC = `'self' ${SUPABASE_ORIGIN}`;
 const AUTH = {
   'Content-Security-Policy': `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src ${AUTH_CONNECT_SRC}; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'`,
   'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex, nofollow',
@@ -288,4 +288,36 @@ test('the site runs on Node 24, the newest LTS Vercel supports (owner rule, DEPE
   assert.deepEqual(pkg.engines, { node: '24.x' });
   const lock = JSON.parse(readFileSync(root + 'package-lock.json', 'utf8'));
   assert.deepEqual(lock.packages[''].engines, { node: '24.x' });
+});
+
+/* ---------- the /auth CSP names exactly our Supabase project (ADDENDUM §10.2, integrator decision 1) ---------- */
+
+const directives = csp => Object.fromEntries(csp.split(';').map(d => d.trim()).filter(Boolean).map(d => { const [k, ...v] = d.split(/\s+/); return [k, v]; }));
+
+test('the /auth CSP connect-src is exactly self and the one Supabase project, with no wildcard anywhere', () => {
+  const auth = routes.find(r => r.src === '^/auth/.*$');
+  const csp = auth.headers['Content-Security-Policy'];
+  const d = directives(csp);
+  assert.deepEqual(d['connect-src'], ["'self'", SUPABASE_ORIGIN]);
+  assert.equal(new URL(SUPABASE_ORIGIN).hostname, 'mputtezdhevwwjgwktvi.supabase.co');
+  // no source in any directive may be a wildcard, a bare scheme, or a host pattern with *
+  for (const [name, sources] of Object.entries(d)) {
+    for (const v of sources) {
+      assert.equal(v.includes('*'), false, `${name} has a wildcard source: ${v}`);
+      assert.equal(/^(https?|wss?|data|blob):?$/.test(v) && !(name === 'img-src' && v === 'data:'), false, `${name} allows a whole scheme: ${v}`);
+    }
+  }
+  assert.deepEqual(d['script-src'], ["'self'", 'https://challenges.cloudflare.com']);
+  assert.deepEqual(d['frame-src'], ['https://challenges.cloudflare.com']);
+  assert.deepEqual(d['default-src'], ["'self'"]);
+  // and the served /auth pages get it, through the evaluator dev.mjs uses
+  assert.equal(run('/auth/login.html').headers['Content-Security-Policy'], csp);
+});
+
+test('no header in vercel.json allows a wildcard Supabase host or a wildcard source', () => {
+  const text = readFileSync(root + 'vercel.json', 'utf8');
+  assert.equal(/\*\.supabase\.co/.test(text), false);
+  for (const r of routes.filter(r => r.headers && r.headers['Content-Security-Policy']))
+    for (const [name, sources] of Object.entries(directives(r.headers['Content-Security-Policy'])))
+      for (const v of sources) assert.equal(v.includes('*'), false, `${r.src} ${name}: ${v}`);
 });
