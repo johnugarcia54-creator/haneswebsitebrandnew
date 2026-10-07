@@ -21,10 +21,14 @@ html{scroll-padding-top:var(--gb-offset)}
 html.gb-open .gb__burger::before{transform:translateY(3.5px) rotate(45deg)}
 html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
 .gb__panel{display:none}
+/* Log in (My account once signed in, assets/site.js): a quiet text link just before the quote pill */
+.gb__in>.gb__login{flex:none;display:block;padding:14px 7px;opacity:.82;transition:opacity .2s;white-space:nowrap}
+.gb__in>.gb__login:hover{opacity:1}
 .gb__quote{flex:none;display:inline-flex;align-items:center;justify-content:center;height:28px;margin-left:6px;padding:0 12px;border-radius:980px;background:#f5f5f7;color:#1d1d1f!important;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .gb__quote:hover{background:#fff}
 .gb a:focus-visible,.gb__burger:focus-visible,.gb__quote:focus-visible{outline:2px solid #2997ff;outline-offset:2px;border-radius:4px}
-@media (max-width:833px){
+/* the burger takes over below 880px: from there down the bar's links and Log in no longer fit beside the logo */
+@media (max-width:879px){
   .gb__list{display:none}
   .gb__burger{display:block}
   .gb__panel{display:block;position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:1;padding:64px 40px 40px;background:#161617;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;opacity:0;transition:opacity .35s cubic-bezier(.28,.11,.32,1),visibility 0s .35s}
@@ -40,12 +44,12 @@ html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
   .gb__panel .gb__sm{margin-top:26px;padding-top:18px;border-top:1px solid #424245}
   .gb__panel .gb__sm a{font-size:17px;font-weight:500;padding:7px 0}
   html.gb-open{overflow:hidden}
-  .gb__in>.gb__quote{display:none}
+  .gb__in>.gb__quote,.gb__in>.gb__login{display:none}
   .gb__panel a.gb__quote{display:inline-flex;width:auto;height:44px;min-width:44px;margin-top:26px;padding:0 18px;border-radius:980px;background:#f5f5f7;color:#1d1d1f;font:600 16px/1 "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
   html.gb-open .gb__panel a.gb__quote{opacity:1;transform:none}
 }
 @media (max-width:1100px){
-  .gb__list a{padding:14px 5px}
+  .gb__list a,.gb__in>.gb__login{padding:14px 5px}
   .gb__quote{padding:0 10px}
 }
 /* a fingertip needs 44px; a mouse can keep the slim pill */
@@ -90,6 +94,11 @@ html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
 .gf--dark .gf__cols a[aria-current="page"]{color:#f5f5f7}
 .gf__base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-top:16px;border-top:1px solid #d2d2d7}
 .gf--dark .gf__base{border-color:#424245}
+/* Privacy and Log in in every footer's base row (24px targets, WCAG 2.5.8) */
+.gf__links{display:flex;flex-wrap:wrap;gap:0 18px}
+.gf__links a{display:inline-flex;align-items:center;min-height:24px;margin:-4px 0;color:inherit;text-decoration:none}
+.gf__links a:hover{text-decoration:underline;text-underline-offset:2px}
+.gf__links a[aria-current="page"]{font-weight:600}
 @media (max-width:833px){.gf__cols{grid-template-columns:1fr 1fr;gap:26px 20px}}
 /* while a page's loading screen is up, the bar waits */
 body.is-loading .gb{opacity:0;pointer-events:none}

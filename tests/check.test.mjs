@@ -46,3 +46,20 @@ test('check.mjs: HTML sinks are caught in sub-folders of auth/ and assets/guide/
   assert.match(r.out, /auth\/lib\/render\.js: innerHTML is not allowed/);
   assert.match(r.out, /assets\/guide\/ui\/bubble\.mjs: document\.write is not allowed/);
 });
+
+// a root page the SEO rules accept with no canonical (404.html is noindex) and the given links
+const notFound = links => `<!doctype html><html lang="en-NZ"><head><title>Page not found</title><meta name="description" content="This page has moved on. Everything else on the Hanes Distribution website is right where you left it."><meta name="robots" content="noindex"></head><body><h1>Not found</h1>${links}</body></html>`;
+
+test('check.mjs: the Log in link may point at auth/login.html before W2 builds it (a warning), nothing else may', () => {
+  let r = run({ '404.html': notFound('<a href="/auth/login.html">Log in</a>') });
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /warning {2}auth\/login\.html is linked but not built yet/);
+  r = run({ '404.html': notFound('<a href="/auth/signup.html">Sign up</a><a href="/auth/login.html#x">Log in</a>') });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /ERROR {4}404\.html: missing file: \/auth\/signup\.html/);
+  assert.match(r.out, /ERROR {4}404\.html: missing file: \/auth\/login\.html#x/);
+  // once the page exists the warning goes and the page is checked like any app page
+  r = run({ '404.html': notFound('<a href="/auth/login.html">Log in</a>'), 'auth/login.html': page(''), 'auth/app.js': '' });
+  assert.equal(r.code, 0, r.out);
+  assert.doesNotMatch(r.out, /not built yet/);
+});

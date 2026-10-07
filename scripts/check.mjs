@@ -8,6 +8,8 @@
    - the sitemap lists every page, and robots.txt points at it
    - no page still sends enquiries through the visitor's email app
    - links into PROXIED_PREFIXES (served by the studio through the rewrite) are not file-checked
+   - links to PENDING_APP_PAGES (the sign-in page stream W2 delivers) only warn while that one file
+     is not built yet; once it exists it is checked like every other file
    - app pages (any .html under auth/, when present): noindex, one <h1>, lang="en-NZ", no inline script,
      <style>, style="" or on*= handler (the /auth CSP would block them), every local file exists
    - no innerHTML, outerHTML, insertAdjacentHTML or document.write in any .js under auth/ or assets/guide/
@@ -22,9 +24,11 @@ const root = process.env.SITE_CHECK_ROOT ? resolve(process.env.SITE_CHECK_ROOT) 
 // paths the site rewrites to the studio server (vercel.json): there is no file here to check
 const PROXIED_PREFIXES = ['studio/'];
 const proxied = p => PROXIED_PREFIXES.some(x => p === x.replace(/\/$/, '') || p.startsWith(x));
+// the "Log in" link on every page (ADDENDUM §6.1) points at W2's sign-in page, which lands separately
+const PENDING_APP_PAGES = new Set(['auth/login.html']);
 const SITE = JSON.parse(readFileSync(root + 'package.json', 'utf8')).homepage.replace(/\/+$/, '');
 const pages = readdirSync(root).filter(f => f.endsWith('.html')).sort();
-const errors = [], warn = [];
+const errors = [], warn = [], pending = new Set();
 const err = (f, m) => errors.push(`${f}: ${m}`);
 
 const src = {}, ids = {};
@@ -55,7 +59,10 @@ for (const f of pages) {
     const [pathq, hash] = r.split('#'), path = pathq.split('?')[0];
     let target = path ? path.replace(/^\//, '') || 'index.html' : f;
     if (path && proxied(target)) continue;
-    if (path && !existsSync(root + decodeURIComponent(target))) { err(f, `missing file: ${r}`); continue; }
+    if (path && !existsSync(root + decodeURIComponent(target))) {
+      if (PENDING_APP_PAGES.has(target) && !hash) { pending.add(target); continue; }
+      err(f, `missing file: ${r}`); continue;
+    }
     if (hash && target.endsWith('.html') && ids[target] && !ids[target].has(hash) && hash !== 'top') err(f, `missing anchor: ${r}`);
   }
   // ---------- images need alt text
@@ -135,6 +142,7 @@ for (const f of pages) {
 const robots = existsSync(root + 'robots.txt') ? readFileSync(root + 'robots.txt', 'utf8') : '';
 if (!robots.includes(`Sitemap: ${SITE}/sitemap.xml`)) err('robots.txt', 'should point at the sitemap');
 
+for (const p of pending) warn.push(`${p} is linked but not built yet (the sign-in pages land with stream W2)`);
 for (const w of warn) console.log('warning  ' + w);
 for (const e of errors) console.log('ERROR    ' + e);
 console.log(`\nChecked ${pages.length} pages and ${appPages.length} app pages: ${errors.length} errors, ${warn.length} warnings.`);

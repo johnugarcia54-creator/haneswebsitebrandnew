@@ -13,5 +13,5 @@
   btn.addEventListener('click', () => setOpen(!root.classList.contains('gb-open')));
   gb.querySelectorAll('.gb__panel a').forEach(a => a.addEventListener('click', () => setOpen(false)));
   addEventListener('keydown', e => { if (e.key === 'Escape' && root.classList.contains('gb-open')) { setOpen(false); btn.focus(); } });
-  addEventListener('resize', () => { if (innerWidth > 833) setOpen(false); });
+  addEventListener('resize', () => { if (innerWidth > 879) setOpen(false); });
 })();
