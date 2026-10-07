@@ -11,21 +11,29 @@
      ENQUIRY_RATE_MAX  enquiries allowed from one address in ten minutes (default 5)
      ENQUIRY_FROM   the sender, on a domain your provider has verified
                     (default "Hanes Distribution website <onboarding@resend.dev>" for Resend, SMTP_USER for SMTP)
+   The CRM forward (api/_lib/crm-forward.js) has its own settings; without them the email is
+   exactly as it was before the forward existed.
    ========================================================================================= */
 export const DEFAULT_TO = 'Enquiry@hanesdistribution.co.nz';
+import { randomUUID } from 'node:crypto';
+
 const EMAIL = /^[^\s@<>()[\]\\,;:"]{1,64}@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]{2,}$/;
 const LIMITS = { name: 120, email: 254, subject: 140, form: 60, page: 300, label: 60, value: 5000, fields: 30, total: 20000 };
 
 // strip control characters (keeping line breaks in long answers) and trim to a length
 const clean = (v, max) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim().slice(0, max);
 const line = (v, max) => clean(v, max).replace(/\s+/g, ' ');
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export function configured(env = process.env) {
   return Boolean(env.RESEND_API_KEY || env.SMTP_HOST);
 }
 
-/* Returns { data } for a good enquiry, { spam: true } for a bot, or { error, field } to show the customer. */
+/* Returns { data } for a good enquiry, { spam: true } for a bot, or { error, field } to show the customer.
+   data.submissionId is the form fill's UUID from assets/enquiry.js (lower-cased), or a new one made
+   here when it is missing or not a UUID, so the CRM event can always be named; data.marketingOptIn
+   is true only when the visitor ticked the optional news and offers box. */
 export function validate(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return { error: 'Something went wrong with the form. Please try again.' };
   // bots fill in the hidden "website" field, or post the moment the page loads
@@ -47,11 +55,14 @@ export function validate(body) {
     fields.push([k, v]);
   }
   if (total > LIMITS.total) return { error: 'Your message is too long. Please shorten it and try again.' };
-  return { data: { name, email, subject, form, page, fields } };
+  const submissionId = typeof body.submissionId === 'string' && UUID.test(body.submissionId) ? body.submissionId.toLowerCase() : randomUUID();
+  return { data: { name, email, subject, form, page, fields, submissionId, marketingOptIn: body.marketingOptIn === true } };
 }
 
-/* The email the Hanes team receives: plain text and a simple HTML table, every value escaped. */
-export function compose(d) {
+/* The email the Hanes team receives: plain text and a simple HTML table, every value escaped.
+   note: one extra line at the end (the CRM result, api/_lib/crm-forward.js); without it the
+   email is byte for byte what it was before the forward existed. */
+export function compose(d, note = '') {
   const rows = [['Name', d.name], ['Email', d.email], ...d.fields];
   const subject = `Website enquiry: ${d.subject} (${d.name})`.slice(0, 200);
   const from = d.page ? `Sent from ${d.page}` : 'Sent from the Hanes Distribution website';
@@ -59,7 +70,8 @@ export function compose(d) {
     d.subject, '',
     ...rows.map(([k, v]) => v.includes('\n') ? `${k}:\n${v}\n` : `${k}: ${v}`), '',
     `${from} (${d.form}).`,
-    `Reply to this email to answer ${d.name} directly.`
+    `Reply to this email to answer ${d.name} directly.`,
+    ...(note ? [note] : [])
   ].join('\n');
   const html = `<!doctype html><html><body style="margin:0;padding:24px;background:#f5f5f7">
 <div style="max-width:640px;margin:0 auto;padding:28px;border-radius:16px;background:#fff;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#1d1d1f">
@@ -68,7 +80,8 @@ export function compose(d) {
 <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse">
 ${rows.map(([k, v]) => `<tr><td style="padding:10px 16px 10px 0;border-top:1px solid #e8e8ed;vertical-align:top;color:#6e6e73;white-space:nowrap">${esc(k)}</td><td style="padding:10px 0;border-top:1px solid #e8e8ed;vertical-align:top;white-space:pre-wrap">${k === 'Email' ? `<a href="mailto:${esc(v)}" style="color:#0066cc">${esc(v)}</a>` : esc(v)}</td></tr>`).join('\n')}
 </table>
-<p style="margin:22px 0 0;font-size:13px;color:#86868b">${esc(from)} (${esc(d.form)}). Reply to this email to answer ${esc(d.name)} directly.</p>
+<p style="margin:22px 0 0;font-size:13px;color:#86868b">${esc(from)} (${esc(d.form)}). Reply to this email to answer ${esc(d.name)} directly.</p>${note ? `
+<p style="margin:8px 0 0;font-size:13px;color:#86868b">${esc(note)}</p>` : ''}
 </div></body></html>`;
   return { subject, text, html, replyTo: d.email };
 }
