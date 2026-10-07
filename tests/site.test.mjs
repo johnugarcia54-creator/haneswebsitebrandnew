@@ -344,6 +344,9 @@ test('bargainhub.html: no sample reviews, ratings or review counts; the reviews 
     assert.doesNotMatch(s, bad);
   assert.match(s, /<section class="reviews" id="reviews"[^>]*>[\s\S]*?Reviews from our first clients <span class="muted">are coming soon\.<\/span>/);
   assert.match(s, /<li><a href="#reviews" data-scroll>Reviews<\/a><\/li>/, 'the subnav still finds the section');
+  // only the integrator's line, no other copy (decision 2)
+  const rv = s.slice(s.indexOf('<section class="reviews"'), s.indexOf('</section>', s.indexOf('<section class="reviews"')));
+  assert.equal(rv.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(), 'Reviews Reviews from our first clients are coming soon.');
   const seo = read('scripts/seo.mjs');
   assert.doesNotMatch(seo, /AggregateRating|"Review"|ratingValue/);
 });

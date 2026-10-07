@@ -240,8 +240,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ---------- Reviews: none to show yet (only real, verified client reviews will go here) ---------- */
 .reviews{padding:clamp(90px,14vh,150px) 0;background:var(--bg-2);text-align:center}
 .reviews .h{font-size:clamp(30px,3.4vw,52px);margin:12px auto 0;max-width:820px}
-.reviews .sub{margin:18px auto 0}
-.reviews .sub a{text-decoration:underline;text-underline-offset:3px}
 .reviews .eyebrow{color:#8a6536} /* a darker brass: 4.8:1 on this grey (WCAG 1.4.3) */
 
 /* ---------- CTA: the last room opens up as you arrive ---------- */
@@ -267,7 +265,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .dw{display:inline-block;white-space:nowrap}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .no-js [data-reveal],.no-js [data-drop],.no-js .cta__copy{opacity:1;transform:none}
-.no-js .intro .w,.no-js .feat .fw{opacity:1}
+.no-js .intro .w{opacity:1}
 
 /* Touch devices: no live backdrop blur */
 html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -516,7 +514,6 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     <div class="wrap">
       <div class="eyebrow">Reviews</div>
       <h2 class="h" id="reviewsTitle">Reviews from our first clients <span class="muted">are coming soon.</span></h2>
-      <p class="sub">Until then, come and see the finishes for yourself at our <a href="#showroom" data-scroll>Sockburn showroom</a>.</p>
     </div>
   </section>
 
