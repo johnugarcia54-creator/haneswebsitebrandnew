@@ -176,6 +176,7 @@ try {
       check((await page.locator('h1').count()) === 1, `${label}: one h1`);
       check((await page.locator('script:not([src])').count()) === 0, `${label}: no inline script`);
       check(!log.requests.some(r => /supabase\.co|cloudflare\.com/.test(r.url)), `${label}: no request to Supabase or Cloudflare`);
+      check(!log.requests.some(r => /\/vendor\/supabase-js/.test(r.url)), `${label}: supabase-js is not loaded while the keys are placeholders`);
       if (p === 'confirm') check(!page.url().includes('token_hash'), `${label}: token_hash removed from the address bar`);
       check((await csp(page)).length === 0, `${label}: zero CSP violations (${(await csp(page)).join(', ')})`);
       check(log.console.length === 0, `${label}: zero console errors (${log.console.join(' | ')})`);
@@ -203,6 +204,7 @@ try {
     await page.locator('#closed').waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
     check(await visible(page, '#closed') && !(await visible(page, '#form')), 'A signup: a failed settings read shows Accounts open soon');
     check(!log.requests.some(r => /supabase\.co|cloudflare\.com/.test(r.url)), 'A signup closed: no call to Supabase or Cloudflare');
+    check(!log.requests.some(r => /\/vendor\/supabase-js/.test(r.url)), 'A signup closed: supabase-js is not loaded');
     await ctx.close();
   }
   studioState.settingsStatus = 200;
@@ -215,6 +217,7 @@ try {
     await page.goto(`${base}/auth/login.html`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => (window.__tsRenders || []).length === 1);
     check(await visible(page, '#form') && !(await visible(page, '#notice')), 'B login: form shown once set up, the loading note gone');
+    check(log.requests.filter(r => /\/vendor\/supabase-js-[\d.]+\.min\.js$/.test(r.url)).length === 1, 'B login: supabase-js loaded once, once the keys are real');
     const order = [];
     for (let i = 0; i < 9; i++) {
       await page.keyboard.press('Tab');
@@ -323,6 +326,16 @@ try {
     await page.locator('#alert').waitFor({ state: 'visible' });
     check(await text(page, '#alert') === want, `B login ${code}: "${want}"`);
     check(!(await page.evaluate(() => Object.keys(localStorage).some(k => /^sb-.*-auth-token$/.test(k)))), `B login ${code}: the Supabase session is ended here`);
+    await ctx.close();
+  }
+  // B3a. sign-up closed (the Friday state) with real keys: no supabase-js, no Turnstile
+  {
+    studioState.publicSignup = false;
+    const { ctx, log } = await context({ configured: true, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/signup.html`, { waitUntil: 'networkidle' });
+    await page.locator('#closed').waitFor({ state: 'visible' });
+    check(!log.requests.some(r => /\/vendor\/supabase-js|supabase\.co|cloudflare\.com/.test(r.url)), 'B signup closed: supabase-js, Supabase and Turnstile are never loaded');
     await ctx.close();
   }
   // B3. sign-up open: the form, the code preview, the answer

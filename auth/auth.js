@@ -117,8 +117,27 @@ const forgetNext = () => { try { sessionStorage.removeItem('bh_next'); } catch {
 const go = to => { forgetNext(); location.assign(to); };
 
 /* ---- Supabase and Turnstile, only once the keys are real ------------------------------ */
-function supabaseClient() {
-  if (!cfg.supabaseReady || !window.supabase || typeof window.supabase.createClient !== 'function') return null;
+// the vendored supabase-js build (213 KiB) loads only when a page will use it (§6.7): never
+// while the keys are placeholders, never on the closed sign-up page
+const SUPABASE_SRC = '/vendor/supabase-js-2.117.3.min.js';
+let supabaseLoading = null;
+function loadSupabase() {
+  if (window.supabase) return Promise.resolve(window.supabase);
+  if (!supabaseLoading) {
+    supabaseLoading = new Promise(resolve => {
+      const s = document.createElement('script');
+      s.src = SUPABASE_SRC;
+      s.addEventListener('load', () => resolve(window.supabase || null));
+      s.addEventListener('error', () => resolve(null));
+      document.head.append(s);
+    });
+  }
+  return supabaseLoading;
+}
+async function supabaseClient() {
+  if (!cfg.supabaseReady) return null;
+  await loadSupabase();
+  if (!window.supabase || typeof window.supabase.createClient !== 'function') return null;
   return window.supabase.createClient(cfg.supabaseUrl, cfg.publishableKey, {
     auth: { flowType: 'implicit', detectSessionInUrl: false, persistSession: true, autoRefreshToken: true }
   });
@@ -235,7 +254,7 @@ async function signupPage() {
     show($('closed'), true);
     return;
   }
-  const sb = cfg.supabaseReady && cfg.turnstileReady ? supabaseClient() : null;
+  const sb = cfg.supabaseReady && cfg.turnstileReady ? await supabaseClient() : null;
   if (!sb) return notReady();
   note('');
   const form = els.form, btn = form.querySelector('button[type=submit]');
@@ -372,7 +391,7 @@ async function passwordPage(sb) {
     for (const input of document.querySelectorAll('input[type=password]')) input.maxLength = PASSWORD_MAX;
     if (page === 'signup') return await signupPage(); // closed (the Friday state) needs no keys at all
     if (!cfg.supabaseReady || (NEEDS_TURNSTILE.has(page) && !cfg.turnstileReady)) return notReady();
-    const sb = supabaseClient();
+    const sb = await supabaseClient();
     if (!sb) { note(''); return fail(MESSAGES.supabase_network); }
     if (page === 'login') return await loginPage(sb);
     if (page === 'reset') return await resetPage(sb);
