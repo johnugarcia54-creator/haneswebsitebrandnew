@@ -9,7 +9,19 @@
      LEADS_INGEST_SECRET      the HMAC key the studio shares
      STUDIO_EDGE_SECRET_PROD  the x-studio-edge value the studio's edge gate expects
    Without STUDIO_INGEST_URL or LEADS_INGEST_SECRET (previews, tests, local dev) nothing is
-   forwarded and the email is exactly as it was before the forward existed.
+   forwarded and the email is exactly as it was before the forward existed. The edge secret is
+   only ever sent to the production studio host (EDGE_HOSTS) or this machine, and never from a
+   Vercel deployment other than Production: a mistyped URL or an environment saved for "All"
+   then gets a 403 from the edge gate ("CRM: NOT stored (403)") instead of the secret.
+
+   The contract with the studio's ingest (its validation must accept every value sent here):
+     form   one of the 7 §7.3 values (FORMS below)
+     brand  bargainhub, hanesteel, hanestone, hanewood, hanesulation, hisense, or 'hanes' for
+            Hanes Distribution itself (tracking, "Something else", the home page), which the
+            studio maps to residential_consumer (integrator decision: "all others")
+     limits name 120, email 254, phone 40, company 120, subject 140, page 300, message 4000
+     a duplicate answers 200 {status:'duplicate', ref, state?}; with state 'held'|'queued' the
+     line is the §7.3 "CRM: <state> <ref>", without it "CRM: already stored <ref>".
 
    The email stays primary: one attempt, a 3 second limit, no retry, and the forward never
    throws. emailLine() turns the result into the one line the Enquiry@ email gains, so the
@@ -35,6 +47,13 @@ export const GENERAL_BRAND = 'hanes'; // Hanes Distribution itself: tracking, "S
 const REF = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,99}$/; // a ref goes into the email: nothing else gets through
 const STORED = new Set(['held', 'queued']);
 const LOOPBACK = new Set(['127.0.0.1', 'localhost', '[::1]']);
+export const EDGE_HOSTS = new Set(['bargainhub-studio.fly.dev']); // the production Fly app (§9.1, §9.3)
+
+/* Whether x-studio-edge may go to this target from this deployment. */
+export function edgeAllowed(target, env = process.env) {
+  if (env.VERCEL_ENV && env.VERCEL_ENV !== 'production') return false;
+  return (target.protocol === 'https:' && EDGE_HOSTS.has(target.hostname)) || LOOPBACK.has(target.hostname);
+}
 
 /* The §7.3 form value for a form label; an unknown label is a general website enquiry. */
 export function formFor(label) {
@@ -101,7 +120,7 @@ export async function forwardLead(lead, env = process.env, { fetchImpl = fetch, 
   const raw = JSON.stringify(lead), timestamp = String(now());
   if (Buffer.byteLength(raw) > MAX_BODY) return { status: 'not_stored', http: 413 };
   const headers = { 'Content-Type': 'application/json', 'X-Lead-Timestamp': timestamp, 'X-Lead-Signature': signature(secret, timestamp, raw) };
-  if (env.STUDIO_EDGE_SECRET_PROD) headers['x-studio-edge'] = env.STUDIO_EDGE_SECRET_PROD;
+  if (env.STUDIO_EDGE_SECRET_PROD && edgeAllowed(target, env)) headers['x-studio-edge'] = env.STUDIO_EDGE_SECRET_PROD;
 
   const ac = new AbortController(), timer = setTimeout(() => ac.abort(), timeoutMs);
   try {

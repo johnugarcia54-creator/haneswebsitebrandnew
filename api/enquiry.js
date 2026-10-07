@@ -40,9 +40,10 @@ export default async function handler(req, res) {
   if (!configured()) return json(res, 503, { error: 'not_configured' });
 
   // without the forward's settings the line is '' and the email is exactly as before
-  let note = '';
+  let note = '', crm = 'unconfirmed';
   try {
     const f = await forwardLead(leadFrom(v.data));
+    crm = f.status;
     note = emailLine(f, v.data.submissionId);
     if (f.status !== 'skipped') console.log(`enquiry crm forward: ${f.status}${f.http ? ` ${f.http}` : ''}${f.reason ? ` ${f.reason}` : ''} (event ${v.data.submissionId})`);
   } catch {
@@ -54,7 +55,9 @@ export default async function handler(req, res) {
     console.log(`enquiry sent via ${r.provider}: ${v.data.form} ${r.id || ''}`);
     return json(res, 200, { ok: true });
   } catch (e) {
-    console.error('enquiry send failed:', e.message);
+    // the event id and the forward's status (no personal data), so a lead the CRM already holds
+    // can be matched before the visitor's fallback email is entered by hand
+    console.error('enquiry send failed:', e.message, `(event ${v.data.submissionId}, crm ${crm})`);
     return json(res, 502, { error: 'send_failed' });
   }
 }

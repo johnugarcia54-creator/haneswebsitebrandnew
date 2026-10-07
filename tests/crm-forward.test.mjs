@@ -6,7 +6,7 @@ import http from 'node:http';
 import { createHash, createHmac } from 'node:crypto';
 import { validate, compose } from '../api/_lib/enquiry.js';
 import handler from '../api/enquiry.js';
-import { FORMS, BRANDS, NOTICE_VERSION, TIMEOUT_MS, MAX_BODY, formFor, brandFor, leadFrom, signature, forwardLead, emailLine } from '../api/_lib/crm-forward.js';
+import { FORMS, BRANDS, GENERAL_BRAND, EDGE_HOSTS, edgeAllowed, NOTICE_VERSION, TIMEOUT_MS, MAX_BODY, formFor, brandFor, leadFrom, signature, forwardLead, emailLine } from '../api/_lib/crm-forward.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const sha = s => createHash('sha256').update(s).digest('hex');
@@ -70,6 +70,15 @@ test('brandFor: by form, then the topic, then the page, else Hanes', () => {
   assert.equal(brandFor('contact', 'Hanewood plywood, board and LVL', '/contact.html'), 'hanewood');
   assert.equal(brandFor('contact', 'Something else', '/contact.html'), 'hanes');
   assert.ok(BRANDS.includes(brandFor('contact', 'Hisense appliances')));
+});
+
+test('the brand contract with the studio: a fixed list of values, and nothing else is ever sent', () => {
+  // docs/api/CRM.md (studio) must accept exactly these; a change here is a change to that contract
+  const CONTRACT = ['bargainhub', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'hisense', 'hanes'];
+  assert.deepEqual([...BRANDS, GENERAL_BRAND], CONTRACT);
+  const topics = ['', 'Something else', 'Shipment tracking', 'Bargainhub kitchens', 'HANESTEEL', 'Hisense appliances', 'Project enquiry'];
+  const pages = ['', '/', '/index.html', '/contact.html', '/tracking.html', ...CONTRACT.map(b => `/${b}.html`), '/hanestone.html?x=1#y'];
+  for (const form of Object.values(FORMS)) for (const t of topics) for (const p of pages) assert.ok(CONTRACT.includes(brandFor(form, t, p)), `${form} ${t} ${p}`);
 });
 
 test('leadFrom builds exactly the §7.3 body', () => {
@@ -161,6 +170,34 @@ test('forwardLead leaves x-studio-edge out when STUDIO_EDGE_SECRET_PROD is unset
     assert.deepEqual(await forwardLead(lead(), envFor(s.url, { STUDIO_EDGE_SECRET_PROD: '' })), { status: 'queued', ref: 'r-1' });
     assert.equal(s.seen[0].headers['x-studio-edge'], undefined);
   } finally { s.close(); }
+});
+
+test('x-studio-edge goes only to the production studio host or this machine, and only from Production', async () => {
+  const u = h => new URL(`https://${h}/api/leads/ingest`);
+  assert.deepEqual([...EDGE_HOSTS], ['bargainhub-studio.fly.dev']);
+  assert.equal(edgeAllowed(u('bargainhub-studio.fly.dev'), {}), true);
+  assert.equal(edgeAllowed(u('bargainhub-studio.fly.dev'), { VERCEL_ENV: 'production' }), true);
+  assert.equal(edgeAllowed(new URL('http://127.0.0.1:1/x'), {}), true);
+  for (const [target, env] of [
+    [u('bargainhub-studio-staging.fly.dev'), {}], [u('studio.example'), { VERCEL_ENV: 'production' }],
+    [u('bargainhub-studio.fly.dev.example'), {}], [u('bargainhub-studio.fly.dev'), { VERCEL_ENV: 'preview' }],
+    [u('bargainhub-studio.fly.dev'), { VERCEL_ENV: 'development' }], [new URL('http://127.0.0.1:1/x'), { VERCEL_ENV: 'preview' }]
+  ]) assert.equal(edgeAllowed(target, env), false, `${target.host} ${env.VERCEL_ENV}`);
+
+  // the forward still goes (the edge gate then refuses it truthfully), but without the secret
+  const sent = [];
+  const fetchImpl = async (href, init) => { sent.push([href, init.headers]); return new Response('{"error":"forbidden"}', { status: 403 }); };
+  for (const env of [envFor('https://bargainhub-studio-staging.fly.dev/api/leads/ingest'), envFor('https://bargainhub-studio.fly.dev/api/leads/ingest', { VERCEL_ENV: 'preview' })]) {
+    const r = await forwardLead(lead(), env, { fetchImpl });
+    assert.deepEqual(r, { status: 'not_stored', http: 403 });
+    assert.equal(emailLine(r, ID), 'CRM: NOT stored (403), enter by hand');
+  }
+  assert.equal(sent.length, 2);
+  for (const [, h] of sent) assert.ok(!('x-studio-edge' in h) && !JSON.stringify(h).includes('test-edge-secret'));
+  // the production host from Production does carry it
+  const r = await forwardLead(lead(), envFor('https://bargainhub-studio.fly.dev/api/leads/ingest', { VERCEL_ENV: 'production' }), { fetchImpl });
+  assert.equal(r.status, 'not_stored');
+  assert.equal(sent[2][1]['x-studio-edge'], 'test-edge-secret');
 });
 
 test('the email line for queued, held and a duplicate', async () => {
@@ -414,6 +451,10 @@ test('handler: when the email fails after a forward, the request fails as before
     const r = await post(golden, { ...fwd(s.url), mailStatus: 500 });
     assert.deepEqual([r.status, r.body], [502, { error: 'send_failed' }]);
     assert.equal(s.seen.length, 1);
+    // the failure log says the CRM already holds this event, so the fallback email can be matched
+    const line = r.logs.find(l => l.startsWith('enquiry send failed:'));
+    assert.ok(line && line.endsWith(`(event ${ID}, crm held)`), line);
+    for (const pii of ['Aroha', 'aroha@example.co.nz', '021 000 000', 'test-edge-secret']) assert.ok(!r.logs.join('\n').includes(pii), pii);
   } finally { s.close(); }
 });
 
