@@ -9,9 +9,14 @@
    - Every string from the server or the JSON goes in as text (textContent / text nodes); links
      and buttons are built here from fixed action ids, never from server URLs.
    - The last 6 turns stay in sessionStorage (bh_milli_history) until the tab closes.
-   - Desktop: a non-modal dialog. At 760 px or less: a full-screen modal sheet (background inert,
-     page scroll locked, focus kept inside, sized to the visual viewport). Esc closes and returns
-     focus to the launcher. New messages never move focus.
+   - Desktop: a non-modal dialog. At 760 px or less, or 500 px tall or less (a phone on its side,
+     400% zoom): a full-screen modal sheet (background inert, page scroll locked, focus kept
+     inside, sized to the visual viewport). Esc closes and returns focus to the launcher. New
+     messages never move focus; the log scrolls so a new answer's first line is in view.
+   - The notice, chips and log scroll as one region under a fixed header (reflow, WCAG 1.4.10).
+   - The first open waits only for guide-faq.json (and at most WAIT ms for the GET /api/guide
+     probe); a slower live answer switches the open panel to live mode when it comes. One open
+     at a time: repeated clicks while it loads don't build a second panel.
    window.HanesMilli.panel: { toggle, open, close, choose, send, action, state } (state is for
    tests). */
 (() => {
@@ -20,7 +25,7 @@
   if (!M || M.panel) return;
 
   const API = '/api/guide', KEY = 'bh_milli_history';
-  const TURNS = 6, MAX = 500;
+  const TURNS = 6, MAX = 500, WAIT = 600;
   const NOTICE = {
     static: 'Milli is an AI guide answering from quick answers on this page right now. Choose a question below, or ask a person.',
     live: "Milli is an AI guide. Your questions go to our AI provider, SpaceXAI (xAI) in the United States, to write a reply. It deletes them after replying and doesn't train on them. We don't keep what you type, only counts. Please don't share personal details here; use the enquiry or booking form instead."
@@ -71,14 +76,15 @@
   const push = t => { S.turns.push(t); S.turns = S.turns.slice(-TURNS); save(); };
 
   // ---------- the panel, in reading and Tab order: header, notice (link), chips, log (actions), form, close
-  let faq = null, mode = 'static', isOpen = false, sheet = false, busy = false, t0 = 0, inerted = [], vvOn = false, happyT = 0;
+  let faq = null, mode = 'static', isOpen = false, sheet = false, busy = false, t0 = 0, inerted = [], vvOn = false, happyT = 0, opening = null;
   const root = el('div', { id: 'milliPanel', class: 'milli-p', role: 'dialog', 'aria-labelledby': 'milliTitle', 'aria-describedby': 'milliNotice', 'data-lenis-prevent': true, hidden: true });
   const face = M.mascot('rest');
   const head = el('div', { class: 'milli-h' }, face, el('h2', { id: 'milliTitle' }, 'Milli · AI guide'));
   const noticeText = d.createTextNode('');
   const notice = el('p', { id: 'milliNotice', class: 'milli-n' }, noticeText, ' ', el('a', { href: '/privacy.html' }, 'Privacy statement'));
   const chips = el('div', { class: 'milli-c', role: 'group', 'aria-label': 'Suggested questions' });
-  const log = el('div', { class: 'milli-log', role: 'log', 'aria-live': 'polite', 'aria-label': 'Conversation with Milli', 'data-lenis-prevent': true, tabindex: '0' }); // focusable, so a keyboard can scroll it
+  const log = el('div', { class: 'milli-log', role: 'log', 'aria-live': 'polite', 'aria-label': 'Conversation with Milli', tabindex: '0' }); // a Tab stop between the choices and the answers' actions
+  const body = el('div', { class: 'milli-b', 'data-lenis-prevent': true }, notice, chips, log); // the one scrolling region
   const status = el('p', { class: 'milli-st', role: 'status' });
   const alert = el('p', { class: 'milli-st milli-st--err', role: 'alert' });
   const input = el('textarea', { id: 'milliQ', name: 'q', rows: '2', maxlength: String(MAX), 'aria-describedby': 'milliNotice milliCount', autocomplete: 'off' });
@@ -86,7 +92,7 @@
   const sendBtn = el('button', { type: 'submit', class: 'milli-send' }, 'Send');
   const form = el('form', { class: 'milli-f' }, el('label', { for: 'milliQ' }, 'Ask Milli a question'), input, el('div', { class: 'milli-fr' }, count, sendBtn));
   const close = el('button', { type: 'button', class: 'milli-x', 'aria-label': 'Close Milli' }, '×');
-  root.append(head, notice, chips, log, status, alert, close); // the form joins only in live mode
+  root.append(head, body, status, alert, close); // the form joins only in live mode
 
   const setFace = s => { face.setAttribute('class', 'milli-m is-' + s); };
   const rest = () => setFace(mode === 'live' ? 'idle' : 'rest');
@@ -97,7 +103,7 @@
     const subject = kind === 'booking' ? 'Bargainhub consultant booking' : topic;
     const hint = kind === 'booking' ? 'What would you like to design, and when suits you?' : '';
     if (!q || typeof q.open !== 'function') { location.assign('/contact.html#enquiry'); return; }
-    if (sheet) { hide(false); from = M.btn; } // the modal sheet gives way to the modal dialog
+    if (sheet) { hide(false); from = M.btn; } // the modal sheet gives way to the modal dialog (only from an action the visitor chose)
     q.open(topic, subject, hint, from);
   };
   const actionEl = id => {
@@ -127,8 +133,14 @@
     }
     if (acts.firstChild) m.append(acts);
     log.append(m);
-    log.scrollTop = log.scrollHeight;
     return m;
+  };
+  // bring a message's first line into view (whichever region scrolls: the body, or the whole
+  // panel when it is very short); never moves focus
+  const into = m => {
+    const sc = [body, root].find(e => e.scrollHeight > e.clientHeight + 1);
+    if (!sc || !m || !m.getBoundingClientRect) return;
+    sc.scrollTop = Math.max(0, sc.scrollTop + m.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8);
   };
   const nodeIds = n => (n.actions || []).map(a => a.id);
   const replay = t => {
@@ -141,10 +153,13 @@
     const n = faq && faq.nodes[id];
     if (!n) return;
     alert.textContent = '';
-    message('user', n.label); push({ role: 'user', text: n.label });
+    const you = message('user', n.label); push({ role: 'user', text: n.label });
     message('assistant', n.answer, nodeIds(n), n.next); push({ role: 'assistant', node: id });
+    into(you);
     happy();
-    if (n.opens) { const a = action(n.opens); if (a && a.dialog) doDialog(a.dialog, d.activeElement); }
+    // the dialog opens by itself only beside the desktop card; on the sheet it would hide the
+    // answer (and its email address), so there the answer's own button opens it
+    if (n.opens && !sheet) { const a = action(n.opens); if (a && a.dialog) doDialog(a.dialog, d.activeElement); }
   };
 
   const setMode = m => {
@@ -156,7 +171,7 @@
   const fallback = () => {
     const had = form.contains(d.activeElement);
     setMode('static');
-    message('assistant', FALLBACK); push({ role: 'assistant', text: FALLBACK });
+    into(message('assistant', FALLBACK)); push({ role: 'assistant', text: FALLBACK });
     if (had && chips.firstChild) chips.firstChild.focus(); // the text box went away under the focus
   };
 
@@ -182,7 +197,8 @@
     if (mode !== 'live' || busy || !text) return false;
     busy = true; alert.textContent = '';
     const hist = history();
-    message('user', text); push({ role: 'user', text });
+    const you = message('user', text); push({ role: 'user', text });
+    into(you);
     input.value = ''; counter();
     status.textContent = 'Milli is writing a reply…'; setFace('think');
     try {
@@ -201,7 +217,7 @@
       const hand = { enquiry: 'open_enquiry', human: 'open_enquiry', booking: 'open_booking' }[b.handoff];
       if (hand && !ids.includes(hand)) ids.push(hand);
       const reply = txt(b.reply);
-      message('assistant', reply, ids);
+      message('assistant', reply, ids); into(you);
       push(typeof b.sig === 'string' ? { role: 'assistant', text: reply, sig: b.sig, actions: ids } : { role: 'assistant', text: reply, actions: ids });
       if (Array.isArray(b.redacted) && b.redacted.length) alert.textContent = 'Milli left out the personal details in your message.';
       happy();
@@ -218,7 +234,7 @@
   form.addEventListener('submit', e => { e.preventDefault(); send(input.value); });
 
   // ---------- open, close, the mobile sheet
-  const mq = w.matchMedia ? w.matchMedia('(max-width:760px)') : { matches: false };
+  const mq = w.matchMedia ? w.matchMedia('(max-width:760px),(max-height:500px)') : { matches: false };
   const focusables = () => {
     const out = [], walk = n => {
       for (const c of n.children) {
@@ -262,33 +278,53 @@
     M.setState('idle');
     if (refocus) M.btn.focus();
   };
-  const show = async () => {
-    if (isOpen) return;
-    if (!faq) {
-      const [f, m] = await Promise.all([fetch(M.base + 'guide-faq.json', { credentials: 'same-origin' }).then(r => r.json()).catch(() => null), probe()]);
-      faq = f && f.nodes && f.chips ? f : { chips: { index: [] }, nodes: {}, topics: {} };
-      for (const id of (faq.chips[page] || faq.chips.index)) {
-        const n = faq.nodes[id];
-        if (!n) continue;
-        const b = el('button', { type: 'button', class: 'milli-chip' }, n.label);
-        b.addEventListener('click', () => choose(id));
-        chips.append(b);
-      }
-      log.append(el('div', { class: 'milli-msg milli-msg--milli' }, el('span', { class: 'milli-sr' }, 'Milli said: '),
-        el('p', {}, el('span', { lang: 'mi' }, 'Kia ora'), ", I'm Milli, Hanes's AI guide.")));
-      for (const t of S.turns) replay(t);
-      if (!f) message('assistant', "Milli couldn't load its quick answers. You can still ask a person.", ['open_enquiry']);
-      setMode(f ? m : 'static');
+  // the first open: chips and greeting as soon as guide-faq.json is in; live mode only if the probe
+  // says so (within WAIT ms, or later, while the panel is already open in static mode)
+  const build = async () => {
+    const pr = probe();
+    const f = await fetch(M.base + 'guide-faq.json', { credentials: 'same-origin' }).then(r => r.json()).catch(() => null);
+    faq = f && f.nodes && f.chips ? f : { chips: { index: [] }, nodes: {}, topics: {} };
+    for (const id of (faq.chips[page] || faq.chips.index)) {
+      const n = faq.nodes[id];
+      if (!n) continue;
+      const b = el('button', { type: 'button', class: 'milli-chip' }, n.label);
+      b.addEventListener('click', () => choose(id));
+      chips.append(b);
     }
+    log.append(el('div', { class: 'milli-msg milli-msg--milli' }, el('span', { class: 'milli-sr' }, 'Milli said: '),
+      el('p', {}, el('span', { lang: 'mi' }, 'Kia ora'), ", I'm Milli, Hanes's AI guide.")));
+    for (const t of S.turns) replay(t);
+    if (!f) { message('assistant', "Milli couldn't load its quick answers. You can still ask a person.", ['open_enquiry']); setMode('static'); return; }
+    let timer;
+    const quick = await Promise.race([pr, new Promise(r => { timer = setTimeout(() => r(null), WAIT); })]);
+    clearTimeout(timer);
+    setMode(quick === 'live' ? 'live' : 'static');
+    if (quick === null) pr.then(m => {
+      if (m !== 'live' || mode !== 'static') return;
+      setMode('live'); // the live notice is above the log and the new text box, before anything is typed
+      status.textContent = 'You can now type a question to Milli.';
+    });
+  };
+  const reveal = () => {
     isOpen = true;
     t0 = Date.now();
     root.hidden = false;
     M.btn.setAttribute('aria-expanded', 'true');
     M.setState('rest');
     modal(mq.matches);
-    log.scrollTop = log.scrollHeight;
+    const last = [...log.children].reverse().find(c => c.classList.contains('milli-msg--you'));
+    body.scrollTop = 0; root.scrollTop = 0;
+    if (last) into(last);
     const first = mode === 'live' ? input : chips.firstChild;
     if (first) first.focus();
+  };
+  const show = () => {
+    if (isOpen) return Promise.resolve();
+    if (opening) return opening; // a second click while it loads
+    if (faq) { reveal(); return Promise.resolve(); }
+    M.btn.setAttribute('aria-busy', 'true');
+    opening = build().then(reveal).finally(() => { opening = null; M.btn.removeAttribute('aria-busy'); });
+    return opening;
   };
   const toggle = () => (isOpen ? hide(true) : show());
 

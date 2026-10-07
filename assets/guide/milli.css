@@ -1,11 +1,15 @@
 /* Milli's panel (ADDENDUM §8.2, §8.3), loaded on the first click. The launcher and mascot styles
    live in milli.js so the page pays for nothing more until then.
    Desktop: a 380 x 560 card above the launcher, bottom-left, under the bar (z-index 9980).
-   760 px or less: a full-screen sheet over everything, sized to the visual viewport.
+   760 px or less, or 500 px tall or less: a full-screen sheet over everything, sized to the
+   visual viewport. The header stays put; the notice, chips and log scroll as one region
+   (.milli-b), and when even that has no room (400% zoom, a phone on its side) the whole panel
+   scrolls, so every choice and answer can be reached (WCAG 1.4.10).
    Targets are at least 44 x 44 px; text is in rem; the text box is at least 16 px so phones
    don't zoom; reduced motion removes every animation; forced colours keep every edge. */
 .milli-p{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:calc(max(16px,env(safe-area-inset-bottom)) + 68px);z-index:9980;display:flex;flex-direction:column;box-sizing:border-box;width:380px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 44px - 100px);max-height:calc(100dvh - 44px - 100px);margin:0;border:1px solid rgba(0,0,0,.14);border-radius:18px;background:#fff;color:#1d1d1f;font:400 1rem/1.45 "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:normal;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden;animation:milli-in .22s cubic-bezier(.28,.11,.32,1)}
-.milli-p[hidden],.milli-f[hidden]{display:none}
+.milli-p[hidden],.milli-f[hidden],html.gb-open .milli-p,body:has(.is-open[aria-modal=true]) .milli-p{display:none}
+.milli-b{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
 .milli-p *,.milli-p *::before,.milli-p *::after{box-sizing:border-box}
 @keyframes milli-in{from{opacity:0;transform:translateY(12px)}}
 .milli-h{display:flex;align-items:center;gap:10px;flex:none;min-height:60px;padding:8px 60px 8px 14px;border-bottom:1px solid #e3e3e8}
@@ -20,7 +24,7 @@
 .milli-chip:hover,.milli-a:hover{background:#f5f1ea}
 .milli-a{border-color:#1d1d1f;color:#1d1d1f}
 .milli-a--q{border-style:dashed;border-color:#7a5a2f;color:#5c4322}
-.milli-log{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:10px 14px 12px}
+.milli-log{flex:none;display:flex;flex-direction:column;gap:10px;padding:10px 14px 12px}
 .milli-msg{max-width:92%;padding:10px 12px;border:1px solid transparent;border-radius:14px;font-size:.9375rem;line-height:1.45;overflow-wrap:anywhere}
 .milli-msg p{margin:0}
 .milli-msg--milli{align-self:flex-start;background:#f5f1ea;border-color:#e6dccb;border-top-left-radius:4px}
@@ -41,10 +45,14 @@
 
 /* the phone sheet: everything else is inert and the page doesn't scroll behind it */
 html.milli-lock,html.milli-lock body{overflow:hidden}
-@media (max-width:760px){
+@media (max-width:760px),(max-height:500px){
   .milli-p,.milli-p.is-sheet{top:var(--milli-top,0);right:0;bottom:auto;left:0;z-index:9995;width:auto;max-width:none;height:100vh;height:100dvh;height:var(--milli-h,100dvh);max-height:none;border:0;border-radius:0;box-shadow:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
   .milli-h{padding-top:max(8px,env(safe-area-inset-top))}
   .milli-x{top:calc(8px + env(safe-area-inset-top))}
+}
+@media (max-height:500px){
+  .milli-p,.milli-p.is-sheet{overflow-y:auto;overscroll-behavior:contain}
+  .milli-b{flex:none;min-height:auto;overflow:visible}
 }
 @media (prefers-reduced-motion:reduce){
   .milli-p,.milli-p *{animation:none!important;transition:none!important;scroll-behavior:auto!important}

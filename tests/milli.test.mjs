@@ -196,7 +196,7 @@ const flush = () => new Promise(r => setTimeout(r, 0));
 const settle = async () => { for (let i = 0; i < 8; i++) await flush(); };
 
 // fetch scripted per test: GET /api/guide and the POSTs; guide-faq.json is served from disk
-const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [], online = true, width = 1280, session = {} } = {}) => {
+const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [], online = true, width = 1280, height = 900, session = {}, open = true } = {}) => {
   const doc = { activeElement: null };
   Object.assign(doc, {
     createElement: t => new El(doc, t), createElementNS: (ns, t) => new El(doc, t), createTextNode: s => new Text(s),
@@ -212,7 +212,7 @@ const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [],
   const w = {
     document: doc, location: { pathname: path, origin: 'https://site.test', assign: u => assigned.push(u) }, navigator: { onLine: online },
     sessionStorage, localStorage: { getItem: k => local[k] ?? null, setItem: (k, v) => { local[k] = String(v); } },
-    matchMedia: q => ({ matches: /max-width:760px/.test(q) ? width <= 760 : false, addEventListener() {} }),
+    matchMedia: q => ({ matches: q === '(max-width:760px),(max-height:500px)' ? width <= 760 || height <= 500 : false, addEventListener() {} }),
     HanesEnquiry: { open: (...a) => dialogs.push(a) }, HanesSite: { BOOKINGS_LIVE: false },
     setTimeout, clearTimeout, URL, Promise, JSON, Date, AbortController, String, Array, Object, Error,
     fetch: async (url, opt = {}) => {
@@ -220,6 +220,7 @@ const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [],
       calls.push({ url: u, method, body: opt.body ? JSON.parse(opt.body) : null });
       if (u.endsWith('/guide-faq.json')) return { status: 200, ok: true, json: async () => JSON.parse(FAQ_SRC) };
       const r = method === 'GET' ? guide : posts.shift();
+      if (r && r.gate) await r.gate; // a slow or stalled studio
       if (!r || r.throws) throw new TypeError('network');
       return { status: r.status, ok: r.status < 300, json: async () => { if (r.body === undefined) throw new SyntaxError('not json'); return r.body; } };
     }
@@ -230,7 +231,7 @@ const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [],
   const M = w.HanesMilli;
   // the launcher would add <link> and <script>; here the panel source runs directly
   vm.runInContext(PANEL, ctx, { filename: 'milli-panel.js' });
-  await M.panel.open();
+  if (open) await M.panel.open();
   await settle();
   const panel = doc.body.find(e => e.id === 'milliPanel');
   return { w, doc, M, panel, calls, dialogs, assigned, store, page,
@@ -289,9 +290,13 @@ test('static mode: the §11.2 notice with the privacy link, chips for the page, 
   assert.equal(t.doc.activeElement, t.chips()[0], 'focus goes to the first choice (there is no input)');
   assert.equal(t.M.btn.getAttribute('aria-expanded'), 'true');
   assert.equal(t.M.btn.getAttribute('aria-controls'), 'milliPanel');
-  // tab order: header (nothing to focus) → notice link → chips → log → close, the close button last
+  // tab order: header (nothing to focus) → notice link → chips → log → close, the close button last;
+  // notice, chips and log share one scrolling region under the header (reflow)
   const kids = t.panel.children.map(e => e.getAttribute('class'));
-  assert.deepEqual(kids, ['milli-h', 'milli-n', 'milli-c', 'milli-log', 'milli-st', 'milli-st milli-st--err', 'milli-x']);
+  assert.deepEqual(kids, ['milli-h', 'milli-b', 'milli-st', 'milli-st milli-st--err', 'milli-x']);
+  const region = t.panel.children[1];
+  assert.deepEqual(region.children.map(e => e.getAttribute('class')), ['milli-n', 'milli-c', 'milli-log']);
+  assert.ok(region.hasAttribute('data-lenis-prevent'), 'the scrolling region keeps its wheel and touch events from Lenis');
   // choosing: finished messages with hidden prefixes, actions after their message, focus stays put
   const chip = t.chips()[1];
   chip.focus(); chip.click();
@@ -464,11 +469,23 @@ test('the phone sheet: modal, background inert, focus kept inside, Esc closes an
   assert.equal(t.page.inert, false);
   assert.equal(t.panel.getAttribute('aria-modal'), null);
   assert.equal(t.doc.documentElement.classList.contains('milli-lock'), false);
-  // Talk to a person on a phone: the sheet gives way to the enquiry dialog, which returns to the launcher
+  // Talk to a person on a phone: the sheet stays, with the answer and its email address in view;
+  // its "Send an enquiry" button then gives the sheet way to the enquiry dialog (back to the launcher)
   await t.M.panel.open();
+  const before = t.dialogs.length;
   t.chips().at(-1).click();
+  assert.equal(t.M.panel.state().open, true, 'choosing never closes the sheet');
+  assert.equal(t.dialogs.length, before, 'no dialog over the answer');
+  const answer = t.log().children.at(-1);
+  assert.match(answer.textContent, /Enquiry@hanesdistribution\.co\.nz/);
+  answer.find(e => e.tagName === 'BUTTON' && e.textContent === 'Send an enquiry').click();
   assert.equal(t.M.panel.state().open, false);
+  assert.equal(t.dialogs.length, before + 1);
   assert.equal(t.dialogs.at(-1)[3], t.M.btn);
+  // a short screen (a phone on its side, 400% zoom) gets the sheet too
+  const side = await boot({ width: 844, height: 390 });
+  assert.equal(side.panel.getAttribute('aria-modal'), 'true');
+  assert.equal(side.M.panel.state().sheet, true);
   // desktop: non-modal, nothing inert
   const dsk = await boot({ width: 1280 });
   assert.equal(dsk.panel.getAttribute('aria-modal'), null);
@@ -479,7 +496,14 @@ test('the phone sheet: modal, background inert, focus kept inside, Esc closes an
 
 test('milli.css: the sheet, 44 px targets, 16 px input text, reduced motion and forced colours', () => {
   const css = read('assets/guide/milli.css');
-  assert.match(css, /@media \(max-width:760px\)\{[\s\S]*?inset|@media \(max-width:760px\)\{[\s\S]*?top:var\(--milli-top,0\);right:0;bottom:auto;left:0/);
+  assert.match(css, /@media \(max-width:760px\),\(max-height:500px\)\{[\s\S]*?top:var\(--milli-top,0\);right:0;bottom:auto;left:0/);
+  assert.match(PANEL, /matchMedia\('\(max-width:760px\),\(max-height:500px\)'\)/, 'the sheet\'s CSS and JS agree');
+  // reflow: one scrolling region under the header, and the whole panel scrolls when even that has no room
+  assert.match(css, /\.milli-b\{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain\}/);
+  assert.match(css, /\.milli-log\{flex:none;/);
+  assert.match(css, /@media \(max-height:500px\)\{\s*\.milli-p,\.milli-p\.is-sheet\{overflow-y:auto;overscroll-behavior:contain\}\s*\.milli-b\{flex:none;min-height:auto;overflow:visible\}/);
+  // an open panel never sits, still tabbable, under the burger menu or a page modal
+  assert.match(css, /html\.gb-open \.milli-p,body:has\(\.is-open\[aria-modal=true\]\) \.milli-p\{display:none\}/);
   assert.match(css, /height:100dvh;height:var\(--milli-h,100dvh\)/);
   assert.match(css, /overscroll-behavior:contain/);
   assert.match(css, /font:400 max\(16px,1rem\)/);
@@ -488,4 +512,41 @@ test('milli.css: the sheet, 44 px targets, 16 px input text, reduced motion and 
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)\{\s*\.milli-p,\.milli-p \*\{animation:none!important;transition:none!important;scroll-behavior:auto!important\}/);
   assert.match(css, /@media \(forced-colors:active\)/);
   assert.match(css, /\.milli-p\{position:fixed;left:max\(16px,env\(safe-area-inset-left\)\);[^}]*z-index:9980;[^}]*width:380px;[^}]*height:560px/);
+});
+
+test('the first open: one panel however often the launcher is clicked, and a slow probe never holds it up', async () => {
+  // GET /api/guide never answers: the panel opens in static mode within WAIT ms of the quick answers
+  let release;
+  const stalled = { gate: new Promise(r => { release = r; }), status: 200, body: { ok: true, mode: 'live' } };
+  const t = await boot({ guide: stalled, open: false });
+  const t0 = Date.now();
+  const a = t.M.panel.open(), b = t.M.panel.open();
+  assert.equal(t.M.btn.getAttribute('aria-busy'), 'true', 'the launcher says it is busy while the panel loads');
+  t.M.panel.toggle(); // a third click
+  await a; await b;
+  assert.ok(Date.now() - t0 < 1500, `opened after ${Date.now() - t0} ms`);
+  assert.equal(t.M.btn.getAttribute('aria-busy'), null);
+  assert.equal(t.M.panel.state().open, true);
+  assert.equal(t.M.panel.state().mode, 'static');
+  assert.equal(t.textarea(), null);
+  assert.deepEqual(t.chips().map(c => c.textContent), ['Which brand do I need?', 'Start a kitchen design', 'Track a shipment', 'Talk to a person'], 'one set of chips');
+  assert.equal(t.log().children.length, 1, 'one greeting');
+  assert.equal(t.calls.filter(c => c.url.endsWith('guide-faq.json')).length, 1);
+  assert.equal(t.calls.filter(c => c.url === '/api/guide').length, 1);
+  // the studio answers live later: the open panel switches, notice first, without moving focus
+  const focus = t.doc.activeElement;
+  assert.equal(focus, t.chips()[0]);
+  release(); await settle();
+  assert.equal(t.M.panel.state().mode, 'live');
+  assert.equal(t.panel.find(e => e.id === 'milliNotice').textContent, NOTICE_LIVE + ' Privacy statement');
+  assert.ok(t.textarea(), 'the text box joins');
+  assert.equal(t.doc.activeElement, focus, 'focus stays put');
+  assert.equal(t.panel.find(e => e.getAttribute('role') === 'status').textContent, 'You can now type a question to Milli.');
+  assert.equal(t.posts().length, 0, 'nothing is sent until the visitor types');
+  // a late answer that is not live leaves static mode alone
+  let late;
+  const s = await boot({ guide: { gate: new Promise(r => { late = r; }), status: 200, body: { ok: true, mode: 'static' } } });
+  late(); await settle();
+  assert.equal(s.M.panel.state().mode, 'static');
+  assert.equal(s.textarea(), null);
 });
