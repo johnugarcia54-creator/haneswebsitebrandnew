@@ -59,6 +59,13 @@ export function looksSecret(value, key = '') {
   return /\b(sk|pk|rk|sb_secret|sb_publishable|re|xai)[-_][A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|[A-Za-z0-9+/_-]{40,}/.test(value);
 }
 
+/* Vercel answers an external rewrite whose target it cannot reach with 502-504 and an
+   x-vercel-error code starting ROUTER_EXTERNAL_TARGET (or a DNS_ code). On a preview that means
+   the staging studio is not deployed yet; on production it is always a failure. */
+export function studioNotDeployed(r, production) {
+  return !production && [502, 503, 504].includes(r.status) && /^(ROUTER_EXTERNAL_TARGET|DNS_)/.test(r.headers.get('x-vercel-error') || '');
+}
+
 export async function smoke(base, { local = false, production = false, productionBase, log = console.log } = {}) {
   let failed = 0;
   const ok = (cond, what) => { log(`${cond ? 'pass' : 'FAIL'}  ${what}`); if (!cond) failed++; };
@@ -110,7 +117,12 @@ export async function smoke(base, { local = false, production = false, productio
     const st = await sget('/studio');
     ok([307, 308].includes(st.status) && /\/studio\/$/.test(st.headers.get('location') || ''), `/studio redirects to /studio/${via} (HTTP ${st.status})`);
     const sr = await sget('/studio/');
-    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex${via} (HTTP ${sr.status})`);
+    if (studioNotDeployed(sr, production)) {
+      // a preview whose staging studio (Fly) is not deployed yet: Vercel itself answers that the
+      // rewrite target is unreachable. Said plainly, never counted as a pass; production always fails.
+      log(`skip  the staging studio is not deployed yet: /studio/ and the studio API were not tested${via} (HTTP ${sr.status}, ${sr.headers.get('x-vercel-error')})`);
+    } else {
+    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex${via} (HTTP ${sr.status}${sr.headers.get('x-vercel-error') ? ', ' + sr.headers.get('x-vercel-error') : ''})`);
     for (const p of ['/api/health', '/api/auth/health']) {
       const r = await sget(p), j = await json(r);
       ok(r.status === 200 && j && j.ok === true, `${p} answers ok through the rewrite${via} (HTTP ${r.status})`);
@@ -124,6 +136,7 @@ export async function smoke(base, { local = false, production = false, productio
     if (production) {
       const ie = await sget('/api/ops/ip-echo');
       ok(ie.status === 404, `/api/ops/ip-echo is hidden on production${via} (HTTP ${ie.status})`);
+    }
     }
     // a production build on its own deployment address reaches only staging, without the production secret
     if (bases.failClosed) for (const p of ['/studio/', '/api/auth/health']) {

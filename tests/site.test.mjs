@@ -555,3 +555,15 @@ test('404.html has no inline style or script, so it renders the same under the /
   assert.match(s, /<link rel="stylesheet" href="\/assets\/404\.css">/);
   assert.ok(existsSync(root + 'assets/404.css'));
 });
+
+test('smoke: an undeployed staging studio is a stated skip on previews, never on production', async () => {
+  const { studioNotDeployed } = await import('../scripts/smoke.mjs');
+  const res = (status, err) => new Response('', { status, headers: err ? { 'x-vercel-error': err } : {} });
+  assert.equal(studioNotDeployed(res(502, 'ROUTER_EXTERNAL_TARGET_CONNECTION_ERROR'), false), true);
+  assert.equal(studioNotDeployed(res(502, 'DNS_HOSTNAME_NOT_FOUND'), false), true);
+  // production always fails; so do a studio that answers itself, or a 502 without Vercel's code
+  assert.equal(studioNotDeployed(res(502, 'ROUTER_EXTERNAL_TARGET_CONNECTION_ERROR'), true), false);
+  assert.equal(studioNotDeployed(res(502), false), false);
+  assert.equal(studioNotDeployed(res(500, 'ROUTER_EXTERNAL_TARGET_ERROR'), false), false);
+  assert.equal(studioNotDeployed(res(403), false), false);
+});
