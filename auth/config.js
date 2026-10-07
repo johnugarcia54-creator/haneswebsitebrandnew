@@ -1,0 +1,48 @@
+/* =========================================================================================
+   auth/config.js: the public sign-in settings (ADDENDUM §6.3). Committed on purpose: the
+   publishable key and the Turnstile site key are public by design. No secret ever goes here.
+
+   Which block applies is chosen by location.host: the production host gets `production`,
+   everything else (the staging alias, previews, localhost) gets `staging`. Both use the one
+   Supabase project (integrator decision 1: staging shares it, with EXCHANGE_ALLOWLIST on the
+   staging studio), so the /auth CSP's connect-src names exactly this URL.
+
+   PLACEHOLDERS: the owner has not sent the keys yet. While a value still reads PLACEHOLDER,
+   the pages say "Sign-in is being set up" and make no call to Supabase or Cloudflare.
+   - publishableKey:   Supabase dashboard, project mputtezdhevwwjgwktvi, Project Settings ->
+                       API Keys -> the publishable key "default" (starts sb_publishable_)
+   - turnstileSiteKey: Cloudflare dashboard -> Turnstile -> the widget for the launch origin
+                       and the staging alias (starts 0x4)
+   ========================================================================================= */
+export const SUPABASE_URL = 'https://mputtezdhevwwjgwktvi.supabase.co';
+// SEC-2 (the custom domain, week 2) adds www.hanesdistribution.co.nz here
+export const PRODUCTION_HOSTS = Object.freeze(['hanes-the-website-new.vercel.app']);
+
+export const AUTH_CONFIG = Object.freeze({
+  production: Object.freeze({
+    supabaseUrl: SUPABASE_URL,
+    publishableKey: 'PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY',
+    turnstileSiteKey: 'PLACEHOLDER_TURNSTILE_SITE_KEY'
+  }),
+  staging: Object.freeze({
+    supabaseUrl: SUPABASE_URL,
+    publishableKey: 'PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY',
+    turnstileSiteKey: 'PLACEHOLDER_TURNSTILE_SITE_KEY'
+  })
+});
+
+const isProduction = host => PRODUCTION_HOSTS.includes(String(host || '').toLowerCase());
+
+// Cloudflare's published test keys (always pass, always fail, ...) never count on production
+const TURNSTILE_TEST_KEY = /^[123]x0{20}[A-Z]{2}$/;
+
+// {name, supabaseUrl, publishableKey, turnstileSiteKey, supabaseReady, turnstileReady}
+export function pickConfig(host, config = AUTH_CONFIG) {
+  const name = isProduction(host) ? 'production' : 'staging';
+  const c = config[name] || {};
+  const real = v => typeof v === 'string' && v !== '' && !/placeholder/i.test(v);
+  const supabaseReady = c.supabaseUrl === SUPABASE_URL && real(c.publishableKey) && /^sb_publishable_[A-Za-z0-9_-]{8,}$/.test(c.publishableKey);
+  const turnstileReady = real(c.turnstileSiteKey) && /^[0-3]x[A-Za-z0-9_-]{8,}$/.test(c.turnstileSiteKey) &&
+    !(name === 'production' && TURNSTILE_TEST_KEY.test(c.turnstileSiteKey));
+  return { name, supabaseUrl: c.supabaseUrl, publishableKey: c.publishableKey, turnstileSiteKey: c.turnstileSiteKey, supabaseReady, turnstileReady };
+}
