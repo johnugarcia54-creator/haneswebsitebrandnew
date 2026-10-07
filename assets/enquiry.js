@@ -6,6 +6,10 @@
      sends a form the page has already checked, and reports back in the status element.
    Links with data-quote="Topic" open a short enquiry form in a dialog, on any page. Their
      href (contact.html?topic=…#enquiry) still works without JavaScript.
+   Every post also carries two top-level keys (ADDENDUM §6.4):
+     marketingOptIn  true only when the form's optional, unticked "news and offers" box is ticked
+     submissionId    a UUID made once per form fill and reused on every retry of that fill, so a
+                     retried enquiry is recognised as the same one; a new fill starts after a send
    ========================================================================================= */
 window.HanesEnquiry = (() => {
   'use strict';
@@ -13,6 +17,18 @@ window.HanesEnquiry = (() => {
   const online = location.protocol === 'http:' || location.protocol === 'https:';
   const REGIONS = ['Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', "Hawke's Bay", 'Taranaki', 'Manawatū-Whanganui', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland', 'Outside New Zealand'];
   const $ = (s, r = document) => r.querySelector(s);
+
+  // one id per form fill: kept across retries, dropped once the enquiry is sent
+  const fills = new WeakMap();
+  const uuid = () => {
+    const c = window.crypto;
+    if (c && typeof c.randomUUID === 'function') return c.randomUUID();
+    const b = c.getRandomValues(new Uint8Array(16)); // randomUUID needs a secure context; same v4 layout
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+    const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  };
+  const submissionId = form => { let id = fills.get(form); if (!id) { id = uuid(); fills.set(form, id); } return id; };
 
   // a field people never see and bots fill in
   const trap = form => {
@@ -41,6 +57,8 @@ window.HanesEnquiry = (() => {
     const email = String(o.email ?? (el.email && el.email.value) ?? '').trim();
     const subject = String(o.subject || 'Website enquiry').trim();
     const fields = (o.fields || []).map(([k, v]) => [k, v == null ? '' : String(v).trim()]).filter(([, v]) => v);
+    const marketingOptIn = o.marketingOptIn != null ? o.marketingOptIn === true : Boolean(el.marketingOptIn && el.marketingOptIn.checked);
+    const id = submissionId(form);
     const btn = form.querySelector('[type="submit"]'), text = btn && btn.textContent.trim() ? btn.innerHTML : null;
     form.dataset.sending = '1'; form.setAttribute('aria-busy', 'true');
     if (btn) { btn.disabled = true; if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
@@ -51,12 +69,13 @@ window.HanesEnquiry = (() => {
       if (online) {
         r = await fetch(API, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, subject, form: o.form || form.id || 'form', page: location.pathname, fields, website: el.website ? el.website.value : '', elapsed: Date.now() - t0 })
+          body: JSON.stringify({ name, email, subject, form: o.form || form.id || 'form', page: location.pathname, fields, website: el.website ? el.website.value : '', elapsed: Date.now() - t0, marketingOptIn, submissionId: id })
         });
         j = await r.json().catch(() => ({}));
       }
       if (r && r.ok) {
         ok = true;
+        fills.delete(form);
         say(status, o.done || `Thanks, ${name.split(' ')[0]}. Your enquiry is with our team, and we'll reply to ${email}.`, 'ok');
         form.reset();
       } else if (r && r.status === 400) {
@@ -95,9 +114,10 @@ window.HanesEnquiry = (() => {
           <label class="qd__f qd__f--full"><span>Region <em>(optional)</em></span><select name="region"><option value="">Choose one</option>${REGIONS.map(r => `<option>${r}</option>`).join('')}</select></label>
           <label class="qd__f qd__f--full"><span>What do you need?</span><textarea name="message" rows="4" required maxlength="5000"></textarea></label>
         </div>
+        <label class="qd__optin" style="display:flex;align-items:flex-start;gap:10px;margin:16px 0 0;font-size:14px;line-height:1.4;color:#1d1d1f;cursor:pointer"><input type="checkbox" name="marketingOptIn" value="yes" style="flex:none;width:18px;height:18px;min-height:0;margin:1px 0 0;padding:0;border:0;appearance:auto;-webkit-appearance:checkbox;accent-color:#0071e3;cursor:pointer"><span>Send me occasional news and offers.</span></label>
         <button class="qd__send" type="submit">Send enquiry</button>
         <p class="qd__status" id="qdStatus" role="status" aria-live="polite"></p>
-        <p class="qd__note">Sent to ${MAIL}. We only use your details to reply to you.</p>
+        <p class="qd__note" style="color:#6e6e73">Sent to ${MAIL}. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="/privacy.html" style="color:inherit;text-decoration:underline">privacy statement</a> explains how to see or correct them.</p>
       </form>`;
     document.body.append(dlg);
     const f = $('form', dlg);

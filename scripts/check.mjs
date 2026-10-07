@@ -11,6 +11,7 @@
    - app pages (auth/*.html, when present): noindex, one <h1>, lang="en-NZ", no inline script,
      <style>, style="" or on*= handler (the /auth CSP would block them), every local file exists
    - no innerHTML, outerHTML, insertAdjacentHTML or document.write in auth/*.js or assets/guide/*.js
+   - no form still promises "We only use your details to reply to you"
    ========================================================================================= */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -111,6 +112,12 @@ for (const dir of ['auth', 'assets/guide']) {
     const f = `${dir}/${name}`, s = readFileSync(root + f, 'utf8');
     for (const x of s.matchAll(/\b(innerHTML|outerHTML|insertAdjacentHTML|document\.write(?:ln)?)\b/g)) err(f, `${x[1]} is not allowed here (build nodes with textContent)`);
   }
+}
+
+// ---------- the old enquiry promise is gone everywhere (ADDENDUM §6.4: the honest notice replaced it)
+for (const f of [...pages, 'assets/enquiry.js']) {
+  const s = f.endsWith('.html') ? src[f] : readFileSync(root + f, 'utf8');
+  if (s.includes('We only use your details to reply to you')) err(f, 'still says "We only use your details to reply to you" (use the enquiry notice and link the privacy statement)');
 }
 
 // ---------- sitemap and robots

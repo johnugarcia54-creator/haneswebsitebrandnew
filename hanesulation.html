@@ -268,6 +268,9 @@ fieldset.field{border:0}
 .toggles input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
 .form .btn{margin-top:20px;width:100%;justify-content:center;height:54px;font-size:17px}
 .form__note{margin-top:12px;font-size:12.5px;color:var(--ink-3);text-align:center}
+.form__note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.form__optin{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:14px;line-height:1.4;text-align:left;cursor:pointer}
+.form__optin input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--blue,#0071e3);cursor:pointer}
 .form__done{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(242,201,90,.1);color:var(--gold);font-size:14px;display:none}
 .form__done.is-on{display:block}
 
@@ -589,8 +592,9 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
           <fieldset class="field full"><legend>Interested in</legend><div class="toggles"><label><input type="checkbox" name="interest" value="Wall insulation" checked><span>Walls</span></label><label><input type="checkbox" name="interest" value="Ceiling insulation" checked><span>Ceilings</span></label></div></fieldset>
           <div class="field full"><label for="fMsg">R-values and volumes</label><textarea id="fMsg" name="message" placeholder="For example: R2.6 wall batts and R4.0 ceiling blankets, about 20 packs a week"></textarea></div>
         </div>
+        <label class="form__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
         <button class="btn btn--gold" type="submit">Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
-        <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We only use your details to reply to you.</p>
+        <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="privacy.html">privacy statement</a> explains how to see or correct them.</p>
         <p class="form__done" id="fDone" role="status"></p>
       </form>
     </div>

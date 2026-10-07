@@ -161,7 +161,10 @@ section{position:relative}
 .fl.flash select{animation:flash 1.2s var(--ease)}
 @keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(0,113,227,0)}30%{box-shadow:0 0 0 6px rgba(0,113,227,.25);border-color:var(--blue)}}
 .form .btn{width:100%;min-height:50px;margin-top:22px}
-.form__note{margin-top:12px;font-size:12px;color:var(--ink-3);text-align:center}
+.form__note{margin-top:12px;font-size:12px;color:var(--ink-2);text-align:center}
+.form__note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.form__optin{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:14px;line-height:1.4;text-align:left;cursor:pointer}
+.form__optin input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--blue,#0071e3);cursor:pointer}
 .form__done{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:rgba(0,113,227,.06);font-size:14px}
 .form__done.is-on{display:block}
 .form__err{display:none;margin-top:12px;font-size:14px;color:#e30000;text-align:center}
@@ -337,9 +340,10 @@ section{position:relative}
             <div class="fl fl--sel"><select id="fRegion" name="region"><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option><option>Outside New Zealand</option></select><label for="fRegion">Region (optional)</label></div>
             <div class="fl full"><textarea id="fMsg" name="message" placeholder=" " required></textarea><label for="fMsg">How can we help?</label></div>
           </div>
+          <label class="form__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
           <button class="btn" type="submit">Send enquiry</button>
           <p class="form__err" id="fErr" role="alert">Please add your name, email, a topic and a message.</p>
-          <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We only use your details to reply to you.</p>
+          <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="privacy.html">privacy statement</a> explains how to see or correct them.</p>
           <p class="form__done" id="fDone" role="status"></p>
         </form>
         <div class="side">
