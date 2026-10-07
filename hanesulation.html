@@ -202,7 +202,7 @@ button{background:none;border:0;cursor:pointer}
 
 /* ---------- Certified ---------- */
 .cert{position:relative;max-width:100%;overflow:clip;padding:clamp(90px,14vh,150px) 0;background:var(--bg)}
-.cert__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
+.cert__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,1.6vw,22px);margin-top:clamp(40px,7vh,72px)}
 .seal-card{position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:linear-gradient(180deg,#15130f,#0d0c09);box-shadow:inset 0 0 0 1px rgba(255,240,210,.07);text-align:center}
 .seal{position:relative;width:min(220px,62%);aspect-ratio:1;margin:0 auto 26px}
 .seal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
@@ -370,13 +370,13 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
       <div class="h-copy" id="hCopy">
         <div class="eyebrow">Hanesulation · For retailers and the trade</div>
         <h1>Warmth,<br><span class="gold">by the roll.</span></h1>
-        <p>Premium glass wool for walls and ceilings, R2 to R7. BRANZ Appraised, stocked in Christchurch and ready to fill your shelves.</p>
+        <p>Premium glass wool for walls and ceilings, R2 to R7. Stocked in Christchurch and ready to fill your shelves.</p>
         <a class="btn btn--gold" href="#pricing" data-scroll>Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
       </div>
       <div class="caps" aria-hidden="true">
         <h2 class="cap" id="cap1">Premium <span class="gold">glass wool.</span></h2>
         <h2 class="cap" id="cap2">R2 to R7. <span>For walls and ceilings.</span></h2>
-        <h2 class="cap" id="cap3">BRANZ Appraised. <span>R-values to AS/NZS 4859.1.</span></h2>
+        <h2 class="cap" id="cap3">R-values to AS/NZS 4859.1.</h2>
       </div>
       <div class="h-meter" aria-hidden="true"><i id="hMeter"></i></div>
     </div>
@@ -487,8 +487,8 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   </section>
 
   <!-- ================= Marquee ================= -->
-  <section class="marq" id="marq" aria-label="R2 to R7 for walls and ceilings, BRANZ Appraised, R-values to AS/NZS 4859.1, delivered nationwide">
-    <div class="marq__row" aria-hidden="true" data-dir="1"><div class="marq__track"><span>R2 to R7 <i>✦</i></span><span>Walls <i>✦</i></span><span>Ceilings <i>✦</i></span><span>BRANZ Appraised <i>✦</i></span><span>AS/NZS 4859.1 <i>✦</i></span></div></div>
+  <section class="marq" id="marq" aria-label="R2 to R7 for walls and ceilings, R-values to AS/NZS 4859.1, delivered nationwide">
+    <div class="marq__row" aria-hidden="true" data-dir="1"><div class="marq__track"><span>R2 to R7 <i>✦</i></span><span>Walls <i>✦</i></span><span>Ceilings <i>✦</i></span><span>AS/NZS 4859.1 <i>✦</i></span></div></div>
     <div class="marq__row marq__row--o" aria-hidden="true" data-dir="-1"><div class="marq__track"><span>Warmth by the roll <i>✦</i></span><span>Stocked in Christchurch <i>✦</i></span><span>Delivered nationwide <i>✦</i></span><span>Pricing for stockists <i>✦</i></span></div></div>
   </section>
 
@@ -496,17 +496,8 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
   <section class="cert" id="certified">
     <div class="wrap">
       <div class="eyebrow" data-reveal>Certified</div>
-      <h2 class="h" style="margin-top:12px">Appraised. <span class="muted">Tested. Ready to sell.</span></h2>
+      <h2 class="h" style="margin-top:12px">Tested. <span class="muted">Ready to sell.</span></h2>
       <div class="cert__grid">
-        <div class="seal-card" data-drop="tilt">
-          <div class="seal" aria-hidden="true">
-            <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
-              <g class="spin"><path id="sp1" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text class="txt"><textPath href="#sp1">INDEPENDENTLY APPRAISED · NEW ZEALAND · INDEPENDENTLY APPRAISED · NZ ·</textPath></text></g></svg>
-            <div class="seal__mid"><small>APPRAISED</small><strong>BRANZ</strong></div>
-          </div>
-          <b>BRANZ Appraised</b>
-          <p>Independently assessed by BRANZ, so builders, specifiers and councils can accept it with confidence.</p>
-        </div>
         <div class="seal-card" data-drop="tilt">
           <div class="seal" aria-hidden="true">
             <svg viewBox="0 0 200 200"><circle class="ring" cx="100" cy="100" r="96" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><circle class="ring2" cx="100" cy="100" r="66"/>
@@ -572,7 +563,7 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
         <ul class="ticks">
           <li data-drop><span><b>Pricing for stockists.</b> Built around what you sell, not a price list.</span></li>
           <li data-drop><span><b>R2 to R7.</b> One brand for every wall and ceiling.</span></li>
-          <li data-drop><span><b>BRANZ Appraised.</b> R-values to AS/NZS 4859.1.</span></li>
+          <li data-drop><span><b>R-values to AS/NZS 4859.1.</b></span></li>
           <li data-drop><span><b>Christchurch stock.</b> Delivered right across New Zealand.</span></li>
         </ul>
       </div>
