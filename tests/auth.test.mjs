@@ -470,8 +470,24 @@ test('sign-up and reset answer the same whether or not the account exists', asyn
     const s = stub({ reset: code });
     assert.equal((await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, s.deps)).message, "If that email has an account, we've sent a link.");
   }
-  const s = stub({ reset: 'over_email_send_rate_limit' });
-  assert.equal((await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, s.deps)).message, lib.MESSAGES.rate_limited);
+});
+
+test('the per-email send limit (sent only for an email with an account) gets the uniform answer in reset, resend and sign-up', async () => {
+  const code = 'over_email_send_rate_limit';
+  let out = await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ reset: code }).deps);
+  assert.deepEqual(out, { action: 'done', message: "If that email has an account, we've sent a link." });
+  out = await lib.resendFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ resend: code }).deps);
+  assert.deepEqual(out, { action: 'done', message: "If that email has an account waiting for confirmation, we've sent a new link." });
+  assert.deepEqual(out, await lib.resendFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub().deps), 'resend: the same as success');
+  out = await lib.signupFlow({ name: 'A', email: 'a@b.co', password: 'twelve chars!', privacyAck: true, captchaToken: 't', origin: ORIGIN }, stub({ signUp: code }).deps);
+  assert.deepEqual(out, { action: 'done', message: 'Check your email to confirm your account.' });
+  // answers that do not depend on the account still say what happened
+  for (const c of ['over_request_rate_limit', 'too_many_requests']) {
+    assert.equal((await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ reset: c }).deps)).message, lib.MESSAGES.rate_limited, c);
+    assert.equal((await lib.resendFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ resend: c }).deps)).message, lib.MESSAGES.rate_limited, c);
+  }
+  assert.equal((await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ reset: 'captcha_failed' }).deps)).action, 'error');
+  assert.equal((await lib.resetFlow({ email: 'a@b.co', captchaToken: 't', origin: ORIGIN }, stub({ reset: 'network' }).deps)).action, 'error');
 });
 
 test('sign-up checks its fields before anything is sent (name 1-120, email, password 12-72, the privacy tick)', async () => {

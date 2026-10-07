@@ -235,6 +235,10 @@ export function supabaseCode(error) {
 }
 const RATE = new Set(['over_request_rate_limit', 'over_email_send_rate_limit', 'too_many_requests']);
 const CAPTCHA = new Set(['captcha_failed']);
+// Supabase sends over_email_send_rate_limit only for an email that has an account (an unknown
+// email gets 200 before any email is sent), so reset, resend and sign-up answer it exactly as
+// they answer success: anything else would say whether the account exists (§3.3.5).
+const EMAIL_RATE = new Set(['over_email_send_rate_limit']);
 // what a person sees for a Supabase error in each flow; never says whether an account exists
 export function supabaseMessage(error, flow) {
   const code = supabaseCode(error);
@@ -291,6 +295,7 @@ export async function resendFlow({ email, captchaToken, origin }, deps) {
   if (!captchaToken) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
   const { error } = await deps.supabase.auth.resend({ type: 'signup', email, options: { captchaToken, emailRedirectTo: origin + '/auth/confirm.html' } });
   const code = supabaseCode(error);
+  if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.resend_sent };
   if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'resend') };
   return { action: 'done', message: MESSAGES.resend_sent };
 }
@@ -300,6 +305,7 @@ export async function resetFlow({ email, captchaToken, origin }, deps) {
   if (!captchaToken) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
   const { error } = await deps.supabase.auth.resetPasswordForEmail(email, { redirectTo: origin + '/auth/confirm.html', captchaToken });
   const code = supabaseCode(error);
+  if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.reset_sent };
   if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'reset') };
   return { action: 'done', message: MESSAGES.reset_sent };
 }
@@ -321,7 +327,7 @@ export async function signupFlow({ name, email, password, code, privacyAck, mark
     }
   });
   const c = supabaseCode(error);
-  if (!error || c === 'user_already_exists' || c === 'email_exists') return { action: 'done', message: MESSAGES.signup_sent };
+  if (!error || c === 'user_already_exists' || c === 'email_exists' || EMAIL_RATE.has(c)) return { action: 'done', message: MESSAGES.signup_sent };
   if (c === 'signup_disabled') return { action: 'error', code: c, message: MESSAGES.accounts_closed, closed: true };
   return { action: 'error', code: c, message: supabaseMessage(error, 'signup') };
 }
