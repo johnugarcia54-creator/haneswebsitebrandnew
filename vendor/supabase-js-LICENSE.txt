@@ -1,0 +1,39 @@
+vendor/supabase-js-2.117.3.min.js is the unmodified browser (UMD) build of supabase-js.
+
+  Package:   @supabase/supabase-js 2.117.3 (the newest release on 2026-10-07; published 2026-10-07T12:34Z)
+  File:      dist/umd/supabase.js from the npm tarball, copied byte for byte
+  Tarball:   https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.117.3.tgz
+  Integrity: sha512-K+f8PimXDunPWQ63CKRXaF5pbVPJxmfw5ryAnh0s9S9PkwcuqBjiSpIaqpF7KLDljeYwXIL85ST8QxaO0+XuvA==
+             (npm's dist.integrity, checked against the downloaded tarball)
+  SHA-256:   d6a5c4414a5d4ce646d9c1de223aa7067d3ff664c15394ffeb7fcffc763354a3 (the vendored file)
+
+The filename carries the version because /vendor/ is served immutable for a year (vercel.json).
+To upgrade: npm pack @supabase/supabase-js@<new> in a scratch folder, check dist.integrity,
+copy dist/umd/supabase.js to vendor/supabase-js-<new>.min.js, update this file and the script
+tags in auth/*.html (tests/auth.test.mjs checks they agree), and delete the old file.
+
+The package's licence follows, unchanged.
+
+------------------------------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2020 Supabase
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
