@@ -78,7 +78,7 @@
   const noticeText = d.createTextNode('');
   const notice = el('p', { id: 'milliNotice', class: 'milli-n' }, noticeText, ' ', el('a', { href: '/privacy.html' }, 'Privacy statement'));
   const chips = el('div', { class: 'milli-c', role: 'group', 'aria-label': 'Suggested questions' });
-  const log = el('div', { class: 'milli-log', role: 'log', 'aria-live': 'polite', 'aria-label': 'Conversation with Milli', 'data-lenis-prevent': true });
+  const log = el('div', { class: 'milli-log', role: 'log', 'aria-live': 'polite', 'aria-label': 'Conversation with Milli', 'data-lenis-prevent': true, tabindex: '0' }); // focusable, so a keyboard can scroll it
   const status = el('p', { class: 'milli-st', role: 'status' });
   const alert = el('p', { class: 'milli-st milli-st--err', role: 'alert' });
   const input = el('textarea', { id: 'milliQ', name: 'q', rows: '2', maxlength: String(MAX), 'aria-describedby': 'milliNotice milliCount', autocomplete: 'off' });
@@ -224,7 +224,7 @@
       for (const c of n.children) {
         if (c.hidden) continue;
         const t = c.tagName;
-        if ((t === 'A' && c.getAttribute('href')) || ((t === 'BUTTON' || t === 'TEXTAREA') && !c.disabled)) out.push(c);
+        if ((t === 'A' && c.getAttribute('href')) || ((t === 'BUTTON' || t === 'TEXTAREA') && !c.disabled) || c.getAttribute('tabindex') === '0') out.push(c);
         walk(c);
       }
     };
