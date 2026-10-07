@@ -12,7 +12,7 @@
    forwarded and the email is exactly as it was before the forward existed. The edge secret is
    only ever sent to the production studio host (EDGE_HOSTS) or this machine, and never from a
    Vercel deployment other than Production: a mistyped URL or an environment saved for "All"
-   then gets a 403 from the edge gate ("CRM: NOT stored (403)") instead of the secret.
+   forwards nothing at all ("CRM: NOT stored (config), enter by hand").
 
    The contract with the studio's ingest (its validation must accept every value sent here):
      form   one of the 7 §7.3 values (FORMS below)
@@ -114,13 +114,15 @@ export async function forwardLead(lead, env = process.env, { fetchImpl = fetch, 
   if (!url || !secret) return { status: 'skipped' };
   let target;
   try { target = new URL(url); } catch { return { status: 'not_stored', http: 'config' }; }
-  // the signature and the edge secret only ever travel over TLS (plain http only to this machine)
+  // personal details, the signature and the edge secret only ever go to the production studio over
+  // TLS (or to this machine), and only from Production: anything else is a setup error
   if (!(target.protocol === 'https:' || (target.protocol === 'http:' && LOOPBACK.has(target.hostname)))) return { status: 'not_stored', http: 'config' };
+  if (!edgeAllowed(target, env)) return { status: 'not_stored', http: 'config' };
 
   const raw = JSON.stringify(lead), timestamp = String(now());
   if (Buffer.byteLength(raw) > MAX_BODY) return { status: 'not_stored', http: 413 };
   const headers = { 'Content-Type': 'application/json', 'X-Lead-Timestamp': timestamp, 'X-Lead-Signature': signature(secret, timestamp, raw) };
-  if (env.STUDIO_EDGE_SECRET_PROD && edgeAllowed(target, env)) headers['x-studio-edge'] = env.STUDIO_EDGE_SECRET_PROD;
+  if (env.STUDIO_EDGE_SECRET_PROD) headers['x-studio-edge'] = env.STUDIO_EDGE_SECRET_PROD;
 
   const ac = new AbortController(), timer = setTimeout(() => ac.abort(), timeoutMs);
   try {

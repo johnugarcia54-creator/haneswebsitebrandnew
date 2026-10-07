@@ -172,7 +172,7 @@ test('forwardLead leaves x-studio-edge out when STUDIO_EDGE_SECRET_PROD is unset
   } finally { s.close(); }
 });
 
-test('x-studio-edge goes only to the production studio host or this machine, and only from Production', async () => {
+test('leads and x-studio-edge go only to the production studio host or this machine, and only from Production', async () => {
   const u = h => new URL(`https://${h}/api/leads/ingest`);
   assert.deepEqual([...EDGE_HOSTS], ['bargainhub-studio.fly.dev']);
   assert.equal(edgeAllowed(u('bargainhub-studio.fly.dev'), {}), true);
@@ -184,20 +184,22 @@ test('x-studio-edge goes only to the production studio host or this machine, and
     [u('bargainhub-studio.fly.dev'), { VERCEL_ENV: 'development' }], [new URL('http://127.0.0.1:1/x'), { VERCEL_ENV: 'preview' }]
   ]) assert.equal(edgeAllowed(target, env), false, `${target.host} ${env.VERCEL_ENV}`);
 
-  // the forward still goes (the edge gate then refuses it truthfully), but without the secret
+  // anywhere else, or from a non-Production deployment, nothing is sent at all: no personal
+  // details, no signature, no edge secret
   const sent = [];
   const fetchImpl = async (href, init) => { sent.push([href, init.headers]); return new Response('{"error":"forbidden"}', { status: 403 }); };
-  for (const env of [envFor('https://bargainhub-studio-staging.fly.dev/api/leads/ingest'), envFor('https://bargainhub-studio.fly.dev/api/leads/ingest', { VERCEL_ENV: 'preview' })]) {
+  for (const env of [envFor('https://bargainhub-studio-staging.fly.dev/api/leads/ingest'), envFor('https://studio.example/api/leads/ingest'),
+    envFor('https://bargainhub-studio.fly.dev/api/leads/ingest', { VERCEL_ENV: 'preview' })]) {
     const r = await forwardLead(lead(), env, { fetchImpl });
-    assert.deepEqual(r, { status: 'not_stored', http: 403 });
-    assert.equal(emailLine(r, ID), 'CRM: NOT stored (403), enter by hand');
+    assert.deepEqual(r, { status: 'not_stored', http: 'config' });
+    assert.equal(emailLine(r, ID), 'CRM: NOT stored (config), enter by hand');
   }
-  assert.equal(sent.length, 2);
-  for (const [, h] of sent) assert.ok(!('x-studio-edge' in h) && !JSON.stringify(h).includes('test-edge-secret'));
+  assert.equal(sent.length, 0);
   // the production host from Production does carry it
   const r = await forwardLead(lead(), envFor('https://bargainhub-studio.fly.dev/api/leads/ingest', { VERCEL_ENV: 'production' }), { fetchImpl });
-  assert.equal(r.status, 'not_stored');
-  assert.equal(sent[2][1]['x-studio-edge'], 'test-edge-secret');
+  assert.deepEqual(r, { status: 'not_stored', http: 403 });
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0][1]['x-studio-edge'], 'test-edge-secret');
 });
 
 test('the email line for queued, held and a duplicate', async () => {
