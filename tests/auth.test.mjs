@@ -591,7 +591,9 @@ for (const p of PAGES) {
     // the messages are live regions, the form starts hidden until auth.js knows it can work
     assert.match(s, /id="notice" role="status"/);
     assert.match(s, /id="alert" role="alert"/);
-    assert.match(s, /<form class="auth__form" id="form" novalidate hidden>/);
+    // the form starts hidden, and even a submit without auth.js would never put a password in a URL
+    assert.match(s, /<form class="auth__form" id="form" method="post" novalidate hidden>/);
+    assert.equal((s.match(/<form\b/g) || []).length, 1);
     // every input has a label
     for (const x of s.matchAll(/<input\b[^>]*\sid="([^"]+)"[^>]*>/g)) {
       const id = x[1];
@@ -607,6 +609,8 @@ test('the wording the addendum fixes is on the pages, as static text', () => {
   assert.ok(login.includes("We'll sign you out when you close your browser. Some browsers keep you signed in if they restore your tabs; on a shared computer, use Sign out."));
   assert.match(login, /<input id="remember" name="remember" type="checkbox" aria-describedby="remember-help">/, 'unticked by default');
   assert.ok(login.includes('Resend confirmation'));
+  assert.match(login, /<input id="password" name="password" type="password" autocomplete="current-password" maxlength="72" required>/, 'sign-in never refuses a password by its length');
+  for (const f of ['signup', 'update-password']) assert.match(read(`auth/${f}.html`), /autocomplete="new-password" maxlength="72" data-min="12"/, `${f}: 12 to 72`);
   assert.ok(signup.includes(lib.MESSAGES.accounts_closed), 'the closed state of §3.3.1');
   assert.ok(signup.includes('By creating an account you agree that Bargainhub (Hanes Distribution) can keep your designs and contact details and contact you about your project. Sign-in is handled by Supabase in Sydney; your contact details also go into our customer system, run by Base44 in the United States. <a href="/privacy.html">Privacy statement</a>'), 'the §11.2 sign-up notice');
   assert.match(signup, /<input id="privacy" name="privacy" type="checkbox" required[^>]*><span>I've read the privacy statement\.<\/span>/);
@@ -626,6 +630,11 @@ test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar befor
   assert.match(s, /const NEEDS_TURNSTILE = new Set\(\['login', 'signup', 'reset'\]\);/);
   assert.equal((s.match(/mountCaptcha\(\$\('captcha'\), '(login|signup|reset)'\)/g) || []).length, 3);
   assert.match(s, /detectSessionInUrl: false/, 'supabase-js never reads tokens from the address');
+  // every page shows its form only after its submit handler is attached
+  for (const fn of s.split(/\nasync function /).slice(1)) {
+    const shown = fn.indexOf('show(form, true)'), handler = fn.indexOf("form.addEventListener('submit'");
+    if (shown >= 0) assert.ok(handler >= 0 && handler < shown, fn.slice(0, 20));
+  }
   for (const imp of s.matchAll(/from '([^']+)'/g)) assert.match(imp[1], /^\/auth\/[a-z-]+\.js$/, 'root-absolute imports');
   const r = spawnSync(process.execPath, ['--check', root + 'auth/auth.js'], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stderr);

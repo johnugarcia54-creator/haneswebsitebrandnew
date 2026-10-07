@@ -140,6 +140,7 @@ function loadTurnstile() {
   return turnstileLoading;
 }
 // one widget per page; token() is the current answer or '' while the check is not done
+const NO_CAPTCHA = { token: () => '', reset() {} };
 async function mountCaptcha(container, action) {
   let token = '';
   try {
@@ -154,7 +155,7 @@ async function mountCaptcha(container, action) {
     return { token: () => token, reset: () => { token = ''; try { ts.reset(id); } catch { /* gone */ } } };
   } catch {
     fail("The security check couldn't load. Reload the page, or check that nothing is blocking challenges.cloudflare.com.");
-    return { token: () => '', reset() {} };
+    return NO_CAPTCHA;
   }
 }
 
@@ -197,8 +198,7 @@ async function loginPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
   note(params.get('reason') === 'reauth' ? 'Your new password is saved. Sign in with it to continue.' : '');
   rememberNext();
-  show(form, true);
-  const captcha = await mountCaptcha($('captcha'), 'login');
+  let captcha = NO_CAPTCHA;
   const resendBox = $('resendBox'), resend = $('resend');
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -223,6 +223,8 @@ async function loginPage(sb) {
     busy(resend, false);
     if (out.action === 'done') { show(resendBox, false); show(els.alert, false); note(out.message); els.notice.focus(); } else fail(out.message);
   });
+  show(form, true); // only once the handlers are in place, so the form never submits by itself
+  captcha = await mountCaptcha($('captcha'), 'login');
 }
 
 async function signupPage() {
@@ -250,8 +252,7 @@ async function signupPage() {
   };
   code.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(preview, 600); });
   if (code.value) timer = setTimeout(preview, 600);
-  show(form, true);
-  const captcha = await mountCaptcha($('captcha'), 'signup');
+  let captcha = NO_CAPTCHA;
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (btn.disabled) return;
@@ -267,13 +268,14 @@ async function signupPage() {
     if (out.closed) { show(form, false); show($('closed'), true); return; }
     settle(out);
   });
+  show(form, true);
+  captcha = await mountCaptcha($('captcha'), 'signup');
 }
 
 async function resetPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
   note('');
-  show(form, true);
-  const captcha = await mountCaptcha($('captcha'), 'reset');
+  let captcha = NO_CAPTCHA;
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (btn.disabled) return;
@@ -285,6 +287,8 @@ async function resetPage(sb) {
     busy(btn, false);
     settle(out);
   });
+  show(form, true);
+  captcha = await mountCaptcha($('captcha'), 'reset');
 }
 
 const CONFIRM_COPY = {
@@ -310,7 +314,6 @@ async function confirmPage(sb) {
   privacy.required = type === 'invite';
   privacy.disabled = type !== 'invite';
   note('');
-  show(form, true);
   let used = false;
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -331,6 +334,7 @@ async function confirmPage(sb) {
     // after a verified link, Retry runs only the exchange again (the outcome's retry)
     settle(out);
   });
+  show(form, true);
 }
 
 async function passwordPage(sb) {
@@ -345,7 +349,6 @@ async function passwordPage(sb) {
   }
   note('');
   const form = els.form, btn = form.querySelector('button[type=submit]');
-  show(form, true);
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (btn.disabled) return;
@@ -356,6 +359,7 @@ async function passwordPage(sb) {
     busy(btn, false);
     settle(out);
   });
+  show(form, true);
 }
 
 /* ---- start ------------------------------------------------------------------------------ */
