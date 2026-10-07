@@ -631,7 +631,10 @@ test('the wording the addendum fixes is on the pages, as static text', () => {
   assert.ok(signup.includes('By creating an account you agree that Bargainhub (Hanes Distribution) can keep your designs and contact details and contact you about your project. Sign-in is handled by Supabase in Sydney; your contact details also go into our customer system, run by Base44 in the United States. <a href="/privacy.html">Privacy statement</a>'), 'the §11.2 sign-up notice');
   assert.match(signup, /<input id="privacy" name="privacy" type="checkbox" required[^>]*><span>I've read the privacy statement\.<\/span>/);
   assert.match(signup, /<input id="marketing" name="marketing" type="checkbox"><span>Send me occasional news and offers\.<\/span>/, 'optional, unticked');
-  assert.match(read('auth/confirm.html'), /I've read the <a href="\/privacy\.html">privacy statement<\/a>/);
+  const confirm = read('auth/confirm.html');
+  assert.match(confirm, /<input id="privacy" name="privacy" type="checkbox"[^>]*><span>I've read the privacy statement\.<\/span>/, 'the invite tick of §3.3.2');
+  // the statement opens in its own tab: Back would reload the page without its (already stripped) token
+  assert.ok(confirm.includes('<a href="/privacy.html" target="_blank" rel="noopener noreferrer">Read the privacy statement (opens in a new tab)</a>'), 'confirm: the privacy statement opens in a new tab');
   assert.ok(read('privacy.html').includes(lib.PRIVACY_NOTICE_VERSION), 'the notice version is the privacy statement version');
 });
 

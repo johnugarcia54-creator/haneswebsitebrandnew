@@ -36,13 +36,22 @@
     <p class="auth__done" id="done" role="status" tabindex="-1" hidden></p>
     <form class="auth__form" id="form" method="post" novalidate hidden>
       <div id="inviteAck" hidden>
-        <label class="auth__check"><input id="privacy" name="privacy" type="checkbox" data-required="Tick “I've read the privacy statement” to continue."><span>I've read the <a href="/privacy.html">privacy statement</a>.</span></label>
+        <p class="auth__links" id="privacy-read"><a href="/privacy.html" target="_blank" rel="noopener noreferrer">Read the privacy statement (opens in a new tab)</a></p>
+        <label class="auth__check"><input id="privacy" name="privacy" type="checkbox" data-required="Tick “I've read the privacy statement” to continue." aria-describedby="privacy-read"><span>I've read the privacy statement.</span></label>
       </div>
       <button class="auth__go" type="submit">Confirm</button>
     </form>
     <div id="retryBox" hidden><button class="auth__go" id="retry" type="button">Retry</button></div>
     <div id="linkHelp" hidden>
       <p class="auth__links"><a href="/auth/reset.html">Ask for a new reset link</a><a href="/auth/login.html">Sign in</a></p>
+    </div>
+    <div id="linkHelpInvite" hidden>
+      <p class="auth__help">For a new invitation, ask your consultant or Back Office.</p>
+      <p class="auth__links"><a href="/contact.html#enquiry">Contact us</a><a href="/auth/login.html">Sign in</a></p>
+    </div>
+    <div id="linkHelpEmail" hidden>
+      <p class="auth__help">For a new confirmation link, sign in and choose Resend confirmation.</p>
+      <p class="auth__links"><a href="/auth/login.html">Sign in</a></p>
     </div>
     <div id="setupHelp" hidden>
       <p class="auth__links"><a href="/contact.html#enquiry">Send us an enquiry</a><a href="/bargainhub.html">About Bargainhub</a></p>

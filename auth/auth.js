@@ -297,13 +297,16 @@ const CONFIRM_COPY = {
   recovery: ['Reset your password', 'Press Confirm, then choose a new password.', 'Confirm'],
   invite: ['Accept your invitation', 'Read the privacy statement, tick the box, then press Confirm and continue to choose your password.', 'Confirm and continue']
 };
+// the way on after a failed link depends on what the link was for: a new reset link, a new
+// invitation (from the consultant or Back Office) or Resend confirmation on the sign-in page
+const linkHelpFor = type => $(type === 'invite' ? 'linkHelpInvite' : type === 'email' || type === 'email_change' ? 'linkHelpEmail' : 'linkHelp');
 async function confirmPage(sb) {
   const { tokenHash, type } = confirmLink;
   const form = els.form, btn = form.querySelector('button[type=submit]');
   if (!tokenHash || !CONFIRM_TYPES.includes(type)) {
     note('');
     fail(MESSAGES.link_incomplete);
-    show($('linkHelp'), true);
+    show(linkHelpFor(type), true);
     return;
   }
   const [title, sub, label] = CONFIRM_COPY[type];
@@ -329,7 +332,7 @@ async function confirmPage(sb) {
     if (out.action === 'error') {
       // before Supabase took the token (no tick, or no connection) the button may be pressed again
       if (!out.retry && (out.code === 'privacy_ack_required' || out.code === 'network')) used = false;
-      else { show(form, false); show($('linkHelp'), !out.retry); }
+      else { show(form, false); show(linkHelpFor(type), !out.retry); }
     }
     // after a verified link, Retry runs only the exchange again (the outcome's retry)
     settle(out);
@@ -344,7 +347,7 @@ async function passwordPage(sb) {
   if (!data || !data.session) {
     note('');
     fail(MESSAGES.session_missing);
-    show($('linkHelp'), true);
+    show($(invite ? 'linkHelpInvite' : 'linkHelp'), true);
     return;
   }
   note('');

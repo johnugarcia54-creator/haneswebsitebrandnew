@@ -403,6 +403,13 @@ try {
     check(!log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'B confirm: nothing is consumed without a click');
     check(await text(page, 'h1') === 'Accept your invitation' && await text(page, 'button[type=submit]') === 'Confirm and continue', 'B confirm invite: wording');
     await axe(page, 'B confirm invite @390');
+    // reading the privacy statement, as the page asks, never loses the link: it opens in its own tab
+    const [tab] = await Promise.all([ctx.waitForEvent('page'), page.click('#privacy-read a')]);
+    await tab.waitForLoadState('load');
+    check(new URL(tab.url()).pathname === '/privacy.html' && page.url().endsWith('/auth/confirm.html?type=invite'), 'B confirm invite: the privacy statement opens in a new tab');
+    check(await tab.evaluate(() => window.opener === null && document.referrer === ''), 'B confirm invite: the new tab has no opener and no Referer');
+    await tab.close();
+    check(await visible(page, '#form') && !(await visible(page, '#alert')), 'B confirm invite: the Confirm button is still there after reading it');
     await page.click('button[type=submit]');
     check(await page.locator('#privacy[aria-invalid=true]').count() === 1 && !log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'B confirm invite: the privacy tick is required first');
     await page.check('#privacy');
@@ -488,8 +495,27 @@ try {
     await page.goto(`${base}/auth/confirm.html?token_hash=abc123def456&type=email`, { waitUntil: 'networkidle' });
     await page.click('button[type=submit]');
     await page.locator('#alert').waitFor({ state: 'visible' });
-    check(await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelp'), 'B confirm: an expired link says so and offers the way on');
+    check(await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelpEmail'), 'B confirm: an expired link says so and offers the way on');
+    check(!(await visible(page, '#linkHelp')) && !(await visible(page, '#linkHelpInvite')), 'B confirm email: no reset or invitation help for a confirmation link');
     await axe(page, 'B confirm expired @390');
+    await ctx.close();
+  }
+  for (const [type, help] of [['invite', '#linkHelpInvite'], ['recovery', '#linkHelp'], ['email_change', '#linkHelpEmail']]) {
+    // a link without its token (for one, a reload): the help matches what the link was for
+    const { ctx } = await context({ configured: true });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/confirm.html?type=${type}`, { waitUntil: 'networkidle' });
+    const shown = [];
+    for (const id of ['#linkHelp', '#linkHelpInvite', '#linkHelpEmail']) if (await visible(page, id)) shown.push(id);
+    check(await text(page, '#alert') === 'This link is incomplete. Open the link from your email again, or ask for a new one.' && shown.join() === help, `B confirm ${type} without a token: ${help} only (${shown.join()})`);
+    if (type === 'invite') await axe(page, 'B confirm invite incomplete');
+    await ctx.close();
+  }
+  {
+    const { ctx } = await context({ configured: true });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/update-password.html?invite=1`, { waitUntil: 'networkidle' });
+    check(await visible(page, '#linkHelpInvite') && !(await visible(page, '#linkHelp')), 'B update-password invite without a session: invitation help, not a reset link');
     await ctx.close();
   }
   {
