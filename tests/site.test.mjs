@@ -543,3 +543,12 @@ test('check.mjs on the release build (SITE_CHECK_RELEASE=1): a Log in link to a 
   const dev = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_ROOT: '', SITE_CHECK_RELEASE: '' }, encoding: 'utf8' });
   assert.doesNotMatch(dev.stdout, /is linked from the pages but not built/);
 });
+
+test('404.html has no inline style or script, so it renders the same under the /auth CSP (style-src \'self\')', () => {
+  const s = read('404.html');
+  assert.doesNotMatch(s, /<style\b/i);
+  assert.doesNotMatch(s, /\sstyle="/i);
+  assert.doesNotMatch(s, /<script\b(?![^>]*\ssrc=)[^>]*>(?!<\/script>)/i);
+  assert.match(s, /<link rel="stylesheet" href="\/assets\/404\.css">/);
+  assert.ok(existsSync(root + 'assets/404.css'));
+});

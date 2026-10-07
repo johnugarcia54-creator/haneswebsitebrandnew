@@ -6,6 +6,8 @@
    scripts/dev.mjs (so it gets exactly the headers Vercel sends). In Chromium the probe page:
    - may connect to https://mputtezdhevwwjgwktvi.supabase.co (answered locally, nothing leaves)
    - is refused by the CSP for any other Supabase project, any other host, and inline script
+   And the real 404.html, as Vercel serves it for an unknown /auth/ path (under the /auth CSP),
+   is fully styled: no style-src refusal and the page's own stylesheet applies.
    ========================================================================================= */
 import { createRequire } from 'node:module';
 import { mkdtempSync, mkdirSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
@@ -65,6 +67,21 @@ try {
   check(await page.evaluate(() => window.inlineRan !== true), 'inline script does not run');
   check(violations.some(v => v.startsWith('connect-src https://otherproject1.supabase.co')) && violations.some(v => v.startsWith('connect-src https://evil.example')), `the CSP reports both refusals (${violations.join(', ')})`);
   check(outbound.length === 1 && outbound[0] === 'mputtezdhevwwjgwktvi.supabase.co', `only our project was contacted (${outbound.join(', ')})`);
+
+  // the 404 page under the /auth header group, served from this repo
+  const real = createDevServer({ root: repo, env: {}, studioUrl: 'http://127.0.0.1:9', log: { warn() {}, error() {} } });
+  await new Promise(r => real.listen(0, '127.0.0.1', r));
+  try {
+    const p404 = await browser.newPage();
+    await p404.addInitScript(() => { window.violations = []; document.addEventListener('securitypolicyviolation', e => window.violations.push(e.violatedDirective + ' ' + e.blockedURI)); });
+    const r404 = await p404.goto(`http://127.0.0.1:${real.address().port}/auth/does-not-exist`, { waitUntil: 'load' });
+    await p404.waitForTimeout(200);
+    check(r404.status() === 404 && /style-src 'self'/.test(r404.headers()['content-security-policy'] || ''), `/auth/does-not-exist gets the 404 page under the /auth CSP (HTTP ${r404.status()})`);
+    const v404 = await p404.evaluate(() => window.violations);
+    check(v404.length === 0, `the 404 page breaks no CSP rule there (${v404.join(', ') || 'none'})`);
+    const look = await p404.evaluate(() => { const t = document.querySelector('.tile'); const cs = getComputedStyle(t); return { radius: cs.borderRadius, c: cs.getPropertyValue('--c').trim(), grid: getComputedStyle(document.querySelector('.tiles')).display }; });
+    check(look.radius === '22px' && look.c === '#b8894d' && look.grid === 'grid', `the 404 page is styled there (${JSON.stringify(look)})`);
+  } finally { real.close(); }
 } finally {
   await browser.close();
   server.close();
