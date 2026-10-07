@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import * as lib from '../auth/auth-lib.js';
 import { AUTH_CONFIG, pickConfig, SUPABASE_URL, PRODUCTION_HOSTS } from '../auth/config.js';
 
@@ -549,3 +550,87 @@ test('no innerHTML, outerHTML, insertAdjacentHTML or document.write anywhere in 
   for (const f of readdirSync(root + 'auth')) assert.doesNotMatch(read('auth/' + f), /innerHTML|outerHTML|insertAdjacentHTML|document\.write/, f);
 });
 
+
+/* ---------- the five pages (§6.3) ---------- */
+const PAGES = ['login', 'signup', 'reset', 'confirm', 'update-password'];
+const SDK_FILES = readdirSync(root + 'vendor').filter(f => /^supabase-js-\d+\.\d+\.\d+\.min\.js$/.test(f));
+
+test('exactly one vendored supabase-js build, its licence names that version, and every page loads it', () => {
+  assert.equal(SDK_FILES.length, 1, SDK_FILES.join());
+  const version = SDK_FILES[0].match(/(\d+\.\d+\.\d+)/)[1];
+  const licence = read('vendor/supabase-js-LICENSE.txt');
+  assert.match(licence, new RegExp(`@supabase/supabase-js ${version.replaceAll('.', '\\.')}`));
+  assert.match(licence, /MIT License/);
+  assert.match(licence, /sha512-[A-Za-z0-9+/=]+/, 'records the tarball integrity');
+  assert.match(read('vendor/' + SDK_FILES[0]), /^var supabase=/, 'the UMD build (window.supabase)');
+  assert.doesNotMatch(read('package.json'), /supabase/, 'not a dependency of the site');
+  for (const p of PAGES) assert.ok(read(`auth/${p}.html`).includes(`<script src="/vendor/${SDK_FILES[0]}" defer></script>`), p);
+});
+
+for (const p of PAGES) {
+  test(`auth/${p}.html: noindex, one h1, en-NZ, no inline code, root-absolute paths, the simplified bar and footer`, () => {
+    const s = read(`auth/${p}.html`);
+    assert.match(s, /^<!doctype html>\n<html lang="en-NZ">/);
+    assert.match(s, /<meta name="robots" content="noindex, nofollow">/);
+    assert.match(s, /<meta name="referrer" content="no-referrer">/);
+    assert.equal((s.match(/<h1\b/g) || []).length, 1);
+    assert.match(s, new RegExp(`<body class="auth-page" data-page="${p}">`));
+    for (const x of s.matchAll(/<script\b([^>]*)>/g)) assert.match(x[1], /\ssrc="\/[^"]+"/, 'external scripts only');
+    assert.doesNotMatch(s, /<style\b|\sstyle=|\son[a-z]+=|javascript:/i);
+    for (const x of s.matchAll(/\s(?:href|src|action)="([^"]*)"/g)) assert.match(x[1], /^(\/$|\/[^/]|#[a-z])/, `root-absolute: ${x[1]}`);
+    assert.ok(s.includes('<script type="module" src="/auth/auth.js"></script>'));
+    assert.ok(s.includes('<link rel="stylesheet" href="/assets/site.css">') && s.includes('<link rel="stylesheet" href="/auth/auth.css">'));
+    assert.doesNotMatch(s, /challenges\.cloudflare\.com/, 'Turnstile is loaded by auth.js, only when the keys are real');
+    // the bar: the logo and Back to the site, nothing else
+    const bar = s.slice(s.indexOf('<header class="gb"'), s.indexOf('</header>'));
+    assert.deepEqual([...bar.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>/g)].map(m => m[1]), ['/', '/']);
+    assert.match(bar, /class="gb__logo" href="\/">Hanes <span>Distribution<\/span><\/a>/);
+    assert.match(bar, /class="gb__back" href="\/">.*Back to the site<\/a>/);
+    const foot = s.slice(s.indexOf('<footer'), s.indexOf('</footer>'));
+    assert.ok(foot.includes('<a href="/privacy.html">Privacy</a>') && foot.includes('<a href="/contact.html">Contact</a>'));
+    // the messages are live regions, the form starts hidden until auth.js knows it can work
+    assert.match(s, /id="notice" role="status"/);
+    assert.match(s, /id="alert" role="alert"/);
+    assert.match(s, /<form class="auth__form" id="form" novalidate hidden>/);
+    // every input has a label
+    for (const x of s.matchAll(/<input\b[^>]*\sid="([^"]+)"[^>]*>/g)) {
+      const id = x[1];
+      assert.ok(s.includes(`<label for="${id}"`) || new RegExp(`<label class="auth__check"><input[^>]*id="${id}"`).test(s), `${p}: #${id} has a label`);
+    }
+    assert.doesNotMatch(s, /\b(claude|opus|sonnet|gpt|openai)\b/i);
+  });
+}
+
+test('the wording the addendum fixes is on the pages, as static text', () => {
+  const login = read('auth/login.html'), signup = read('auth/signup.html');
+  assert.ok(login.includes('Keep me signed in on this device'));
+  assert.ok(login.includes("We'll sign you out when you close your browser. Some browsers keep you signed in if they restore your tabs; on a shared computer, use Sign out."));
+  assert.match(login, /<input id="remember" name="remember" type="checkbox" aria-describedby="remember-help">/, 'unticked by default');
+  assert.ok(login.includes('Resend confirmation'));
+  assert.ok(signup.includes(lib.MESSAGES.accounts_closed), 'the closed state of §3.3.1');
+  assert.ok(signup.includes('By creating an account you agree that Bargainhub (Hanes Distribution) can keep your designs and contact details and contact you about your project. Sign-in is handled by Supabase in Sydney; your contact details also go into our customer system, run by Base44 in the United States. <a href="/privacy.html">Privacy statement</a>'), 'the §11.2 sign-up notice');
+  assert.match(signup, /<input id="privacy" name="privacy" type="checkbox" required[^>]*><span>I've read the privacy statement\.<\/span>/);
+  assert.match(signup, /<input id="marketing" name="marketing" type="checkbox"><span>Send me occasional news and offers\.<\/span>/, 'optional, unticked');
+  assert.match(read('auth/confirm.html'), /I've read the <a href="\/privacy\.html">privacy statement<\/a>/);
+  assert.ok(read('privacy.html').includes(lib.PRIVACY_NOTICE_VERSION), 'the notice version is the privacy statement version');
+});
+
+test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar before Supabase is touched, Turnstile only on three pages', () => {
+  const s = read('auth/auth.js');
+  const code = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  const statements = code.replace(/import\s*\{[\s\S]*?\}\s*from\s*'[^']+';|import\s+[^;]+;/g, '').trim();
+  assert.match(statements, /^bhAuthHygiene\(window\);/, 'the first statement after the imports');
+  assert.ok(code.indexOf('history.replaceState') < code.indexOf('createClient('), 'token_hash goes first');
+  assert.ok(code.indexOf("params.delete('token_hash')") < code.indexOf('history.replaceState'));
+  assert.match(s, /const TURNSTILE_SRC = 'https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit';/);
+  assert.match(s, /const NEEDS_TURNSTILE = new Set\(\['login', 'signup', 'reset'\]\);/);
+  assert.equal((s.match(/mountCaptcha\(\$\('captcha'\), '(login|signup|reset)'\)/g) || []).length, 3);
+  assert.match(s, /detectSessionInUrl: false/, 'supabase-js never reads tokens from the address');
+  for (const imp of s.matchAll(/from '([^']+)'/g)) assert.match(imp[1], /^\/auth\/[a-z-]+\.js$/, 'root-absolute imports');
+  const r = spawnSync(process.execPath, ['--check', root + 'auth/auth.js'], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+});
+
+test('the sign-in pages are noindex and outside the sitemap', () => {
+  assert.doesNotMatch(read('sitemap.xml'), /\/auth\//);
+});

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in — Bargainhub studio</title>
+<meta name="description" content="Sign in to the Bargainhub studio: for clients, consultants and Hanes staff.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/auth/auth.css">
+<script src="/vendor/supabase-js-2.117.3.min.js" defer></script>
+<script type="module" src="/auth/auth.js"></script>
+</head>
+<body class="auth-page" data-page="login">
+<a class="auth__skip" href="#main">Skip to the form</a>
+
+<header class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="/">Hanes <span>Distribution</span></a>
+    <a class="gb__back" href="/"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 1L3 5l4 4"/></svg>Back to the site</a>
+  </nav>
+</header>
+
+<main class="auth" id="main" tabindex="-1">
+  <section class="auth__card" aria-labelledby="title">
+    <p class="auth__eyebrow">Bargainhub studio</p>
+    <h1 id="title">Sign in</h1>
+    <p class="auth__sub" id="sub">For clients, consultants and Hanes staff.</p>
+    <p class="auth__note" id="notice" role="status" tabindex="-1">Getting sign-in ready…</p>
+    <noscript><p class="auth__alert">Sign-in needs JavaScript. Switch it on, then reload this page.</p></noscript>
+    <p class="auth__alert" id="alert" role="alert" tabindex="-1" hidden></p>
+    <p class="auth__done" id="done" role="status" tabindex="-1" hidden></p>
+    <form class="auth__form" id="form" novalidate hidden>
+      <div class="auth__field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="254" required>
+      </div>
+      <div class="auth__field">
+        <label for="password">Password</label>
+        <div class="auth__pw">
+          <input id="password" name="password" type="password" autocomplete="current-password" maxlength="72" data-min="12" required>
+          <button class="auth__show" type="button" aria-controls="password" aria-label="Show password">Show</button>
+        </div>
+      </div>
+      <label class="auth__check"><input id="remember" name="remember" type="checkbox" aria-describedby="remember-help"><span>Keep me signed in on this device</span></label>
+      <p class="auth__help" id="remember-help">We'll sign you out when you close your browser. Some browsers keep you signed in if they restore your tabs; on a shared computer, use Sign out.</p>
+      <div class="auth__captcha" id="captcha"></div>
+      <button class="auth__go" type="submit">Sign in</button>
+      <p class="auth__links"><a href="/auth/reset.html">Forgot your password?</a></p>
+    </form>
+    <div id="resendBox" hidden><button class="auth__linkbtn" id="resend" type="button">Resend confirmation</button></div>
+    <div id="retryBox" hidden><button class="auth__go" id="retry" type="button">Retry</button></div>
+    <p class="auth__alt">New to Bargainhub? <a href="/auth/signup.html">Create an account</a></p>
+    <div id="setupHelp" hidden>
+      <p class="auth__links"><a href="/contact.html#enquiry">Send us an enquiry</a><a href="/bargainhub.html">About Bargainhub</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__base"><span>© 2026 Hanes Distribution</span><span class="gf__links"><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a></span></div>
+  </div>
+</footer>
+</body>
+</html>
