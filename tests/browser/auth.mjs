@@ -141,6 +141,14 @@ async function noScroll(page, label) {
   check(sw <= iw, `${label}: no horizontal scroll (${sw} > ${iw})`);
 }
 const visible = (page, sel) => page.locator(sel).isVisible();
+// every target is at least 44 px tall (links inside a sentence are exempt, WCAG 2.5.8)
+async function targets(page, label) {
+  const small = await page.evaluate(() => [...document.querySelectorAll('.gb a, .gf a, .auth__links a, .auth__alt a, .auth__closed a, button, .auth__check, .auth input:not([type=checkbox])')]
+    .filter(e => e.offsetParent !== null).map(e => [e.id || e.className || e.textContent.trim(), Math.round(e.getBoundingClientRect().height)]));
+  check(small.length >= 5, `${label}: the target check sees the page (${small.length} targets)`);
+  small.splice(0, small.length, ...small.filter(([, h]) => h < 44));
+  check(small.length === 0, `${label}: every target is at least 44 px tall (${JSON.stringify(small)})`);
+}
 const text = (page, sel) => page.locator(sel).innerText();
 
 try {
@@ -167,6 +175,16 @@ try {
       if (width !== 834) await axe(page, label);
       await ctx.close();
     }
+  }
+  // 400% zoom of a 1280 px window is 320 px wide: still no horizontal scroll
+  for (const p of PAGES) {
+    const { ctx } = await context({ width: 320, configured: p !== 'signup' });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/${p}.html${p === 'confirm' ? '?token_hash=abc123def456&type=invite' : ''}`, { waitUntil: 'load' });
+    await page.waitForTimeout(400);
+    await noScroll(page, `A ${p} @320`);
+    await targets(page, `A ${p} @320`);
+    await ctx.close();
   }
   // sign-up when the settings read fails: closed, never a broken form
   studioState.settingsStatus = 503;
@@ -279,6 +297,7 @@ try {
     await page.locator('#retry').waitFor({ state: 'visible' });
     check(await text(page, '#alert') === "You're signed in, but the studio is unavailable for a moment.", 'B login: studio down message');
     await noScroll(page, 'B login retry @390');
+    await targets(page, 'B login retry @390');
     await axe(page, 'B login retry @390');
     await page.click('#retry');
     await page.waitForURL(`${base}/studio/#/account`);
@@ -309,6 +328,7 @@ try {
     await page.waitForFunction(() => document.getElementById('codeNote').textContent !== '', null, { timeout: 3000 });
     check(await text(page, '#codeNote') === 'Code recorded: your consultant Sarah will apply your 5% discount on your quote.', `B signup @${width}: prefilled code previewed`);
     await noScroll(page, `B signup @${width}`);
+    await targets(page, `B signup @${width}`);
     if (width !== 834) await axe(page, `B signup @${width}`);
     if (width === 1440) {
       const t0 = Date.now();

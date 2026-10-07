@@ -97,7 +97,6 @@ function checkFields(form) {
   if (first) first.focus();
   return !first;
 }
-function clearFieldErrors(form) { for (const input of form.querySelectorAll('input[aria-invalid]')) fieldError(input, ''); }
 
 // Show / Hide on every password field
 for (const btn of document.querySelectorAll('.auth__show')) {
@@ -226,7 +225,7 @@ async function loginPage(sb) {
   });
 }
 
-async function signupPage(sb) {
+async function signupPage() {
   rememberNext();
   const open = await publicSignupOpen();
   if (!open) {
@@ -234,7 +233,8 @@ async function signupPage(sb) {
     show($('closed'), true);
     return;
   }
-  if (!sb || !cfg.turnstileReady) return notReady();
+  const sb = cfg.supabaseReady && cfg.turnstileReady ? supabaseClient() : null;
+  if (!sb) return notReady();
   note('');
   const form = els.form, btn = form.querySelector('button[type=submit]');
   const code = form.code, codeNote = $('codeNote');
@@ -363,7 +363,7 @@ async function passwordPage(sb) {
   try {
     for (const input of document.querySelectorAll('input[data-min]')) input.dataset.min = String(Math.max(Number(input.dataset.min), PASSWORD_MIN));
     for (const input of document.querySelectorAll('input[type=password]')) input.maxLength = PASSWORD_MAX;
-    if (page === 'signup') return await signupPage(cfg.supabaseReady ? supabaseClient() : null);
+    if (page === 'signup') return await signupPage(); // closed (the Friday state) needs no keys at all
     if (!cfg.supabaseReady || (NEEDS_TURNSTILE.has(page) && !cfg.turnstileReady)) return notReady();
     const sb = supabaseClient();
     if (!sb) { note(''); return fail(MESSAGES.supabase_network); }
