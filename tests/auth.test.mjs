@@ -604,6 +604,7 @@ for (const p of PAGES) {
     assert.match(bar, /class="gb__back" href="\/">.*Back to the site<\/a>/);
     const foot = s.slice(s.indexOf('<footer'), s.indexOf('</footer>'));
     assert.ok(foot.includes('<a href="/privacy.html">Privacy</a>') && foot.includes('<a href="/contact.html">Contact</a>'));
+    assert.ok(foot.includes('<span>© 2026 Hanes Distribution. All rights reserved.</span>'), 'the site footer wording');
     // the messages are live regions, the form starts hidden until auth.js knows it can work
     assert.match(s, /id="notice" role="status"/);
     assert.match(s, /id="alert" role="alert"/);
