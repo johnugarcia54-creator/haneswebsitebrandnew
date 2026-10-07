@@ -118,6 +118,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .b-intro h1{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:.93;font-size:var(--fs-big);margin:16px 0 18px}
 .b-intro h1 em{font-style:normal;background:linear-gradient(90deg,#9c7440,#c9a36a 60%,#9c7440);-webkit-background-clip:text;background-clip:text;color:transparent}
 .b-intro p{font-size:var(--fs-sub);color:var(--ink-2);max-width:460px}
+/* the intro ignores the pointer so the scroll gets through; its button takes clicks again */
+.b-intro__go{margin-top:24px}
+.b-intro__go a{pointer-events:auto}
 .cue{margin-top:30px;width:22px;height:36px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--ink-4);position:relative}
 .cue::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:var(--ink);animation:cue 1.8s var(--ease) infinite}
 @keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(11px);opacity:0}100%{opacity:0}}
@@ -176,6 +179,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .studio ul{list-style:none;margin-top:26px;display:grid;gap:10px}
 .studio li{display:flex;gap:12px;align-items:baseline;color:var(--ink-2)}
 .studio li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--brass);transform:translateY(-2px)}
+.studio__btns,.design__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(18px,3vh,30px)}
 
 /* ---------- Details ---------- */
 .details{max-width:100%;overflow:clip;padding:clamp(40px,7vh,80px) 0 clamp(90px,14vh,150px)}
@@ -233,33 +237,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tp__in{position:absolute;inset:0;overflow:hidden;border-radius:22px;background:var(--bg-2);will-change:transform}
 .tp img{position:absolute;left:0;top:-10%;width:100%;height:120%;max-width:none;object-fit:cover;will-change:transform}
 
-/* ---------- Reviews: a moving wall, and one voice at a time ---------- */
-.reviews{position:relative;height:210vh;background:var(--bg-2)}
-.reviews .sticky{display:grid;grid-template-columns:minmax(300px,.85fr) 1.3fr;gap:clamp(24px,4vw,64px);align-items:center;padding:calc(var(--nav) + 2vh) var(--pad) 0;max-width:1400px;margin:0 auto}
-.reviews .h{font-size:clamp(30px,3.4vw,52px);margin-top:12px}
-.score{display:flex;align-items:center;gap:14px;margin-top:22px}
-.score b{font-family:var(--display);font-weight:600;font-size:clamp(40px,4vw,56px);letter-spacing:-.04em;line-height:1}
-.score small{display:block;font-size:13px;color:var(--ink-3)}
-.stars{display:flex;gap:2px;color:#b8873c}
-.stars svg{width:14px;height:14px}
-.stars .off{color:var(--ink-4)}
-.rv__note{margin-top:10px;font-size:12.5px;color:var(--ink-3)}
-.feat{position:relative;margin-top:clamp(22px,4vh,40px);min-height:clamp(170px,26vh,240px)}
-.feat figure{position:absolute;inset:0}
-.feat blockquote{font-family:var(--display);font-weight:500;font-size:clamp(21px,1.9vw,28px);letter-spacing:-.025em;line-height:1.28}
-.feat .fw{opacity:.16;will-change:opacity}
-.feat figcaption{margin-top:16px;font-size:14px;color:var(--ink-3);opacity:0}
-.feat figcaption b{color:var(--ink);font-weight:600}
-.wall{position:relative;height:calc(100svh - var(--nav) - 2vh);display:grid;grid-template-columns:repeat(3,1fr);gap:14px;overflow:hidden}
-.wall::before,.wall::after{content:"";position:absolute;left:0;right:0;height:22%;z-index:2;pointer-events:none}
-.wall::before{top:0;background:linear-gradient(180deg,var(--bg-2),rgba(245,245,247,0))}
-.wall::after{bottom:0;background:linear-gradient(0deg,var(--bg-2),rgba(245,245,247,0))}
-.wcol{display:flex;flex-direction:column;gap:14px;will-change:transform}
-.rcard{padding:20px 20px 18px;border-radius:20px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px -18px rgba(0,0,0,.18)}
-.rcard q{display:block;margin-top:10px;font-size:15px;line-height:1.5;color:var(--ink);quotes:"\201C" "\201D"}
-.rcard footer{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-3)}
-.rcard footer i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff;background:linear-gradient(135deg,#c9a36a,#9c7440)}
-.rcard footer b{display:block;color:var(--ink);font-weight:500}
+/* ---------- Reviews: none to show yet (only real, verified client reviews will go here) ---------- */
+.reviews{padding:clamp(90px,14vh,150px) 0;background:var(--bg-2);text-align:center}
+.reviews .h{font-size:clamp(30px,3.4vw,52px);margin:12px auto 0;max-width:820px}
+.reviews .sub{margin:18px auto 0}
+.reviews .sub a{text-decoration:underline;text-underline-offset:3px}
 
 /* ---------- CTA: the last room opens up as you arrive ---------- */
 .cta{position:relative;height:160vh}
@@ -301,9 +283,6 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   .dsteps li{position:absolute;inset:0;opacity:0;transition:opacity .5s var(--ease)}
   .dsteps li.is-on{opacity:1}
   .plan{aspect-ratio:4/3;max-height:52svh;width:100%}
-  .reviews .sticky{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start;gap:14px}
-  .feat{min-height:120px;margin-top:14px}
-  .wall{height:auto;min-height:0;align-self:stretch}
   .dgrid{grid-template-columns:repeat(2,1fr)}
   .studio__grid{grid-template-columns:1fr}
 }
@@ -316,15 +295,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   .rooms__head .sub{display:none}
   .plan{aspect-ratio:4/5;max-height:50svh}
   .design .h{font-size:28px}
-  .wall{grid-template-columns:repeat(2,1fr);gap:10px}
-  .wcol{gap:10px}
-  .wcol:nth-child(3){display:none}
-  .rcard{padding:16px}
-  .rcard q{font-size:14px}
   .reviews .h{font-size:28px}
-  .score{margin-top:12px}
-  .score b{font-size:36px}
-  .feat blockquote{font-size:18px}
   .dgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--pad) * -1);padding:0 var(--pad);scroll-padding-inline:var(--pad);gap:12px}
   .dgrid::-webkit-scrollbar{display:none}
   .dcard{flex:0 0 72%;scroll-snap-align:start}
@@ -396,6 +367,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
         <div class="eyebrow">Bargainhub Interiors</div>
         <h1>Your home,<br><em>assembled.</em></h1>
         <p>Kitchens, bathrooms and whole-home interiors. Scroll to build one, from the first line to the lights coming on.</p>
+        <div class="b-intro__go"><a class="btn btn--dark" href="studio/">Design your kitchen <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
         <div class="cue" aria-hidden="true"></div>
       </div>
       <div class="b-label" id="bLabel" aria-hidden="true"><small id="bNum">01 / 10</small><b id="bName">The drawing</b></div>
@@ -410,6 +382,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
       <li><a href="#packages" data-scroll>Packages</a></li>
       <li><a href="#reviews" data-scroll>Reviews</a></li>
       <li><a href="#showroom" data-scroll>Showroom</a></li>
+      <li><a href="studio/">Design your kitchen</a></li>
     </ul>
   </nav>
 
@@ -461,6 +434,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
           <li><b>Finished render</b><p>The room lit and styled, the way it will look when it is done.</p></li>
           <li><b>Your drawing set</b><p>Plans, elevations, finishes and a render, before you commit.</p></li>
         </ol>
+        <div class="design__btns"><a class="btn btn--dark" href="studio/">Design your kitchen <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
       </div>
       <div class="plan" id="plan"><img id="planImg" src="stills/bargainhub/plan-1200.webp" srcset="stills/bargainhub/plan-1200.webp 1200w, stills/bargainhub/plan-2000.webp 2000w" sizes="(max-width:1024px) 100vw, 60vw" width="2000" height="2000" alt="Kitchen design set: layout plan, three elevations, materials and finishes, an isometric model and a photoreal render" decoding="async"></div>
     </div>
@@ -480,6 +454,10 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
           <li data-drop>Finishes chosen to match from room to room</li>
           <li data-drop>Supplied together from our Hornby warehouse</li>
         </ul>
+        <div class="studio__btns">
+          <a class="btn btn--dark" href="studio/">Design your kitchen <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--line" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-book data-quote="Book a consultant" data-quote-subject="Bargainhub consultant booking" data-quote-hint="What would you like to design, and when suits you? For example: a kitchen and two bathrooms for a new build in Rolleston">Book a consultant</a>
+        </div>
       </div>
     </div>
   </section>
@@ -517,7 +495,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
         </div>
         <p class="pkg__lead">A whole-house interior package, including soft furnishings and a full kit-out, designed with you and supplied on one order.</p>
         <ul class="incl" id="incl"><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Kitchen</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Bathrooms</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Living &amp; joinery</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Lighting</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Soft furnishings</li><li><i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></i>Full kit-out</li></ul>
-        <div class="pkg__cta"><a class="btn btn--dark" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub whole-home package" data-quote-hint="Tell us about the home: how many bedrooms and bathrooms, and where it is">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+        <div class="pkg__cta"><a class="btn btn--dark" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-book data-quote="Book a consultant" data-quote-subject="Bargainhub whole-home package" data-quote-hint="Tell us about the home: how many bedrooms and bathrooms, and where it is">Book a consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
         <p class="pkg__fine">Talk to one of our sales consultants for more information. Starting price, excluding GST; yours depends on the size of your home and the finishes you choose.</p>
       </div>
       <div class="stack" id="stack" aria-hidden="true">
@@ -532,17 +510,12 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   </section>
 
   <!-- ================= Reviews ================= -->
-  <section class="reviews" id="reviews" aria-label="Customer reviews">
-    <div class="sticky">
-      <div>
-        <div class="eyebrow">Reviews</div>
-        <h2 class="h">Loved in homes <span class="muted">across New Zealand.</span></h2>
-        <div class="score"><b id="rvAvg">4.9</b><div><div class="stars" id="rvStars"></div><small id="rvCount">30 reviews</small></div></div>
-        <!-- SAMPLE REVIEWS: these are layout placeholders, not real customers. Replace REVIEWS in the script below with verified reviews (and remove this note) before the page goes live. -->
-        <p class="rv__note">Sample reviews shown for layout. They will be replaced with verified customer reviews.</p>
-        <div class="feat" id="feat"></div>
-      </div>
-      <div class="wall" id="wall" aria-hidden="true"></div>
+  <!-- Only real, verified client reviews go here (Fair Trading Act 1986). -->
+  <section class="reviews" id="reviews" aria-labelledby="reviewsTitle">
+    <div class="wrap">
+      <div class="eyebrow">Reviews</div>
+      <h2 class="h" id="reviewsTitle">Reviews from our first clients <span class="muted">are coming soon.</span></h2>
+      <p class="sub">Until then, come and see the finishes for yourself at our <a href="#showroom" data-scroll>Sockburn showroom</a>.</p>
     </div>
   </section>
 
@@ -556,7 +529,7 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
         <div class="addr" id="addr"><span class="pin" id="pin"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2z"/></svg><i></i></span><address style="font-style:normal"><b>93 Main South Road</b><span>Sockburn, Christchurch</span></address></div>
         <div class="show__btns" data-reveal>
           <a class="btn btn--dark" href="https://www.google.com/maps/search/?api=1&amp;query=93%20Main%20South%20Road%2C%20Sockburn%2C%20Christchurch" target="_blank" rel="noopener">Get directions <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-          <a class="btn btn--line" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub showroom visit" data-quote-hint="When would you like to visit, and what would you like to see?">Talk to a consultant</a>
+          <a class="btn btn--line" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-book data-quote="Book a consultant" data-quote-subject="Bargainhub showroom visit" data-quote-hint="When would you like to visit, and what would you like to see?">Book a showroom visit</a>
         </div>
       </div>
       <div class="trip" id="trip" aria-hidden="true">
@@ -576,7 +549,8 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
         <h2>Your home,<br>assembled.</h2>
         <p>Tell us about your space. One of our sales consultants will design it with you and price the whole interior on one quote. Whole-home packages start from $45k + GST.</p>
         <div class="cta__btns">
-          <a class="btn btn--white" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-quote="Bargainhub kitchens and interiors" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Talk to a sales consultant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--white" href="studio/">Design your kitchen <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn--ghost" href="contact.html?topic=Bargainhub%20kitchens%20and%20interiors#enquiry" data-book data-quote="Book a consultant" data-quote-subject="Bargainhub interiors quote" data-quote-hint="For example: a kitchen, laundry and two bathrooms for a new build in Rolleston">Book a consultant</a>
           <a class="btn btn--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=93%20Main%20South%20Road%2C%20Sockburn%2C%20Christchurch" target="_blank" rel="noopener">Visit the showroom</a>
         </div>
       </div>
@@ -1048,80 +1022,6 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
     PK.to(c, { x: () => o * stack.offsetWidth * .15, y: () => (o * o * .012 - .04) * stack.offsetHeight, rotation: o * 4.5, scale: .84, duration: 1, ease: 'power3.inOut' }, LAND[N - 1] + .45); });
   PK.to({}, { duration: .5 });
   setPkg();
-
-  /* =========================================================
-     REVIEWS: columns of reviews drift in opposite directions and slide further as you scroll,
-     while one review at a time is read out large on the left
-     ========================================================= */
-  // SAMPLE REVIEWS for layout only. Replace with verified customer reviews (name, town, stars, text) before launch.
-  const REVIEWS = [
-    ['Aroha M.', 'Rolleston', 5, 'The island is the first thing everyone comments on. It looks like it cost twice what we paid.'],
-    ['Daniel K.', 'Christchurch', 5, 'Everything turned up on one truck, labelled and complete. Our builder could not believe how easy it was.'],
-    ['Priya S.', 'Wellington', 5, 'We priced the same look through a showroom. Bargainhub came in well under and the finish is just as good.'],
-    ['Tom R.', 'Queenstown', 5, 'Love the lit shelving. At night the whole kitchen glows.'],
-    ['Hannah W.', 'Rangiora', 5, 'Clear quote, no surprises, delivered when they said it would be.'],
-    ['Mere T.', 'Hamilton', 5, 'The stone-look benchtop is stunning and easy to wipe down with three kids.'],
-    ['James L.', 'Nelson', 5, 'Handle-free drawers look so clean. The whole room feels calmer.'],
-    ['Sophie C.', 'Timaru', 4, 'Great team to deal with from quote to delivery. Would recommend.'],
-    ['Ana P.', 'Tauranga', 5, 'The brass tap was the finishing touch. It feels like a boutique hotel.'],
-    ['Ben H.', 'Ashburton', 5, 'Ordered the kitchen and our Hisense appliances in one go. So simple.'],
-    ['Grace N.', 'Dunedin', 5, 'Warm oak, warm lighting. Exactly the feel we were after.'],
-    ['Mark D.', 'Invercargill', 5, 'Well packed, nothing damaged, and every part was there.'],
-    ['Lucy F.', 'Blenheim', 5, 'Seeing the 3D model first meant there were no surprises on the day.'],
-    ['Sam W.', 'Lincoln', 5, 'Our open-plan living finally feels finished.'],
-    ['Karan B.', 'Auckland', 5, 'The value for this quality is unreal.'],
-    ['Olivia G.', 'Napier', 5, 'The waterfall ends on the island make the whole room.'],
-    ['Hemi W.', 'Palmerston North', 5, 'Delivered to the North Island without a hitch.'],
-    ['Rachel K.', 'Kaiapoi', 5, 'The neighbours keep asking who did our kitchen.'],
-    ['Chris M.', 'Nelson', 4, 'Good communication the whole way through.'],
-    ['Emma J.', 'Hastings', 5, 'The tall pantry towers swallow everything. So much storage.'],
-    ['Liam O.', 'New Plymouth', 5, 'We did the kitchen and the living room shelving together. It all matches.'],
-    ['Nikau R.', 'Rotorua', 5, 'The veneer looks beautiful up close.'],
-    ['Jess A.', 'Oamaru', 5, 'It came together faster than we expected.'],
-    ['Paul E.', 'Whanganui', 4, 'Exactly what we wanted for a rental upgrade: good-looking and tough.'],
-    ['Mia S.', 'Wānaka', 5, 'The glow under the island is my favourite detail.'],
-    ['Ravi P.', 'Christchurch', 5, 'Straightforward pricing and no upselling.'],
-    ['Kate B.', 'Wellington', 5, 'A designer look without the designer bill.'],
-    ['Josh T.', 'Greymouth', 5, 'Everything fitted first time.'],
-    ['Aria H.', 'Gisborne', 5, 'From old laminate to this. Night and day.'],
-    ['Leo V.', 'Whangārei', 5, 'We would buy from Bargainhub again without a second thought.'],
-  ];
-  const FEATURED = [2, 0, 26];
-  const star = on => `<svg viewBox="0 0 16 16" class="${on ? '' : 'off'}" aria-hidden="true"><path fill="currentColor" d="M8 1.2l2.1 4.3 4.7.7-3.4 3.3.8 4.7L8 12l-4.2 2.2.8-4.7L1.2 6.2l4.7-.7z"/></svg>`;
-  const stars = n => `<div class="stars" aria-label="${n} out of 5 stars">${[1, 2, 3, 4, 5].map(k => star(k <= n)).join('')}</div>`;
-  const card = ([name, town, n, text]) => `<article class="rcard">${stars(n)}<q>${text}</q><footer><i>${name[0]}</i><span><b>${name}</b>${town}</span></footer></article>`;
-  const avg = REVIEWS.reduce((a, r) => a + r[2], 0) / REVIEWS.length;
-  $('#rvAvg').textContent = avg.toFixed(1); $('#rvStars').innerHTML = [1, 2, 3, 4, 5].map(k => star(k <= Math.round(avg))).join(''); $('#rvCount').textContent = REVIEWS.length + ' reviews';
-  const COLS = [0, 1, 2].map(k => REVIEWS.filter((_, i) => i % 3 === k));
-  $('#wall').innerHTML = COLS.map(col => { const h = col.map(card).join(''); return `<div class="wcol">${h}${h}</div>`; }).join('');
-  $('#feat').innerHTML = FEATURED.map(i => { const [name, town, , text] = REVIEWS[i];
-    return `<figure><blockquote>${text.split(' ').map(w => `<span class="fw">${w}</span>`).join(' ')}</blockquote><figcaption><b>${name}</b> · ${town}</figcaption></figure>`; }).join('');
-  const cols = $$('.wcol').map((el, i) => ({ el, drift: 0, half: 0, dir: i % 2 ? 1 : -1, v: [.32, .44, .38][i], sv: [520, 760, 620][i] }));
-  const measureWall = () => cols.forEach(c => { c.half = c.el.scrollHeight / 2; });
-  measureWall(); addEventListener('resize', measureWall); document.fonts && document.fonts.ready.then(measureWall);
-  let rvOn = false, rvP = 0; new IntersectionObserver(es => { rvOn = es[es.length - 1].isIntersecting; }).observe($('#wall'));
-  ScrollTrigger.create({ trigger: '#reviews', start: 'top bottom', end: 'bottom top', onUpdate: s => { rvP = s.progress; } });
-  gsap.ticker.add(() => {
-    if (!rvOn) return;
-    const boost = reduce ? 0 : Math.min(Math.abs(lenis ? lenis.velocity : 0) * .12, 6);
-    cols.forEach(c => {
-      if (!c.half) return;
-      if (!reduce) c.drift += c.v + boost;
-      const o = (c.drift + rvP * c.sv) * c.dir, y = -(((o % c.half) + c.half) % c.half);
-      c.el.style.transform = `translate3d(0,${y.toFixed(2)}px,0)`;
-    });
-  });
-  // one voice at a time: each featured review is read out word by word, then gives way to the next
-  const figs = $$('#feat figure');
-  const FT = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#reviews', start: 'top top', end: 'bottom bottom', scrub: true } });
-  figs.forEach((f, i) => {
-    const t = i * 1.2;
-    FT.to(f.querySelectorAll('.fw'), { opacity: 1, stagger: .03, duration: .2 }, t)
-      .to(f.querySelector('figcaption'), { opacity: 1, duration: .15 }, t + .45);
-    if (i) FT.fromTo(f, { autoAlpha: 0, y: -34 }, { autoAlpha: 1, y: 0, duration: .15, ease: 'power2.out', immediateRender: true }, t - .08);
-    if (i < figs.length - 1) FT.to(f, { autoAlpha: 0, y: 30, duration: .2, ease: 'power1.in' }, t + .95);
-  });
-  FT.to({}, { duration: .2 });
 
   /* =========================================================
      SHOWROOM: three rooms drop down like blinds as you arrive, then the pin drops onto the address

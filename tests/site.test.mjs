@@ -300,3 +300,45 @@ test('the marketing pages never load the Supabase SDK, Turnstile or the guide up
   }
   assert.doesNotMatch(SITE_JS, /supabase\.co|supabase-js|import\(/i);
 });
+
+/* ---------- bargainhub.html (§6.2 and the integrator's decision on the sample reviews) ---------- */
+test('bargainhub.html: Design your kitchen goes to studio/ in the five places of §6.2', () => {
+  const s = read('bargainhub.html');
+  const go = 'href="studio/">Design your kitchen';
+  const section = (start, end) => s.slice(s.indexOf(start), s.indexOf(end, s.indexOf(start)));
+  assert.match(section('<div class="b-intro" id="bIntro">', '</div>\n      <div class="b-label"'), /<div class="b-intro__go"><a class="btn btn--dark" href="studio\/">Design your kitchen/);
+  assert.ok(section('<nav class="subnav"', '</nav>').includes('<li><a href="studio/">Design your kitchen</a></li>'), 'subnav');
+  assert.match(section('<section class="design"', '</section>'), /<\/ol>\s*<div class="design__btns"><a class="btn btn--dark" href="studio\/">Design your kitchen/);
+  assert.match(section('<section class="studio"', '</section>'), /<div class="studio__btns">\s*<a class="btn btn--dark" href="studio\/">Design your kitchen/);
+  assert.match(section('<section class="cta" id="quote">', '</section>'), /<div class="cta__btns">\s*<a class="btn btn--white" href="studio\/">Design your kitchen/);
+  assert.equal(s.split(go).length - 1, 5);
+  // .b-intro lets the scroll through; its button takes the pointer back
+  assert.match(s, /\.b-intro\{[^}]*pointer-events:none/);
+  assert.match(s, /\.b-intro__go a\{pointer-events:auto\}/);
+  // the studio content stays indexed (only /studio/ itself is noindex)
+  assert.match(s, /<meta name="robots" content="index, follow/);
+});
+
+test('bargainhub.html: every Book a consultant opens the enquiry dialog with that topic and carries data-book', () => {
+  const s = read('bargainhub.html');
+  const books = [...s.matchAll(/<a\b[^>]*\sdata-book\b[^>]*>([^<]*)/g)];
+  assert.equal(books.length, 4);
+  const where = ['pkg__cta', 'show__btns', 'studio__btns', 'cta__btns'];
+  for (const w of where) assert.ok(new RegExp(`class="${w}"[\\s\\S]{0,600}?data-book data-quote="Book a consultant"`).test(s), w);
+  for (const [tag, text] of books) {
+    assert.match(tag, /data-quote="Book a consultant"/);
+    assert.match(tag, /href="contact\.html\?topic=Bargainhub%20kitchens%20and%20interiors#enquiry"/, 'works without JavaScript');
+    assert.match(text.trim(), /^Book a (consultant|showroom visit)$/);
+  }
+  assert.ok(s.includes('>Book a showroom visit</a>'));
+});
+
+test('bargainhub.html: no sample reviews, ratings or review counts; the reviews section says they are coming soon', () => {
+  const s = read('bargainhub.html');
+  for (const bad of [/Sample reviews/i, /SAMPLE REVIEWS/, /\bREVIEWS\s*=/, /rvAvg|rvStars|rvCount/, /\b4\.9\b/, /\b30 reviews\b/, /AggregateRating|"@type":\s*"Review"/i, /class="(rcard|wall|feat|score|stars)"/])
+    assert.doesNotMatch(s, bad);
+  assert.match(s, /<section class="reviews" id="reviews"[^>]*>[\s\S]*?Reviews from our first clients <span class="muted">are coming soon\.<\/span>/);
+  assert.match(s, /<li><a href="#reviews" data-scroll>Reviews<\/a><\/li>/, 'the subnav still finds the section');
+  const seo = read('scripts/seo.mjs');
+  assert.doesNotMatch(seo, /AggregateRating|"Review"|ratingValue/);
+});
