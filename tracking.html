@@ -203,6 +203,9 @@ section{position:relative}
 .tf__go svg{width:18px;height:18px}
 .tf__go:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .tf__note{margin-top:14px;font-size:14px;color:var(--ink-2);text-align:center}
+.tf__note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.form__optin{display:flex;align-items:flex-start;gap:10px;min-height:44px;margin-top:6px;padding:12px 0;font-size:14px;line-height:1.4;text-align:left;cursor:pointer}
+.form__optin input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--blue,#0071e3);cursor:pointer}
 .tf__done{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(0,113,227,.06);font-size:14px;text-align:center}
 .tf__done.is-on{display:block}
 .tf__err{display:none;margin-top:10px;font-size:14px;color:#e30000;text-align:center}
@@ -404,8 +407,9 @@ section{position:relative}
           <div class="tf__sm"><input id="tfName" name="name" placeholder=" " required autocomplete="name" maxlength="120"><label for="tfName">Your name</label></div>
           <div class="tf__sm"><input id="tfEmail" name="email" type="email" placeholder=" " required autocomplete="email" maxlength="254"><label for="tfEmail">Email for the update</label></div>
         </div>
+        <label class="form__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
         <p class="tf__err" id="tfErr" role="alert">Enter a tracking ID or order number to continue.</p>
-        <p class="tf__note">Sent straight to our team, and we'll email you the latest status and delivery date.</p>
+        <p class="tf__note">Sent straight to our team, and we'll email you the latest status and delivery date. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="privacy.html">privacy statement</a> explains how to see or correct them.</p>
         <p class="tf__done" id="tfDone" role="status"></p>
       </form>
     </section>

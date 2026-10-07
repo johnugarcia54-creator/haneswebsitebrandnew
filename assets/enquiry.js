@@ -10,6 +10,8 @@
      marketingOptIn  true only when the form's optional, unticked "news and offers" box is ticked
      submissionId    a UUID made once per form fill and reused on every retry of that fill, so a
                      retried enquiry is recognised as the same one; a new fill starts after a send
+   If the website can't send, the visitor's email app opens with everything filled in, ending
+     with "Reference: <submissionId>".
    ========================================================================================= */
 window.HanesEnquiry = (() => {
   'use strict';
@@ -44,8 +46,10 @@ window.HanesEnquiry = (() => {
     el.textContent = text;
     el.classList.add('is-on'); el.classList.toggle('is-err', kind === 'err'); el.classList.toggle('is-ok', kind === 'ok');
   };
-  const mailto = (subject, name, email, fields) => {
-    const body = [subject, '', `Name: ${name}`, `Email: ${email}`, ...fields.map(([k, v]) => `${k}: ${v}`)].join('\n');
+  // the fallback email carries the fill's submissionId, so it can be matched to a CRM lead the
+  // website may already have forwarded before the email service failed
+  const mailto = (subject, name, email, fields, ref) => {
+    const body = [subject, '', `Name: ${name}`, `Email: ${email}`, ...fields.map(([k, v]) => `${k}: ${v}`), ...(ref ? ['', `Reference: ${ref}`] : [])].join('\n');
     return `mailto:${MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -86,7 +90,7 @@ window.HanesEnquiry = (() => {
       } else throw new Error('unavailable');
     } catch (e) {
       // the website couldn't send it (offline, or email not set up yet): hand it to the email app so nothing is lost
-      location.href = mailto(subject, name, email, fields);
+      location.href = mailto(subject, name, email, fields, id);
       say(status, `We couldn't send this from the website just now, so your email app has opened with everything filled in. If it didn't open, email us at ${MAIL}.`, 'err');
     } finally {
       delete form.dataset.sending; form.removeAttribute('aria-busy');

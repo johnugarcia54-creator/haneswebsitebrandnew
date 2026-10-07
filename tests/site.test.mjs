@@ -342,3 +342,40 @@ test('bargainhub.html: no sample reviews, ratings or review counts; the reviews 
   const seo = read('scripts/seo.mjs');
   assert.doesNotMatch(seo, /AggregateRating|"Review"|ratingValue/);
 });
+
+/* ---------- tracking.html's form and the enquiry fallback email ---------- */
+test('tracking.html: the form has the §11.2 notice with the privacy link and the unticked news box', () => {
+  const s = read('tracking.html');
+  const form = s.slice(s.indexOf('<form class="tf" id="trackForm"'), s.indexOf('</form>', s.indexOf('id="trackForm"')));
+  assert.ok(form.includes('<label class="form__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>'));
+  assert.doesNotMatch(form, /marketingOptIn"[^>]*checked/);
+  assert.ok(form.includes("We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href=\"privacy.html\">privacy statement</a> explains how to see or correct them."));
+  const css = s.slice(s.indexOf('.form__optin{'), s.indexOf('}', s.indexOf('.form__optin{')));
+  assert.match(css, /min-height:44px/);
+});
+
+test('enquiry.js: when the website cannot send, the fallback email ends with Reference: <submissionId>', async () => {
+  const src = read('assets/enquiry.js');
+  const posted = [];
+  const status = { textContent: '', classList: { add() {}, remove() {}, toggle() {} } };
+  const input = v => ({ value: v });
+  const form = {
+    elements: { name: input('Aroha Smith'), email: input('aroha@example.com'), website: input(''), marketingOptIn: { checked: false } },
+    dataset: {}, setAttribute() {}, removeAttribute() {}, reset() {}, querySelector: () => null
+  };
+  const w = {
+    location: { protocol: 'https:', pathname: '/tracking.html', search: '', href: '' },
+    crypto: { randomUUID: () => '0b5c6f1e-7f2d-4b8a-9c1d-2e3f4a5b6c7d' },
+    document: { readyState: 'complete', querySelectorAll: () => [], querySelector: () => null, addEventListener() {} },
+    fetch: (u, o) => { posted.push(JSON.parse(o.body)); return Promise.resolve({ ok: false, status: 502, json: () => Promise.resolve({ error: 'send_failed' }) }); },
+    URLSearchParams, Date, JSON, Promise, String, Boolean, encodeURIComponent, setTimeout, Event: class {}
+  };
+  w.window = w;
+  vm.runInContext(src, vm.createContext(w));
+  const ok = await w.HanesEnquiry.submit(form, { subject: 'Tracking request: HD123', form: 'hanes track', status, fields: [['Tracking ID or order number', 'HD123']] });
+  assert.equal(ok, false);
+  assert.equal(posted[0].submissionId, '0b5c6f1e-7f2d-4b8a-9c1d-2e3f4a5b6c7d');
+  assert.match(w.location.href, /^mailto:Enquiry@hanesdistribution\.co\.nz\?subject=/);
+  const body = decodeURIComponent(w.location.href.split('&body=')[1]);
+  assert.equal(body, 'Tracking request: HD123\n\nName: Aroha Smith\nEmail: aroha@example.com\nTracking ID or order number: HD123\n\nReference: 0b5c6f1e-7f2d-4b8a-9c1d-2e3f4a5b6c7d');
+});
