@@ -14,6 +14,8 @@
      <style>, style="" or on*= handler (the /auth CSP would block them), every local file exists
    - no innerHTML, outerHTML, insertAdjacentHTML or document.write in any .js under auth/ or assets/guide/
    - no form still promises "We only use your details to reply to you"
+   - MILLI_SHIPPED in assets/site.js is true only when assets/guide/milli.js exists (a warning
+     while the guide is built but not switched on)
    SITE_CHECK_ROOT=<dir> checks another copy of the site (the tests use it for fixtures)
    ========================================================================================= */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
@@ -123,6 +125,15 @@ for (const dir of ['auth', 'assets/guide']) {
     const s = readFileSync(root + f, 'utf8');
     for (const x of s.matchAll(/\b(innerHTML|outerHTML|insertAdjacentHTML|document\.write(?:ln)?)\b/g)) err(f, `${x[1]} is not allowed here (build nodes with textContent)`);
   }
+}
+
+// ---------- assets/site.js loads Milli only when the guide is deployed (ADDENDUM §6.5)
+if (existsSync(root + 'assets/site.js')) {
+  const shipped = (readFileSync(root + 'assets/site.js', 'utf8').match(/\bMILLI_SHIPPED = (true|false)\b/) || [])[1];
+  const milli = existsSync(root + 'assets/guide/milli.js');
+  if (!shipped) err('assets/site.js', 'MILLI_SHIPPED = true|false is missing');
+  else if (shipped === 'true' && !milli) err('assets/site.js', 'MILLI_SHIPPED is true but assets/guide/milli.js does not exist');
+  else if (shipped === 'false' && milli) warn.push('assets/guide/milli.js exists but assets/site.js does not load it yet (set MILLI_SHIPPED = true)');
 }
 
 // ---------- the old enquiry promise is gone everywhere (ADDENDUM §6.4: the honest notice replaced it)

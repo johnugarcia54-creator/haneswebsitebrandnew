@@ -38,3 +38,265 @@ test('the burger takes over below 880 px, in the stylesheet and in the script', 
   assert.match(js, /innerWidth > 879/);
   assert.equal(/innerWidth > 833/.test(js), false);
 });
+
+/* ---------- assets/site.js in a minimal DOM stub ---------- */
+import vm from 'node:vm';
+import { existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, dirname } from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+const SITE_JS = read('assets/site.js');
+
+function storage(init = {}, { throws = false } = {}) {
+  const m = new Map(Object.entries(init));
+  const s = {
+    get length() { return m.size; },
+    key: i => [...m.keys()][i] ?? null,
+    getItem: k => (m.has(k) ? m.get(k) : null),
+    setItem: (k, v) => { m.set(k, String(v)); },
+    removeItem: k => { m.delete(k); },
+    dump: () => Object.fromEntries(m)
+  };
+  return throws ? null : s;
+}
+function anchor(attrs, text) {
+  const a = { attrs: { ...attrs }, textContent: text,
+    getAttribute: k => (k in a.attrs ? a.attrs[k] : null), setAttribute: (k, v) => { a.attrs[k] = String(v); }, removeAttribute: k => { delete a.attrs[k]; } };
+  return a;
+}
+// a page with the three Log in links and the bargainhub data-book links
+function page({ store = storage(), storageThrows = false, cookie = '', path = '/bargainhub.html', fetch, readyState = 'complete', idle = true } = {}) {
+  const links = [anchor({ class: 'gb__login', href: 'auth/login.html' }, 'Log in'), anchor({ class: 'gb__login', href: 'auth/login.html' }, 'Log in'), anchor({ class: 'gf__login', href: 'auth/login.html' }, 'Log in')];
+  const books = [anchor({ href: 'contact.html?topic=Book%20a%20consultant#enquiry', 'data-book': '', 'data-quote': 'Book a consultant', 'data-quote-subject': 'Bargainhub consultant booking', 'data-quote-hint': 'x' }, 'Book a consultant')];
+  const calls = [], added = [], listeners = [], idles = [], order = [];
+  const document = {
+    cookie, readyState,
+    get head() { return { append: el => added.push(el) }; },
+    documentElement: { classList: { toggle() {}, contains: () => false } },
+    getElementById: () => null,
+    createElement: tag => ({ tag, remove() {} }),
+    querySelectorAll: sel => {
+      order.push(sel);
+      if (sel === 'a.gb__login, a.gf__login') return links;
+      if (sel === 'a[data-book]') return books;
+      return [];
+    }
+  };
+  const w = {
+    document, location: { pathname: path },
+    fetch: fetch || ((url, o = {}) => { calls.push([url, o]); return Promise.resolve({ ok: true, json: () => Promise.resolve({ user: { id: 'u1' }, csrfToken: 'csrf-1' }) }); }),
+    addEventListener: (t, f, o) => listeners.push([t, f, o]),
+    requestIdleCallback: idle ? (f, o) => idles.push([f, o]) : undefined,
+    setTimeout: f => f()
+  };
+  Object.defineProperty(w, 'localStorage', { get() { if (storageThrows) throw new Error('SecurityError'); return store; } });
+  w.window = w; w.globalThis = w;
+  return { w, links, books, calls, added, listeners, idles, order, store };
+}
+function boot(p, source = SITE_JS) {
+  const ctx = vm.createContext(p.w);
+  vm.runInContext(source, ctx);
+  return p.w.HanesSite;
+}
+const flush = () => new Promise(r => setTimeout(r, 10));
+const TOKEN = 'sb-mputtezdhevwwjgwktvi-auth-token';
+
+test('bhAuthHygiene (§3.3.4): the whole table', async () => {
+  const cases = [
+    // [what, storage, cookie, result, keys left, server calls]
+    ['no Supabase token', { bh_remember: '1', other: 'x' }, '', 'none', ['bh_remember', 'other'], 0],
+    ['token, kept signed in (bh_remember=1)', { [TOKEN]: 't', bh_remember: '1' }, '', 'kept', [TOKEN, 'bh_remember'], 0],
+    ['token, this browser session (bh_live=1)', { [TOKEN]: 't' }, 'a=b; bh_live=1', 'kept', [TOKEN], 0],
+    ['token, bh_live first in the cookie string', { [TOKEN]: 't' }, 'bh_live=1; a=b', 'kept', [TOKEN], 0],
+    ['token, browser closed and reopened (no marker)', { [TOKEN]: 't', 'sb-otherref1-auth-token': 'u', 'sb-x-auth-token-code-verifier': 'v', keep: 'k' }, '', 'cleared', ['sb-x-auth-token-code-verifier', 'keep'], 2],
+    ['token, bh_remember other than 1', { [TOKEN]: 't', bh_remember: 'true' }, '', 'cleared', ['bh_remember'], 2],
+    ['token, look-alike cookies do not count', { [TOKEN]: 't' }, 'xbh_live=1; bh_live=10; bh_live=0', 'cleared', [], 2],
+    ['not a Supabase token key (upper case, no ref)', { 'sb-ABC-auth-token': 't', 'sb--auth-token': 'u' }, '', 'none', ['sb-ABC-auth-token', 'sb--auth-token'], 0]
+  ];
+  for (const [what, init, cookie, result, left, n] of cases) {
+    const p = page({ store: storage(init), cookie });
+    const site = boot(p);
+    await flush();
+    assert.equal(site.bhAuthHygiene(p.w), result === 'cleared' ? 'none' : result, `${what}: a second run finds nothing more to do`);
+    assert.deepEqual(Object.keys(p.store.dump()).sort(), [...left].sort(), `${what}: keys left`);
+    assert.equal(p.calls.length, n, `${what}: server calls`);
+    if (n) {
+      assert.equal(JSON.stringify(p.calls[0]), JSON.stringify(['/api/session', { credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' } }]));
+      assert.equal(p.calls[1][0], '/api/auth/logout');
+      assert.equal(p.calls[1][1].method, 'POST');
+      assert.equal(p.calls[1][1].credentials, 'same-origin');
+      assert.equal(p.calls[1][1].headers['X-CSRF-Token'], 'csrf-1');
+    }
+    // and the result itself, on a fresh copy of the same state
+    const q = page({ store: storage(init), cookie });
+    const fn = boot(q).bhAuthHygiene;
+    assert.equal(fn(page({ store: storage(init), cookie }).w), result, what);
+  }
+});
+
+test('bhAuthHygiene: logout only when /api/session reports a signed-in user with a CSRF token', async () => {
+  for (const s of [{ user: null, csrfToken: null }, { user: { id: 'u' }, csrfToken: null }, { user: { id: 'u' }, csrfToken: '' }, null]) {
+    const calls = [];
+    const p = page({ store: storage({ [TOKEN]: 't' }), fetch: (u, o) => { calls.push(u); return Promise.resolve({ ok: true, json: () => Promise.resolve(s) }); } });
+    boot(p); await flush();
+    assert.deepEqual(calls, ['/api/session'], JSON.stringify(s));
+  }
+  const calls = [];
+  const p = page({ store: storage({ [TOKEN]: 't' }), fetch: u => { calls.push(u); return Promise.resolve({ ok: false, status: 502 }); } });
+  boot(p); await flush();
+  assert.deepEqual(calls, ['/api/session']);
+});
+
+test('bhAuthHygiene never throws and never blocks: blocked storage, a throwing or failing fetch', async () => {
+  let p = page({ storageThrows: true });
+  let site = boot(p);
+  assert.equal(site.bhAuthHygiene(p.w), 'unavailable');
+  assert.equal(p.links[0].textContent, 'Log in');
+  const rejections = [];
+  const onRej = e => rejections.push(e);
+  process.on('unhandledRejection', onRej);
+  try {
+    p = page({ store: storage({ [TOKEN]: 't' }), fetch: () => { throw new TypeError('fetch is not available'); } });
+    site = boot(p);
+    assert.equal(p.store.getItem(TOKEN), null, 'the key is gone even when fetch throws');
+    p = page({ store: storage({ [TOKEN]: 't' }), fetch: () => Promise.reject(new TypeError('Failed to fetch')) });
+    boot(p);
+    p = page({ store: storage({ [TOKEN]: 't' }), fetch: () => Promise.resolve({ ok: true, json: () => Promise.reject(new SyntaxError('bad json')) }) });
+    boot(p);
+    // fetch never resolves: the page still finishes booting
+    p = page({ store: storage({ [TOKEN]: 't' }), fetch: () => new Promise(() => {}) });
+    site = boot(p);
+    assert.equal(typeof site.swapLogin, 'function');
+    await flush();
+  } finally { process.off('unhandledRejection', onRej); }
+  assert.deepEqual(rejections, []);
+  // a removeItem that throws
+  const st = storage({ [TOKEN]: 't' }); st.removeItem = () => { throw new Error('quota'); };
+  p = page({ store: st });
+  assert.equal(boot(p).bhAuthHygiene(page({ store: st }).w), 'unavailable');
+});
+
+test('My account: shown only while a Supabase session is kept, and only after the hygiene ran', async () => {
+  // signed in and remembered: every Log in becomes My account, with an absolute link
+  let p = page({ store: storage({ [TOKEN]: 't', bh_remember: '1' }) });
+  boot(p);
+  for (const a of p.links) { assert.equal(a.textContent, 'My account'); assert.equal(a.getAttribute('href'), '/studio/#/account'); }
+  // browser closed with the box unticked: the hygiene clears the token first, so it stays Log in
+  p = page({ store: storage({ [TOKEN]: 't' }) });
+  boot(p);
+  for (const a of p.links) { assert.equal(a.textContent, 'Log in'); assert.equal(a.getAttribute('href'), 'auth/login.html'); }
+  // signed out
+  p = page({ store: storage({}) });
+  boot(p);
+  assert.equal(p.links[2].textContent, 'Log in');
+  // blocked storage: Log in, no error
+  p = page({ storageThrows: true });
+  boot(p);
+  assert.equal(p.links[0].textContent, 'Log in');
+  // the swap is the first DOM query, after the hygiene (which only reads storage)
+  p = page({ store: storage({ [TOKEN]: 't', bh_remember: '1' }) });
+  boot(p);
+  assert.equal(p.order[0], 'a.gb__login, a.gf__login');
+});
+
+test('BOOKINGS_LIVE is false: Book a consultant keeps opening the enquiry dialog; true sends it to studio/#/book', () => {
+  assert.match(SITE_JS, /const BOOKINGS_LIVE = false;/);
+  let p = page();
+  const site = boot(p);
+  assert.equal(site.BOOKINGS_LIVE, false);
+  assert.equal(p.books[0].getAttribute('data-quote'), 'Book a consultant');
+  assert.match(p.books[0].getAttribute('href'), /^contact\.html/);
+  // flipping the one line
+  p = page();
+  boot(p, SITE_JS.replace('const BOOKINGS_LIVE = false;', 'const BOOKINGS_LIVE = true;'));
+  const a = p.books[0];
+  assert.equal(a.getAttribute('href'), 'studio/#/book');
+  for (const k of ['data-quote', 'data-quote-subject', 'data-quote-hint']) assert.equal(a.getAttribute(k), null, k);
+  assert.equal(a.getAttribute('data-book'), '');
+});
+
+test('Milli: loaded after load and idle (4 s timeout) only when shipped, never on /auth/ or /studio/', () => {
+  // not shipped (today): nothing is requested, so no failed request is ever logged
+  assert.match(SITE_JS, /MILLI_SHIPPED = false/);
+  let p = page();
+  boot(p);
+  assert.equal(p.added.length + p.idles.length + p.listeners.filter(l => l[0] === 'load').length, 0);
+  const shipped = SITE_JS.replace('MILLI_SHIPPED = false', 'MILLI_SHIPPED = true');
+  // page still loading: waits for load, then for idle, then adds the script
+  p = page({ readyState: 'interactive' });
+  boot(p, shipped);
+  assert.equal(p.added.length, 0);
+  const load = p.listeners.find(l => l[0] === 'load');
+  assert.ok(load, 'waits for load');
+  load[1]();
+  assert.equal(p.added.length, 0, 'not before idle');
+  assert.equal(JSON.stringify(p.idles[0][1]), '{"timeout":4000}');
+  p.idles[0][0]();
+  assert.equal(p.added.length, 1);
+  assert.equal(p.added[0].src, '/assets/guide/milli.js');
+  assert.equal(typeof p.added[0].onerror, 'function');
+  // already loaded, no requestIdleCallback (Safari): a timer instead
+  p = page({ idle: false });
+  boot(p, shipped);
+  assert.equal(p.added.length, 1);
+  // only once
+  assert.equal(p.w.HanesSite.loadMilli(p.w), false);
+  // never on the sign-in pages or in the studio
+  for (const path of ['/auth/login.html', '/auth/', '/studio/', '/studio/consultant.html']) {
+    p = page({ path });
+    boot(p, shipped);
+    assert.equal(p.added.length + p.idles.length, 0, path);
+  }
+});
+
+test('check.mjs keeps MILLI_SHIPPED honest', () => {
+  const run = files => {
+    const dir = mkdtempSync(join(tmpdir(), 'site-milli-'));
+    try {
+      const all = { 'package.json': JSON.stringify({ homepage: 'https://example.test' }), 'sitemap.xml': '<urlset></urlset>', 'robots.txt': 'Sitemap: https://example.test/sitemap.xml\n', 'assets/enquiry.js': '', ...files };
+      for (const [f, s] of Object.entries(all)) { mkdirSync(dirname(join(dir, f)), { recursive: true }); writeFileSync(join(dir, f), s); }
+      const r = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_ROOT: dir }, encoding: 'utf8' });
+      return { code: r.status, out: r.stdout + r.stderr };
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  };
+  const on = SITE_JS.replace('MILLI_SHIPPED = false', 'MILLI_SHIPPED = true');
+  assert.equal(run({ 'assets/site.js': SITE_JS }).code, 0);
+  let r = run({ 'assets/site.js': on });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /MILLI_SHIPPED is true but assets\/guide\/milli\.js does not exist/);
+  r = run({ 'assets/site.js': SITE_JS, 'assets/guide/milli.js': '' });
+  assert.equal(r.code, 0);
+  assert.match(r.out, /warning {2}assets\/guide\/milli\.js exists but assets\/site\.js does not load it yet/);
+  assert.equal(run({ 'assets/site.js': on, 'assets/guide/milli.js': '' }).code, 0);
+});
+
+// the contract block, with its common indentation removed
+export const hygieneBlock = s => {
+  const m = s.match(/\n([ \t]*)\/\/ BEGIN bhAuthHygiene\n([\s\S]*?)\n[ \t]*\/\/ END bhAuthHygiene/);
+  if (!m) return null;
+  return m[2].split('\n').map(l => (l.startsWith(m[1]) ? l.slice(m[1].length) : l)).join('\n');
+};
+
+test('bhAuthHygiene is one delimited block of about 25 lines, and every copy in this repo is identical', () => {
+  const block = hygieneBlock(SITE_JS);
+  assert.ok(block, 'BEGIN/END markers');
+  assert.match(block, /^function bhAuthHygiene\(w = globalThis\) \{/);
+  const lines = block.split('\n').length;
+  assert.ok(lines >= 15 && lines <= 30, `${lines} lines`);
+  assert.doesNotMatch(block, /innerHTML|outerHTML|insertAdjacentHTML|document\.write/);
+  for (const f of ['auth/auth-lib.js', 'auth/auth.js']) {
+    if (!existsSync(root + f)) continue;
+    const other = hygieneBlock(read(f));
+    if (other !== null || f === 'auth/auth-lib.js') assert.equal(other, block, `${f} carries the same bhAuthHygiene`);
+  }
+});
+
+test('the marketing pages never load the Supabase SDK, Turnstile or the guide up front', () => {
+  for (const p of pages) {
+    const s = read(p);
+    for (const x of s.matchAll(/<(?:script|link)\b[^>]*\s(?:src|href)="([^"]*)"/gi)) assert.doesNotMatch(x[1], /supabase|challenges\.cloudflare\.com|assets\/guide\//i, `${p}: ${x[1]}`);
+    assert.match(s, /<script src="\/?assets\/site\.js" defer><\/script>/, `${p} loads site.js`);
+  }
+  assert.doesNotMatch(SITE_JS, /supabase\.co|supabase-js|import\(/i);
+});
