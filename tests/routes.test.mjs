@@ -144,3 +144,126 @@ test('resolveFile models the deployment: static files, api functions, nothing pr
     assert.equal(r('/%E0%A4%A'), null, 'a bad escape is a miss, not a crash');
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+/* ---------- scripts/dev.mjs serves vercel.json's routes through the evaluator ---------- */
+import http from 'node:http';
+import { createDevServer } from '../scripts/dev.mjs';
+
+const listen = server => new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve(server.address().port)));
+const close = server => new Promise(resolve => server.close(resolve));
+const raw = (port, path, { method = 'GET', headers = {}, body } = {}) => new Promise((resolve, reject) => {
+  const req = http.request({ host: '127.0.0.1', port, path, method, headers }, res => {
+    let data = '';
+    res.setEncoding('utf8');
+    res.on('data', c => { data += c; });
+    res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, body: data }));
+  });
+  req.on('error', reject);
+  req.end(body);
+});
+
+async function withServers(env, fn) {
+  const seen = [];
+  const stub = http.createServer((req, res) => {
+    let body = '';
+    req.on('data', c => { body += c; });
+    req.on('end', () => {
+      seen.push({ method: req.method, url: req.url, headers: req.headers, body });
+      res.writeHead(200, { 'Content-Type': 'application/json', 'X-Upstream': 'studio-stub' });
+      res.end(JSON.stringify({ stub: true, url: req.url }));
+    });
+  });
+  const stubPort = await listen(stub);
+  const quiet = { warn() {}, error() {} };
+  const dev = createDevServer({ env, studioUrl: `http://127.0.0.1:${stubPort}`, log: quiet });
+  const port = await listen(dev);
+  try { await fn(port, seen); } finally { await close(dev); await close(stub); }
+}
+
+test('dev.mjs: pages, redirects, /studio/ proxied with the staging secret, /api/enquiry local, /api/session proxied', async () => {
+  await withServers({ STUDIO_EDGE_SECRET_STAGING: 'dev-test-value' }, async (port, seen) => {
+    const home = await raw(port, '/');
+    assert.equal(home.status, 200);
+    assert.match(home.headers['content-type'], /text\/html/);
+    assert.equal(home.headers['content-security-policy'], "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+
+    const st = await raw(port, '/studio');
+    assert.equal(st.status, 307);
+    assert.equal(st.headers.location, '/studio/');
+    assert.equal(seen.length, 0, 'the redirect never reaches the studio');
+
+    const root = await raw(port, '/studio/', { headers: { 'X-Forwarded-For': '203.0.113.9', 'X-Real-IP': '203.0.113.9', 'X-Studio-Edge': 'forged' } });
+    assert.equal(root.status, 200);
+    assert.equal(root.headers['x-upstream'], 'studio-stub');
+    assert.equal(root.headers['x-robots-tag'], 'noindex');
+    assert.equal(root.headers['x-vercel-enable-rewrite-caching'], '1');
+    assert.equal(seen[0].url, '/');
+    assert.equal(seen[0].headers['x-studio-edge'], 'dev-test-value');
+    assert.equal(seen[0].headers['x-real-ip'], '127.0.0.1');
+    assert.equal(seen[0].headers['x-forwarded-for'], '127.0.0.1');
+    assert.match(seen[0].headers.host, /^127\.0\.0\.1:\d+$/);
+
+    await raw(port, '/studio/src/app.js?v=2');
+    assert.equal(seen[1].url, '/src/app.js?v=2');
+
+    const enq = await raw(port, '/api/enquiry');
+    assert.equal(enq.status, 200);
+    assert.equal(JSON.parse(enq.body).ok, true);
+    assert.equal(enq.headers['cache-control'], 'no-store');
+    assert.equal(enq.headers['x-robots-tag'], 'noindex');
+    assert.equal(seen.length, 2, '/api/enquiry is the local function, not the studio');
+
+    const sess = await raw(port, '/api/session', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' }, body: '{"a":1}' });
+    assert.equal(sess.status, 200);
+    assert.equal(sess.headers['cache-control'], 'no-store');
+    assert.equal(seen[2].url, '/api/session');
+    assert.equal(seen[2].method, 'POST');
+    assert.equal(seen[2].body, '{"a":1}');
+    assert.equal(seen[2].headers.origin, 'http://localhost:3000', 'Origin passes unchanged');
+    assert.equal(seen[2].headers['x-studio-edge'], 'dev-test-value');
+
+    await raw(port, '/api/enquiry/x');
+    assert.equal(seen[3].url, '/api/enquiry/x', 'nested /api paths go to the studio');
+
+    const lost = await raw(port, '/no-such-page');
+    assert.equal(lost.status, 404);
+    assert.match(lost.body, /Page not found/);
+
+    const login = await raw(port, '/login');
+    assert.equal(login.status, 307);
+    assert.equal(login.headers.location, '/auth/login.html');
+
+    for (const p of ['/scripts/dev.mjs', '/package.json', '/.git/config']) assert.equal((await raw(port, p)).status, 404, p);
+    // the function's source is never served: under /api/ it is just another studio path
+    const lib = await raw(port, '/api/_lib/enquiry.js');
+    assert.equal(lib.headers['x-upstream'], 'studio-stub');
+    assert.equal(seen[4].url, '/api/_lib/enquiry.js');
+    assert.equal(seen.length, 5);
+  });
+});
+
+test('dev.mjs: the production host picks the production secret name; without a value no edge header is sent', async () => {
+  await withServers({ STUDIO_EDGE_SECRET_PROD: 'prod-test-value', STUDIO_EDGE_SECRET_STAGING: 'staging-test-value' }, async (port, seen) => {
+    await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new.vercel.app' } });
+    assert.equal(seen[0].headers['x-studio-edge'], 'prod-test-value');
+    await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new-abc123-hanes.vercel.app' } });
+    assert.equal(seen[1].headers['x-studio-edge'], 'staging-test-value');
+  });
+  await withServers({}, async (port, seen) => {
+    await raw(port, '/api/session', { headers: { 'X-Studio-Edge': 'forged' } });
+    assert.equal(seen[0].headers['x-studio-edge'], undefined);
+  });
+});
+
+test('dev.mjs: a studio that is not running gives 502 with the route headers', async () => {
+  const dead = http.createServer();
+  const deadPort = await listen(dead);
+  await close(dead);
+  const dev = createDevServer({ env: {}, studioUrl: `http://127.0.0.1:${deadPort}`, log: { warn() {}, error() {} } });
+  const port = await listen(dev);
+  try {
+    const r = await raw(port, '/studio/');
+    assert.equal(r.status, 502);
+    assert.equal(r.headers['x-robots-tag'], 'noindex');
+  } finally { await close(dev); }
+});
