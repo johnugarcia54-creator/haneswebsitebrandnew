@@ -52,6 +52,11 @@ html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
   .gb__list a,.gb__in>.gb__login{padding:14px 5px}
   .gb__quote{padding:0 10px}
 }
+/* just above the burger, signed in: "My account" is longer than "Log in", so the links close up a little
+   to keep clear space after the logo (tests/browser/bar.mjs checks at least 16px in both states) */
+@media (max-width:959px){
+  .gb__list a,.gb__in>.gb__login{padding:14px 4px}
+}
 /* a fingertip needs 44px; a mouse can keep the slim pill */
 @media (pointer:coarse),(hover:none){
   .gb__quote{height:44px;min-width:44px;padding:0 16px}
