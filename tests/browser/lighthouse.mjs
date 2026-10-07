@@ -1,7 +1,8 @@
 /* =========================================================================================
    Mobile Lighthouse for the performance budget (ADDENDUM §6.7), run by hand: CI has no browser.
-     node tests/browser/lighthouse.mjs [base-url] [--runs 3] [--pages index.html,bargainhub.html]
-   Without a base URL it serves this checkout through scripts/dev.mjs on a free loopback port.
+     node tests/browser/lighthouse.mjs [base-url] [--runs 3] [--pages index.html,bargainhub.html] [--root dir]
+   Without a base URL it serves this checkout (or --root, e.g. an export of main given this
+   vercel.json, for a like-for-like baseline) through scripts/dev.mjs on a free loopback port.
    LIGHTHOUSE_BIN   a lighthouse CLI (default: npx --yes lighthouse@13.5.0)
    CHROMIUM_PATH    the browser (default /opt/pw-browsers/chromium-1194/chrome-linux/chrome)
    Prints each run's performance score and the median per page. Budget: within 3 points of
@@ -18,9 +19,10 @@ const args = process.argv.slice(2);
 const opt = (name, d) => { const i = args.indexOf(name); return i >= 0 ? args.splice(i, 2)[1] : d; };
 const runs = Number(opt('--runs', 3));
 const pages = opt('--pages', 'index.html,bargainhub.html').split(',');
+const siteRoot = opt('--root', undefined);
 let base = args[0], server = null;
 if (!base) {
-  server = createDevServer({ env: {}, log: { warn() {}, error: console.error } });
+  server = createDevServer({ ...(siteRoot && { root: siteRoot }), env: {}, log: { warn() {}, error: console.error } });
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${server.address().port}`;
 }

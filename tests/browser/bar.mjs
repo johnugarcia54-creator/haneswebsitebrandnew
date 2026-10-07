@@ -10,6 +10,7 @@
    - 320, 390, 600, 834 and 879 px: the bar links, Log in and Get a quote are hidden and the
      burger shows; opened, the panel shows Log in; Escape closes it
    - 390 px: the page never scrolls sideways
+   - 390, 834, 880, 1024 and 1440 px: Tab walks the bar in the order it is shown
    - a Supabase token key with "keep me signed in" turns every Log in into My account
      (/studio/#/account), and nothing on the page loads supabase-js
    ========================================================================================= */
@@ -86,6 +87,22 @@ try {
       check(panel.visible && panel.text === 'Log in' && panel.expanded === 'true', `${p} @${w}: the open panel shows Log in (${JSON.stringify(panel)})`);
       await page.keyboard.press('Escape');
       check(await page.evaluate(() => !document.documentElement.classList.contains('gb-open')), `${p} @${w}: Escape closes the panel`);
+    }
+    // keyboard order through the bar matches what is on screen, at the review widths
+    for (const w of [390, 834, 880, 1024, 1440]) {
+      await page.setViewportSize({ width: w, height: 900 });
+      await page.goto(`${base}/${p}`, { waitUntil: 'load' }); // a fresh page: Tab starts at the top
+      await page.evaluate(() => document.fonts.ready);
+      const expected = await page.evaluate(() => [...document.querySelectorAll('#gb .gb__in a, #gb .gb__in button')]
+        .filter(el => { const r = el.getBoundingClientRect(), st = getComputedStyle(el); return r.width > 0 && st.display !== 'none' && st.visibility !== 'hidden'; })
+        .map(el => (el.textContent.trim() || el.getAttribute('aria-label')).slice(0, 24)));
+      const got = [];
+      for (let i = 0; i < 40 && got.length < expected.length; i++) {
+        await page.keyboard.press('Tab');
+        const t = await page.evaluate(() => { const a = document.activeElement; return a && a.closest('#gb .gb__in') ? (a.textContent.trim() || a.getAttribute('aria-label')).slice(0, 24) : null; });
+        if (t) got.push(t); else if (got.length) break;
+      }
+      check(JSON.stringify(got) === JSON.stringify(expected), `${p} @${w}: Tab order in the bar ${JSON.stringify(got)} matches the screen ${JSON.stringify(expected)}`);
     }
     await page.close();
   }
