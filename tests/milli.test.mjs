@@ -11,7 +11,7 @@
    - the launcher stays at 3 KB gzipped or less */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
@@ -248,7 +248,13 @@ test('the launcher: a real 56 px button, named, bottom-left, and 3 KB gzipped or
   assert.match(LAUNCHER, /'aria-label': 'Ask Milli, our AI guide'/);
   assert.match(LAUNCHER, /\.milli-l\{position:fixed;left:max\(16px,env\(safe-area-inset-left\)\);bottom:max\(16px,env\(safe-area-inset-bottom\)\);z-index:9980;/);
   assert.match(LAUNCHER, /min-width:56px;height:56px/);
-  assert.match(LAUNCHER, /html\.gb-open \.milli-l,body\.is-loading \.milli-l/);
+  // hidden under the burger menu, the loader and a page's own open modal (index's film player)
+  assert.match(LAUNCHER, /:is\(html\.gb-open,body\.is-loading,body:has\(\.is-open\[aria-modal=true\]\)\) :is\(\.milli-l,\.milli-nudge\)[^{]*\{display:none\}/);
+  assert.match(read('index.html'), /class="modal" id="modal" role="dialog" aria-modal="true"/, 'the film player is the modal the rule matches');
+  assert.match(read('index.html'), /modal\.classList\.add\('is-open'\)/);
+  // the last footer of every page gets room below it, so the launcher never covers its links (WCAG 2.4.11)
+  assert.match(LAUNCHER, /body>footer:last-of-type\{padding-bottom:calc\(max\(16px,env\(safe-area-inset-bottom\)\) \+ 72px\)\}html\{scroll-padding-bottom:88px\}/);
+  for (const f of readdirSync(root).filter(n => n.endsWith('.html'))) assert.match(read(f), /\n<footer[ >]/, `${f}: its footer is a child of body`);
   assert.match(LAUNCHER, /prefers-reduced-motion:reduce\)\{\.milli-m \*\{animation:none!important\}/);
   assert.match(LAUNCHER, /'bh_milli_nudged'/);
   assert.match(LAUNCHER, /page === 'bargainhub'/);

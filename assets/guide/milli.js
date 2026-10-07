@@ -1,9 +1,10 @@
 /* Milli, Hanes's AI guide: the launcher (ADDENDUM §8.1-8.3), added by assets/site.js after load
-   and idle. Kept at 3 KB gzipped or less (tests/milli.test.mjs); the panel (milli-panel.js,
-   milli.css, guide-faq.json) loads on the first click. A real 56 px button, bottom-left, under
-   the bar (z-index 9980), hidden while html.gb-open or body.is-loading; never opens by itself.
-   One hello on bargainhub.html, desktop only, once (localStorage bh_milli_nudged). The mascot is
-   built node by node; states: is-idle (blink), is-think (antenna pulse), is-happy, is-rest. */
+   and idle; 3 KB gzipped at most (tests/milli.test.mjs). The panel (milli-panel.js, milli.css,
+   guide-faq.json) loads on the first click. A real 56 px button, bottom-left, under the bar
+   (z-index 9980); hidden under html.gb-open, body.is-loading or an open page modal (index's film);
+   never opens by itself. The last footer gets room so the launcher never covers it. One hello on
+   bargainhub.html, desktop only, once (localStorage bh_milli_nudged). Mascot states: is-idle
+   (blink), is-think (antenna pulse), is-happy, is-rest. */
 (() => {
   'use strict';
   const w = window, d = document;
@@ -30,7 +31,8 @@
   const css = el('style', { id: 'milli-launcher-css' });
   css.textContent = '.milli-l{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:9980;display:flex;align-items:center;min-width:56px;height:56px;margin:0;padding:0;border:2px solid #7a5a2f;border-radius:28px;background:#f5f1ea;color:#1d1d1f;font:600 1rem/1 Inter,-apple-system,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer}'
     + '.milli-l .milli-m{width:52px;height:52px;flex:none}.milli-l__t{padding:0 18px 0 2px;white-space:nowrap}.milli-l:focus-visible{outline:3px solid #1d1d1f;outline-offset:3px;box-shadow:0 0 0 7px #fff}'
-    + 'html.gb-open .milli-l,body.is-loading .milli-l,html.gb-open .milli-nudge,body.is-loading .milli-nudge,.milli-l[hidden],.milli-nudge[hidden]{display:none}'
+    + ':is(html.gb-open,body.is-loading,body:has(.is-open[aria-modal=true])) :is(.milli-l,.milli-nudge),.milli-l[hidden],.milli-nudge[hidden]{display:none}'
+    + 'body>footer:last-of-type{padding-bottom:calc(max(16px,env(safe-area-inset-bottom)) + 72px)}html{scroll-padding-bottom:88px}'
     + '.milli-m .mb,.milli-m .mo,.milli-m .md{fill:#1d1d1f}.milli-m .mf{fill:#f5f1ea}.milli-m .ma,.milli-m .mt{fill:#9c7440}.milli-m .mk,.milli-m .mh,.milli-m .mr{fill:none;stroke:#1d1d1f;stroke-width:1.6;stroke-linecap:round}.milli-m .md{stroke:#9c7440;stroke-width:1.2}'
     + '.milli-m .mh,.milli-m .mr,.milli-m.is-happy .mo,.milli-m.is-rest .mo{display:none}.milli-m.is-happy .mh,.milli-m.is-rest .mr{display:inline}'
     + '.milli-m .mo{transform-box:fill-box;transform-origin:center}.milli-m.is-idle .mo{animation:milli-blink 6s infinite}.milli-m.is-think .ma{animation:milli-pulse 1s ease-in-out infinite alternate}'
