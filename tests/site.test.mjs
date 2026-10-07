@@ -251,12 +251,12 @@ test('Milli: loaded after load and idle (4 s timeout) only when shipped, never o
 });
 
 test('check.mjs keeps MILLI_SHIPPED honest', () => {
-  const run = files => {
+  const run = (files, extraEnv = {}) => {
     const dir = mkdtempSync(join(tmpdir(), 'site-milli-'));
     try {
       const all = { 'package.json': JSON.stringify({ homepage: 'https://example.test' }), 'sitemap.xml': '<urlset></urlset>', 'robots.txt': 'Sitemap: https://example.test/sitemap.xml\n', 'assets/enquiry.js': '', ...files };
       for (const [f, s] of Object.entries(all)) { mkdirSync(dirname(join(dir, f)), { recursive: true }); writeFileSync(join(dir, f), s); }
-      const r = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_ROOT: dir }, encoding: 'utf8' });
+      const r = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_RELEASE: '', SITE_CHECK_ROOT: dir, ...extraEnv }, encoding: 'utf8' });
       return { code: r.status, out: r.stdout + r.stderr };
     } finally { rmSync(dir, { recursive: true, force: true }); }
   };
@@ -265,9 +265,14 @@ test('check.mjs keeps MILLI_SHIPPED honest', () => {
   let r = run({ 'assets/site.js': on });
   assert.equal(r.code, 1);
   assert.match(r.out, /MILLI_SHIPPED is true but assets\/guide\/milli\.js does not exist/);
+  // the guide merged without switching it on: an error, so Milli can never silently stay off
   r = run({ 'assets/site.js': SITE_JS, 'assets/guide/milli.js': '' });
-  assert.equal(r.code, 0);
-  assert.match(r.out, /warning {2}assets\/guide\/milli\.js exists but assets\/site\.js does not load it yet/);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /ERROR {4}assets\/site\.js: assets\/guide\/milli\.js exists but MILLI_SHIPPED is false/);
+  // only an explicit hold makes it a warning
+  r = run({ 'assets/site.js': SITE_JS.replace('MILLI_SHIPPED = false;', 'MILLI_SHIPPED = false; // held'), 'assets/guide/milli.js': '' });
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /warning {2}assets\/guide\/milli\.js exists but is held/);
   assert.equal(run({ 'assets/site.js': on, 'assets/guide/milli.js': '' }).code, 0);
 });
 
@@ -526,4 +531,15 @@ test('smoke.mjs on a production deployment address: studio and API checks use th
     await smoke(prodBase, { production: true, productionBase: prodBase.replace(/:\d+$/, ':' + depSite.address().port), log: l => bad.push(l) });
     assert.ok(bad.some(l => l.startsWith('FAIL') && l.includes('/studio/ on the deployment address fails closed')));
   } finally { prodSite.close(); depSite.close(); studio.close(); }
+});
+
+test('check.mjs on the release build (SITE_CHECK_RELEASE=1): a Log in link to a sign-in page not built yet fails', () => {
+  const r = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_ROOT: '', SITE_CHECK_RELEASE: '1' }, encoding: 'utf8' });
+  if (existsSync(root + 'auth/login.html')) assert.doesNotMatch(r.stdout, /auth\/login\.html: is linked from the pages but not built/);
+  else {
+    assert.equal(r.status, 1, r.stdout);
+    assert.match(r.stdout, /ERROR {4}auth\/login\.html: is linked from the pages but not built/);
+  }
+  const dev = spawnSync(process.execPath, [root + 'scripts/check.mjs'], { env: { ...process.env, SITE_CHECK_ROOT: '', SITE_CHECK_RELEASE: '' }, encoding: 'utf8' });
+  assert.doesNotMatch(dev.stdout, /is linked from the pages but not built/);
 });

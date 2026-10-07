@@ -14,8 +14,10 @@
      <style>, style="" or on*= handler (the /auth CSP would block them), every local file exists
    - no innerHTML, outerHTML, insertAdjacentHTML or document.write in any .js under auth/ or assets/guide/
    - no form still promises "We only use your details to reply to you"
-   - MILLI_SHIPPED in assets/site.js is true only when assets/guide/milli.js exists (a warning
-     while the guide is built but not switched on)
+   - MILLI_SHIPPED in assets/site.js is true exactly when assets/guide/milli.js exists, so merging
+     the guide without switching it on fails; only an explicit hold ("MILLI_SHIPPED = false; // held")
+     turns that into a warning
+   SITE_CHECK_RELEASE=1 (the release build, X1) also fails on links to a pending page not built yet
    SITE_CHECK_ROOT=<dir> checks another copy of the site (the tests use it for fixtures)
    ========================================================================================= */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
@@ -133,7 +135,10 @@ if (existsSync(root + 'assets/site.js')) {
   const milli = existsSync(root + 'assets/guide/milli.js');
   if (!shipped) err('assets/site.js', 'MILLI_SHIPPED = true|false is missing');
   else if (shipped === 'true' && !milli) err('assets/site.js', 'MILLI_SHIPPED is true but assets/guide/milli.js does not exist');
-  else if (shipped === 'false' && milli) warn.push('assets/guide/milli.js exists but assets/site.js does not load it yet (set MILLI_SHIPPED = true)');
+  else if (shipped === 'false' && milli) {
+    if (/\bMILLI_SHIPPED = false;[ \t]*\/\/ held\b/.test(readFileSync(root + 'assets/site.js', 'utf8'))) warn.push('assets/guide/milli.js exists but is held: assets/site.js does not load it (MILLI_SHIPPED = false; // held)');
+    else err('assets/site.js', 'assets/guide/milli.js exists but MILLI_SHIPPED is false, so Milli never loads (set MILLI_SHIPPED = true, or hold it explicitly with "MILLI_SHIPPED = false; // held")');
+  }
 }
 
 // ---------- the old enquiry promise is gone everywhere (ADDENDUM §6.4: the honest notice replaced it)
@@ -153,7 +158,10 @@ for (const f of pages) {
 const robots = existsSync(root + 'robots.txt') ? readFileSync(root + 'robots.txt', 'utf8') : '';
 if (!robots.includes(`Sitemap: ${SITE}/sitemap.xml`)) err('robots.txt', 'should point at the sitemap');
 
-for (const p of pending) warn.push(`${p} is linked but not built yet (the sign-in pages land with stream W2)`);
+for (const p of pending) {
+  if (/^(1|true)$/i.test(process.env.SITE_CHECK_RELEASE || '')) err(p, 'is linked from the pages but not built (release build: the sign-in pages of stream W2 must ship with the Log in links)');
+  else warn.push(`${p} is linked but not built yet (the sign-in pages land with stream W2)`);
+}
 for (const w of warn) console.log('warning  ' + w);
 for (const e of errors) console.log('ERROR    ' + e);
 console.log(`\nChecked ${pages.length} pages and ${appPages.length} app pages: ${errors.length} errors, ${warn.length} warnings.`);
