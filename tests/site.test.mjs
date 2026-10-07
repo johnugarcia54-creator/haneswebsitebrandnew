@@ -394,3 +394,81 @@ test('BOOKINGS_LIVE flips only links: hisense.html\'s catalogue buttons (button[
   assert.match(SITE_JS, /querySelectorAll\('a\[data-book\]'\)/);
   assert.match(read('hisense.html'), /<button[^>]*data-book="tv"/);
 });
+
+/* ---------- scripts/smoke.mjs: reads only, and its enquiry posts can never create a lead ---------- */
+import http from 'node:http';
+import { ENQUIRY_PROBES, smoke, looksSecret, AUTH_PAGES } from '../scripts/smoke.mjs';
+import enquiryHandler from '../api/enquiry.js';
+import { validate } from '../api/_lib/enquiry.js';
+import { createDevServer } from '../scripts/dev.mjs';
+
+test('smoke.mjs posts only its three ENQUIRY_PROBES, and nothing to the guide, the CRM or the studio', () => {
+  const src = read('scripts/smoke.mjs');
+  assert.equal((src.match(/method: 'POST'/g) || []).length, 1, 'one POST site');
+  assert.match(src, /for \(const p of ENQUIRY_PROBES\) \{\n\s+const r = await get\('\/api\/enquiry', \{ method: 'POST'/);
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  assert.doesNotMatch(code, /leads\/ingest|base44|api\.x\.ai|grok|xai\.com/i);
+  assert.doesNotMatch(code, /'\/api\/guide'[^)]*method/);
+  assert.doesNotMatch(src, /method: '(PATCH|DELETE)'/);
+  assert.equal(ENQUIRY_PROBES.length, 3);
+  // each probe is refused by validation or carries the spam trap, and only the origin probe comes from elsewhere
+  for (const p of ENQUIRY_PROBES) {
+    const v = validate(p.body);
+    assert.ok(v.spam || v.error, `${p.what}: validation refuses it`);
+    assert.ok(!v.data, p.what);
+  }
+});
+
+test('smoke.mjs ENQUIRY_PROBES through the real /api/enquiry with the CRM forward and email set up: nothing leaves', async () => {
+  const saved = { ...process.env }, realFetch = globalThis.fetch, outbound = [];
+  Object.assign(process.env, { STUDIO_INGEST_URL: 'http://127.0.0.1:9/api/leads/ingest', LEADS_INGEST_SECRET: 'test-only', STUDIO_EDGE_SECRET_PROD: 'test-only', RESEND_API_KEY: 'test-only', RESEND_API_URL: 'http://127.0.0.1:9' });
+  globalThis.fetch = async (...a) => { outbound.push(String(a[0])); throw new Error('no network in this test'); };
+  try {
+    for (const [i, p] of ENQUIRY_PROBES.entries()) {
+      const headers = { host: 'site.test', origin: 'https://site.test', 'x-forwarded-for': `203.0.113.${50 + i}`, ...Object.fromEntries(Object.entries(p.headers || {}).map(([k, v]) => [k.toLowerCase(), v])) };
+      const res = { statusCode: 0, headers: {}, body: '', setHeader(k, v) { this.headers[k] = v; }, end(b) { this.body = b; } };
+      await enquiryHandler({ method: 'POST', headers, body: p.body, socket: {} }, res);
+      assert.equal(res.statusCode, p.status, `${p.what}: ${res.body}`);
+    }
+    assert.deepEqual(outbound, [], 'no forward to the studio and no email');
+  } finally {
+    globalThis.fetch = realFetch;
+    for (const k of Object.keys(process.env)) if (!(k in saved)) delete process.env[k];
+    Object.assign(process.env, saved);
+  }
+});
+
+test('looksSecret: catches credential-looking answers, passes the health shapes', () => {
+  for (const ok of [{ ok: true, state: 'held' }, { ok: true, mode: 'static' }, { ok: false, auth: 'jwks_empty' }]) assert.equal(looksSecret(ok), false, JSON.stringify(ok));
+  for (const bad of [{ ok: true, token: 'abc' }, { ok: true, apiKey: 'x' }, { ok: true, note: 'sb_secret_abcdefghijklmnopqrstuv' }, { ok: true, jwt: 'eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig' }, { nested: { password: 'p' } }])
+    assert.equal(looksSecret(bad), true, JSON.stringify(bad));
+});
+
+test('smoke.mjs against scripts/dev.mjs with a stub studio behind the rewrite: everything passes but the sign-in pages still to come', async () => {
+  const studioSeen = [];
+  const studio = http.createServer((req, res) => {
+    studioSeen.push(`${req.method} ${req.url} edge=${req.headers['x-studio-edge'] || ''}`);
+    res.setHeader('Content-Type', 'application/json');
+    const answers = { '/api/health': { ok: true, version: 'x', schema: 1 }, '/api/auth/health': { ok: true, auth: 'ok' }, '/api/crm/health': { ok: true, state: 'held' } };
+    if (req.url === '/') { res.setHeader('Content-Type', 'text/html'); return res.end('<!doctype html><title>studio</title>'); }
+    if (answers[req.url]) return res.end(JSON.stringify(answers[req.url]));
+    res.statusCode = 404; res.end('{"error":{"code":"not_found"}}');
+  });
+  await new Promise(r => studio.listen(0, '127.0.0.1', r));
+  const site = createDevServer({ env: { STUDIO_EDGE_SECRET_STAGING: 'stub-edge' }, studioUrl: `http://127.0.0.1:${studio.address().port}`, log: { warn() {}, error() {} } });
+  await new Promise(r => site.listen(0, '127.0.0.1', r));
+  const lines = [];
+  try {
+    const failed = await smoke(`http://127.0.0.1:${site.address().port}`, { production: true, log: l => lines.push(l) });
+    const fails = lines.filter(l => l.startsWith('FAIL'));
+    const missing = AUTH_PAGES.filter(p => !existsSync(root + p.slice(1)));
+    assert.equal(failed, fails.length);
+    for (const f of fails) assert.ok(missing.some(p => f.includes(p)), `only a sign-in page not built yet may fail: ${f}`);
+    for (const want of ['/studio redirects to /studio/', '/studio/ loads and is noindex', '/api/health answers ok', '/api/auth/health answers ok', '/api/crm/health answers without secrets', '/api/ops/ip-echo is hidden on production', 'posts from other websites are refused (403)', 'the spam trap accepts quietly'])
+      assert.ok(lines.some(l => l.startsWith('pass') && l.includes(want)), want);
+    assert.ok(lines.includes('skip  /api/guide is not deployed yet'));
+    // the studio saw reads only, each with the edge header from dev.mjs
+    assert.ok(studioSeen.length >= 5);
+    for (const s of studioSeen) assert.match(s, /^GET .* edge=stub-edge$/, s);
+  } finally { site.close(); studio.close(); }
+});
