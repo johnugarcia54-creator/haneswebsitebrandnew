@@ -277,16 +277,15 @@ test('(g) the five old redirects keep their status and Location', () => {
   for (const p of ['/index.html', '/contact.html', '/hisense.html', '/tracking.html']) assert.equal(run(p).kind, 'filesystem', p);
 });
 
-test('website CI and smoke stay on Node 22, and package.json sets no engines (ADDENDUM §6.6, §12.2)', () => {
-  // engines.node would also override the Vercel project's Node version for api/enquiry.js
-  for (const wf of ['ci.yml', 'smoke.yml']) {
-    const y = readFileSync(root + '.github/workflows/' + wf, 'utf8');
-    const versions = [...y.matchAll(/node-version:\s*['"]?([^'"\s]+)/g)].map(m => m[1]);
-    assert.ok(versions.length, `${wf} sets a node-version`);
-    for (const v of versions) assert.equal(v, '22', wf);
-  }
+test('the site runs on Node 24, the newest LTS Vercel supports (owner rule, DEPENDENCY-POLICY.md)', () => {
+  // engines.node sets the Vercel runtime of api/enquiry.js; CI tests Node 24 and keeps 22 covered
+  const ci = readFileSync(root + '.github/workflows/ci.yml', 'utf8');
+  assert.match(ci, /node:\s*\[24, 22\]/);
+  assert.match(ci, /node-version:\s*\$\{\{ matrix\.node \}\}/);
+  const smoke = readFileSync(root + '.github/workflows/smoke.yml', 'utf8');
+  assert.deepEqual([...smoke.matchAll(/node-version:\s*['"]?([^'"\s]+)/g)].map(m => m[1]), ['24']);
   const pkg = JSON.parse(readFileSync(root + 'package.json', 'utf8'));
-  assert.equal(pkg.engines, undefined);
+  assert.deepEqual(pkg.engines, { node: '24.x' });
   const lock = JSON.parse(readFileSync(root + 'package-lock.json', 'utf8'));
-  assert.equal(lock.packages[''].engines, undefined);
+  assert.deepEqual(lock.packages[''].engines, { node: '24.x' });
 });
