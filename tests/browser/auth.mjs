@@ -148,6 +148,14 @@ async function targets(page, label) {
   check(small.length >= 5, `${label}: the target check sees the page (${small.length} targets)`);
   small.splice(0, small.length, ...small.filter(([, h]) => h < 44));
   check(small.length === 0, `${label}: every target is at least 44 px tall (${JSON.stringify(small)})`);
+  const narrow = await page.evaluate(() => [...document.querySelectorAll('.gf a')].filter(e => e.offsetParent !== null && e.getBoundingClientRect().width < 44).map(e => e.textContent.trim()));
+  check(narrow.length === 0, `${label}: the footer links are at least 44 px wide (${narrow.join(', ')})`);
+  // the copyright and the footer links sit on one line (their text centres within 1 px)
+  const mid = await page.evaluate(() => [document.querySelector('.gf__base>span:first-child'), document.querySelector('.gf__links a')].map(e => {
+    const r = document.createRange(); r.selectNodeContents(e); const b = r.getBoundingClientRect(); return b.top + b.height / 2;
+  }));
+  const wrapped = Math.abs(mid[0] - mid[1]) > 15; // a narrow footer puts the links on their own line
+  check(wrapped || Math.abs(mid[0] - mid[1]) <= 1, `${label}: the footer text shares one line (${mid.map(Math.round).join(' vs ')})`);
 }
 const text = (page, sel) => page.locator(sel).innerText();
 
@@ -353,6 +361,20 @@ try {
     await ctx.close();
   }
   studioState.publicSignup = false;
+  // B3b. forced colours (Windows contrast themes): focus stays visible on the fields, and the button keeps its edge
+  {
+    const { ctx } = await context({ configured: true, width: 390 });
+    const page = await ctx.newPage();
+    await page.emulateMedia({ forcedColors: 'active' });
+    await page.goto(`${base}/auth/login.html`, { waitUntil: 'networkidle' });
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.focus('#email');
+    const st = await page.evaluate(() => { const c = getComputedStyle(document.activeElement); return [c.outlineStyle, parseFloat(c.outlineWidth)]; });
+    check(st[0] !== 'none' && st[1] >= 2, `B forced colours: the focused field has a visible outline (${st.join(' ')})`);
+    const btn = await page.evaluate(() => { const c = getComputedStyle(document.querySelector('.auth__go')); return [c.borderTopStyle, parseFloat(c.borderTopWidth)]; });
+    check(btn[0] === 'solid' && btn[1] >= 1, `B forced colours: the Sign in button keeps a border (${btn.join(' ')})`);
+    await ctx.close();
+  }
   // B4. reset
   {
     const { ctx, log } = await context({ configured: true, width: 390 });

@@ -59,7 +59,7 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__field label,.auth__label{display:block;margin:0 0 6px;font-size:14px;font-weight:600;color:var(--ink)}
 .auth__field label em{font-style:normal;font-weight:400;color:var(--ink-2)}
 .auth input[type=email],.auth input[type=password],.auth input[type=text]{display:block;width:100%;min-height:48px;margin:0;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:17px;appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
-.auth input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.2)}
+.auth input:focus{outline:2px solid transparent;outline-offset:2px;border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.2)}
 .auth input[aria-invalid=true]{border-color:#c0392b}
 .auth input[aria-invalid=true]:focus{box-shadow:0 0 0 4px rgba(192,57,43,.18)}
 .auth__pw{position:relative}
@@ -75,7 +75,7 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__notice{margin:6px 0 4px;padding:14px 16px;border-radius:14px;background:var(--alt);font-size:14px;line-height:1.45;color:var(--ink)}
 .auth__captcha{min-height:65px;margin:10px 0 4px}
 .auth__captcha:empty{min-height:0}
-.auth__go{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:18px 0 0;padding:0 22px;border:0;border-radius:980px;background:var(--blue);color:#fff!important;font:inherit;font-size:17px;font-weight:500;text-decoration:none!important;cursor:pointer;transition:background .2s,opacity .2s}
+.auth__go{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:18px 0 0;padding:0 22px;border:1px solid transparent;border-radius:980px;background:var(--blue);color:#fff!important;font:inherit;font-size:17px;font-weight:500;text-decoration:none!important;cursor:pointer;transition:background .2s,opacity .2s}
 .auth__go:hover{background:#0077ed}
 .auth__go:disabled,.auth__go[aria-disabled=true]{opacity:.6;cursor:default}
 .auth__go--quiet{background:#e8e8ed;color:var(--ink)!important}
@@ -87,8 +87,8 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 
 /* the footer's two links get full-size targets here */
 .auth-page .gf{padding-top:6px}
-.auth-page .gf__base{border-top:0}
-.auth-page .gf__links a{min-height:44px;margin:-10px 0}
+.auth-page .gf__base{border-top:0;align-items:center} /* the copyright and the 44 px links share a centre line */
+.auth-page .gf__links a{justify-content:center;min-height:44px;min-width:44px;margin:-10px 0}
 
 /* phones: the form is the whole screen */
 @media (max-width:560px){
@@ -96,6 +96,12 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
   .auth{padding:0}
   .auth__card{max-width:none;min-height:100%;padding:28px 16px 32px;border-radius:0;box-shadow:none}
   .auth-page .gf{background:var(--alt);padding-left:16px;padding-right:16px}
+}
+/* forced colours (Windows contrast themes) drop box-shadows: the transparent outline above
+   becomes the visible focus ring there, and the transparent border keeps each button's edge */
+@media (forced-colors:active){
+  .auth input:focus{outline-color:Highlight}
+  .auth__go{border-color:ButtonText}
 }
 @media (prefers-reduced-motion:no-preference){
   .auth__card{animation:authIn .7s var(--ease) both}
