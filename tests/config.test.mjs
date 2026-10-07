@@ -276,3 +276,17 @@ test('(g) the five old redirects keep their status and Location', () => {
   // and nothing else that used to be a page became a redirect
   for (const p of ['/index.html', '/contact.html', '/hisense.html', '/tracking.html']) assert.equal(run(p).kind, 'filesystem', p);
 });
+
+test('website CI and smoke stay on Node 22, and package.json sets no engines (ADDENDUM §6.6, §12.2)', () => {
+  // engines.node would also override the Vercel project's Node version for api/enquiry.js
+  for (const wf of ['ci.yml', 'smoke.yml']) {
+    const y = readFileSync(root + '.github/workflows/' + wf, 'utf8');
+    const versions = [...y.matchAll(/node-version:\s*['"]?([^'"\s]+)/g)].map(m => m[1]);
+    assert.ok(versions.length, `${wf} sets a node-version`);
+    for (const v of versions) assert.equal(v, '22', wf);
+  }
+  const pkg = JSON.parse(readFileSync(root + 'package.json', 'utf8'));
+  assert.equal(pkg.engines, undefined);
+  const lock = JSON.parse(readFileSync(root + 'package-lock.json', 'utf8'));
+  assert.equal(lock.packages[''].engines, undefined);
+});
