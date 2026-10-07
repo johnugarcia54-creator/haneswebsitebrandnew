@@ -379,3 +379,18 @@ test('enquiry.js: when the website cannot send, the fallback email ends with Ref
   const body = decodeURIComponent(w.location.href.split('&body=')[1]);
   assert.equal(body, 'Tracking request: HD123\n\nName: Aroha Smith\nEmail: aroha@example.com\nTracking ID or order number: HD123\n\nReference: 0b5c6f1e-7f2d-4b8a-9c1d-2e3f4a5b6c7d');
 });
+
+test('contrast (WCAG 1.4.3): the dialog topic, "(optional)" and the floating form labels use the darker grey', () => {
+  const css = read('assets/site.css');
+  assert.match(css, /\.qd__eyebrow\{[^}]*color:#6e6e73\}/);
+  assert.match(css, /\.qd__f em\{[^}]*color:#6e6e73\}/);
+  for (const f of ['contact.html', 'hanestone.html', 'hanewood.html']) assert.match(read(f), /\.fl label\{[^}]*color:var\(--ink-2\)/, f);
+  const t = read('tracking.html');
+  assert.match(t, /\.tf__field label\{[^}]*color:var\(--ink-2\)/);
+  assert.match(t, /\.tf__sm label\{[^}]*color:var\(--ink-2\)/);
+});
+
+test('BOOKINGS_LIVE flips only links: hisense.html\'s catalogue buttons (button[data-book]) are left alone', () => {
+  assert.match(SITE_JS, /querySelectorAll\('a\[data-book\]'\)/);
+  assert.match(read('hisense.html'), /<button[^>]*data-book="tv"/);
+});

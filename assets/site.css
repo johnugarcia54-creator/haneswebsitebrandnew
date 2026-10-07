@@ -112,7 +112,8 @@ body.is-loading .gb{opacity:0;pointer-events:none}
   background:radial-gradient(closest-side,rgba(41,151,255,0) 74%,rgba(41,151,255,.09) 86.3%,rgba(120,190,255,.3) 87.6%,rgba(41,151,255,.1) 89.7%,rgba(41,151,255,0) 100%)}
 .hg-planet i{position:absolute;inset:80px;border-radius:50%;background:radial-gradient(farthest-corner at 32% 27%,#0d1420 0%,#05080d 58%,#020305 100%)}
 
-/* ---------- Enquiries (see assets/enquiry.js): the quick enquiry dialog, and form messages ---------- */
+/* ---------- Enquiries (see assets/enquiry.js): the quick enquiry dialog, and form messages ----------
+   Small grey text on white uses #6e6e73 (5.1:1), not #86868b (3.6:1): WCAG 1.4.3 AA */
 .qd{width:min(560px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);margin:auto;padding:0;border:0;border-radius:24px;background:#fff;color:#1d1d1f;box-shadow:0 40px 100px -24px rgba(0,0,0,.5);overflow:auto;overscroll-behavior:contain;font:400 16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
 .qd::backdrop{background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .qd[open]{animation:qdIn .5s cubic-bezier(.28,.11,.32,1)}
@@ -122,12 +123,12 @@ body.is-loading .gb{opacity:0;pointer-events:none}
 .qd__x{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#f0f0f3;color:#1d1d1f;cursor:pointer;transition:background .2s}
 .qd__x:hover{background:#e3e3e8}
 .qd__x svg{width:13px;height:13px}
-.qd__eyebrow{margin:0 48px 6px 0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#86868b}
+.qd__eyebrow{margin:0 48px 6px 0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6e6e73}
 .qd__title{margin:0 48px 8px 0;font-size:clamp(24px,4vw,30px);font-weight:600;line-height:1.1;letter-spacing:-.025em}
 .qd__sub{margin:0 0 22px;font-size:15px;color:#6e6e73}
 .qd__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
 .qd__f{display:flex;flex-direction:column;gap:6px;margin:0;font-size:13px;font-weight:600;color:#1d1d1f}
-.qd__f em{font-style:normal;font-weight:400;color:#86868b}
+.qd__f em{font-style:normal;font-weight:400;color:#6e6e73}
 .qd__f--full{grid-column:1/-1}
 .qd input,.qd select,.qd textarea{width:100%;min-height:46px;margin:0;padding:11px 14px;border:1px solid #d2d2d7;border-radius:12px;background:#fff;color:#1d1d1f;font:inherit;font-size:16px;font-weight:400;appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
 .qd select{padding-right:38px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236e6e73' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center/12px}
