@@ -1,6 +1,11 @@
 /* POST /api/enquiry: sends a website enquiry to the Hanes inbox (see api/_lib/enquiry.js).
+   In order: origin, size, rate limit, validation and the spam trap (and "not configured" when no
+   email provider is set); then the CRM forward to the studio (api/_lib/crm-forward.js, ADDENDUM
+   §7.3), then the email, which gains one line saying what the CRM did. The email is primary: a failed forward never fails the request, and spam,
+   refused or rate-limited enquiries are never forwarded.
    GET /api/enquiry: a health check that says whether sending is configured. */
 import { validate, compose, send, configured, limited } from './_lib/enquiry.js';
+import { leadFrom, forwardLead, emailLine } from './_lib/crm-forward.js';
 
 const json = (res, status, body) => { res.statusCode = status; res.setHeader('Content-Type', 'application/json; charset=utf-8'); res.end(JSON.stringify(body)); };
 
@@ -34,8 +39,18 @@ export default async function handler(req, res) {
   if (v.error) return json(res, 400, { error: v.error, field: v.field || null });
   if (!configured()) return json(res, 503, { error: 'not_configured' });
 
+  // without the forward's settings the line is '' and the email is exactly as before
+  let note = '';
   try {
-    const r = await send(compose(v.data));
+    const f = await forwardLead(leadFrom(v.data));
+    note = emailLine(f, v.data.submissionId);
+    if (f.status !== 'skipped') console.log(`enquiry crm forward: ${f.status}${f.http ? ` ${f.http}` : ''}${f.reason ? ` ${f.reason}` : ''} (event ${v.data.submissionId})`);
+  } catch {
+    note = emailLine({ status: 'unconfirmed' }, v.data.submissionId);
+  }
+
+  try {
+    const r = await send(compose(v.data, note));
     console.log(`enquiry sent via ${r.provider}: ${v.data.form} ${r.id || ''}`);
     return json(res, 200, { ok: true });
   } catch (e) {
