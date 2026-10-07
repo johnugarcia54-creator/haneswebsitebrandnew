@@ -158,6 +158,7 @@ test('local development (any other host) goes to the staging rules', () => {
 for (const [p, expected] of [
   ['/', MARKETING],
   ['/bargainhub.html', MARKETING],
+  ['/privacy.html', MARKETING],
   ['/assets/site.js', MARKETING],
   ['/auth/login.html', AUTH],
   ['/fonts/x.woff2', { ...MARKETING, ...LONG_CACHE }],

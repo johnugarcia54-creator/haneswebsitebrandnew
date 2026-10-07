@@ -59,7 +59,11 @@ export const PAGES = [
   { file: 'contact.html', name: 'Contact', priority: '0.7',
     title: 'Contact Hanes Distribution — Offices and enquiries',
     description: 'Contact Hanes Distribution: head office and showroom in Sockburn, warehouse in Hornby, Christchurch, and offices in Hong Kong and Zhangzhou.',
-    og: 'contact.jpg', ogAlt: 'The Hanes offices in Christchurch, Hong Kong and Zhangzhou on a globe', about: 'contact' }
+    og: 'contact.jpg', ogAlt: 'The Hanes offices in Christchurch, Hong Kong and Zhangzhou on a globe', about: 'contact' },
+  { file: 'privacy.html', name: 'Privacy statement', priority: '0.3',
+    title: 'Privacy statement — Hanes Distribution and Bargainhub',
+    description: 'How Hanes Distribution and Bargainhub collect, use, store and share your personal information, who processes it for us and where, and your rights.',
+    og: 'index.jpg', ogAlt: 'A Hanes Distribution truck: engineered supply, delivered nationwide' }
 ];
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
