@@ -114,10 +114,10 @@ window.HanesEnquiry = (() => {
           <label class="qd__f qd__f--full"><span>Region <em>(optional)</em></span><select name="region"><option value="">Choose one</option>${REGIONS.map(r => `<option>${r}</option>`).join('')}</select></label>
           <label class="qd__f qd__f--full"><span>What do you need?</span><textarea name="message" rows="4" required maxlength="5000"></textarea></label>
         </div>
-        <label class="qd__optin" style="display:flex;align-items:flex-start;gap:10px;margin:16px 0 0;font-size:14px;line-height:1.4;color:#1d1d1f;cursor:pointer"><input type="checkbox" name="marketingOptIn" value="yes" style="flex:none;width:18px;height:18px;min-height:0;margin:1px 0 0;padding:0;border:0;appearance:auto;-webkit-appearance:checkbox;accent-color:#0071e3;cursor:pointer"><span>Send me occasional news and offers.</span></label>
+        <label class="qd__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
         <button class="qd__send" type="submit">Send enquiry</button>
         <p class="qd__status" id="qdStatus" role="status" aria-live="polite"></p>
-        <p class="qd__note" style="color:#6e6e73">Sent to ${MAIL}. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="/privacy.html" style="color:inherit;text-decoration:underline">privacy statement</a> explains how to see or correct them.</p>
+        <p class="qd__note">Sent to ${MAIL}. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="/privacy.html">privacy statement</a> explains how to see or correct them.</p>
       </form>`;
     document.body.append(dlg);
     const f = $('form', dlg);
