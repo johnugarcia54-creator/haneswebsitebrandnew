@@ -567,3 +567,11 @@ test('smoke: an undeployed staging studio is a stated skip on previews, never on
   assert.equal(studioNotDeployed(res(500, 'ROUTER_EXTERNAL_TARGET_ERROR'), false), false);
   assert.equal(studioNotDeployed(res(403), false), false);
 });
+
+test('smoke: a refusal names only the studio error code, never other body text', async () => {
+  const { refusalCode } = await import('../scripts/smoke.mjs');
+  assert.equal(refusalCode({ status: 403 }, { error: { code: 'edge_only' } }), ', edge_only');
+  assert.equal(refusalCode({ status: 200 }, { error: { code: 'edge_only' } }), '');
+  assert.equal(refusalCode({ status: 403 }, { error: { code: 'Bearer abc.def' } }), '');
+  assert.equal(refusalCode({ status: 403 }, null), '');
+});

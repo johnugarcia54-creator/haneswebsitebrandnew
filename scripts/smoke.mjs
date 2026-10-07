@@ -66,6 +66,12 @@ export function studioNotDeployed(r, production) {
   return !production && [502, 503, 504].includes(r.status) && /^(ROUTER_EXTERNAL_TARGET|DNS_)/.test(r.headers.get('x-vercel-error') || '');
 }
 
+/* On a refusal, the error code the studio gave (e.g. ', edge_only') for the log line; nothing else
+   from the body is ever printed. */
+export function refusalCode(r, j) {
+  return r.status >= 400 && typeof j?.error?.code === 'string' && /^[a-z_]{1,40}$/.test(j.error.code) ? `, ${j.error.code}` : '';
+}
+
 export async function smoke(base, { local = false, production = false, productionBase, log = console.log } = {}) {
   let failed = 0;
   const ok = (cond, what) => { log(`${cond ? 'pass' : 'FAIL'}  ${what}`); if (!cond) failed++; };
@@ -74,6 +80,7 @@ export async function smoke(base, { local = false, production = false, productio
   const bases = rewriteBases(base, { production, productionBase });
   const sget = at(bases.studio), via = bases.failClosed ? ` via ${bases.studio}` : '';
   const json = r => r.json().catch(() => null);
+  const why = refusalCode;
 
   for (const p of PAGES) {
     const r = await get(p), html = r.ok ? await r.text() : '';
@@ -122,17 +129,18 @@ export async function smoke(base, { local = false, production = false, productio
       // rewrite target is unreachable. Said plainly, never counted as a pass; production always fails.
       log(`skip  the staging studio is not deployed yet: /studio/ and the studio API were not tested${via} (HTTP ${sr.status}, ${sr.headers.get('x-vercel-error')})`);
     } else {
-    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex${via} (HTTP ${sr.status}${sr.headers.get('x-vercel-error') ? ', ' + sr.headers.get('x-vercel-error') : ''})`);
+    const sj = sr.status >= 400 ? await json(sr) : null;
+    ok(sr.status === 200 && /noindex/.test(sr.headers.get('x-robots-tag') || ''), `/studio/ loads and is noindex${via} (HTTP ${sr.status}${sr.headers.get('x-vercel-error') ? ', ' + sr.headers.get('x-vercel-error') : ''}${why(sr, sj)})`);
     for (const p of ['/api/health', '/api/auth/health']) {
       const r = await sget(p), j = await json(r);
-      ok(r.status === 200 && j && j.ok === true, `${p} answers ok through the rewrite${via} (HTTP ${r.status})`);
+      ok(r.status === 200 && j && j.ok === true, `${p} answers ok through the rewrite${via} (HTTP ${r.status}${why(r, j)})`);
     }
     const crm = await sget('/api/crm/health'), cj = await json(crm);
-    ok(crm.status === 200 && cj !== null && !looksSecret(cj), `/api/crm/health answers without secrets${via} (HTTP ${crm.status})`);
+    ok(crm.status === 200 && cj !== null && !looksSecret(cj), `/api/crm/health answers without secrets${via} (HTTP ${crm.status}${why(crm, cj)})`);
     // the guide: only once G1 is deployed, and only its GET (it never posts a question)
     const gd = await sget('/api/guide');
     if (gd.status === 404) log(`skip  /api/guide is not deployed yet${via}`);
-    else { const gj = await json(gd); ok(gd.status === 200 && gj && typeof gj.mode === 'string' && !looksSecret(gj), `GET /api/guide answers its mode${via} (HTTP ${gd.status})`); }
+    else { const gj = await json(gd); ok(gd.status === 200 && gj && typeof gj.mode === 'string' && !looksSecret(gj), `GET /api/guide answers its mode${via} (HTTP ${gd.status}${why(gd, gj)})`); }
     if (production) {
       const ie = await sget('/api/ops/ip-echo');
       ok(ie.status === 404, `/api/ops/ip-echo is hidden on production${via} (HTTP ${ie.status})`);
