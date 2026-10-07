@@ -428,6 +428,12 @@ try {
     const ex2 = studioSeen.slice(mark).filter(s => s.url === '/api/auth/exchange');
     check(put >= 0 && log.sb[put].body.password === 'my-own-new-password' && ex2.length === 1 && ex2[0].body.revokeOthers === true, 'B update-password: updateUser, then the exchange with revokeOthers:true');
     await axe(page, 'B update-password done @390');
+    check(await page.evaluate(() => document.activeElement.id) === 'done', 'B update-password: the message takes focus (announced)');
+    await page.keyboard.press('Tab');
+    check(await page.evaluate(() => document.activeElement.id) === 'continue' && await page.getAttribute('#continue', 'href') === '/studio/#/account', 'B update-password: Continue is the next stop and goes to the landing');
+    await page.waitForTimeout(3500);
+    check(page.url().startsWith(`${base}/auth/update-password.html`), 'B update-password: no timed redirect (WCAG 2.2.1)');
+    await page.keyboard.press('Enter');
     await page.waitForURL(`${base}/studio/#/account`, { timeout: 5000 });
     check((await csp(page)).length === 0 && log.console.length === 0, `B confirm invite: zero CSP violations and console errors (${log.console.join(' | ')})`);
     await ctx.close();

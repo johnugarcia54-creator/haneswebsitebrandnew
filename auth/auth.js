@@ -173,11 +173,11 @@ function settle(out, { onError } = {}) {
   retryWith = null;
   if (out.action === 'go') return go(out.to);
   if (out.action === 'done') {
+    // no timed redirect (WCAG 2.2.1): the message keeps focus and Continue is the next stop
     finish(out.message);
     if (out.to) {
       const a = $('continue');
-      if (a) { a.setAttribute('href', out.to); show(a.parentElement, true); }
-      setTimeout(() => go(out.to), 2500);
+      if (a) { a.setAttribute('href', out.to); a.addEventListener('click', forgetNext); show(a.parentElement, true); }
     }
     return;
   }
