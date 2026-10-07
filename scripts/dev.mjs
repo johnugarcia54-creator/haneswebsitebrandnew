@@ -8,6 +8,11 @@
    STUDIO_DEV_URL=http://127.0.0.1:4190   where the rewrites go: the studio server (default shown)
    STUDIO_EDGE_SECRET_STAGING=…        the x-studio-edge value the studio's edge gate expects
                                        (local requests match the staging rules)
+   HOST=0.0.0.0 npm run dev            listen on every interface (default 127.0.0.1 only, so
+                                       nobody else on the network can use it as a proxy)
+
+   Only STUDIO_EDGE_SECRET_STAGING ever reaches the routes here: the production secret is never
+   sent from a workstation, even for a request whose Host is the production domain.
 
    - Static files and api/<name>.js functions are served in the filesystem phase, so
      /api/enquiry runs here; every other /api/* path (including nested ones such as
@@ -31,10 +36,14 @@ const HOP = ['connection', 'keep-alive', 'te', 'trailer', 'transfer-encoding', '
 // what Vercel sets itself; a visitor's own copies never get through
 const EDGE_SET = ['x-forwarded-for', 'x-real-ip', 'x-vercel-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-studio-edge'];
 
+// the only secret dev ever sends (ADDENDUM §6.6): the production rules find no value here
+export const devRouteEnv = env => (env.STUDIO_EDGE_SECRET_STAGING ? { STUDIO_EDGE_SECRET_STAGING: env.STUDIO_EDGE_SECRET_STAGING } : {});
+
 const clientAddress = req => String(req.socket.remoteAddress || '').replace(/^::ffff:/, '') || '127.0.0.1';
 
 export function createDevServer({ root = ROOT, env = process.env, studioUrl = env.STUDIO_DEV_URL || 'http://127.0.0.1:4190', log = console } = {}) {
   const studio = new URL(studioUrl);
+  const routeEnv = devRouteEnv(env);
   const warned = new Set();
   const routes = () => JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8')).routes; // read per request: edits apply at once
   const filesystem = p => !!resolveFile(root, p);
@@ -66,7 +75,12 @@ export function createDevServer({ root = ROOT, env = process.env, studioUrl = en
   function proxy(req, res, r) {
     const live = new URL(r.dest);
     const target = new URL(live.pathname + live.search, studio); // the live destination's path, on the local studio
-    for (const name of r.missingEnv) if (!warned.has(name)) { warned.add(name); log.warn(`dev: ${name} is not set, so proxied requests carry no x-studio-edge header (the studio's edge gate will answer 403)`); }
+    for (const name of r.missingEnv) if (!warned.has(name)) {
+      warned.add(name);
+      log.warn(name === 'STUDIO_EDGE_SECRET_STAGING'
+        ? `dev: ${name} is not set, so proxied requests carry no x-studio-edge header (the studio's edge gate will answer 403)`
+        : `dev: requests for the production host carry no x-studio-edge header (dev never sends ${name})`);
+    }
     const headers = {};
     const connectionListed = String(req.headers.connection || '').toLowerCase().split(',').map(s => s.trim());
     for (const [k, v] of Object.entries(req.headers)) {
@@ -105,7 +119,7 @@ export function createDevServer({ root = ROOT, env = process.env, studioUrl = en
 
   return http.createServer(async (req, res) => {
     try {
-      const r = matchRoute(routes(), { path: req.url || '/', host: req.headers.host || '', env, filesystem });
+      const r = matchRoute(routes(), { path: req.url || '/', host: req.headers.host || '', env: routeEnv, filesystem });
       if (r.kind === 'redirect' || r.kind === 'status') {
         applyHeaders(res, r.headers);
         res.writeHead(r.status);
@@ -124,8 +138,9 @@ export function createDevServer({ root = ROOT, env = process.env, studioUrl = en
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.env.PORT || 3000);
-  createDevServer().listen(port, () => {
-    console.log(`Hanes website on http://localhost:${port}`);
+  const host = process.env.HOST || '127.0.0.1'; // loopback unless asked: the proxy adds the edge header
+  createDevServer().listen(port, host, () => {
+    console.log(`Hanes website on http://${host.includes(':') ? `[${host}]` : host}:${port}`);
     console.log(`Studio rewrites go to ${process.env.STUDIO_DEV_URL || 'http://127.0.0.1:4190'}`);
   });
 }

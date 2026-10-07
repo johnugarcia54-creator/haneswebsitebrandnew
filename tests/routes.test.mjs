@@ -242,10 +242,11 @@ test('dev.mjs: pages, redirects, /studio/ proxied with the staging secret, /api/
   });
 });
 
-test('dev.mjs: the production host picks the production secret name; without a value no edge header is sent', async () => {
+test('dev.mjs never sends the production secret, even for the production host; without a value no edge header is sent', async () => {
   await withServers({ STUDIO_EDGE_SECRET_PROD: 'prod-test-value', STUDIO_EDGE_SECRET_STAGING: 'staging-test-value' }, async (port, seen) => {
     await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new.vercel.app' } });
-    assert.equal(seen[0].headers['x-studio-edge'], 'prod-test-value');
+    assert.equal(seen[0].headers['x-studio-edge'], undefined);
+    assert.ok(!JSON.stringify(seen[0].headers).includes('prod-test-value'));
     await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new-abc123-hanes.vercel.app' } });
     assert.equal(seen[1].headers['x-studio-edge'], 'staging-test-value');
   });
@@ -266,4 +267,26 @@ test('dev.mjs: a studio that is not running gives 502 with the route headers', a
     assert.equal(r.status, 502);
     assert.equal(r.headers['x-robots-tag'], 'noindex');
   } finally { await close(dev); }
+});
+
+test('dev.mjs: only the staging secret reaches the routes, and the server listens on loopback by default', async () => {
+  const { devRouteEnv } = await import('../scripts/dev.mjs');
+  assert.deepEqual(devRouteEnv({ STUDIO_EDGE_SECRET_PROD: 'p', STUDIO_EDGE_SECRET_STAGING: 's', PATH: '/bin' }), { STUDIO_EDGE_SECRET_STAGING: 's' });
+  assert.deepEqual(devRouteEnv({ STUDIO_EDGE_SECRET_PROD: 'p' }), {});
+
+  const free = http.createServer();
+  const port = await listen(free);
+  await close(free);
+  const { spawn } = await import('node:child_process');
+  const env = { ...process.env, PORT: String(port) };
+  delete env.HOST;
+  const child = spawn(process.execPath, [new URL('../scripts/dev.mjs', import.meta.url).pathname], { env, stdio: ['ignore', 'pipe', 'inherit'] });
+  try {
+    const line = await new Promise((resolve, reject) => {
+      let out = '';
+      child.stdout.on('data', c => { out += c; if (out.includes('\n')) resolve(out.split('\n')[0]); });
+      child.on('exit', code => reject(new Error(`dev.mjs exited ${code}`)));
+    });
+    assert.equal(line, `Hanes website on http://127.0.0.1:${port}`);
+  } finally { child.kill(); }
 });
