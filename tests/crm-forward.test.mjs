@@ -395,9 +395,9 @@ test('handler: every forward failure still sends the email, with a line that tel
       assert.equal(s.seen.length, 1, 'no retry');
     } finally { s.close(); }
   }
-  // nothing listening at all
-  const s = await studio(reply(202, {})); const url = s.url; s.close();
-  const r = await post(golden, fwd(url));
+  // nothing listening at all: port 1 on loopback, which no test can bind (a port freed by close()
+  // can be taken at once by a server in another test file running alongside)
+  const r = await post(golden, fwd('http://127.0.0.1:1/api/leads/ingest'));
   assert.deepEqual([r.status, r.mails.length, r.mail.text.split('\n').at(-1)], [200, 1, UNCONFIRMED]);
 });
 
