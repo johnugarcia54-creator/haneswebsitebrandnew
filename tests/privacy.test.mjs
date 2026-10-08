@@ -44,3 +44,9 @@ test('privacy.html names the agency and privacy contact from COMPANY.md, with no
   assert.ok(html.includes('93 Main South Road, Sockburn, Christchurch, New Zealand'));
   assert.ok(html.includes('mailto:Enquiry@hanesdistribution.co.nz'));
 });
+
+test('Turnstile row names every page it runs on: sign-in, sign-up and password reset', () => {
+  assert.deepEqual(row('Cloudflare (Turnstile)'), [
+    ['What it handles for us', 'Checks that sign-ins, sign-ups and password resets are not bots'], ['Where', 'Global']
+  ]);
+});
