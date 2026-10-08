@@ -3,7 +3,7 @@
    one rendered from it (scripts/og-cards.mjs writes the sha256). */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { NEVER } from './_never-say.mjs';
@@ -24,8 +24,8 @@ const jpegSize = b => {
 };
 
 test('og/cards.json: the cards that replaced the ones with claims baked in', () => {
-  assert.deepEqual(cards.map(c => c.file), ['hanesteel.jpg', 'hanestone.jpg']);
-  const steel = cards.find(c => c.file === 'hanesteel.jpg');
+  assert.deepEqual(cards.map(c => [c.file, c.page]), [['hanesteel-2.jpg', 'hanesteel.html'], ['hanestone-2.jpg', 'hanestone.html']]);
+  const steel = cards.find(c => c.page === 'hanesteel.html');
   assert.equal(steel.text, 'Aluminium and uPVC windows and doors, built for New Zealand homes.');
 });
 
@@ -48,9 +48,13 @@ test('each card image is the one rendered from its manifest entry (sha256), 1200
   assert.doesNotMatch(read('scripts/og/card.html'), /https?:\/\//);
 });
 
-test('the pages that share a card point og:image and twitter:image at it', () => {
+test('the pages that share a card point og:image and twitter:image at it, under a new name (link previews cache by URL)', () => {
+  for (const old of ['hanesteel.jpg', 'hanestone.jpg']) {
+    assert.equal(existsSync(root + 'og/' + old), false, `og/${old} (the card with the claim) is gone`);
+    for (const p of readdirSync(root).filter(f => f.endsWith('.html'))) assert.ok(!read(p).includes('/og/' + old), `${p} still names og/${old}`);
+  }
   for (const c of cards) {
-    const page = read(c.file.replace(/\.jpg$/, '.html'));
+    const page = read(c.page);
     for (const m of ['property="og:image"', 'name="twitter:image"'])
       assert.ok(page.includes(`<meta ${m} content="https://hanes-the-website-new.vercel.app/og/${c.file}">`), `${c.file}: ${m}`);
   }

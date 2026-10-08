@@ -1,8 +1,9 @@
 {
-  "note": "Sharing cards rendered by scripts/og-cards.mjs (scripts/og/card.html) from the site's own photos and fonts. The text here is the exact text in each image; tests/og.test.mjs scans it against the SEO-H0 never-say list and pins each image's sha256.",
+  "note": "Sharing cards rendered by scripts/og-cards.mjs (scripts/og/card.html) from the site's own photos and fonts. The text here is the exact text in each image; tests/og.test.mjs scans it against the SEO-H0 never-say list and pins each image's sha256. A card that changes gets a new file name, so link previews that cached the old image fetch the new one.",
   "cards": [
     {
-      "file": "hanesteel.jpg",
+      "file": "hanesteel-2.jpg",
+      "page": "hanesteel.html",
       "photo": "stills/hanesteel/door-2000.webp",
       "position": "0% 22%",
       "eyebrow": "Hanesteel",
@@ -11,7 +12,8 @@
       "sha256": "46e9e7e1ae442961fe8563bef533a393f2219d29047c7a941607dfbb54c98225"
     },
     {
-      "file": "hanestone.jpg",
+      "file": "hanestone-2.jpg",
+      "page": "hanestone.html",
       "photo": "stills/range/hanestone-1200.webp",
       "position": "50% 50%",
       "eyebrow": "Hanestone",
