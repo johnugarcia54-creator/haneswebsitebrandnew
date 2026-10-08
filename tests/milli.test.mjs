@@ -196,7 +196,8 @@ const flush = () => new Promise(r => setTimeout(r, 0));
 const settle = async () => { for (let i = 0; i < 8; i++) await flush(); };
 
 // fetch scripted per test: GET /api/guide and the POSTs; guide-faq.json is served from disk
-const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [], online = true, width = 1280, height = 900, session = {}, open = true } = {}) => {
+// clock: { t } makes Date.now() read clock.t, so a test can let time pass
+const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [], online = true, width = 1280, height = 900, session = {}, open = true, clock = null } = {}) => {
   const doc = { activeElement: null };
   Object.assign(doc, {
     createElement: t => new El(doc, t), createElementNS: (ns, t) => new El(doc, t), createTextNode: s => new Text(s),
@@ -214,7 +215,7 @@ const boot = async ({ path = '/index.html', guide = { status: 404 }, posts = [],
     sessionStorage, localStorage: { getItem: k => local[k] ?? null, setItem: (k, v) => { local[k] = String(v); } },
     matchMedia: q => ({ matches: q === '(max-width:760px),(max-height:500px)' ? width <= 760 || height <= 500 : false, addEventListener() {} }),
     HanesEnquiry: { open: (...a) => dialogs.push(a) }, HanesSite: { BOOKINGS_LIVE: false },
-    setTimeout, clearTimeout, URL, Promise, JSON, Date, AbortController, String, Array, Object, Error,
+    setTimeout, clearTimeout, URL, Promise, JSON, Date: clock ? class extends Date { static now() { return clock.t; } } : Date, AbortController, String, Array, Object, Error,
     fetch: async (url, opt = {}) => {
       const u = String(url), method = opt.method || 'GET';
       calls.push({ url: u, method, body: opt.body ? JSON.parse(opt.body) : null });
@@ -391,7 +392,7 @@ test('live mode only when GET /api/guide says so: the live notice, a labelled te
   assert.equal(t.panel.find(e => e.getAttribute('role') === 'status').textContent, 'Milli is writing a reply…');
   await settle();
   const [start, ask] = t.posts();
-  assert.deepEqual(start.body, { op: 'start', surface: 'website', page: 'index' });
+  assert.deepEqual({ ...start.body, elapsedMs: typeof start.body.elapsedMs }, { op: 'start', surface: 'website', page: 'index', website: '', elapsedMs: 'number' });
   assert.equal(ask.url, '/api/guide');
   assert.deepEqual(Object.keys(ask.body).sort(), ['elapsedMs', 'history', 'op', 'page', 'sid', 'sig', 'surface', 'text', 'website']);
   assert.equal(ask.body.text, 'Do you design kitchens?');
@@ -549,4 +550,33 @@ test('the first open: one panel however often the launcher is clicked, and a slo
   late(); await settle();
   assert.equal(s.M.panel.state().mode, 'static');
   assert.equal(s.textarea(), null);
+});
+
+// the studio's rule (backend/modules/65-guide.cjs, parse(): honeypot): a body that trips it is
+// answered static, so live Milli would never start
+const MIN_ELAPSED_MS = 800;
+const STUDIO_PAGES = ['index', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'bargainhub', 'hisense', 'tracking', 'contact', 'privacy', 'login', 'studio', 'consultant'];
+const honeypot = b => (b.website !== undefined && b.website !== '') || b.elapsedMs === undefined || b.elapsedMs < MIN_ELAPSED_MS;
+
+test('live Milli: start and ask both pass the studio honeypot rule, and a page the studio does not know is sent as index', async () => {
+  for (const [path, sent] of [['/404.html', 'index'], ['/hanesteel.html', 'hanesteel'], ['/privacy.html', 'privacy']]) {
+    const clock = { t: 1_000_000 };
+    const t = await boot({ path, guide: LIVE, clock, posts: [
+      { status: 200, body: { sid: 's1', sig: 'g1' } },
+      { status: 200, body: { mode: 'live', reply: 'Hello.', actions: [], sig: 'r1', redacted: [] } }
+    ] });
+    clock.t += 1200; // a person reads the panel before typing
+    const box = t.textarea();
+    box.value = 'Do you design kitchens?';
+    box.dispatch('input');
+    box.dispatch('keydown', { key: 'Enter' });
+    await settle();
+    const [start, ask] = t.posts();
+    for (const b of [start.body, ask.body]) {
+      assert.equal(honeypot(b), false, `${path} ${b.op}: ${JSON.stringify(b)}`);
+      assert.equal(b.page, sent, `${path} ${b.op}`);
+      assert.ok(STUDIO_PAGES.includes(b.page));
+    }
+    assert.deepEqual(start.body, { op: 'start', surface: 'website', page: sent, website: '', elapsedMs: 1200 });
+  }
 });

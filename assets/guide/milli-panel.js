@@ -35,6 +35,9 @@
     hanesulation: 'Hanesulation insulation', bargainhub: 'Bargainhub kitchens and interiors', hisense: 'Hisense appliances', tracking: 'Hanes Track', contact: 'Contact us' };
   const SHOWROOM = 'https://www.google.com/maps/search/?api=1&query=93+Main+South+Road%2C+Sockburn%2C+Christchurch';
   const page = M.page;
+  // the pages the studio's /api/guide knows (65-guide.cjs PAGES); any other (404) is sent as index
+  const API_PAGES = ['index', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'bargainhub', 'hisense', 'tracking', 'contact', 'privacy', 'login', 'studio', 'consultant'];
+  const apiPage = API_PAGES.includes(page) ? page : 'index';
 
   // action ids → fixed targets (§8.2); anything else is dropped
   const action = id => {
@@ -203,11 +206,12 @@
     status.textContent = 'Milli is writing a reply…'; setFace('think');
     try {
       if (!S.sid) {
-        const s = await call('POST', { op: 'start', surface: 'website', page }, 10000);
+        // start carries the honeypot fields too: without them the studio answers static (its bot rule)
+        const s = await call('POST', { op: 'start', surface: 'website', page: apiPage, website: '', elapsedMs: Date.now() - t0 }, 10000);
         if (s.status !== 200 || !s.body || typeof s.body.sid !== 'string' || typeof s.body.sig !== 'string') throw new Error('start');
         S.sid = s.body.sid; S.sig = s.body.sig; save();
       }
-      const r = await call('POST', { op: 'ask', sid: S.sid, sig: S.sig, surface: 'website', page, text, history: hist, website: '', elapsedMs: Date.now() - t0 }, 15000);
+      const r = await call('POST', { op: 'ask', sid: S.sid, sig: S.sig, surface: 'website', page: apiPage, text, history: hist, website: '', elapsedMs: Date.now() - t0 }, 15000);
       const b = r.body || {};
       status.textContent = '';
       if (r.status === 429) { alert.textContent = 'Milli has had a lot of questions just now. Please try again in a moment, or ask a person.'; rest(); return false; }
