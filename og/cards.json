@@ -1,0 +1,23 @@
+{
+  "note": "Sharing cards rendered by scripts/og-cards.mjs (scripts/og/card.html) from the site's own photos and fonts. The text here is the exact text in each image; tests/og.test.mjs scans it against the SEO-H0 never-say list and pins each image's sha256.",
+  "cards": [
+    {
+      "file": "hanesteel.jpg",
+      "photo": "stills/hanesteel/door-2000.webp",
+      "position": "0% 22%",
+      "eyebrow": "Hanesteel",
+      "title": "Windows and doors, built for New Zealand.",
+      "text": "Aluminium and uPVC windows and doors, built for New Zealand homes.",
+      "sha256": "46e9e7e1ae442961fe8563bef533a393f2219d29047c7a941607dfbb54c98225"
+    },
+    {
+      "file": "hanestone.jpg",
+      "photo": "stills/range/hanestone-1200.webp",
+      "position": "50% 50%",
+      "eyebrow": "Hanestone",
+      "title": "Trusus gypsum board.",
+      "text": "Gypsum plasterboard for walls and ceilings, in bulk for retailers and merchants.",
+      "sha256": "76b4455769717df42918282bdcef1de6ab8f408695645669069463c4f9a423b3"
+    }
+  ]
+}
