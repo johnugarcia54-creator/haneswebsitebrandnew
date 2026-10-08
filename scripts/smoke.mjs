@@ -8,7 +8,7 @@
    the enquiry API answers and rejects bad requests.
    It only reads, apart from three enquiry posts that the API must refuse before anything is
    sent or forwarded (ENQUIRY_PROBES): it never sends an email, never creates a CRM lead or a
-   Base44 row, and never asks the guide a question (no Grok tokens are spent).
+   Base44 row, and never asks the guide a question (the guide's AI provider is never called).
    --local         skip what only Vercel and the studio provide (redirects, headers, rewrites)
    --production    also require what only production promises (DEPLOY_ENV=Production does the same)
 

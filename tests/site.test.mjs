@@ -662,3 +662,10 @@ test('enquiry.js quote dialog: a new topic is a new enquiry, never the id of an 
   assert.notEqual(s.posted[3].submissionId, s.posted[2].submissionId, 'opened on another topic in between: the fill starts again');
   assert.equal(new Set(s.posted.map(p => p.submissionId)).size, 3);
 });
+
+test('owner rule: no shipped file, script or README names an AI model', () => {
+  const walk = d => readdirSync(root + d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]);
+  const files = [...pages, 'README.md', ...['scripts', 'api', 'assets', 'auth'].flatMap(walk).filter(f => /\.(m?js|html|css|json)$/.test(f))];
+  assert.ok(files.includes('scripts/smoke.mjs') && files.includes('auth/auth-lib.js'));
+  for (const f of files) assert.deepEqual(read(f).match(/[^\n]*\b(grok|claude|opus|sonnet|gpt|gemini|openai)\b[^\n]*/gi) || [], [], f);
+});
