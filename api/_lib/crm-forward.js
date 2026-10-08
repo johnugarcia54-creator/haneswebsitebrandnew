@@ -16,9 +16,9 @@
 
    The contract with the studio's ingest (its validation must accept every value sent here):
      form   one of the 7 §7.3 values (FORMS below)
-     brand  bargainhub, hanesteel, hanestone, hanewood, hanesulation, hisense, or 'hanes' for
-            Hanes Distribution itself (tracking, "Something else", the home page), which the
-            studio maps to residential_consumer (integrator decision: "all others")
+     brand  one of the six brands (BRANDS below); for an enquiry about Hanes Distribution itself
+            (tracking, "Something else", the home page) the key is left out, and the studio
+            falls back by form (backend/modules/60-crm.cjs; it refuses any other brand value)
      limits name 120, email 254, phone 40, company 120, subject 140, page 300, message 4000
      a duplicate answers 200 {status:'duplicate', ref, state?}; with state 'held'|'queued' the
      line is the §7.3 "CRM: <state> <ref>", without it "CRM: already stored <ref>".
@@ -42,7 +42,7 @@ export const FORMS = {
 const FORM_ENUM = new Set(Object.values(FORMS));
 export const BRANDS = ['bargainhub', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'hisense'];
 const FORM_BRAND = { 'hanestone-pricing': 'hanestone', 'hanewood-pricing': 'hanewood', 'hanesulation-pricing': 'hanesulation', hisense: 'hisense' };
-export const GENERAL_BRAND = 'hanes'; // Hanes Distribution itself: tracking, "Something else", the home page
+export const GENERAL_BRAND = null; // Hanes Distribution itself (tracking, "Something else", the home page): no brand key
 
 const REF = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,99}$/; // a ref goes into the email: nothing else gets through
 const STORED = new Set(['held', 'queued']);
@@ -62,7 +62,8 @@ export function formFor(label) {
 }
 
 /* The brand the enquiry is about: the pricing and Hisense forms by form, the contact page and the
-   quote dialog by the topic chosen, then by the page it came from, else Hanes Distribution. */
+   quote dialog by the topic chosen, then by the page it came from, else null (Hanes Distribution
+   itself: the lead carries no brand). */
 export function brandFor(form, topic = '', page = '') {
   if (FORM_BRAND[form]) return FORM_BRAND[form];
   if (form === 'tracking') return GENERAL_BRAND;
@@ -85,8 +86,9 @@ export function leadFrom(d, now = new Date()) {
     else if (/^(business|company)$/i.test(k) && !company) company = cut(v.replace(/\s+/g, ' '), 120);
     else { if (/^topic$/i.test(k) && !topic) topic = v; rest.push(v.includes('\n') ? `${k}:\n${v}` : `${k}: ${v}`); }
   }
+  const brand = brandFor(form, topic || d.subject, d.page);
   const lead = {
-    eventId: d.submissionId, form, brand: brandFor(form, topic || d.subject, d.page), page: d.page, name: d.name, email: d.email,
+    eventId: d.submissionId, form, ...(brand && { brand }), page: d.page, name: d.name, email: d.email,
     ...(phone && { phone }), ...(company && { company }), ...(d.subject && { subject: d.subject }),
     message: cut(rest.join('\n'), MAX_MESSAGE),
     marketingOptIn: d.marketingOptIn === true, noticeVersion: NOTICE_VERSION, submittedAt: now.toISOString()

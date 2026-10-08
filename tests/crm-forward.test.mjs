@@ -63,22 +63,24 @@ test('brandFor: by form, then the topic, then the page, else Hanes', () => {
   assert.equal(brandFor('hanewood-pricing'), 'hanewood');
   assert.equal(brandFor('hanesulation-pricing'), 'hanesulation');
   assert.equal(brandFor('hisense'), 'hisense');
-  assert.equal(brandFor('tracking', 'Bargainhub', '/bargainhub.html'), 'hanes');
+  assert.equal(brandFor('tracking', 'Bargainhub', '/bargainhub.html'), null);
   assert.equal(brandFor('quote-dialog', 'Bargainhub kitchens and interiors', '/index.html'), 'bargainhub');
   assert.equal(brandFor('quote-dialog', 'Project enquiry', '/hanesteel.html'), 'hanesteel');
-  assert.equal(brandFor('quote-dialog', 'Project enquiry', '/'), 'hanes');
+  assert.equal(brandFor('quote-dialog', 'Project enquiry', '/'), null);
   assert.equal(brandFor('contact', 'Hanewood plywood, board and LVL', '/contact.html'), 'hanewood');
-  assert.equal(brandFor('contact', 'Something else', '/contact.html'), 'hanes');
+  assert.equal(brandFor('contact', 'Something else', '/contact.html'), null);
   assert.ok(BRANDS.includes(brandFor('contact', 'Hisense appliances')));
 });
 
 test('the brand contract with the studio: a fixed list of values, and nothing else is ever sent', () => {
-  // docs/api/CRM.md (studio) must accept exactly these; a change here is a change to that contract
-  const CONTRACT = ['bargainhub', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'hisense', 'hanes'];
-  assert.deepEqual([...BRANDS, GENERAL_BRAND], CONTRACT);
+  // the studio's envelope accepts exactly these six (backend/crm/envelope.cjs BRANDS) or no brand at
+  // all, and answers 400 "Unknown lead brand." to anything else; a change here changes that contract
+  const CONTRACT = ['bargainhub', 'hanesteel', 'hanestone', 'hanewood', 'hanesulation', 'hisense'];
+  assert.deepEqual([...BRANDS].sort(), [...CONTRACT].sort());
+  assert.equal(GENERAL_BRAND, null);
   const topics = ['', 'Something else', 'Shipment tracking', 'Bargainhub kitchens', 'HANESTEEL', 'Hisense appliances', 'Project enquiry'];
   const pages = ['', '/', '/index.html', '/contact.html', '/tracking.html', ...CONTRACT.map(b => `/${b}.html`), '/hanestone.html?x=1#y'];
-  for (const form of Object.values(FORMS)) for (const t of topics) for (const p of pages) assert.ok(CONTRACT.includes(brandFor(form, t, p)), `${form} ${t} ${p}`);
+  for (const form of Object.values(FORMS)) for (const t of topics) for (const p of pages) { const b = brandFor(form, t, p); assert.ok(b === null || CONTRACT.includes(b), `${form} ${t} ${p}`); }
 });
 
 test('leadFrom builds exactly the §7.3 body', () => {
@@ -93,7 +95,8 @@ test('leadFrom builds exactly the §7.3 body', () => {
   assert.equal(NOTICE_VERSION, '2026-10-09');
   // optional keys are left out when empty, and nothing outside the §7.3 set ever appears
   const bare = leadFrom(validate({ ...good, form: 'hanes track', fields: [] }).data);
-  assert.deepEqual(Object.keys(bare), ['eventId', 'form', 'brand', 'page', 'name', 'email', 'subject', 'marketingOptIn', 'noticeVersion', 'submittedAt']);
+  // a general Hanes enquiry (Hanes Track) sends no brand key at all, never 'hanes'
+  assert.deepEqual(Object.keys(bare), ['eventId', 'form', 'page', 'name', 'email', 'subject', 'marketingOptIn', 'noticeVersion', 'submittedAt']);
   assert.equal(bare.marketingOptIn, false);
   assert.match(bare.eventId, UUID);
   for (const k of Object.keys(lead)) assert.ok(KEYS.includes(k), k);
