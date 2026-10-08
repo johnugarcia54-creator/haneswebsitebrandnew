@@ -669,3 +669,9 @@ test('owner rule: no shipped file, script or README names an AI model', () => {
   assert.ok(files.includes('scripts/smoke.mjs') && files.includes('auth/auth-lib.js'));
   for (const f of files) assert.deepEqual(read(f).match(/[^\n]*\b(grok|claude|opus|sonnet|gpt|gemini|openai)\b[^\n]*/gi) || [], [], f);
 });
+
+test('trust: the Hanesteel safety-glass callout names the standard, not a test result', () => {
+  const s = read('hanesteel.html');
+  assert.ok(s.includes('<span class="co__label"><b>Safety glass</b>to AS/NZS 2208</span>'));
+  assert.doesNotMatch(userFacing(s), /impact tested/i);
+});
