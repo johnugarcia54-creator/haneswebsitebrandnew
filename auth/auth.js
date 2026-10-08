@@ -3,11 +3,12 @@
    Order on every page:
      1. bhAuthHygiene() first (§3.3.4), before anything reads or writes the sign-in state.
      2. confirm.html only: token_hash leaves the address bar (history.replaceState) at once.
-     3. The settings for this host (auth/config.js). While the publishable key or the Turnstile
-        site key is still a placeholder, the page says "Sign-in is being set up" and makes no
-        call to Supabase or Cloudflare at all.
+     3. The settings for this host (auth/config.js). While the publishable key is still a
+        placeholder, the page says "Sign-in is being set up" and makes no call to Supabase.
    Text is only ever set with textContent; nothing is parsed as HTML. Turnstile is loaded here
-   (explicit rendering) on login, sign-up and reset only, and only once the keys are real.
+   (explicit rendering) on login, sign-up and reset only, and only once its site key is real.
+   Until then (integrator decision) sign-in, resend and reset run without it and send no captcha
+   token, nothing is loaded from Cloudflare, and sign-up stays closed ("Accounts open soon").
    ========================================================================================= */
 import {
   bhAuthHygiene, safeNext, MESSAGES, exchange, rememberChoice, keepChoice, publicSignupOpen, previewCode, cleanCode,
@@ -30,7 +31,8 @@ if (page === 'confirm' && (params.has('token_hash') || /access_token|refresh_tok
 
 const cfg = pickConfig(location.host);
 const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-const NEEDS_TURNSTILE = new Set(['login', 'signup', 'reset']);
+const NEEDS_TURNSTILE = new Set(['login', 'signup', 'reset']); // the pages that show the widget once it is live
+const CAPTCHA_ON = cfg.turnstileReady;
 
 /* ---- small DOM helpers (textContent only) ---------------------------------------------- */
 const $ = id => document.getElementById(id);
@@ -160,6 +162,7 @@ function loadTurnstile() {
 }
 // one widget per page; token() is the current answer or '' while the check is not done
 const NO_CAPTCHA = { token: () => '', reset() {} };
+const captchaFor = action => (CAPTCHA_ON && NEEDS_TURNSTILE.has(page) ? mountCaptcha($('captcha'), action) : NO_CAPTCHA);
 async function mountCaptcha(container, action) {
   let token = '';
   try {
@@ -227,7 +230,7 @@ async function loginPage(sb) {
     busy(btn, true, 'Signing in…');
     const out = await loginFlow({
       email: form.email.value.trim(), password: form.password.value, remember: form.remember.checked,
-      captchaToken: captcha.token(), next: [queryNext, storedNext()]
+      captchaToken: captcha.token(), captcha: CAPTCHA_ON, next: [queryNext, storedNext()]
     }, { supabase: sb, exchange, rememberChoice, w: window });
     captcha.reset();
     busy(btn, false);
@@ -237,24 +240,25 @@ async function loginPage(sb) {
     const email = form.email.value.trim();
     if (!checkFields(form.querySelector('.auth__field'))) return;
     busy(resend, true, 'Sending…');
-    const out = await resendFlow({ email, captchaToken: captcha.token(), origin: location.origin }, { supabase: sb });
+    const out = await resendFlow({ email, captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb });
     captcha.reset();
     busy(resend, false);
     if (out.action === 'done') { show(resendBox, false); show(els.alert, false); note(out.message); els.notice.focus(); } else fail(out.message);
   });
   show(form, true); // only once the handlers are in place, so the form never submits by itself
-  captcha = await mountCaptcha($('captcha'), 'login');
+  captcha = await captchaFor('login');
 }
 
 async function signupPage() {
   rememberNext();
-  const open = await publicSignupOpen();
+  // sign-up fails closed: never open without Turnstile, whatever the studio's setting says
+  const open = CAPTCHA_ON && await publicSignupOpen();
   if (!open) {
     note('');
     show($('closed'), true);
     return;
   }
-  const sb = cfg.supabaseReady && cfg.turnstileReady ? await supabaseClient() : null;
+  const sb = cfg.supabaseReady ? await supabaseClient() : null;
   if (!sb) return notReady();
   note('');
   const form = els.form, btn = form.querySelector('button[type=submit]');
@@ -288,7 +292,7 @@ async function signupPage() {
     settle(out);
   });
   show(form, true);
-  captcha = await mountCaptcha($('captcha'), 'signup');
+  captcha = await captchaFor('signup');
 }
 
 async function resetPage(sb) {
@@ -301,13 +305,13 @@ async function resetPage(sb) {
     show(els.alert, false);
     if (!checkFields(form)) return;
     busy(btn, true, 'Sending…');
-    const out = await resetFlow({ email: form.email.value.trim(), captchaToken: captcha.token(), origin: location.origin }, { supabase: sb });
+    const out = await resetFlow({ email: form.email.value.trim(), captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb });
     captcha.reset();
     busy(btn, false);
     settle(out);
   });
   show(form, true);
-  captcha = await mountCaptcha($('captcha'), 'reset');
+  captcha = await captchaFor('reset');
 }
 
 const CONFIRM_COPY = {
@@ -390,7 +394,7 @@ async function passwordPage(sb) {
     for (const input of document.querySelectorAll('input[data-min]')) input.dataset.min = String(Math.max(Number(input.dataset.min), PASSWORD_MIN));
     for (const input of document.querySelectorAll('input[type=password]')) input.maxLength = PASSWORD_MAX;
     if (page === 'signup') return await signupPage(); // closed (the Friday state) needs no keys at all
-    if (!cfg.supabaseReady || (NEEDS_TURNSTILE.has(page) && !cfg.turnstileReady)) return notReady();
+    if (!cfg.supabaseReady) return notReady();
     const sb = await supabaseClient();
     if (!sb) { note(''); return fail(MESSAGES.supabase_network); }
     if (page === 'login') return await loginPage(sb);

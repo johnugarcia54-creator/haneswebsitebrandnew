@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { matchRoute, resolveFile } from '../scripts/routes.mjs';
+import { pickConfig } from '../auth/config.js';
 
 const require = createRequire(import.meta.url);
 const { routesSchema, normalizeRoutes, getTransformedRoutes } = require('@vercel/routing-utils');
@@ -40,8 +41,14 @@ const MARKETING = {
 // exactly the one Supabase project production and staging share (integrator decision 1, 2026-10-07)
 const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
 const AUTH_CONNECT_SRC = `'self' ${SUPABASE_ORIGIN}`;
+const AUTH_CSP_REST = `connect-src ${AUTH_CONNECT_SRC}; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'`;
+// two exact /auth policies, chosen by auth/config.js (integrator decision, 2026-10-08): with a real
+// Turnstile site key the widget's script and frame are allowed from Cloudflare; until then nothing is
+const AUTH_CSP_TURNSTILE = `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; ${AUTH_CSP_REST}`;
+const AUTH_CSP_NO_TURNSTILE = `default-src 'self'; script-src 'self'; frame-src 'none'; ${AUTH_CSP_REST}`;
+const TURNSTILE_ON = [PROD_HOST, 'localhost:3000'].some(h => pickConfig(h).turnstileReady);
 const AUTH = {
-  'Content-Security-Policy': `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src ${AUTH_CONNECT_SRC}; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'`,
+  'Content-Security-Policy': TURNSTILE_ON ? AUTH_CSP_TURNSTILE : AUTH_CSP_NO_TURNSTILE,
   'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex, nofollow',
   'X-Frame-Options': 'DENY', 'X-Content-Type-Options': 'nosniff', 'Permissions-Policy': PERMISSIONS
 };
@@ -307,8 +314,8 @@ test('the /auth CSP connect-src is exactly self and the one Supabase project, wi
       assert.equal(/^(https?|wss?|data|blob):?$/.test(v) && !(name === 'img-src' && v === 'data:'), false, `${name} allows a whole scheme: ${v}`);
     }
   }
-  assert.deepEqual(d['script-src'], ["'self'", 'https://challenges.cloudflare.com']);
-  assert.deepEqual(d['frame-src'], ['https://challenges.cloudflare.com']);
+  assert.deepEqual(d['script-src'], TURNSTILE_ON ? ["'self'", 'https://challenges.cloudflare.com'] : ["'self'"]);
+  assert.deepEqual(d['frame-src'], TURNSTILE_ON ? ['https://challenges.cloudflare.com'] : ["'none'"]);
   assert.deepEqual(d['default-src'], ["'self'"]);
   // and the served /auth pages get it, through the evaluator dev.mjs uses
   assert.equal(run('/auth/login.html').headers['Content-Security-Policy'], csp);
@@ -320,4 +327,16 @@ test('no header in vercel.json allows a wildcard Supabase host or a wildcard sou
   for (const r of routes.filter(r => r.headers && r.headers['Content-Security-Policy']))
     for (const [name, sources] of Object.entries(directives(r.headers['Content-Security-Policy'])))
       for (const v of sources) assert.equal(v.includes('*'), false, `${r.src} ${name}: ${v}`);
+});
+
+test('the /auth CSP follows the Turnstile site key: Cloudflare is allowed exactly when auth/config.js has a real key', () => {
+  const csp = routes.find(r => r.src === '^/auth/.*$').headers['Content-Security-Policy'];
+  assert.equal(csp, TURNSTILE_ON ? AUTH_CSP_TURNSTILE : AUTH_CSP_NO_TURNSTILE,
+    'setting turnstileSiteKey in auth/config.js and the /auth CSP in vercel.json go in the same commit');
+  assert.equal(/cloudflare/.test(csp), TURNSTILE_ON);
+  // the two policies differ only in where scripts and frames may come from
+  const a = directives(AUTH_CSP_TURNSTILE), b = directives(AUTH_CSP_NO_TURNSTILE);
+  for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) if (!['script-src', 'frame-src'].includes(k)) assert.deepEqual(a[k], b[k], k);
+  assert.deepEqual(b['script-src'], ["'self'"]);
+  assert.deepEqual(b['frame-src'], ["'none'"]);
 });

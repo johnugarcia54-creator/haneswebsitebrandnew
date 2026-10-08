@@ -279,11 +279,16 @@ async function exchangeStep(deps, extra, onOk) {
 export const validEmail = e => typeof e === 'string' && e.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 const validPassword = p => typeof p === 'string' && [...p].length >= PASSWORD_MIN && [...p].length <= PASSWORD_MAX;
 
-// sign-in (§3.3.3): the remember choice first, then Supabase (with Turnstile), then our server
-export async function loginFlow({ email, password, remember, captchaToken, next = [] }, deps) {
-  if (!captchaToken) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
+// `captcha` (sign-in, resend, reset): true (the default) while Turnstile is live, so a missing token
+// stops the flow; false until its site key exists, when no token is sent at all (Supabase CAPTCHA
+// protection stays off until the widget is live). Sign-up always needs a token: it fails closed.
+const needsToken = (captcha, captchaToken) => captcha !== false && !captchaToken;
+
+// sign-in (§3.3.3): the remember choice first, then Supabase (with Turnstile when on), then our server
+export async function loginFlow({ email, password, remember, captchaToken, captcha = true, next = [] }, deps) {
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
   (deps.rememberChoice || rememberChoice)(!!remember, deps.w);
-  const { error } = await deps.supabase.auth.signInWithPassword({ email, password, options: { captchaToken } });
+  const { error } = await deps.supabase.auth.signInWithPassword(captcha === false ? { email, password } : { email, password, options: { captchaToken } });
   if (error) {
     const code = supabaseCode(error);
     return { action: 'error', code, message: supabaseMessage(error, 'login'), resend: code !== 'network' && !RATE.has(code) && !CAPTCHA.has(code) };
@@ -291,10 +296,11 @@ export async function loginFlow({ email, password, remember, captchaToken, next 
   return exchangeStep(deps, {}, session => ({ action: 'go', to: destination(session, ...next) }));
 }
 
-// Resend confirmation (§3.3.3), with its own Turnstile token; the answer never depends on the account
-export async function resendFlow({ email, captchaToken, origin }, deps) {
-  if (!captchaToken) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
-  const { error } = await deps.supabase.auth.resend({ type: 'signup', email, options: { captchaToken, emailRedirectTo: origin + '/auth/confirm.html' } });
+// Resend confirmation (§3.3.3), with its own Turnstile token when on; the answer never depends on the account
+export async function resendFlow({ email, captchaToken, captcha = true, origin }, deps) {
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
+  const redirect = { emailRedirectTo: origin + '/auth/confirm.html' };
+  const { error } = await deps.supabase.auth.resend({ type: 'signup', email, options: captcha === false ? redirect : { captchaToken, ...redirect } });
   const code = supabaseCode(error);
   if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.resend_sent };
   if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'resend') };
@@ -302,9 +308,10 @@ export async function resendFlow({ email, captchaToken, origin }, deps) {
 }
 
 // Password reset (§3.3.5): always the same answer, unless nothing could be sent at all
-export async function resetFlow({ email, captchaToken, origin }, deps) {
-  if (!captchaToken) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
-  const { error } = await deps.supabase.auth.resetPasswordForEmail(email, { redirectTo: origin + '/auth/confirm.html', captchaToken });
+export async function resetFlow({ email, captchaToken, captcha = true, origin }, deps) {
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
+  const redirect = { redirectTo: origin + '/auth/confirm.html' };
+  const { error } = await deps.supabase.auth.resetPasswordForEmail(email, captcha === false ? redirect : { ...redirect, captchaToken });
   const code = supabaseCode(error);
   if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.reset_sent };
   if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'reset') };

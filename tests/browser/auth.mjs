@@ -13,6 +13,7 @@
       /auth CSP, has zero CSP violations and zero console errors, makes no request to Supabase
       or Cloudflare, says "Sign-in is being set up" (sign-up: "Accounts open soon"), has one
       h1, no inline script, no horizontal scroll, and passes axe (WCAG 2.2 AA rules).
+   A always serves a placeholder copy of auth/config.js, so it tests that state whatever is committed.
    B. With test keys (a test copy of auth/config.js served by a route) and stubbed Supabase:
       the keyboard flow on the sign-in page, sign-in with the remember choice and the landing,
       the uniform error with Resend, Retry when the studio is down, sign-up closed, open and
@@ -20,12 +21,17 @@
       token_hash gone from the address bar before anything else, nothing consumed without a
       click, invite exchange before update-password, recovery without an exchange until the
       password is set, then revokeOthers:true; no Referer on any request. axe on every state.
+      B serves the pages with the Turnstile CSP, as vercel.json will once the site key is set.
+   C. The publishable key without a Turnstile site key (the Friday state): the /auth CSP without
+      Cloudflare, sign-in, Resend and reset with no widget, nothing loaded from Cloudflare and no
+      captcha token sent; sign-up stays closed even when the studio says it is open.
    ========================================================================================= */
 import http from 'node:http';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createDevServer } from '../../scripts/dev.mjs';
+import { pickConfig } from '../../auth/config.js';
 
 const require = createRequire(import.meta.url);
 const loadPlaywright = () => {
@@ -40,7 +46,11 @@ if (!axePath || !existsSync(axePath)) throw new Error('axe-core not found: set A
 const axeSource = readFileSync(axePath, 'utf8');
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
-const CSP = "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src 'self' https://mputtezdhevwwjgwktvi.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'";
+const CSP_REST = "connect-src 'self' https://mputtezdhevwwjgwktvi.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'";
+const CSP_TURNSTILE = `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; ${CSP_REST}`;
+const CSP_NO_TURNSTILE = `default-src 'self'; script-src 'self'; frame-src 'none'; ${CSP_REST}`;
+// what vercel.json serves: it follows the committed Turnstile site key (tests/config.test.mjs)
+const CSP = ['hanes-the-website-new.vercel.app', 'localhost:3000'].some(h => pickConfig(h).turnstileReady) ? CSP_TURNSTILE : CSP_NO_TURNSTILE;
 const SB = 'https://mputtezdhevwwjgwktvi.supabase.co';
 const PAGES = ['login', 'signup', 'reset', 'confirm', 'update-password'];
 const PORT = Number(process.env.PORT || 3000), STUB_PORT = Number(process.env.STUB_PORT || 4190);
@@ -88,12 +98,15 @@ const TURNSTILE_STUB = `window.turnstile = {
   reset() { window.__tsResets = (window.__tsResets || 0) + 1; setTimeout(() => window.__tsCb && window.__tsCb('ts-token-r' + window.__tsResets), 30); },
   getResponse() { return ''; }
 };`;
-const TEST_CONFIG = readFileSync(root + 'auth/config.js', 'utf8')
-  .replaceAll("'PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY'", "'sb_publishable_testOnlyKey123'")
-  .replaceAll("'PLACEHOLDER_TURNSTILE_SITE_KEY'", "'1x00000000000000000000AA'");
+// test copies of auth/config.js: whatever is committed, every key is replaced
+const CONFIG_SRC = readFileSync(root + 'auth/config.js', 'utf8');
+const configWith = (pk, ts) => CONFIG_SRC.replace(/publishableKey: '[^']*'/g, `publishableKey: '${pk}'`).replace(/turnstileSiteKey: '[^']*'/g, `turnstileSiteKey: '${ts}'`);
+const TEST_CONFIG = configWith('sb_publishable_testOnlyKey123', '1x00000000000000000000AA');
+const TEST_CONFIG_NO_TURNSTILE = configWith('sb_publishable_testOnlyKey123', 'PLACEHOLDER_TURNSTILE_SITE_KEY');
+const PLACEHOLDER_CONFIG = configWith('PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY', 'PLACEHOLDER_TURNSTILE_SITE_KEY');
 
 // a context that records requests, console output and CSP violations
-async function context({ width = 1280, configured = false, gotrue = {} } = {}) {
+async function context({ width = 1280, configured = false, turnstile = true, gotrue = {} } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
   const log = { requests: [], console: [], sb: [] };
   await ctx.addInitScript(() => {
@@ -103,8 +116,12 @@ async function context({ width = 1280, configured = false, gotrue = {} } = {}) {
   ctx.on('request', r => log.requests.push({ url: r.url(), method: r.method(), referer: r.headers().referer || null }));
   ctx.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') log.console.push(`${m.type()}: ${m.text()}`); });
   ctx.on('weberror', e => log.console.push(`pageerror: ${e.error().message}`));
+  const body = !configured ? PLACEHOLDER_CONFIG : turnstile ? TEST_CONFIG : TEST_CONFIG_NO_TURNSTILE;
+  await ctx.route(`${base}/auth/config.js`, r => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body, headers: { 'Cache-Control': 'no-store' } }));
+  // with a Turnstile key the pages get the Turnstile CSP, as vercel.json will in the same commit
+  const policy = configured && turnstile ? CSP_TURNSTILE : CSP_NO_TURNSTILE;
+  if (policy !== CSP) await ctx.route(/\/auth\/[a-z-]+\.html(\?|$)/, async r => { const res = await r.fetch(); await r.fulfill({ response: res, headers: { ...res.headers(), 'content-security-policy': policy } }); });
   if (configured) {
-    await ctx.route(`${base}/auth/config.js`, r => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: TEST_CONFIG, headers: { 'Cache-Control': 'no-store' } }));
     await ctx.route('https://challenges.cloudflare.com/**', r => r.fulfill({ status: 200, contentType: 'text/javascript', body: TURNSTILE_STUB, headers: { 'Access-Control-Allow-Origin': '*' } }));
     await ctx.route(`${SB}/**`, async r => {
       const req = r.request(), url = new URL(req.url());
@@ -167,7 +184,7 @@ try {
       const { ctx, log } = await context({ width });
       const page = await ctx.newPage();
       const resp = await page.goto(`${base}/auth/${p}.html${p === 'confirm' ? '?token_hash=abc123def456&type=email' : ''}`, { waitUntil: 'networkidle' });
-      check(resp.headers()['content-security-policy'] === CSP, `${label}: exactly the /auth CSP`);
+      check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, `${label}: exactly the /auth CSP without Cloudflare`);
       check(resp.headers()['referrer-policy'] === 'no-referrer' && /noindex/.test(resp.headers()['x-robots-tag'] || ''), `${label}: no-referrer and noindex headers`);
       await page.waitForTimeout(150);
       const msg = p === 'signup' ? "Accounts open soon. Send us an enquiry and we'll set you up, or ask your consultant for an invitation." : 'Sign-in is being set up.';
@@ -538,6 +555,76 @@ try {
     check(await text(page, '#alert') === 'Your link has expired. Open the link from your email again, or ask for a new one.', 'B update-password without a session: says so');
     await ctx.close();
   }
+
+  /* ================= C. the publishable key, no Turnstile site key yet ================= */
+  // C1. sign-in with no widget and no captcha token, then the landing
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    const resp = await page.goto(`${base}/auth/login.html`, { waitUntil: 'networkidle' });
+    check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, 'C login: the /auth CSP without Cloudflare');
+    check(await visible(page, '#form') && !(await visible(page, '#notice')), 'C login: the form is shown without Turnstile');
+    check(await page.evaluate(() => !window.turnstile && document.getElementById('captcha').childElementCount === 0), 'C login: no widget');
+    await axe(page, 'C login');
+    await page.fill('#email', 'aroha@example.co.nz'); await page.fill('#password', 'a-good-long-password');
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/studio/#/account`);
+    const signIn = log.sb.find(x => x.key === 'POST /auth/v1/token?password');
+    check(!!signIn && !(signIn.body.gotrue_meta_security && signIn.body.gotrue_meta_security.captcha_token), `C login: signInWithPassword sends no captcha token (${JSON.stringify(signIn && signIn.body.gotrue_meta_security)})`);
+    check(studioSeen.filter(x => x.url === '/api/auth/exchange').length > 0, 'C login: then the exchange');
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)), 'C login: nothing from Cloudflare');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C login: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // C2. the uniform error, then Resend without a token
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, gotrue: { 'POST /auth/v1/token?password': () => [400, { code: 'invalid_credentials', error_code: 'invalid_credentials', msg: 'Invalid login credentials' }] } });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/login.html`, { waitUntil: 'networkidle' });
+    await page.fill('#email', 'aroha@example.co.nz'); await page.fill('#password', 'wrong-password-123');
+    await page.click('button[type=submit]');
+    await page.locator('#alert').waitFor({ state: 'visible' });
+    check(await text(page, '#alert') === "That email and password don't match, or the account isn't confirmed yet.", 'C login: the uniform error');
+    await page.click('#resend');
+    await page.locator('#notice').waitFor({ state: 'visible' });
+    const rs = log.sb.find(x => x.key === 'POST /auth/v1/resend');
+    check(rs && rs.body.type === 'signup' && !(rs.body.gotrue_meta_security && rs.body.gotrue_meta_security.captcha_token), 'C login: resend({type:signup}) with no captcha token');
+    // (the browser logs the 400 itself as a console error, so only CSP is counted here, as in B)
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)) && (await csp(page)).length === 0, 'C login error: nothing from Cloudflare, zero CSP violations');
+    check(log.console.every(m => /status of 400/.test(m)), `C login error: no console error but the 400 itself (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // C3. reset
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
+    check(await visible(page, '#form') && await page.evaluate(() => document.getElementById('captcha').childElementCount === 0), 'C reset: the form, with no widget');
+    await page.fill('#email', 'nobody@example.co.nz');
+    await page.keyboard.press('Enter');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    check(await text(page, '#done') === "If that email has an account, we've sent a link.", 'C reset: always the same answer');
+    const rc = log.sb.find(x => x.key === 'POST /auth/v1/recover');
+    check(rc && !(rc.body.gotrue_meta_security && rc.body.gotrue_meta_security.captcha_token), 'C reset: resetPasswordForEmail sends no captcha token');
+    await axe(page, 'C reset done @390');
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)) && (await csp(page)).length === 0 && log.console.length === 0, 'C reset: nothing from Cloudflare, zero CSP violations and console errors');
+    await ctx.close();
+  }
+  // C4. sign-up stays closed without Turnstile, even when the studio says it is open
+  studioState.publicSignup = true;
+  {
+    const seen = studioSeen.length;
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/signup.html`, { waitUntil: 'networkidle' });
+    await page.locator('#closed').waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
+    check(await visible(page, '#closed') && !(await visible(page, '#form')), 'C signup: Accounts open soon without Turnstile');
+    check(!studioSeen.slice(seen).some(x => x.url === '/api/settings/public'), 'C signup: the studio setting is not even asked');
+    check(!log.requests.some(r => /\/vendor\/supabase-js|supabase\.co|cloudflare\.com/.test(r.url)), 'C signup: supabase-js, Supabase and Cloudflare are never loaded');
+    await axe(page, 'C signup closed @390');
+    await ctx.close();
+  }
+  studioState.publicSignup = false;
 } finally {
   await browser.close();
   server.close();

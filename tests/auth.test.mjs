@@ -439,6 +439,34 @@ test('sign-in: exchange refusals use the §3.3.3 wording and end the Supabase se
   }
 });
 
+test('Turnstile off (no site key yet): sign-in, resend and reset go to Supabase with no captcha token; sign-up still needs one', async () => {
+  const origin = 'https://hanes-the-website-new.vercel.app';
+  let s = stub();
+  let out = await lib.loginFlow({ email: 'a@b.co', password: 'pw', remember: false, captchaToken: '', captcha: false, next: [] }, s.deps);
+  assert.equal(out.action, 'go');
+  assert.deepEqual(s.log.find(e => e[0] === 'signInWithPassword')[1], { email: 'a@b.co', password: 'pw' }, 'no options, so no captcha_token is sent');
+  s = stub();
+  out = await lib.resetFlow({ email: 'a@b.co', captchaToken: '', captcha: false, origin }, s.deps);
+  assert.equal(out.action, 'done');
+  assert.deepEqual(s.log[0], ['resetPasswordForEmail', 'a@b.co', { redirectTo: origin + '/auth/confirm.html' }]);
+  s = stub();
+  out = await lib.resendFlow({ email: 'a@b.co', captchaToken: '', captcha: false, origin }, s.deps);
+  assert.equal(out.action, 'done');
+  assert.deepEqual(s.log[0][1], { type: 'signup', email: 'a@b.co', options: { emailRedirectTo: origin + '/auth/confirm.html' } });
+  // with Turnstile on (the default) a missing token still stops every flow before Supabase
+  for (const f of ['loginFlow', 'resetFlow', 'resendFlow']) {
+    s = stub();
+    out = await lib[f]({ email: 'a@b.co', password: 'pw', captchaToken: '', origin }, s.deps);
+    assert.equal(out.code, 'captcha_needed', f);
+    assert.deepEqual(s.log, [], f);
+  }
+  // sign-up never runs without Turnstile, whatever it is passed
+  s = stub();
+  out = await lib.signupFlow({ name: 'A', email: 'a@b.co', password: 'twelve chars!', privacyAck: true, captchaToken: '', captcha: false, origin }, s.deps);
+  assert.equal(out.code, 'captcha_needed');
+  assert.deepEqual(s.log, []);
+});
+
 test('Turnstile goes with every Supabase call that accepts it: sign-up, sign-in, resend and reset', async () => {
   const origin = ORIGIN;
   let s = stub();
@@ -649,7 +677,7 @@ test('the wording the addendum fixes is on the pages, as static text', () => {
   assert.ok(read('privacy.html').includes(lib.PRIVACY_NOTICE_VERSION), 'the notice version is the privacy statement version');
 });
 
-test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar before Supabase is touched, Turnstile only on three pages', () => {
+test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar before Supabase is touched, Turnstile only on three pages and only with a real site key', () => {
   const s = read('auth/auth.js');
   const code = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
   const statements = code.replace(/import\s*\{[\s\S]*?\}\s*from\s*'[^']+';|import\s+[^;]+;/g, '').trim();
@@ -658,7 +686,14 @@ test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar befor
   assert.ok(code.indexOf("params.delete('token_hash')") < code.indexOf('history.replaceState'));
   assert.match(s, /const TURNSTILE_SRC = 'https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit';/);
   assert.match(s, /const NEEDS_TURNSTILE = new Set\(\['login', 'signup', 'reset'\]\);/);
-  assert.equal((s.match(/mountCaptcha\(\$\('captcha'\), '(login|signup|reset)'\)/g) || []).length, 3);
+  assert.equal((s.match(/captcha = await captchaFor\('(login|signup|reset)'\);/g) || []).length, 3);
+  // Turnstile only once its site key is real; until then no widget, no token and sign-up stays closed
+  assert.match(s, /const CAPTCHA_ON = cfg\.turnstileReady;/);
+  assert.match(s, /const captchaFor = action => \(CAPTCHA_ON && NEEDS_TURNSTILE\.has\(page\) \? mountCaptcha\(\$\('captcha'\), action\) : NO_CAPTCHA\);/);
+  assert.equal((s.match(/mountCaptcha\(/g) || []).length, 2, 'defined once, called only from captchaFor');
+  assert.equal((s.match(/captchaToken: captcha\.token\(\), captcha: CAPTCHA_ON,/g) || []).length, 3, 'sign-in, resend and reset say whether Turnstile is on');
+  assert.match(s, /const open = CAPTCHA_ON && await publicSignupOpen\(\);/, 'sign-up fails closed without Turnstile');
+  assert.match(s, /if \(!cfg\.supabaseReady\) return notReady\(\);/);
   assert.match(s, /detectSessionInUrl: false/, 'supabase-js never reads tokens from the address');
   // every page shows its form only after its submit handler is attached
   for (const fn of s.split(/\nasync function /).slice(1)) {

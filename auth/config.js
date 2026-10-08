@@ -13,6 +13,10 @@
                        API Keys -> the publishable key "default" (starts sb_publishable_)
    - turnstileSiteKey: Cloudflare dashboard -> Turnstile -> the widget for the launch origin
                        and the staging alias (starts 0x4)
+                       Until it is real, sign-in, resend and reset run without Turnstile and
+                       sign-up stays closed. Setting it means changing the /auth CSP in
+                       vercel.json in the same commit (script-src and frame-src gain
+                       https://challenges.cloudflare.com); tests/config.test.mjs enforces this.
    ========================================================================================= */
 export const SUPABASE_URL = 'https://mputtezdhevwwjgwktvi.supabase.co';
 // SEC-2 (the custom domain, week 2) adds www.hanesdistribution.co.nz here
