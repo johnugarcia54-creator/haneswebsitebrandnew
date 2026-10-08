@@ -182,8 +182,9 @@ export async function exchange(accessToken, extra = {}, { fetch = globalThis.fet
     let data = null;
     try { data = await res.json(); } catch { /* not JSON */ }
     if (res.ok && data && typeof data === 'object' && data.user) return { ok: true, status: res.status, session: data };
+    // with no error code in the answer (an edge or proxy wrote it), the status says what happened
     const code = data && data.error && typeof data.error.code === 'string' ? data.error.code
-      : res.status >= 500 || res.ok ? 'unavailable' : 'unexpected';
+      : res.status >= 500 || res.ok || res.status === 408 ? 'unavailable' : res.status === 429 ? 'rate_limited' : 'unexpected';
     return { ok: false, status: res.ok ? 502 : res.status, code };
   } catch {
     return { ok: false, status: 0, code: 'network' };

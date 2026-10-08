@@ -233,7 +233,11 @@ test('exchange: every §4.3 error code comes back as it was sent; 5xx, 408, 429,
   assert.deepEqual(r, { ok: false, status: 502, code: 'unavailable' });
   assert.ok(lib.retryable(r));
   r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(408, undefined)) });
-  assert.ok(lib.retryable(r), 'a 408 is the studio timing out, not a refusal');
+  assert.deepEqual(r, { ok: false, status: 408, code: 'unavailable' }, 'a bodyless 408 is the studio timing out');
+  assert.ok(lib.retryable(r));
+  r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(429, undefined)) });
+  assert.deepEqual(r, { ok: false, status: 429, code: 'rate_limited' }, 'a bodyless 429 is the rate limit');
+  assert.ok(lib.retryable(r));
   r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(404, undefined)) });
   assert.deepEqual(r, { ok: false, status: 404, code: 'unexpected' });
   assert.ok(!lib.retryable(r));
@@ -436,6 +440,19 @@ test('sign-in: exchange refusals use the §3.3.3 wording and end the Supabase se
     assert.equal(typeof out.retry, 'function');
     assert.ok(!s.names().includes('signOut'), 'kept signed in to Supabase so Retry can work');
     assert.equal((await out.retry()).action, 'go');
+  }
+});
+
+test('sign-in: a bodyless 408 or 429 from the exchange says what happened and offers Retry, never "Something went wrong"', async () => {
+  for (const [status, message] of [[408, "You're signed in, but the studio is unavailable for a moment."], [429, lib.MESSAGES.rate_limited]]) {
+    const s = stub();
+    let calls = 0;
+    s.deps.exchange = (token, extra) => lib.exchange(token, extra, { fetch: () => Promise.resolve(++calls === 1 ? res(status, undefined) : res(200, { user: { id: 'u' }, level: 'client' })) });
+    const out = await lib.loginFlow({ email: 'a@b.co', password: 'pw', captchaToken: 't' }, s.deps);
+    assert.equal(out.message, message, String(status));
+    assert.notEqual(out.message, lib.MESSAGES.unexpected);
+    assert.ok(!s.names().includes('signOut'), `${status}: still signed in to Supabase`);
+    assert.equal((await out.retry()).action, 'go', `${status}: Retry runs the exchange again`);
   }
 });
 
