@@ -576,3 +576,18 @@ test('smoke: a refusal names only the studio error code, never other body text',
   assert.equal(refusalCode({ status: 403 }, { error: { code: 'Bearer abc.def' } }), '');
   assert.equal(refusalCode({ status: 403 }, null), '');
 });
+
+// what a visitor or a screen reader meets: the text outside <style>, <script> and comments, plus every aria-label and alt
+const userFacing = html => {
+  const attrs = [...html.matchAll(/\s(?:aria-label|alt)="([^"]*)"/g)].map(m => m[1]);
+  const text = html.replace(/<!--[\s\S]*?-->/g, ' ').replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
+  return [text, ...attrs].join(' ');
+};
+
+test('trust (SEO-H0): hanesteel.html claims no certification in its text, aria-labels or alt text', () => {
+  const s = read('hanesteel.html');
+  assert.deepEqual(userFacing(s).match(/[^.\n]*\bcertified\b[^.\n]*/gi) || [], []);
+  assert.match(s, /<a href="#certified" data-scroll>Standards<\/a>/);
+  assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Built for New Zealand homes\.<\/h2>/);
+  assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
+});
