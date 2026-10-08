@@ -7,18 +7,18 @@
    Supabase project (integrator decision 1: staging shares it, with EXCHANGE_ALLOWLIST on the
    staging studio), so the /auth CSP's connect-src names exactly this URL.
 
-   PLACEHOLDERS: the publishable key below is the project's enabled "default" key (read from
-   project mputtezdhevwwjgwktvi on 8 Oct; the same value the studio's fly.toml carries). The
-   Turnstile site key is still a placeholder until the owner creates the widget. While a value
-   still reads PLACEHOLDER, the pages say "Sign-in is being set up" and make no call to Supabase
-   or Cloudflare.
-   - publishableKey:   Supabase dashboard, project mputtezdhevwwjgwktvi, Project Settings ->
-                       API Keys -> the publishable key "default" (starts sb_publishable_)
-   - turnstileSiteKey: Cloudflare dashboard -> Turnstile -> the widget for the launch origin
-                       and the staging alias (starts 0x4)
-                       Until it is real, sign-in, resend and reset run without Turnstile and
-                       sign-up stays closed. Setting it means changing the /auth CSP in
-                       vercel.json in the same commit (script-src and frame-src gain
+   - publishableKey:   real. The project's enabled "default" key (read from project
+                       mputtezdhevwwjgwktvi on 8 Oct; the same value the studio's fly.toml
+                       carries), so the sign-in pages call Supabase. Supabase dashboard ->
+                       Project Settings -> API Keys -> "default" (starts sb_publishable_).
+                       If it ever read PLACEHOLDER again, the pages would say "Sign-in is being
+                       set up" and make no call to Supabase.
+   - turnstileSiteKey: still a PLACEHOLDER until the owner creates the widget (Cloudflare
+                       dashboard -> Turnstile -> the widget for the launch origin and the
+                       staging alias; starts 0x4). While it is, nothing loads from Cloudflare:
+                       sign-in, resend and reset run without Turnstile and send no captcha
+                       token, and sign-up stays closed. Setting it means changing the /auth CSP
+                       in vercel.json in the same commit (script-src and frame-src gain
                        https://challenges.cloudflare.com); tests/config.test.mjs enforces this.
    ========================================================================================= */
 export const SUPABASE_URL = 'https://mputtezdhevwwjgwktvi.supabase.co';
