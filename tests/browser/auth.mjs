@@ -24,7 +24,8 @@
       B serves the pages with the Turnstile CSP, as vercel.json will once the site key is set.
    C. The publishable key without a Turnstile site key (the Friday state): the /auth CSP without
       Cloudflare, sign-in, Resend and reset with no widget, nothing loaded from Cloudflare and no
-      captcha token sent; sign-up stays closed even when the studio says it is open.
+      captcha token sent; sign-up stays closed even when the studio says it is open; and an
+      invite and a recovery through confirm and update-password, with axe on each.
    ========================================================================================= */
 import http from 'node:http';
 import { createRequire } from 'node:module';
@@ -622,6 +623,54 @@ try {
     check(!studioSeen.slice(seen).some(x => x.url === '/api/settings/public'), 'C signup: the studio setting is not even asked');
     check(!log.requests.some(r => /\/vendor\/supabase-js|supabase\.co|cloudflare\.com/.test(r.url)), 'C signup: supabase-js, Supabase and Cloudflare are never loaded');
     await axe(page, 'C signup closed @390');
+    await ctx.close();
+  }
+  // C5. confirm an invite, then choose the password, under the committed CSP (no Cloudflare)
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    const resp = await page.goto(`${base}/auth/confirm.html?token_hash=abc123def456&type=invite`, { waitUntil: 'networkidle' });
+    check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, 'C confirm invite: the /auth CSP without Cloudflare');
+    await axe(page, 'C confirm invite @390');
+    await page.check('#privacy');
+    const before = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html?invite=1`);
+    const ex = studioSeen.slice(before).filter(x => x.url === '/api/auth/exchange');
+    check(ex.length === 1 && ex[0].body.purpose === 'invite', 'C confirm invite: verifyOtp, then the invite exchange');
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.fill('#password', 'my-own-new-password');
+    const mark = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    const ex2 = studioSeen.slice(mark).filter(x => x.url === '/api/auth/exchange');
+    check(log.sb.some(x => x.key === 'PUT /auth/v1/user') && ex2.length === 1 && ex2[0].body.revokeOthers === true, 'C update-password (invite): updateUser, then the exchange with revokeOthers:true');
+    await axe(page, 'C update-password invite done @390');
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)), 'C invite: nothing from Cloudflare');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C invite: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // C6. recovery: no exchange until the password is set, then the exchange with revokeOthers
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    const resp = await page.goto(`${base}/auth/confirm.html?token_hash=abc123def456&type=recovery`, { waitUntil: 'networkidle' });
+    check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, 'C confirm recovery: the /auth CSP without Cloudflare');
+    await axe(page, 'C confirm recovery');
+    const before = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    check(studioSeen.slice(before).every(x => x.url !== '/api/auth/exchange'), 'C confirm recovery: no exchange before the password is set');
+    await page.fill('#password', 'my-own-new-password');
+    await page.click('button[type=submit]');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    const ex = studioSeen.slice(before).filter(x => x.url === '/api/auth/exchange');
+    check(log.sb.some(x => x.key === 'PUT /auth/v1/user') && ex.length === 1 && ex[0].body.revokeOthers === true, 'C update-password (recovery): updateUser, then the exchange with revokeOthers:true');
+    check(await text(page, '#done') === "Password changed. You're signed in on this device only.", 'C update-password (recovery): Password changed');
+    await axe(page, 'C update-password recovery done');
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)), 'C recovery: nothing from Cloudflare');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C recovery: zero CSP violations and console errors (${log.console.join(' | ')})`);
     await ctx.close();
   }
   studioState.publicSignup = false;
