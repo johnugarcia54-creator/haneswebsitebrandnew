@@ -7,8 +7,11 @@
    Supabase project (integrator decision 1: staging shares it, with EXCHANGE_ALLOWLIST on the
    staging studio), so the /auth CSP's connect-src names exactly this URL.
 
-   PLACEHOLDERS: the owner has not sent the keys yet. While a value still reads PLACEHOLDER,
-   the pages say "Sign-in is being set up" and make no call to Supabase or Cloudflare.
+   PLACEHOLDERS: the publishable key below is the project's enabled "default" key (read from
+   project mputtezdhevwwjgwktvi on 8 Oct; the same value the studio's fly.toml carries). The
+   Turnstile site key is still a placeholder until the owner creates the widget. While a value
+   still reads PLACEHOLDER, the pages say "Sign-in is being set up" and make no call to Supabase
+   or Cloudflare.
    - publishableKey:   Supabase dashboard, project mputtezdhevwwjgwktvi, Project Settings ->
                        API Keys -> the publishable key "default" (starts sb_publishable_)
    - turnstileSiteKey: Cloudflare dashboard -> Turnstile -> the widget for the launch origin
@@ -25,12 +28,12 @@ export const PRODUCTION_HOSTS = Object.freeze(['hanes-the-website-new.vercel.app
 export const AUTH_CONFIG = Object.freeze({
   production: Object.freeze({
     supabaseUrl: SUPABASE_URL,
-    publishableKey: 'PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY',
+    publishableKey: 'sb_publishable_MoYnbvMfITHjpWEuBEe03Q_y_nSg3mK',
     turnstileSiteKey: 'PLACEHOLDER_TURNSTILE_SITE_KEY'
   }),
   staging: Object.freeze({
     supabaseUrl: SUPABASE_URL,
-    publishableKey: 'PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY',
+    publishableKey: 'sb_publishable_MoYnbvMfITHjpWEuBEe03Q_y_nSg3mK',
     turnstileSiteKey: 'PLACEHOLDER_TURNSTILE_SITE_KEY'
   })
 });
