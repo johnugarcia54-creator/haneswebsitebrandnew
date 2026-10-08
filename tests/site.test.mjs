@@ -601,12 +601,12 @@ test('trust (SEO-H0): hanesulation.html claims no certification in its text, ari
 });
 
 // enquiry.js in a sandbox: every post is recorded and answered by `answer` (a 502 by default)
-function enquirySandbox({ answer = () => ({ ok: false, status: 502 }), dialog = false } = {}) {
+function enquirySandbox({ answer = () => ({ ok: false, status: 502 }) } = {}) {
   const posted = [];
   let n = 0;
   const el = (extra = {}) => ({ textContent: '', innerHTML: '', placeholder: '', classList: { add() {}, remove() {}, toggle() {} }, listeners: {},
     addEventListener(t, f) { this.listeners[t] = f; }, setAttribute() {}, removeAttribute() {}, focus() {}, scrollIntoView() {}, ...extra });
-  const input = v => ({ value: v });
+  const input = v => ({ value: v, focus() {} });
   const form = (values = {}) => el({
     elements: { name: input('Aroha Smith'), email: input('aroha@example.com'), website: input(''), marketingOptIn: { checked: false },
       phone: input(''), business: input(''), region: input(''), message: input(''), ...values },
@@ -626,7 +626,7 @@ function enquirySandbox({ answer = () => ({ ok: false, status: 502 }), dialog = 
   w.window = w;
   vm.runInContext(read('assets/enquiry.js'), vm.createContext(w));
   const send = () => dlgForm.listeners.submit({ preventDefault() {} });
-  return { w, posted, form, dlgForm, send, dialog };
+  return { w, posted, form, dlgForm, send };
 }
 
 test('enquiry.js: a retry of the same fill keeps its submissionId; an edited retry gets a new one', async () => {
@@ -647,4 +647,18 @@ test('enquiry.js: a retry of the same fill keeps its submissionId; an edited ret
   assert.notEqual(s.posted[5].submissionId, s.posted[4].submissionId, 'a changed subject: a new enquiry');
   await go([['Message', 'Three windows']], { marketingOptIn: true, subject: 'Hanesteel quote' });
   assert.equal(s.posted[6].submissionId, s.posted[5].submissionId);
+});
+
+test('enquiry.js quote dialog: a new topic is a new enquiry, never the id of an earlier failed one', async () => {
+  const s = enquirySandbox();
+  const { open } = s.w.HanesEnquiry;
+  s.dlgForm.elements.message.value = 'Kitchen for a new build';
+  open('Bargainhub kitchen'); await s.send();
+  open('Bargainhub kitchen'); await s.send();
+  assert.equal(s.posted[1].submissionId, s.posted[0].submissionId, 'the same topic, unchanged: a retry');
+  open('Hanesteel windows'); await s.send();
+  assert.notEqual(s.posted[2].submissionId, s.posted[1].submissionId, 'another topic: a new enquiry');
+  open('Bargainhub kitchen'); open('Hanesteel windows'); await s.send();
+  assert.notEqual(s.posted[3].submissionId, s.posted[2].submissionId, 'opened on another topic in between: the fill starts again');
+  assert.equal(new Set(s.posted.map(p => p.submissionId)).size, 3);
 });

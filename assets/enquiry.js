@@ -151,7 +151,9 @@ window.HanesEnquiry = (() => {
   const open = (t, s, hint, from) => {
     if (!dlg) build();
     const f = $('form', dlg);
-    topic = t || 'General enquiry'; subj = s || topic; trigger = from || document.activeElement;
+    const next = t || 'General enquiry';
+    if (next !== topic) fills.delete(f); // another topic is another enquiry, never an earlier fill's id
+    topic = next; subj = s || topic; trigger = from || document.activeElement;
     $('#qdTopic', dlg).textContent = topic;
     f.elements.message.placeholder = hint || '';
     $('.qd__send', dlg).textContent = 'Send enquiry';
