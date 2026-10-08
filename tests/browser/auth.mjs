@@ -673,6 +673,67 @@ try {
     check((await csp(page)).length === 0 && log.console.length === 0, `C recovery: zero CSP violations and console errors (${log.console.join(' | ')})`);
     await ctx.close();
   }
+  // C7. (b) the fallback: Supabase's default invite link comes back with the session in the hash
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    const access = jwt(user.id, 'otp').replace(/\.c2ln$/, '.c2lnbmF0dXJlLXRlc3Q');
+    const admin = [200, { user: { id: 'u1' }, csrfToken: 'c', level: 'admin' }];
+    studioState.exchange = [admin, admin];
+    const resp = await page.goto(`${base}/auth/confirm.html#access_token=${access}&expires_at=${Math.floor(Date.now() / 1000) + 3600}&expires_in=3600&refresh_token=r-invite-123&token_type=bearer&type=invite`, { waitUntil: 'networkidle' });
+    check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, 'C7 confirm (b): the /auth CSP without Cloudflare');
+    check(await page.evaluate(() => location.hash === '' && location.search === '' && !history.state), 'C7 confirm (b): the session leaves the address bar at once');
+    check(await text(page, '#title') === 'Accept your invitation' && await text(page, 'button[type=submit]') === 'Confirm and continue' && await visible(page, '#inviteAck'), 'C7 confirm (b): the invitation form with the privacy tick');
+    check(!log.sb.length, `C7 confirm (b): nothing is sent to Supabase before the button (${log.sb.map(x => x.key).join()})`);
+    await axe(page, 'C7 confirm invite (b) @390');
+    await page.click('button[type=submit]');
+    check(await page.locator('#privacy[aria-invalid=true]').count() === 1 && !log.sb.length, 'C7 confirm (b): the privacy tick is required first');
+    await page.check('#privacy');
+    const before = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html?invite=1`);
+    const user1 = log.sb.find(x => x.key === 'GET /auth/v1/user');
+    const ex = studioSeen.slice(before).filter(x => x.url === '/api/auth/exchange');
+    check(!!user1 && !log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'C7 confirm (b): setSession checks the session with Supabase; no verify (the token is already spent)');
+    check(ex.length === 1 && ex[0].body.purpose === 'invite' && ex[0].body.accessToken === access && ex[0].body.privacyNoticeVersion === '2026-10-09', 'C7 confirm (b): then the invite exchange with that session');
+    check(log.requests.every(r => !r.url.includes('r-invite-123') && !(r.referer || '').includes('access_token')), 'C7 confirm (b): the tokens are never in a URL or a Referer');
+    await page.locator('#form').waitFor({ state: 'visible' });
+    check(await text(page, '#title') === 'Choose your password', 'C7 update-password (b): Choose your password');
+    await page.fill('#password', 'short-pass');
+    await page.click('button[type=submit]');
+    check(await page.locator('#password[aria-invalid=true]').count() === 1 && !log.sb.some(x => x.key === 'PUT /auth/v1/user'), 'C7 update-password (b): 12 characters at least');
+    await page.fill('#password', 'the-owner-new-password');
+    const mark = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    const ex2 = studioSeen.slice(mark).filter(x => x.url === '/api/auth/exchange');
+    check(log.sb.some(x => x.key === 'PUT /auth/v1/user') && ex2.length === 1 && ex2[0].body.revokeOthers === true, 'C7 update-password (b): updateUser, then the exchange with revokeOthers:true');
+    check(await page.getAttribute('#continue', 'href') === '/studio/#/backoffice', 'C7 update-password (b): an admin continues to Back Office');
+    await axe(page, 'C7 update-password invite done (b) @390');
+    await page.click('#continue');
+    await page.waitForURL(`${base}/studio/#/backoffice`);
+    check(await page.locator('h1').textContent() === 'Studio', 'C7 admin: lands on /studio/#/backoffice');
+    check(!log.requests.some(r => /cloudflare\.com/.test(r.url)), 'C7 (b): nothing from Cloudflare');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C7 (b): zero CSP violations and console errors (${log.console.join(' | ')})`);
+    studioState.exchange = [];
+    await ctx.close();
+  }
+  // C7. (b) an expired or already-used default link: Supabase sends the error in the hash
+  for (const [query, type, help, msg] of [
+    ['', 'invite', '#linkHelpInvite', 'This invitation link has expired or was already used. Ask for a new one.'],
+    ['?type=recovery', 'recovery', '#linkHelp', 'This link has expired or was already used. Ask for a new one.']
+  ]) {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/confirm.html${query}#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired`, { waitUntil: 'networkidle' });
+    const shown = [];
+    for (const id of ['#linkHelp', '#linkHelpInvite', '#linkHelpEmail']) if (await visible(page, id)) shown.push(id);
+    check(await text(page, '#alert') === msg && shown.join() === help && !(await visible(page, '#form')), `C7 confirm (b) ${type} otp_expired: says so, ${help} only (${shown.join()})`);
+    check(await page.evaluate(() => location.hash === ''), `C7 confirm (b) ${type} otp_expired: the hash leaves the address bar`);
+    check(!log.sb.length, `C7 confirm (b) ${type} otp_expired: nothing is sent to Supabase`);
+    if (type === 'invite') await axe(page, 'C7 confirm invite expired (b)');
+    await ctx.close();
+  }
   studioState.publicSignup = false;
 } finally {
   await browser.close();

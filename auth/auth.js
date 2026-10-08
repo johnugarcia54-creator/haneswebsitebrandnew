@@ -2,7 +2,8 @@
    auth/auth.js: wires the five sign-in pages to auth/auth-lib.js (ADDENDUM §3.3, §6.3).
    Order on every page:
      1. bhAuthHygiene() first (§3.3.4), before anything reads or writes the sign-in state.
-     2. confirm.html only: token_hash leaves the address bar (history.replaceState) at once.
+     2. confirm.html only: token_hash (or the session hash of Supabase's default link) leaves the
+        address bar (history.replaceState) at once.
      3. The settings for this host (auth/config.js). While the publishable key is still a
         placeholder, the page says "Sign-in is being set up" and makes no call to Supabase.
    Text is only ever set with textContent; nothing is parsed as HTML. Turnstile is loaded here
@@ -12,7 +13,7 @@
    ========================================================================================= */
 import {
   bhAuthHygiene, safeNext, MESSAGES, exchange, rememberChoice, keepChoice, publicSignupOpen, previewCode, cleanCode,
-  loginFlow, resendFlow, resetFlow, signupFlow, confirmFlow, passwordFlow, CONFIRM_TYPES, PASSWORD_MIN, PASSWORD_MAX
+  loginFlow, resendFlow, resetFlow, signupFlow, confirmFlow, confirmSessionFlow, hashLink, hashLinkError, passwordFlow, CONFIRM_TYPES, PASSWORD_MIN, PASSWORD_MAX
 } from '/auth/auth-lib.js';
 import { pickConfig } from '/auth/config.js';
 
@@ -21,9 +22,11 @@ bhAuthHygiene(window);
 const page = document.body.dataset.page;
 const params = new URLSearchParams(location.search);
 
-// confirm.html: the one-time token never stays in the address bar, the history or a later Referer
-const confirmLink = { tokenHash: params.get('token_hash'), type: params.get('type') };
-if (page === 'confirm' && (params.has('token_hash') || /access_token|refresh_token|error/.test(location.hash))) {
+// confirm.html: the one-time token never stays in the address bar, the history or a later Referer.
+// (a) ?token_hash= (the §3.4 templates) is the primary link; (b) the hash Supabase's default link
+// comes back with is read here once, kept only in memory, and used only on the button (auth-lib.js).
+const confirmLink = { tokenHash: params.get('token_hash'), type: params.get('type'), hash: page === 'confirm' ? hashLink(location.hash) : null };
+if (page === 'confirm' && (params.has('token_hash') || confirmLink.hash || /access_token|refresh_token|error/.test(location.hash))) {
   params.delete('token_hash');
   const q = params.toString();
   history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
@@ -324,9 +327,18 @@ const CONFIRM_COPY = {
 // invitation (from the consultant or Back Office) or Resend confirmation on the sign-in page
 const linkHelpFor = type => $(type === 'invite' ? 'linkHelpInvite' : type === 'email' || type === 'email_change' ? 'linkHelpEmail' : 'linkHelp');
 async function confirmPage(sb) {
-  const { tokenHash, type } = confirmLink;
+  const { tokenHash, hash } = confirmLink;
+  // (b): the hash's own type wins; an error hash has none, so the query's, else an invitation (the
+  // link this fallback exists for)
+  const type = hash ? hash.type || (CONFIRM_TYPES.includes(confirmLink.type) ? confirmLink.type : hash.errorCode ? 'invite' : null) : confirmLink.type;
   const form = els.form, btn = form.querySelector('button[type=submit]');
-  if (!tokenHash || !CONFIRM_TYPES.includes(type)) {
+  if (hash && hash.errorCode) {
+    note('');
+    fail(hashLinkError(type).message);
+    show(linkHelpFor(type), true);
+    return;
+  }
+  if (hash ? !hash.accessToken || !hash.refreshToken || !CONFIRM_TYPES.includes(type) : !tokenHash || !CONFIRM_TYPES.includes(type)) {
     note('');
     fail(MESSAGES.link_incomplete);
     show(linkHelpFor(type), true);
@@ -346,11 +358,13 @@ async function confirmPage(sb) {
     if (btn.disabled || used) return;
     show(els.alert, false);
     if (!checkFields(form)) return;
-    used = true; // the token works once: never send it twice
+    used = true; // the token (or the session) works once: never send it twice
     busy(btn, true, 'Confirming…');
     const deps = { supabase: sb, exchange, keepChoice, w: window };
     const next = [params.get('next'), storedNext()];
-    const out = await confirmFlow({ type, tokenHash, privacyAck: privacy.checked, next }, deps);
+    const out = hash
+      ? await confirmSessionFlow({ type, accessToken: hash.accessToken, refreshToken: hash.refreshToken, privacyAck: privacy.checked, next }, deps)
+      : await confirmFlow({ type, tokenHash, privacyAck: privacy.checked, next }, deps);
     busy(btn, false);
     if (out.action === 'error') {
       // before Supabase took the token (no tick, or no connection) the button may be pressed again

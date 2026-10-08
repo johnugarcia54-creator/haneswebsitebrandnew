@@ -359,7 +359,55 @@ export async function confirmFlow({ type, tokenHash, privacyAck, next = [] }, de
   return afterConfirm({ type, next }, deps);
 }
 
-// the part after verifyOtp; also what Retry runs when the studio was unavailable
+/* ---- the fallback: Supabase's default {{ .ConfirmationURL }} link ---------------------------
+   (a) above, the token_hash link of the §3.4 templates, is the primary path. Until those templates
+   are applied, Supabase's default link goes to /auth/v1/verify first, which spends the token there
+   and comes back to confirm.html with the session (or the error) in the address-bar hash. So a mail
+   scanner that opens the link burns it before the person ever sees the page; that is why (a) stays
+   primary and this is only the fallback. auth.js reads the hash once, before it removes it from the
+   address bar, and nothing is sent to Supabase until the person presses the button.
+   Supabase names an email confirmation 'signup' in the hash; magic links are not used (§3.4). */
+const HASH_TYPES = Object.freeze({ invite: 'invite', recovery: 'recovery', signup: 'email', email: 'email', email_change: 'email_change' });
+const JWT_SHAPE = /^[A-Za-z0-9_-]{8,2048}\.[A-Za-z0-9_-]{8,4096}\.[A-Za-z0-9_-]{8,1024}$/;
+const REFRESH_SHAPE = /^[A-Za-z0-9_-]{6,512}$/;
+
+// {accessToken, refreshToken, type, errorCode} from the hash, or null when it carries no link at all
+export function hashLink(hash) {
+  if (typeof hash !== 'string' || hash.length < 2 || hash.length > 16384) return null;
+  let p;
+  try { p = new URLSearchParams(hash.replace(/^#/, '')); } catch { return null; }
+  if (!['access_token', 'refresh_token', 'error', 'error_code'].some(k => p.has(k))) return null;
+  const t = p.get('type');
+  return {
+    accessToken: p.get('access_token'),
+    refreshToken: p.get('refresh_token'),
+    type: t && Object.hasOwn(HASH_TYPES, t) ? HASH_TYPES[t] : null,
+    errorCode: p.get('error_code') || p.get('error') || null
+  };
+}
+
+// what a hash link that came back with an error says (Supabase spent or refused the token)
+export function hashLinkError(type) {
+  return { action: 'error', code: 'link_expired', message: type === 'invite' ? MESSAGES.link_expired_invite : MESSAGES.link_expired };
+}
+
+// The same order as confirmFlow, with setSession in place of verifyOtp (the token is already spent)
+export async function confirmSessionFlow({ type, accessToken, refreshToken, privacyAck, next = [] }, deps) {
+  if (!CONFIRM_TYPES.includes(type) || typeof accessToken !== 'string' || !JWT_SHAPE.test(accessToken) ||
+      typeof refreshToken !== 'string' || !REFRESH_SHAPE.test(refreshToken)) {
+    return { action: 'error', code: 'link_incomplete', message: MESSAGES.link_incomplete };
+  }
+  if (type === 'invite' && !privacyAck) return { action: 'error', code: 'privacy_ack_required', message: MESSAGES.privacy_ack_required };
+  (deps.keepChoice || keepChoice)(deps.w); // the new session survives the next page's hygiene
+  const { data, error } = await deps.supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+  if (error || !data || !data.session) {
+    if (supabaseCode(error) === 'network') return { action: 'error', code: 'network', message: MESSAGES.supabase_network };
+    return hashLinkError(type);
+  }
+  return afterConfirm({ type, next }, deps);
+}
+
+// the part after verifyOtp (or setSession); also what Retry runs when the studio was unavailable
 export function afterConfirm({ type, next = [] }, deps) {
   if (type === 'invite') {
     return exchangeStep(deps, { purpose: 'invite', privacyNoticeVersion: PRIVACY_NOTICE_VERSION }, () => ({ action: 'go', to: '/auth/update-password.html?invite=1' }));

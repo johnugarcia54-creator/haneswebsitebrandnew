@@ -696,7 +696,7 @@ test('enquiry.js: once an enquiry is sent, only that enquiry\'s id is dropped', 
 
 test('owner rule: no shipped file, script, config, workflow or README names an AI model', () => {
   const walk = d => readdirSync(root + d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]);
-  const files = [...pages, 'README.md', 'vercel.json', 'package.json', ...['scripts', 'api', 'assets', 'auth', '.github'].flatMap(walk).filter(f => /\.(m?js|html|css|json|ya?ml)$/.test(f))];
+  const files = [...pages, 'README.md', 'docs/supabase/SETTINGS.md', 'vercel.json', 'package.json', ...['scripts', 'api', 'assets', 'auth', '.github'].flatMap(walk).filter(f => /\.(m?js|html|css|json|ya?ml)$/.test(f))];
   for (const f of ['scripts/smoke.mjs', 'auth/auth-lib.js', 'vercel.json', 'package.json', '.github/workflows/ci.yml', '.github/workflows/smoke.yml']) assert.ok(files.includes(f), f);
   for (const f of files) assert.deepEqual(read(f).match(/[^\n]*\b(grok|claude|opus|sonnet|gpt|gemini|openai)\b[^\n]*/gi) || [], [], f);
 });

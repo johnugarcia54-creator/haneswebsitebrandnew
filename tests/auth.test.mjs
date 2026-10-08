@@ -266,6 +266,7 @@ function stub({ verify = 'ok', signIn = 'ok', update = 'ok', exchangeAnswers = [
   const err = code => ({ name: 'AuthApiError', status: code === 'network' ? 0 : 400, code: code === 'network' ? undefined : code, message: code });
   const supabase = {
     auth: {
+      setSession: async a => { log.push(['setSession', a]); if (verify !== 'ok') return { data: { session: null, user: null }, error: err(verify) }; session = { access_token: a.access_token }; return { data: { session, user: { id: 's' } }, error: null }; },
       verifyOtp: async a => { log.push(['verifyOtp', a]); if (verify !== 'ok') return { data: { session: null, user: null }, error: err(verify) }; session = { access_token: 'otp-token' }; return { data: { session, user: { id: 's' } }, error: null }; },
       signInWithPassword: async a => { log.push(['signInWithPassword', a]); if (signIn !== 'ok') return { data: {}, error: err(signIn) }; session = { access_token: 'pw-token' }; return { data: { session }, error: null }; },
       updateUser: async a => { log.push(['updateUser', a]); return update === 'ok' ? { data: { user: {} }, error: null } : { data: {}, error: err(update) }; },
@@ -359,6 +360,101 @@ test('confirm: a bad link or an unknown type never calls Supabase; an expired to
   const out = await lib.confirmFlow({ type: 'email', tokenHash: 'abc123def456' }, s.deps);
   assert.equal(out.message, 'This link has expired or was already used. Ask for a new one.');
   assert.deepEqual(s.names(), ['keepChoice', 'verifyOtp'], 'no exchange without a verified session');
+});
+
+/* ---- (b) the fallback: Supabase's default link, the session in the hash ----------------------- */
+const AT = 'eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ1MSIsImFtciI6Im90cCJ9.c2lnbmF0dXJl';
+const RT = 'v1-refresh-abc123';
+
+test('hashLink: reads the session, the type and the error from the hash, and nothing else', () => {
+  assert.deepEqual(lib.hashLink(`#access_token=${AT}&expires_at=1&expires_in=3600&refresh_token=${RT}&token_type=bearer&type=invite`),
+    { accessToken: AT, refreshToken: RT, type: 'invite', errorCode: null });
+  assert.equal(lib.hashLink(`#access_token=${AT}&refresh_token=${RT}&type=signup`).type, 'email', "Supabase's 'signup' is an email confirmation");
+  assert.equal(lib.hashLink(`#access_token=${AT}&refresh_token=${RT}&type=recovery`).type, 'recovery');
+  assert.equal(lib.hashLink(`#access_token=${AT}&refresh_token=${RT}&type=magiclink`).type, null, 'magic links are not used');
+  assert.equal(lib.hashLink(`#access_token=${AT}&refresh_token=${RT}&type=__proto__`).type, null);
+  assert.deepEqual(lib.hashLink('#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired'),
+    { accessToken: null, refreshToken: null, type: null, errorCode: 'otp_expired' });
+  assert.equal(lib.hashLink('#error=server_error').errorCode, 'server_error');
+  for (const h of ['', '#', '#top', '#/account', '#x=1', null, undefined, 42, '#' + 'a'.repeat(20000)]) assert.equal(lib.hashLink(h), null, String(h).slice(0, 20));
+});
+
+test('confirm (b), type=invite: privacy tick, then setSession, then the invite exchange, then update-password', async () => {
+  const s = stub();
+  const out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: true }, s.deps);
+  assert.deepEqual(out, { action: 'go', to: '/auth/update-password.html?invite=1' });
+  assert.deepEqual(s.names(), ['keepChoice', 'setSession', 'getSession', 'exchange']);
+  assert.deepEqual(s.log[1][1], { access_token: AT, refresh_token: RT });
+  assert.deepEqual(s.log[3], ['exchange', AT, { purpose: 'invite', privacyNoticeVersion: '2026-10-09' }]);
+});
+
+test('confirm (b), type=invite: no privacy tick means no session is set at all', async () => {
+  const s = stub();
+  const out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: false }, s.deps);
+  assert.equal(out.code, 'privacy_ack_required');
+  assert.deepEqual(s.log, []);
+});
+
+test('confirm (b): a refused session says the invitation expired; no connection lets the button be pressed again', async () => {
+  let s = stub({ verify: 'session_not_found' });
+  let out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: true }, s.deps);
+  assert.deepEqual(out, { action: 'error', code: 'link_expired', message: 'This invitation link has expired or was already used. Ask for a new one.' });
+  assert.deepEqual(s.names(), ['keepChoice', 'setSession'], 'no exchange without a session');
+  s = stub({ verify: 'network' });
+  out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: true }, s.deps);
+  assert.equal(out.code, 'network');
+  s = stub({ verify: 'session_not_found' });
+  out = await lib.confirmSessionFlow({ type: 'recovery', accessToken: AT, refreshToken: RT }, s.deps);
+  assert.equal(out.message, 'This link has expired or was already used. Ask for a new one.');
+});
+
+test('confirm (b): the studio down gives Retry, which repeats only the exchange; 409 ends the session here', async () => {
+  let s = stub({ exchangeAnswers: [fail(503, undefined)] });
+  let out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: true }, s.deps);
+  assert.equal(typeof out.retry, 'function');
+  assert.deepEqual(await out.retry(), { action: 'go', to: '/auth/update-password.html?invite=1' });
+  assert.deepEqual(s.names(), ['keepChoice', 'setSession', 'getSession', 'exchange', 'getSession', 'exchange'], 'setSession runs once');
+  s = stub({ exchangeAnswers: [fail(409, 'invitation_needs_link')] });
+  out = await lib.confirmSessionFlow({ type: 'invite', accessToken: AT, refreshToken: RT, privacyAck: true }, s.deps);
+  assert.equal(out.code, 'invitation_needs_link');
+  assert.deepEqual(s.log.at(-1), ['signOut', { scope: 'local' }]);
+});
+
+test('confirm (b), recovery and email: the same order as (a) after the session is set', async () => {
+  let s = stub();
+  let out = await lib.confirmSessionFlow({ type: 'recovery', accessToken: AT, refreshToken: RT }, s.deps);
+  assert.deepEqual(out, { action: 'go', to: '/auth/update-password.html' });
+  assert.deepEqual(s.names(), ['keepChoice', 'setSession']);
+  globalThis.location = { origin: ORIGIN };
+  try {
+    s = stub({ exchangeAnswers: [{ ok: true, status: 200, session: { user: {}, level: 'admin' } }] });
+    out = await lib.confirmSessionFlow({ type: 'email', accessToken: AT, refreshToken: RT, next: [null] }, s.deps);
+    assert.deepEqual(out, { action: 'go', to: '/studio/#/backoffice' });
+  } finally { delete globalThis.location; }
+});
+
+test('confirm (b): a malformed session or an unknown type never calls Supabase', async () => {
+  for (const [type, accessToken, refreshToken] of [['magiclink', AT, RT], [null, AT, RT], ['invite', null, RT], ['invite', AT, null],
+    ['invite', 'not-a-jwt', RT], ['invite', AT + '<x>', RT], ['invite', AT, 'a b'], ['invite', AT, 'x'.repeat(600)], ['invite', 'a.b.c', RT]]) {
+    const s = stub();
+    const out = await lib.confirmSessionFlow({ type, accessToken, refreshToken, privacyAck: true }, s.deps);
+    assert.equal(out.code, 'link_incomplete', `${type}/${accessToken}/${refreshToken}`);
+    assert.deepEqual(s.log, []);
+  }
+});
+
+test('confirm (b): an error hash maps to the expired-link message for its type (otp_expired on an invite)', () => {
+  assert.deepEqual(lib.hashLinkError('invite'), { action: 'error', code: 'link_expired', message: 'This invitation link has expired or was already used. Ask for a new one.' });
+  assert.equal(lib.hashLinkError('recovery').message, 'This link has expired or was already used. Ask for a new one.');
+});
+
+test('update-password after (b), as admin: the password, then the exchange, then Back Office', async () => {
+  const s = stub({ signedIn: true, exchangeAnswers: [{ ok: true, status: 200, session: { user: {}, level: 'admin' } }] });
+  const out = await lib.passwordFlow({ password: 'a-long-enough-pass', invite: true }, s.deps);
+  assert.equal(out.action, 'done');
+  assert.equal(out.to, '/studio/#/backoffice');
+  assert.deepEqual(s.names(), ['updateUser', 'getSession', 'exchange']);
+  assert.deepEqual(s.log.at(-1)[2], { revokeOthers: true });
 });
 
 test('update-password: updateUser first, then the exchange with revokeOthers:true (§3.3.2a, §3.3.5)', async () => {
@@ -701,6 +797,10 @@ test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar befor
   assert.match(statements, /^bhAuthHygiene\(window\);/, 'the first statement after the imports');
   assert.ok(code.indexOf('history.replaceState') < code.indexOf('createClient('), 'token_hash goes first');
   assert.ok(code.indexOf("params.delete('token_hash')") < code.indexOf('history.replaceState'));
+  // (b): the hash is read once, before the address bar loses it, and the replaced address keeps no hash
+  assert.ok(code.indexOf('hashLink(location.hash)') > 0 && code.indexOf('hashLink(location.hash)') < code.indexOf('history.replaceState'), 'the hash is read before it is removed');
+  assert.match(code, /history\.replaceState\(null, '', location\.pathname \+ \(q \? '\?' \+ q : ''\)\);/, 'pathname and query only: the hash never survives');
+  assert.equal((code.match(/location\.hash/g) || []).length, 2, 'read only in the confirm.html prologue');
   assert.match(s, /const TURNSTILE_SRC = 'https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit';/);
   assert.match(s, /const NEEDS_TURNSTILE = new Set\(\['login', 'signup', 'reset'\]\);/);
   assert.equal((s.match(/captcha = await captchaFor\('(login|signup|reset)'\);/g) || []).length, 3);

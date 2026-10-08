@@ -78,7 +78,7 @@ Optional: `ENQUIRY_TO` sends enquiries somewhere else (separate several addresse
 | `STUDIO_EDGE_SECRET_STAGING` | `not-this-environment` | the staging edge value | the header on the staging rewrites |
 | `STUDIO_INGEST_URL`, `LEADS_INGEST_SECRET` | set | unset | the CRM forward (`https://bargainhub-studio.fly.dev/api/leads/ingest` and its signing key) |
 
-Both edge secret names exist in both environments, so a production build opened on its own deployment address sends `not-this-environment` to staging and is refused. The Supabase URL, its publishable key and the Turnstile site key are public and committed in `auth/config.js`.
+Both edge secret names exist in both environments, so a production build opened on its own deployment address sends `not-this-environment` to staging and is refused. The Supabase URL, its publishable key and the Turnstile site key are public and committed in `auth/config.js`. The Supabase dashboard settings the sign-in pages need (Site URL, redirect URLs and the four email-template links) are in `docs/supabase/SETTINGS.md`.
 
 Local and test only: `PORT`, `HOST`, `STUDIO_DEV_URL` and `STUDIO_EDGE_SECRET_STAGING` (dev server), `DEPLOY_ENV` (smoke test), `SITE_CHECK_ROOT` (site check), `RESEND_API_URL` (tests), `PLAYWRIGHT_MODULE`, `CHROMIUM_PATH`, `AXE_PATH`, `LIGHTHOUSE_BIN` (browser checks).
 
