@@ -577,24 +577,34 @@ test('smoke: a refusal names only the studio error code, never other body text',
   assert.equal(refusalCode({ status: 403 }, null), '');
 });
 
-// what a visitor or a screen reader meets: the text outside <style>, <script> and comments, plus every aria-label and alt
+// what a visitor, a screen reader, a search result or a link preview meets: the text outside <style>,
+// <script> and comments; every aria-label, alt and title attribute; the description and image-alt
+// meta tags; and every string in the page's JSON-LD
+const SHOWN_META = /^(description|og:description|twitter:description|og:image:alt|twitter:image:alt)$/;
+const jsonStrings = v => typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(jsonStrings) : [];
 const userFacing = html => {
-  const attrs = [...html.matchAll(/\s(?:aria-label|alt)="([^"]*)"/g)].map(m => m[1]);
+  const attrs = [...html.matchAll(/\s(?:aria-label|alt|title)="([^"]*)"/g)].map(m => m[1]);
+  const meta = [...html.matchAll(/<meta\b[^>]*>/gi)].map(m => m[0])
+    .filter(t => SHOWN_META.test((t.match(/\s(?:name|property)="([^"]*)"/) || [])[1] || ''))
+    .map(t => (t.match(/\scontent="([^"]*)"/) || [])[1] || '');
+  const ld = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap(m => jsonStrings(JSON.parse(m[1])));
   const text = html.replace(/<!--[\s\S]*?-->/g, ' ').replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  return [text, ...attrs].join(' ');
+  return [text, ...attrs, ...meta, ...ld].join('\n');
 };
+// the claims SEO-H0 keeps off the Hanesteel and Hanesulation pages
+const TRUST_CLAIM = /[^.\n]*(certif|\btested\b|\bapproved\b)[^.\n]*/gi;
 
-test('trust (SEO-H0): hanesteel.html claims no certification in its text, aria-labels or alt text', () => {
+test('trust (SEO-H0): hanesteel.html claims no certification, test or approval anywhere a person or a preview sees it', () => {
   const s = read('hanesteel.html');
-  assert.deepEqual(userFacing(s).match(/[^.\n]*\bcertified\b[^.\n]*/gi) || [], []);
+  assert.deepEqual(userFacing(s).match(TRUST_CLAIM) || [], []);
   assert.match(s, /<a href="#certified" data-scroll>Standards<\/a>/);
   assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Built for New Zealand homes\.<\/h2>/);
   assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
 });
 
-test('trust (SEO-H0): hanesulation.html claims no certification in its text, aria-labels or alt text', () => {
+test('trust (SEO-H0): hanesulation.html claims no certification, test or approval anywhere a person or a preview sees it', () => {
   const s = read('hanesulation.html');
-  assert.deepEqual(userFacing(s).match(/[^.\n]*\bcertified\b[^.\n]*/gi) || [], []);
+  assert.deepEqual(userFacing(s).match(TRUST_CLAIM) || [], []);
   assert.match(s, /<a href="#certified" data-scroll>Standards<\/a>/);
   assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Ready to sell\.<\/h2>/);
   assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
@@ -674,4 +684,19 @@ test('trust: the Hanesteel safety-glass callout names the standard, not a test r
   const s = read('hanesteel.html');
   assert.ok(s.includes('<span class="co__label"><b>Safety glass</b>to AS/NZS 2208</span>'));
   assert.doesNotMatch(userFacing(s), /impact tested/i);
+});
+
+test('trust: the scan sees meta descriptions, title attributes and JSON-LD, not only the body text', () => {
+  const page = read('hanesteel.html');
+  const injected = [
+    page.replace(/<meta name="description" content="/, '$&Certified. '),
+    page.replace('<a href="#certified" data-scroll>Standards</a>', '<a href="#certified" data-scroll title="Certified to NZS 4211">Standards</a>'),
+    page.replace('</main>', '<p>Independently tested and approved.</p></main>'),
+    page.replace(/("description":\s*")/, '$1Approved by everyone. '),
+    page.replace(/<meta property="og:image:alt" content="/, '$&Certified door: ')
+  ];
+  for (const [i, p] of injected.entries()) {
+    assert.notEqual(p, page, `injection ${i} applied`);
+    assert.ok((userFacing(p).match(TRUST_CLAIM) || []).length > 0, `injection ${i} is caught`);
+  }
 });
