@@ -599,3 +599,52 @@ test('trust (SEO-H0): hanesulation.html claims no certification in its text, ari
   assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Ready to sell\.<\/h2>/);
   assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
 });
+
+// enquiry.js in a sandbox: every post is recorded and answered by `answer` (a 502 by default)
+function enquirySandbox({ answer = () => ({ ok: false, status: 502 }), dialog = false } = {}) {
+  const posted = [];
+  let n = 0;
+  const el = (extra = {}) => ({ textContent: '', innerHTML: '', placeholder: '', classList: { add() {}, remove() {}, toggle() {} }, listeners: {},
+    addEventListener(t, f) { this.listeners[t] = f; }, setAttribute() {}, removeAttribute() {}, focus() {}, scrollIntoView() {}, ...extra });
+  const input = v => ({ value: v });
+  const form = (values = {}) => el({
+    elements: { name: input('Aroha Smith'), email: input('aroha@example.com'), website: input(''), marketingOptIn: { checked: false },
+      phone: input(''), business: input(''), region: input(''), message: input(''), ...values },
+    dataset: {}, reset() {}, reportValidity: () => true, querySelector: s => (s === 'input[name="website"]' ? {} : null)
+  });
+  const dlgForm = form();
+  const parts = { form: dlgForm, '.qd__x': el(), '.qd__send': el(), '#qdTopic': el(), '#qdStatus': el() };
+  const dlg = el({ querySelector: s => parts[s] || null, showModal() {}, close() {} });
+  const w = {
+    location: { protocol: 'https:', pathname: '/contact.html', search: '', href: '' },
+    crypto: { randomUUID: () => `00000000-0000-4000-8000-${String(++n).padStart(12, '0')}` },
+    document: { readyState: 'complete', querySelectorAll: () => [], querySelector: () => null, addEventListener() {},
+      createElement: () => dlg, body: { append() {} }, documentElement: { classList: { add() {}, remove() {} } }, activeElement: null },
+    fetch: (u, o) => { const b = JSON.parse(o.body); posted.push(b); const a = answer(b); return Promise.resolve({ ...a, json: () => Promise.resolve({}) }); },
+    URLSearchParams, Date, JSON, Promise, String, Boolean, encodeURIComponent, setTimeout, Event: class {}
+  };
+  w.window = w;
+  vm.runInContext(read('assets/enquiry.js'), vm.createContext(w));
+  const send = () => dlgForm.listeners.submit({ preventDefault() {} });
+  return { w, posted, form, dlgForm, send, dialog };
+}
+
+test('enquiry.js: a retry of the same fill keeps its submissionId; an edited retry gets a new one', async () => {
+  const s = enquirySandbox();
+  const f = s.form();
+  const go = (fields, o = {}) => s.w.HanesEnquiry.submit(f, { subject: 'Website enquiry', form: 'contact page', fields, ...o });
+  await go([['Message', 'Two windows']]);
+  await go([['Message', 'Two windows']]);
+  assert.equal(s.posted[1].submissionId, s.posted[0].submissionId, 'an unchanged retry is the same enquiry');
+  await go([['Message', 'Three windows']]);
+  assert.notEqual(s.posted[2].submissionId, s.posted[1].submissionId, 'edited fields: a new enquiry');
+  f.elements.email.value = 'aroha@example.org';
+  await go([['Message', 'Three windows']]);
+  assert.notEqual(s.posted[3].submissionId, s.posted[2].submissionId, 'an edited email: a new enquiry');
+  await go([['Message', 'Three windows']], { marketingOptIn: true });
+  assert.notEqual(s.posted[4].submissionId, s.posted[3].submissionId, 'a changed news choice: a new enquiry');
+  await go([['Message', 'Three windows']], { marketingOptIn: true, subject: 'Hanesteel quote' });
+  assert.notEqual(s.posted[5].submissionId, s.posted[4].submissionId, 'a changed subject: a new enquiry');
+  await go([['Message', 'Three windows']], { marketingOptIn: true, subject: 'Hanesteel quote' });
+  assert.equal(s.posted[6].submissionId, s.posted[5].submissionId);
+});

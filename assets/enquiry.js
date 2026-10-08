@@ -8,8 +8,10 @@
      href (contact.html?topic=…#enquiry) still works without JavaScript.
    Every post also carries two top-level keys (ADDENDUM §6.4):
      marketingOptIn  true only when the form's optional, unticked "news and offers" box is ticked
-     submissionId    a UUID made once per form fill and reused on every retry of that fill, so a
-                     retried enquiry is recognised as the same one; a new fill starts after a send
+     submissionId    a UUID made once per form fill and reused on every unchanged retry of that
+                     fill, so a retried enquiry is recognised as the same one; a retry with any
+                     answer changed (name, email, subject, fields, the news box) is a new enquiry
+                     and gets a new id, and a new fill starts after a send
    If the website can't send, the visitor's email app opens with everything filled in, ending
      with "Reference: <submissionId>".
    ========================================================================================= */
@@ -20,7 +22,8 @@ window.HanesEnquiry = (() => {
   const REGIONS = ['Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', "Hawke's Bay", 'Taranaki', 'Manawatū-Whanganui', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland', 'Outside New Zealand'];
   const $ = (s, r = document) => r.querySelector(s);
 
-  // one id per form fill: kept across retries, dropped once the enquiry is sent
+  // one id per form fill: kept across unchanged retries, new when an answer changed (the CRM keeps
+  // the first enquiry under an id, so an edited resend must not reuse it), dropped once sent
   const fills = new WeakMap();
   const uuid = () => {
     const c = window.crypto;
@@ -30,7 +33,13 @@ window.HanesEnquiry = (() => {
     const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
     return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
   };
-  const submissionId = form => { let id = fills.get(form); if (!id) { id = uuid(); fills.set(form, id); } return id; };
+  const submissionId = (form, answers) => {
+    const fp = JSON.stringify(answers), fill = fills.get(form);
+    if (fill && fill.fp === fp) return fill.id;
+    const id = uuid();
+    fills.set(form, { id, fp });
+    return id;
+  };
 
   // a field people never see and bots fill in
   const trap = form => {
@@ -62,7 +71,7 @@ window.HanesEnquiry = (() => {
     const subject = String(o.subject || 'Website enquiry').trim();
     const fields = (o.fields || []).map(([k, v]) => [k, v == null ? '' : String(v).trim()]).filter(([, v]) => v);
     const marketingOptIn = o.marketingOptIn != null ? o.marketingOptIn === true : Boolean(el.marketingOptIn && el.marketingOptIn.checked);
-    const id = submissionId(form);
+    const id = submissionId(form, { name, email, subject, fields, marketingOptIn });
     const btn = form.querySelector('[type="submit"]'), text = btn && btn.textContent.trim() ? btn.innerHTML : null;
     form.dataset.sending = '1'; form.setAttribute('aria-busy', 'true');
     if (btn) { btn.disabled = true; if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
