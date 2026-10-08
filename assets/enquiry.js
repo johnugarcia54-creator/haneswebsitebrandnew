@@ -8,10 +8,11 @@
      href (contact.html?topic=…#enquiry) still works without JavaScript.
    Every post also carries two top-level keys (ADDENDUM §6.4):
      marketingOptIn  true only when the form's optional, unticked "news and offers" box is ticked
-     submissionId    a UUID made once per form fill and reused on every unchanged retry of that
-                     fill, so a retried enquiry is recognised as the same one; a retry with any
-                     answer changed (name, email, subject, fields, the news box) is a new enquiry
-                     and gets a new id, and a new fill starts after a send
+     submissionId    a UUID per enquiry, reused on every unchanged retry of it, so a retried
+                     enquiry is recognised as the same one, even after another enquiry was tried
+                     on the same form in between; changed answers (name, email, subject, fields,
+                     the news box) are a new enquiry with a new id; once an enquiry is sent its
+                     id is dropped, so sending the same answers again is a new enquiry
    If the website can't send, the visitor's email app opens with everything filled in, ending
      with "Reference: <submissionId>".
    ========================================================================================= */
@@ -22,9 +23,11 @@ window.HanesEnquiry = (() => {
   const REGIONS = ['Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', "Hawke's Bay", 'Taranaki', 'Manawatū-Whanganui', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland', 'Outside New Zealand'];
   const $ = (s, r = document) => r.querySelector(s);
 
-  // one id per form fill: kept across unchanged retries, new when an answer changed (the CRM keeps
-  // the first enquiry under an id, so an edited resend must not reuse it), dropped once sent
+  // per form, the id of each enquiry tried on it, keyed by its answers: an unchanged retry keeps its
+  // id (the CRM may already hold it after a failed email), changed answers get a new one (the CRM
+  // keeps the first values under an id, so an edited resend must not reuse it), dropped once sent
   const fills = new WeakMap();
+  const FILLS_MAX = 20;
   const uuid = () => {
     const c = window.crypto;
     if (c && typeof c.randomUUID === 'function') return c.randomUUID();
@@ -33,11 +36,14 @@ window.HanesEnquiry = (() => {
     const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
     return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
   };
-  const submissionId = (form, answers) => {
-    const fp = JSON.stringify(answers), fill = fills.get(form);
-    if (fill && fill.fp === fp) return fill.id;
+  const fingerprint = answers => JSON.stringify(answers);
+  const submissionId = (form, fp) => {
+    let ids = fills.get(form);
+    if (!ids) fills.set(form, ids = new Map());
+    if (ids.has(fp)) return ids.get(fp);
     const id = uuid();
-    fills.set(form, { id, fp });
+    ids.set(fp, id);
+    if (ids.size > FILLS_MAX) ids.delete(ids.keys().next().value);
     return id;
   };
 
@@ -71,7 +77,7 @@ window.HanesEnquiry = (() => {
     const subject = String(o.subject || 'Website enquiry').trim();
     const fields = (o.fields || []).map(([k, v]) => [k, v == null ? '' : String(v).trim()]).filter(([, v]) => v);
     const marketingOptIn = o.marketingOptIn != null ? o.marketingOptIn === true : Boolean(el.marketingOptIn && el.marketingOptIn.checked);
-    const id = submissionId(form, { name, email, subject, fields, marketingOptIn });
+    const fp = fingerprint({ name, email, subject, fields, marketingOptIn }), id = submissionId(form, fp);
     const btn = form.querySelector('[type="submit"]'), text = btn && btn.textContent.trim() ? btn.innerHTML : null;
     form.dataset.sending = '1'; form.setAttribute('aria-busy', 'true');
     if (btn) { btn.disabled = true; if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
@@ -88,7 +94,7 @@ window.HanesEnquiry = (() => {
       }
       if (r && r.ok) {
         ok = true;
-        fills.delete(form);
+        fills.get(form).delete(fp);
         say(status, o.done || `Thanks, ${name.split(' ')[0]}. Your enquiry is with our team, and we'll reply to ${email}.`, 'ok');
         form.reset();
       } else if (r && r.status === 400) {
@@ -151,9 +157,7 @@ window.HanesEnquiry = (() => {
   const open = (t, s, hint, from) => {
     if (!dlg) build();
     const f = $('form', dlg);
-    const next = t || 'General enquiry';
-    if (next !== topic) fills.delete(f); // another topic is another enquiry, never an earlier fill's id
-    topic = next; subj = s || topic; trigger = from || document.activeElement;
+    topic = t || 'General enquiry'; subj = s || topic; trigger = from || document.activeElement;
     $('#qdTopic', dlg).textContent = topic;
     f.elements.message.placeholder = hint || '';
     $('.qd__send', dlg).textContent = 'Send enquiry';

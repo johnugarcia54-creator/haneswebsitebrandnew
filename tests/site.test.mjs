@@ -659,7 +659,7 @@ test('enquiry.js: a retry of the same fill keeps its submissionId; an edited ret
   assert.equal(s.posted[6].submissionId, s.posted[5].submissionId);
 });
 
-test('enquiry.js quote dialog: a new topic is a new enquiry, never the id of an earlier failed one', async () => {
+test('enquiry.js quote dialog: each enquiry keeps its own id across topics; an unchanged retry is always the same enquiry', async () => {
   const s = enquirySandbox();
   const { open } = s.w.HanesEnquiry;
   s.dlgForm.elements.message.value = 'Kitchen for a new build';
@@ -669,8 +669,29 @@ test('enquiry.js quote dialog: a new topic is a new enquiry, never the id of an 
   open('Hanesteel windows'); await s.send();
   assert.notEqual(s.posted[2].submissionId, s.posted[1].submissionId, 'another topic: a new enquiry');
   open('Bargainhub kitchen'); open('Hanesteel windows'); await s.send();
-  assert.notEqual(s.posted[3].submissionId, s.posted[2].submissionId, 'opened on another topic in between: the fill starts again');
-  assert.equal(new Set(s.posted.map(p => p.submissionId)).size, 3);
+  assert.equal(s.posted[3].submissionId, s.posted[2].submissionId, 'opened on another topic in between, sent unchanged: still a retry');
+  // A, then B sent, then A unchanged: A's id, so a lead the CRM already stored is not duplicated
+  open('Bargainhub kitchen'); await s.send();
+  assert.equal(s.posted[4].submissionId, s.posted[0].submissionId, 'back to the first enquiry: its own id');
+  assert.equal(new Set(s.posted.map(p => p.submissionId)).size, 2);
+});
+
+test('enquiry.js: once an enquiry is sent, only that enquiry\'s id is dropped', async () => {
+  let fail = true;
+  const s = enquirySandbox({ answer: () => (fail ? { ok: false, status: 502 } : { ok: true, status: 200 }) });
+  const { open } = s.w.HanesEnquiry;
+  s.dlgForm.elements.message.value = 'Two windows';
+  open('Hanesteel windows'); await s.send();           // A fails
+  fail = false;
+  open('Bargainhub kitchen'); await s.send();          // B is sent
+  fail = true;
+  open('Hanesteel windows'); await s.send();           // A again, unchanged
+  assert.equal(s.posted[2].submissionId, s.posted[0].submissionId, 'A keeps its id after B was sent');
+  fail = false;
+  await s.send();                                       // A is sent
+  s.dlgForm.elements.message.value = 'Two windows';
+  await s.send();                                       // the same answers after a send: a new enquiry
+  assert.notEqual(s.posted[4].submissionId, s.posted[3].submissionId);
 });
 
 test('owner rule: no shipped file, script or README names an AI model', () => {
