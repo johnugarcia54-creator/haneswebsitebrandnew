@@ -221,17 +221,19 @@ test('exchange: POST /api/auth/exchange, same-origin credentials, JSON body with
   assert.doesNotMatch(url, /tok/, 'the token never travels in the URL');
 });
 
-test('exchange: every §4.3 error code comes back as it was sent; 5xx, bad JSON and no answer are retryable', async () => {
+test('exchange: every §4.3 error code comes back as it was sent; 5xx, 408, 429, bad JSON and no answer are retryable', async () => {
   for (const [status, code] of [[400, 'invalid_input'], [400, 'privacy_ack_required'], [401, 'invalid_token'], [401, 'session_ended'], [401, 'email_unconfirmed'],
     [401, 'reauth_required'], [403, 'cross_origin'], [403, 'origin_required'], [403, 'not_allowed_here'], [403, 'signup_closed'], [403, 'account_disabled'],
     [409, 'invitation_needs_link'], [409, 'link_requires_invitation'], [429, 'rate_limited'], [503, 'auth_unavailable'], [503, 'auth_settings_unsafe']]) {
     const r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(status, { error: { code, message: 'x' } })) });
     assert.deepEqual(r, { ok: false, status, code });
-    assert.equal(lib.retryable(r), status >= 500, code);
+    assert.equal(lib.retryable(r), status >= 500 || status === 429, code);
   }
   let r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(502, undefined)) });
   assert.deepEqual(r, { ok: false, status: 502, code: 'unavailable' });
   assert.ok(lib.retryable(r));
+  r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(408, undefined)) });
+  assert.ok(lib.retryable(r), 'a 408 is the studio timing out, not a refusal');
   r = await lib.exchange('t', {}, { fetch: () => Promise.resolve(res(404, undefined)) });
   assert.deepEqual(r, { ok: false, status: 404, code: 'unexpected' });
   assert.ok(!lib.retryable(r));
@@ -427,10 +429,10 @@ test('sign-in: exchange refusals use the §3.3.3 wording and end the Supabase se
     assert.deepEqual(out, { action: 'error', code, message: msg });
     assert.equal(s.names().at(-1), 'signOut');
   }
-  for (const r of [fail(0, 'network'), fail(503, 'auth_unavailable'), fail(500, 'unavailable')]) {
+  for (const r of [fail(0, 'network'), fail(503, 'auth_unavailable'), fail(500, 'unavailable'), fail(408, 'unavailable'), fail(429, 'rate_limited')]) {
     const s = stub({ exchangeAnswers: [r] });
     const out = await lib.loginFlow({ email: 'a@b.co', password: 'pw', captchaToken: 't' }, s.deps);
-    assert.equal(out.message, "You're signed in, but the studio is unavailable for a moment.");
+    assert.equal(out.message, r.status === 429 ? lib.MESSAGES.rate_limited : "You're signed in, but the studio is unavailable for a moment.");
     assert.equal(typeof out.retry, 'function');
     assert.ok(!s.names().includes('signOut'), 'kept signed in to Supabase so Retry can work');
     assert.equal((await out.retry()).action, 'go');

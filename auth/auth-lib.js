@@ -115,8 +115,9 @@ export function messageFor(code) {
   return typeof code === 'string' && Object.hasOwn(MESSAGES, code) ? MESSAGES[code] : MESSAGES.unexpected;
 }
 
-// the studio is down or unreachable (not a refusal): the person may retry the exchange
-export const retryable = r => !!r && !r.ok && (r.status === 0 || r.status >= 500);
+// the studio is down, unreachable, timed out (408) or busy (429), not a refusal: the Supabase
+// session is kept and the person may retry the exchange, so a one-time link is never spent for nothing
+export const retryable = r => !!r && !r.ok && (r.status === 0 || r.status === 408 || r.status === 429 || r.status >= 500);
 
 /* ---- "Keep me signed in" (ADDENDUM §3.3.4) ------------------------------------------------ */
 const COOKIE_ATTRS = '; Path=/; SameSite=Strict; Secure';
