@@ -31,19 +31,19 @@ export const PAGES = [
   { file: 'hanesteel.html', name: 'Hanesteel', priority: '0.8',
     title: 'Hanesteel — Aluminium and uPVC windows and doors, NZ',
     description: 'Hanesteel aluminium and uPVC windows and doors for New Zealand homes, supplied by Hanes Distribution from Christchurch. Request a quote online.',
-    og: 'hanesteel.jpg', ogAlt: 'A Hanesteel front door: windows and doors built for New Zealand', brand: 'Aluminium and uPVC windows and doors for New Zealand homes.' },
+    og: 'hanesteel-2.jpg', ogAlt: 'A Hanesteel front door: windows and doors built for New Zealand', brand: 'Aluminium and uPVC windows and doors for New Zealand homes.' },
   { file: 'hanestone.html', name: 'Hanestone', priority: '0.8',
     title: 'Hanestone — Trusus gypsum board for walls and ceilings',
     description: 'Hanestone Trusus gypsum plasterboard for walls and ceilings. Bulk supply to New Zealand merchants from Christchurch. Ask for a merchant quote.',
-    og: 'hanestone.jpg', ogAlt: 'Hanestone Trusus gypsum board on a ceiling frame', brand: 'Trusus gypsum board for walls and ceilings.' },
+    og: 'hanestone-2.jpg', ogAlt: 'Hanestone Trusus gypsum board on a ceiling frame', brand: 'Trusus gypsum board for walls and ceilings.' },
   { file: 'hanewood.html', name: 'Hanewood', priority: '0.8',
     title: 'Hanewood — MDF, HDF, plywood, H3.2 plywood and LVL',
     description: 'Hanewood MDF, HDF, plywood, H3.2 radiata pine plywood and LVL for merchants and retailers. Stocked in Christchurch, delivered nationwide.',
-    og: 'hanewood.jpg', ogAlt: 'A stack of Hanewood plywood sheets', brand: 'MDF, HDF, plywood, H3.2 radiata pine plywood and LVL.' },
+    og: 'hanewood-2.jpg', ogAlt: 'A forklift carrying Hanewood plywood through the warehouse', brand: 'MDF, HDF, plywood, H3.2 radiata pine plywood and LVL.' },
   { file: 'hanesulation.html', name: 'Hanesulation', priority: '0.8',
     title: 'Hanesulation — Glass wool insulation, R2 to R7',
     description: 'Hanesulation glass wool insulation for walls and ceilings, supplied wholesale to NZ merchants. Held in Christchurch and delivered nationwide.',
-    og: 'hanesulation.jpg', ogAlt: 'A roll of Hanesulation glass wool insulation', brand: 'Glass wool insulation for walls and ceilings, R2 to R7.' },
+    og: 'hanesulation-2.jpg', ogAlt: 'A roll of Hanesulation glass wool insulation', brand: 'Glass wool insulation for walls and ceilings, R2 to R7.' },
   { file: 'bargainhub.html', name: 'Bargainhub Interiors', priority: '0.8',
     title: 'Bargainhub Interiors — Kitchens, bathrooms, whole homes',
     description: 'Kitchens, bathrooms and whole-home interiors from Bargainhub, designed in plan and 3D, supplied on one order and delivered nationwide.',
@@ -59,7 +59,11 @@ export const PAGES = [
   { file: 'contact.html', name: 'Contact', priority: '0.7',
     title: 'Contact Hanes Distribution — Offices and enquiries',
     description: 'Contact Hanes Distribution: head office and showroom in Sockburn, warehouse in Hornby, Christchurch, and offices in Hong Kong and Zhangzhou.',
-    og: 'contact.jpg', ogAlt: 'The Hanes offices in Christchurch, Hong Kong and Zhangzhou on a globe', about: 'contact' }
+    og: 'contact-2.jpg', ogAlt: 'A container ship at sea, on its way to New Zealand', about: 'contact' },
+  { file: 'privacy.html', name: 'Privacy statement', priority: '0.3',
+    title: 'Privacy statement — Hanes Distribution and Bargainhub',
+    description: 'How Hanes Distribution and Bargainhub collect, use, store and share your personal information, who processes it for us and where, and your rights.',
+    og: 'index.jpg', ogAlt: 'A Hanes Distribution truck: engineered supply, delivered nationwide' }
 ];
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

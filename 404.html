@@ -10,49 +10,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/site.css">
-<style>
-@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/inter-latin-400-normal.woff2) format('woff2')}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/inter-latin-600-normal.woff2) format('woff2')}
-:root{
-  --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b; --alt:#f5f5f7; --link:#0066cc;
-  --ease:cubic-bezier(.28,.11,.32,1);
-  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
-  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{min-height:100vh;display:flex;flex-direction:column;padding-top:var(--gb,0px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip}
-a{color:inherit;text-decoration:none}
-main{flex:1;padding:clamp(72px,12vh,140px) 22px clamp(72px,10vh,120px)}
-.nf{max-width:980px;margin:0 auto;text-align:center}
-.nf__eyebrow{font-family:var(--display);font-weight:600;font-size:clamp(17px,1.6vw,21px);color:var(--ink-3)}
-.nf h1{margin-top:8px;font-family:var(--display);font-weight:600;font-size:clamp(44px,6.4vw,80px);line-height:1.05;letter-spacing:-.03em;text-wrap:balance}
-.nf__sub{max-width:560px;margin:18px auto 0;font-size:clamp(17px,1.5vw,21px);line-height:1.4;color:var(--ink-2);text-wrap:pretty}
-.nf__home{display:inline-flex;align-items:center;gap:4px;margin-top:26px;font-size:17px;color:var(--link)}
-.nf__home:hover{text-decoration:underline}
-.nf__home svg{width:10px;height:10px}
-.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:clamp(48px,8vh,84px) auto 0;max-width:1100px}
-.tile{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:188px;padding:24px 22px 22px;border-radius:22px;background:var(--alt);text-align:left;overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
-.tile::before{content:"";position:absolute;inset:auto 0 0;height:4px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
-.tile:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(0,0,0,.3)}
-.tile:hover::before{transform:none}
-.tile i{display:block;width:10px;height:10px;border-radius:50%;background:var(--c)}
-.tile b{display:block;margin-top:28px;font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
-.tile small{display:block;margin-top:4px;font-size:14px;line-height:1.35;color:var(--ink-2)}
-.tile em{display:inline-flex;align-items:center;gap:4px;margin-top:16px;font-style:normal;font-size:14px;color:var(--link)}
-.tile em svg{width:9px;height:9px;transition:transform .3s var(--ease)}
-.tile:hover em svg{transform:translateX(3px)}
-.tile:focus-visible{outline:2px solid var(--link);outline-offset:3px}
-@media (max-width:980px){.tiles{grid-template-columns:repeat(2,1fr)}.tile:last-child{grid-column:1 / -1}}
-@media (max-width:480px){.tiles{grid-template-columns:1fr}.tile{min-height:0}.tile b{margin-top:18px}}
-@media (prefers-reduced-motion:no-preference){
-  .nf > *,.tile{animation:rise .9s var(--ease) both}
-  .nf h1{animation-delay:.06s}.nf__sub{animation-delay:.12s}.nf__home{animation-delay:.18s}
-  .tile:nth-child(1){animation-delay:.24s}.tile:nth-child(2){animation-delay:.29s}.tile:nth-child(3){animation-delay:.34s}.tile:nth-child(4){animation-delay:.39s}.tile:nth-child(5){animation-delay:.44s}
-  @keyframes rise{from{opacity:0;transform:translateY(24px)}}
-}
-</style>
+<link rel="stylesheet" href="/assets/404.css">
 </head>
 <body>
 
@@ -60,13 +18,14 @@ main{flex:1;padding:clamp(72px,12vh,140px) 22px clamp(72px,10vh,120px)}
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="/">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="/hanesteel.html">Hanesteel</a></li><li><a href="/hanestone.html">Hanestone</a></li><li><a href="/hanewood.html">Hanewood</a></li><li><a href="/hanesulation.html">Hanesulation</a></li><li><a href="/bargainhub.html">Bargainhub</a></li><li><a href="/hisense.html">Hisense</a></li><li><a href="/tracking.html">Tracking</a></li><li><a href="/contact.html">Contact</a></li></ul>
+    <a class="gb__login" href="/auth/login.html">Log in</a>
     <a class="gb__quote" href="/contact.html#enquiry">Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="/hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="/hanestone.html">Hanestone<span>Plasterboard</span></a><a href="/hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="/hanesulation.html">Hanesulation<span>Insulation</span></a><a href="/bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
-    <div class="gb__sm"><a href="/">Hanes Distribution home</a><a href="/tracking.html">Hanes Track</a><a href="/hisense.html">Hisense appliances</a><a href="/contact.html">Contact us</a></div>
+    <div class="gb__sm"><a href="/">Hanes Distribution home</a><a href="/tracking.html">Hanes Track</a><a href="/hisense.html">Hisense appliances</a><a href="/contact.html">Contact us</a><a class="gb__login" href="/auth/login.html">Log in</a></div>
     <a class="gb__quote" href="/contact.html#enquiry">Get a quote</a>
   </div>
 </div>
@@ -79,11 +38,11 @@ main{flex:1;padding:clamp(72px,12vh,140px) 22px clamp(72px,10vh,120px)}
     <a class="nf__home" href="/">Go to Hanes Distribution <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></a>
   </div>
   <nav class="tiles" aria-label="Hanes brands">
-    <a class="tile" href="/hanesteel.html" style="--c:#b8894d"><span><i></i><b>Hanesteel</b><small>Windows and doors</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
-    <a class="tile" href="/hanestone.html" style="--c:#5d7389"><span><i></i><b>Hanestone</b><small>Plasterboard</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
-    <a class="tile" href="/hanewood.html" style="--c:#b86a2e"><span><i></i><b>Hanewood</b><small>Plywood, board and LVL</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
-    <a class="tile" href="/hanesulation.html" style="--c:#e5b83b"><span><i></i><b>Hanesulation</b><small>Insulation</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
-    <a class="tile" href="/bargainhub.html" style="--c:#a07a4a"><span><i></i><b>Bargainhub</b><small>Kitchens and interiors</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
+    <a class="tile tile--hanesteel" href="/hanesteel.html"><span><i></i><b>Hanesteel</b><small>Windows and doors</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
+    <a class="tile tile--hanestone" href="/hanestone.html"><span><i></i><b>Hanestone</b><small>Plasterboard</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
+    <a class="tile tile--hanewood" href="/hanewood.html"><span><i></i><b>Hanewood</b><small>Plywood, board and LVL</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
+    <a class="tile tile--hanesulation" href="/hanesulation.html"><span><i></i><b>Hanesulation</b><small>Insulation</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
+    <a class="tile tile--bargainhub" href="/bargainhub.html"><span><i></i><b>Bargainhub</b><small>Kitchens and interiors</small></span><em>Visit <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 1l4 4-4 4"/></svg></em></a>
   </nav>
 </main>
 
@@ -95,7 +54,7 @@ main{flex:1;padding:clamp(72px,12vh,140px) 22px clamp(72px,10vh,120px)}
       <div><h2>Visit</h2><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
       <div><h2>Contact</h2><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="/contact.html#enquiry">Make an enquiry</a></li></ul></div>
     </div>
-    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span class="gf__links"><a href="/privacy.html">Privacy</a><a class="gf__login" href="/auth/login.html">Log in</a></span><span>Christchurch, New Zealand</span></div>
   </div>
 </footer>
 

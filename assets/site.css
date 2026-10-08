@@ -21,10 +21,14 @@ html{scroll-padding-top:var(--gb-offset)}
 html.gb-open .gb__burger::before{transform:translateY(3.5px) rotate(45deg)}
 html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
 .gb__panel{display:none}
+/* Log in (My account once signed in, assets/site.js): a quiet text link just before the quote pill */
+.gb__in>.gb__login{flex:none;display:block;padding:14px 7px;opacity:.82;transition:opacity .2s;white-space:nowrap}
+.gb__in>.gb__login:hover{opacity:1}
 .gb__quote{flex:none;display:inline-flex;align-items:center;justify-content:center;height:28px;margin-left:6px;padding:0 12px;border-radius:980px;background:#f5f5f7;color:#1d1d1f!important;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .gb__quote:hover{background:#fff}
 .gb a:focus-visible,.gb__burger:focus-visible,.gb__quote:focus-visible{outline:2px solid #2997ff;outline-offset:2px;border-radius:4px}
-@media (max-width:833px){
+/* the burger takes over below 880px: from there down the bar's links and Log in no longer fit beside the logo */
+@media (max-width:879px){
   .gb__list{display:none}
   .gb__burger{display:block}
   .gb__panel{display:block;position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;z-index:1;padding:64px 40px 40px;background:#161617;overflow-y:auto;overscroll-behavior:contain;visibility:hidden;opacity:0;transition:opacity .35s cubic-bezier(.28,.11,.32,1),visibility 0s .35s}
@@ -40,13 +44,18 @@ html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
   .gb__panel .gb__sm{margin-top:26px;padding-top:18px;border-top:1px solid #424245}
   .gb__panel .gb__sm a{font-size:17px;font-weight:500;padding:7px 0}
   html.gb-open{overflow:hidden}
-  .gb__in>.gb__quote{display:none}
+  .gb__in>.gb__quote,.gb__in>.gb__login{display:none}
   .gb__panel a.gb__quote{display:inline-flex;width:auto;height:44px;min-width:44px;margin-top:26px;padding:0 18px;border-radius:980px;background:#f5f5f7;color:#1d1d1f;font:600 16px/1 "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
   html.gb-open .gb__panel a.gb__quote{opacity:1;transform:none}
 }
 @media (max-width:1100px){
-  .gb__list a{padding:14px 5px}
+  .gb__list a,.gb__in>.gb__login{padding:14px 5px}
   .gb__quote{padding:0 10px}
+}
+/* just above the burger, signed in: "My account" is longer than "Log in", so the links close up a little
+   to keep clear space after the logo (tests/browser/bar.mjs checks at least 16px in both states) */
+@media (max-width:959px){
+  .gb__list a,.gb__in>.gb__login{padding:14px 4px}
 }
 /* a fingertip needs 44px; a mouse can keep the slim pill */
 @media (pointer:coarse),(hover:none){
@@ -90,6 +99,11 @@ html.gb-open .gb__burger::after{transform:translateY(-3.5px) rotate(-45deg)}
 .gf--dark .gf__cols a[aria-current="page"]{color:#f5f5f7}
 .gf__base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-top:16px;border-top:1px solid #d2d2d7}
 .gf--dark .gf__base{border-color:#424245}
+/* Privacy and Log in in every footer's base row (24px targets, WCAG 2.5.8) */
+.gf__links{display:flex;flex-wrap:wrap;gap:0 18px}
+.gf__links a{display:inline-flex;align-items:center;min-height:24px;margin:-4px 0;color:inherit;text-decoration:none}
+.gf__links a:hover{text-decoration:underline;text-underline-offset:2px}
+.gf__links a[aria-current="page"]{font-weight:600}
 @media (max-width:833px){.gf__cols{grid-template-columns:1fr 1fr;gap:26px 20px}}
 /* while a page's loading screen is up, the bar waits */
 body.is-loading .gb{opacity:0;pointer-events:none}
@@ -103,7 +117,8 @@ body.is-loading .gb{opacity:0;pointer-events:none}
   background:radial-gradient(closest-side,rgba(41,151,255,0) 74%,rgba(41,151,255,.09) 86.3%,rgba(120,190,255,.3) 87.6%,rgba(41,151,255,.1) 89.7%,rgba(41,151,255,0) 100%)}
 .hg-planet i{position:absolute;inset:80px;border-radius:50%;background:radial-gradient(farthest-corner at 32% 27%,#0d1420 0%,#05080d 58%,#020305 100%)}
 
-/* ---------- Enquiries (see assets/enquiry.js): the quick enquiry dialog, and form messages ---------- */
+/* ---------- Enquiries (see assets/enquiry.js): the quick enquiry dialog, and form messages ----------
+   Small grey text on white uses #6e6e73 (5.1:1), not #86868b (3.6:1): WCAG 1.4.3 AA */
 .qd{width:min(560px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);margin:auto;padding:0;border:0;border-radius:24px;background:#fff;color:#1d1d1f;box-shadow:0 40px 100px -24px rgba(0,0,0,.5);overflow:auto;overscroll-behavior:contain;font:400 16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
 .qd::backdrop{background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .qd[open]{animation:qdIn .5s cubic-bezier(.28,.11,.32,1)}
@@ -113,17 +128,21 @@ body.is-loading .gb{opacity:0;pointer-events:none}
 .qd__x{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#f0f0f3;color:#1d1d1f;cursor:pointer;transition:background .2s}
 .qd__x:hover{background:#e3e3e8}
 .qd__x svg{width:13px;height:13px}
-.qd__eyebrow{margin:0 48px 6px 0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#86868b}
+.qd__eyebrow{margin:0 48px 6px 0;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6e6e73}
 .qd__title{margin:0 48px 8px 0;font-size:clamp(24px,4vw,30px);font-weight:600;line-height:1.1;letter-spacing:-.025em}
 .qd__sub{margin:0 0 22px;font-size:15px;color:#6e6e73}
 .qd__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
 .qd__f{display:flex;flex-direction:column;gap:6px;margin:0;font-size:13px;font-weight:600;color:#1d1d1f}
-.qd__f em{font-style:normal;font-weight:400;color:#86868b}
+.qd__f em{font-style:normal;font-weight:400;color:#6e6e73}
 .qd__f--full{grid-column:1/-1}
 .qd input,.qd select,.qd textarea{width:100%;min-height:46px;margin:0;padding:11px 14px;border:1px solid #d2d2d7;border-radius:12px;background:#fff;color:#1d1d1f;font:inherit;font-size:16px;font-weight:400;appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
 .qd select{padding-right:38px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236e6e73' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center/12px}
 .qd textarea{min-height:112px;resize:vertical}
 .qd input:focus,.qd select:focus,.qd textarea:focus{outline:none;border-color:#0071e3;box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.qd__optin{display:flex;align-items:flex-start;gap:10px;min-height:44px;margin:4px 0 0;padding:12px 0;font-size:14px;line-height:1.4;color:#1d1d1f;cursor:pointer}
+.qd input[type=checkbox]{flex:none;width:18px;height:18px;min-height:0;margin:1px 0 0;padding:0;border:0;border-radius:0;appearance:auto;-webkit-appearance:checkbox;accent-color:#0071e3;cursor:pointer}
+.qd input[type=checkbox]:focus{box-shadow:none}
+.qd input[type=checkbox]:focus-visible{outline:2px solid #0071e3;outline-offset:2px}
 .qd__send{width:100%;min-height:50px;margin-top:20px;border:0;border-radius:980px;background:#0071e3;color:#fff;font:inherit;font-size:17px;font-weight:500;cursor:pointer;transition:background .2s,opacity .2s}
 .qd__send:hover{background:#0077ed}
 .qd__send:disabled{opacity:.6;cursor:default}
@@ -132,7 +151,8 @@ body.is-loading .gb{opacity:0;pointer-events:none}
 .qd__status.is-on{display:block}
 .qd__status.is-ok{background:#ecf7ee;color:#1d5b2a}
 .qd__status.is-err{background:#fdf0ee;color:#8a2b1d}
-.qd__note{margin:12px 0 0;font-size:12px;color:#86868b;text-align:center}
+.qd__note{margin:12px 0 0;font-size:12px;color:#6e6e73;text-align:center}
+.qd__note a{color:inherit;text-decoration:underline}
 @media (max-width:560px){.qd__grid{grid-template-columns:1fr}.qd{border-radius:20px}}
 @media (prefers-reduced-motion:reduce){.qd[open]{animation:none}}
 .form__done.is-err,.tf__done.is-err{background:rgba(215,0,21,.09)!important;color:inherit!important}

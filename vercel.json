@@ -1,36 +1,52 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "api/enquiry.js": { "maxDuration": 20 }
-  },
-  "redirects": [
-    { "source": "/index", "destination": "/", "permanent": true },
-    { "source": "/:page(hanesteel|hanestone|hanewood|hanesulation|bargainhub|hisense|tracking|contact)", "destination": "/:page.html", "permanent": true },
-    { "source": "/(contact-us|enquiry|enquire|quote)", "destination": "/contact.html", "permanent": true },
-    { "source": "/track", "destination": "/tracking.html", "permanent": true },
-    { "source": "/catalogues", "destination": "/hisense.html#catalogues", "permanent": false }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
-      ]
-    },
-    {
-      "source": "/(frames2|stills|catalogues|films|og)/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }]
-    },
-    {
-      "source": "/(fonts|vendor)/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "no-store" }, { "key": "X-Robots-Tag", "value": "noindex" }]
-    }
+  "regions": ["syd1"],
+  "functions": { "api/enquiry.js": { "maxDuration": 20 } },
+  "routes": [
+    { "src": "^/(?!studio/|api/|auth/).*$", "continue": true, "headers": {
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+      "Content-Security-Policy": "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests" } },
+    { "src": "^/auth/.*$", "continue": true, "headers": {
+      "Content-Security-Policy": "default-src 'self'; script-src 'self'; frame-src 'none'; connect-src 'self' https://mputtezdhevwwjgwktvi.supabase.co; img-src 'self' data:; style-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'",
+      "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Robots-Tag": "noindex, nofollow",
+      "X-Frame-Options": "DENY", "X-Content-Type-Options": "nosniff",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()" } },
+    { "src": "^/studio/.*$", "continue": true, "headers": {
+      "X-Robots-Tag": "noindex", "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+      "x-vercel-enable-rewrite-caching": "1" } },
+    { "src": "^/api/.*$", "continue": true, "headers": {
+      "Cache-Control": "no-store", "X-Robots-Tag": "noindex", "x-vercel-enable-rewrite-caching": "0" } },
+    { "src": "^/(frames2|stills|catalogues|films|og)/.*$", "continue": true, "headers": { "Cache-Control": "public, max-age=604800, stale-while-revalidate=2592000" } },
+    { "src": "^/(fonts|vendor)/.*$", "continue": true, "headers": { "Cache-Control": "public, max-age=31536000, immutable" } },
+
+    { "src": "^/index$", "status": 308, "headers": { "Location": "/" } },
+    { "src": "^/(hanesteel|hanestone|hanewood|hanesulation|bargainhub|hisense|tracking|contact)$", "status": 308, "headers": { "Location": "/$1.html" } },
+    { "src": "^/(contact-us|enquiry|enquire|quote)$", "status": 308, "headers": { "Location": "/contact.html" } },
+    { "src": "^/track$", "status": 308, "headers": { "Location": "/tracking.html" } },
+    { "src": "^/catalogues$", "status": 307, "headers": { "Location": "/hisense.html#catalogues" } },
+    { "src": "^/studio$", "status": 307, "headers": { "Location": "/studio/" } },
+    { "src": "^/login$", "status": 307, "headers": { "Location": "/auth/login.html" } },
+    { "src": "^/signup$", "status": 307, "headers": { "Location": "/auth/signup.html" } },
+    { "src": "^/reset$", "status": 307, "headers": { "Location": "/auth/reset.html" } },
+    { "src": "^/staff$", "status": 307, "headers": { "Location": "/auth/login.html?next=/studio/%23/backoffice" } },
+    { "src": "^/privacy$", "status": 307, "headers": { "Location": "/privacy.html" } },
+
+    { "handle": "filesystem" },
+
+    { "src": "^/studio/(.*)$", "has": [{ "type": "host", "value": "hanes-the-website-new.vercel.app" }],
+      "dest": "https://bargainhub-studio.fly.dev/$1", "respectOriginCacheControl": true,
+      "transforms": [{ "type": "request.headers", "op": "set", "target": { "key": "x-studio-edge" }, "args": "$STUDIO_EDGE_SECRET_PROD", "env": ["STUDIO_EDGE_SECRET_PROD"] }] },
+    { "src": "^/api/((?!enquiry$).*)$", "has": [{ "type": "host", "value": "hanes-the-website-new.vercel.app" }],
+      "dest": "https://bargainhub-studio.fly.dev/api/$1", "respectOriginCacheControl": false,
+      "transforms": [{ "type": "request.headers", "op": "set", "target": { "key": "x-studio-edge" }, "args": "$STUDIO_EDGE_SECRET_PROD", "env": ["STUDIO_EDGE_SECRET_PROD"] }] },
+    { "src": "^/studio/(.*)$",
+      "dest": "https://bargainhub-studio-staging.fly.dev/$1", "respectOriginCacheControl": true,
+      "transforms": [{ "type": "request.headers", "op": "set", "target": { "key": "x-studio-edge" }, "args": "$STUDIO_EDGE_SECRET_STAGING", "env": ["STUDIO_EDGE_SECRET_STAGING"] }] },
+    { "src": "^/api/((?!enquiry$).*)$",
+      "dest": "https://bargainhub-studio-staging.fly.dev/api/$1", "respectOriginCacheControl": false,
+      "transforms": [{ "type": "request.headers", "op": "set", "target": { "key": "x-studio-edge" }, "args": "$STUDIO_EDGE_SECRET_STAGING", "env": ["STUDIO_EDGE_SECRET_STAGING"] }] }
   ]
 }

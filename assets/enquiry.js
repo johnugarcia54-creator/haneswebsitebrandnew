@@ -6,6 +6,15 @@
      sends a form the page has already checked, and reports back in the status element.
    Links with data-quote="Topic" open a short enquiry form in a dialog, on any page. Their
      href (contact.html?topic=…#enquiry) still works without JavaScript.
+   Every post also carries two top-level keys (ADDENDUM §6.4):
+     marketingOptIn  true only when the form's optional, unticked "news and offers" box is ticked
+     submissionId    a UUID per enquiry, reused on every unchanged retry of it, so a retried
+                     enquiry is recognised as the same one, even after another enquiry was tried
+                     on the same form in between; changed answers (name, email, subject, fields,
+                     the news box) are a new enquiry with a new id; once an enquiry is sent its
+                     id is dropped, so sending the same answers again is a new enquiry
+   If the website can't send, the visitor's email app opens with everything filled in, ending
+     with "Reference: <submissionId>".
    ========================================================================================= */
 window.HanesEnquiry = (() => {
   'use strict';
@@ -13,6 +22,30 @@ window.HanesEnquiry = (() => {
   const online = location.protocol === 'http:' || location.protocol === 'https:';
   const REGIONS = ['Northland', 'Auckland', 'Waikato', 'Bay of Plenty', 'Gisborne', "Hawke's Bay", 'Taranaki', 'Manawatū-Whanganui', 'Wellington', 'Tasman', 'Nelson', 'Marlborough', 'West Coast', 'Canterbury', 'Otago', 'Southland', 'Outside New Zealand'];
   const $ = (s, r = document) => r.querySelector(s);
+
+  // per form, the id of each enquiry tried on it, keyed by its answers: an unchanged retry keeps its
+  // id (the CRM may already hold it after a failed email), changed answers get a new one (the CRM
+  // keeps the first values under an id, so an edited resend must not reuse it), dropped once sent
+  const fills = new WeakMap();
+  const FILLS_MAX = 20;
+  const uuid = () => {
+    const c = window.crypto;
+    if (c && typeof c.randomUUID === 'function') return c.randomUUID();
+    const b = c.getRandomValues(new Uint8Array(16)); // randomUUID needs a secure context; same v4 layout
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+    const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  };
+  const fingerprint = answers => JSON.stringify(answers);
+  const submissionId = (form, fp) => {
+    let ids = fills.get(form);
+    if (!ids) fills.set(form, ids = new Map());
+    if (ids.has(fp)) return ids.get(fp);
+    const id = uuid();
+    ids.set(fp, id);
+    if (ids.size > FILLS_MAX) ids.delete(ids.keys().next().value);
+    return id;
+  };
 
   // a field people never see and bots fill in
   const trap = form => {
@@ -28,8 +61,10 @@ window.HanesEnquiry = (() => {
     el.textContent = text;
     el.classList.add('is-on'); el.classList.toggle('is-err', kind === 'err'); el.classList.toggle('is-ok', kind === 'ok');
   };
-  const mailto = (subject, name, email, fields) => {
-    const body = [subject, '', `Name: ${name}`, `Email: ${email}`, ...fields.map(([k, v]) => `${k}: ${v}`)].join('\n');
+  // the fallback email carries the fill's submissionId, so it can be matched to a CRM lead the
+  // website may already have forwarded before the email service failed
+  const mailto = (subject, name, email, fields, ref) => {
+    const body = [subject, '', `Name: ${name}`, `Email: ${email}`, ...fields.map(([k, v]) => `${k}: ${v}`), ...(ref ? ['', `Reference: ${ref}`] : [])].join('\n');
     return `mailto:${MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -41,6 +76,8 @@ window.HanesEnquiry = (() => {
     const email = String(o.email ?? (el.email && el.email.value) ?? '').trim();
     const subject = String(o.subject || 'Website enquiry').trim();
     const fields = (o.fields || []).map(([k, v]) => [k, v == null ? '' : String(v).trim()]).filter(([, v]) => v);
+    const marketingOptIn = o.marketingOptIn != null ? o.marketingOptIn === true : Boolean(el.marketingOptIn && el.marketingOptIn.checked);
+    const fp = fingerprint({ name, email, subject, fields, marketingOptIn }), id = submissionId(form, fp);
     const btn = form.querySelector('[type="submit"]'), text = btn && btn.textContent.trim() ? btn.innerHTML : null;
     form.dataset.sending = '1'; form.setAttribute('aria-busy', 'true');
     if (btn) { btn.disabled = true; if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
@@ -51,12 +88,13 @@ window.HanesEnquiry = (() => {
       if (online) {
         r = await fetch(API, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, subject, form: o.form || form.id || 'form', page: location.pathname, fields, website: el.website ? el.website.value : '', elapsed: Date.now() - t0 })
+          body: JSON.stringify({ name, email, subject, form: o.form || form.id || 'form', page: location.pathname, fields, website: el.website ? el.website.value : '', elapsed: Date.now() - t0, marketingOptIn, submissionId: id })
         });
         j = await r.json().catch(() => ({}));
       }
       if (r && r.ok) {
         ok = true;
+        fills.get(form).delete(fp);
         say(status, o.done || `Thanks, ${name.split(' ')[0]}. Your enquiry is with our team, and we'll reply to ${email}.`, 'ok');
         form.reset();
       } else if (r && r.status === 400) {
@@ -67,7 +105,7 @@ window.HanesEnquiry = (() => {
       } else throw new Error('unavailable');
     } catch (e) {
       // the website couldn't send it (offline, or email not set up yet): hand it to the email app so nothing is lost
-      location.href = mailto(subject, name, email, fields);
+      location.href = mailto(subject, name, email, fields, id);
       say(status, `We couldn't send this from the website just now, so your email app has opened with everything filled in. If it didn't open, email us at ${MAIL}.`, 'err');
     } finally {
       delete form.dataset.sending; form.removeAttribute('aria-busy');
@@ -95,9 +133,10 @@ window.HanesEnquiry = (() => {
           <label class="qd__f qd__f--full"><span>Region <em>(optional)</em></span><select name="region"><option value="">Choose one</option>${REGIONS.map(r => `<option>${r}</option>`).join('')}</select></label>
           <label class="qd__f qd__f--full"><span>What do you need?</span><textarea name="message" rows="4" required maxlength="5000"></textarea></label>
         </div>
+        <label class="qd__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
         <button class="qd__send" type="submit">Send enquiry</button>
         <p class="qd__status" id="qdStatus" role="status" aria-live="polite"></p>
-        <p class="qd__note">Sent to ${MAIL}. We only use your details to reply to you.</p>
+        <p class="qd__note">Sent to ${MAIL}. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="/privacy.html">privacy statement</a> explains how to see or correct them.</p>
       </form>`;
     document.body.append(dlg);
     const f = $('form', dlg);

@@ -1,0 +1,109 @@
+/* =========================================================================================
+   The sign-in pages (/auth/*.html). Loaded after /assets/site.css, which draws the bar (.gb)
+   and the footer (.gf); everything here is the page itself, in the site's visual language.
+   No inline styles anywhere: the /auth CSP allows style-src 'self' only.
+   Phones: the form fills the screen (no floating card), every target is at least 44 px, and
+   the layout holds at 320 px wide (400% zoom of a 1280 px window, WCAG 1.4.10).
+   Small grey text on white uses #6e6e73 (5.1:1), never #86868b: WCAG 1.4.3 AA.
+   ========================================================================================= */
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/inter-tight-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/inter-latin-600-normal.woff2) format('woff2')}
+:root{
+  --ink:#1d1d1f; --ink-2:#6e6e73; --line:#d2d2d7; --alt:#f5f5f7; --link:#0066cc; --blue:#0071e3;
+  --ease:cubic-bezier(.28,.11,.32,1);
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-top:var(--gb,44px);font-family:var(--text);font-size:17px;line-height:1.47;letter-spacing:-.012em;color:var(--ink);background:var(--alt);-webkit-font-smoothing:antialiased;overflow-x:clip}
+
+/* the simplified bar: the logo and Back to the site, both 44 px tall targets */
+.gb__in>.gb__logo{align-items:center;min-height:44px}
+.gb__in>.gb__back{flex:none;display:inline-flex;align-items:center;min-height:44px;margin-left:auto;padding:0 6px;opacity:.86;transition:opacity .2s;white-space:nowrap;font-size:12px}
+.gb__in>.gb__back:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
+.gb__back svg{width:9px;height:9px;margin-right:5px}
+
+/* skip link, visible when focused */
+.auth__skip{position:absolute;left:12px;top:-60px;z-index:10000;padding:12px 16px;border-radius:12px;background:#fff;color:var(--ink);font-weight:600;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.auth__skip:focus{top:52px;outline:2px solid var(--blue);outline-offset:2px}
+
+/* the page */
+.auth{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:clamp(40px,8vh,96px) 22px clamp(48px,8vh,96px)}
+.auth__card{width:100%;max-width:480px;padding:40px clamp(24px,5vw,44px) 36px;border-radius:28px;background:#fff;box-shadow:0 30px 80px -40px rgba(0,0,0,.28)}
+.auth__card:focus{outline:none}
+.auth__eyebrow{margin:0 0 6px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.auth h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(30px,5vw,40px);line-height:1.08;letter-spacing:-.03em;text-wrap:balance}
+.auth h1:focus{outline:none}
+.auth__sub{margin:10px 0 0;font-size:17px;line-height:1.4;color:var(--ink-2);text-wrap:pretty}
+.auth p{overflow-wrap:anywhere}
+.auth a{color:var(--link);text-decoration:underline;text-underline-offset:2px}
+.auth a:focus-visible,.auth button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+
+/* messages: the status line (polite) and the alert (errors) */
+.auth__note,.auth__alert,.auth__done{margin:22px 0 0;padding:14px 16px;border-radius:14px;font-size:15px;line-height:1.45}
+.auth__note{background:var(--alt);color:var(--ink)}
+.auth__alert{background:#fdf0ee;color:#8a2b1d}
+.auth__alert:focus{outline:2px solid #c0392b;outline-offset:2px}
+.auth__done{background:#ecf7ee;color:#1d5b2a}
+.auth__done:focus,.auth__note:focus{outline:2px solid var(--blue);outline-offset:2px}
+.auth__closed{margin-top:22px}
+.auth__closed p{margin:0 0 16px;font-size:17px;line-height:1.45}
+
+/* the form */
+.auth__form{margin:24px 0 0}
+.auth__field{margin:0 0 18px}
+.auth__field label,.auth__label{display:block;margin:0 0 6px;font-size:14px;font-weight:600;color:var(--ink)}
+.auth__field label em{font-style:normal;font-weight:400;color:var(--ink-2)}
+.auth input[type=email],.auth input[type=password],.auth input[type=text]{display:block;width:100%;min-height:48px;margin:0;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:17px;appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
+.auth input:focus{outline:2px solid transparent;outline-offset:2px;border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.2)}
+.auth input[aria-invalid=true]{border-color:#c0392b}
+.auth input[aria-invalid=true]:focus{box-shadow:0 0 0 4px rgba(192,57,43,.18)}
+.auth__pw{position:relative}
+.auth__pw input{padding-right:78px}
+.auth__show{position:absolute;top:2px;right:2px;min-width:64px;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:none;color:var(--link);font:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.auth__show:hover{background:var(--alt)}
+.auth__help{margin:6px 0 0;font-size:14px;line-height:1.4;color:var(--ink-2)}
+.auth__err{margin:6px 0 0;font-size:14px;line-height:1.4;color:#a8261b;font-weight:500}
+.auth__check{display:flex;align-items:flex-start;gap:12px;min-height:44px;margin:0;padding:11px 0;font-size:16px;line-height:1.4;cursor:pointer}
+.auth__check input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--blue);cursor:pointer}
+.auth__check input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.auth__check + .auth__help{margin:-6px 0 14px 32px}
+.auth__notice{margin:6px 0 4px;padding:14px 16px;border-radius:14px;background:var(--alt);font-size:14px;line-height:1.45;color:var(--ink)}
+.auth__captcha{min-height:65px;margin:10px 0 4px}
+.auth__captcha:empty{min-height:0}
+.auth__go{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:18px 0 0;padding:0 22px;border:1px solid transparent;border-radius:980px;background:var(--blue);color:#fff!important;font:inherit;font-size:17px;font-weight:500;text-decoration:none!important;cursor:pointer;transition:background .2s,opacity .2s}
+.auth__go:hover{background:#0077ed}
+.auth__go:disabled,.auth__go[aria-disabled=true]{opacity:.6;cursor:default}
+.auth__go--quiet{background:#e8e8ed;color:var(--ink)!important}
+.auth__go--quiet:hover{background:#dcdce1}
+.auth__linkbtn{display:inline-flex;align-items:center;min-height:44px;margin:6px 0 0;padding:0;border:0;background:none;color:var(--link);font:inherit;font-size:16px;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.auth__links{display:flex;flex-wrap:wrap;gap:0 20px;margin:10px 0 0}
+.auth__links a,.auth__alt a{display:inline-flex;align-items:center;min-height:44px}
+.auth__alt{margin:20px 0 0;padding-top:16px;border-top:1px solid #e8e8ed;font-size:15px;color:var(--ink-2)}
+
+/* the footer's two links get full-size targets here */
+.auth-page .gf{padding-top:6px}
+.auth-page .gf__base{border-top:0;align-items:center} /* the copyright and the 44 px links share a centre line */
+.auth-page .gf__links a{justify-content:center;min-height:44px;min-width:44px;margin:-10px 0}
+
+/* phones: the form is the whole screen */
+@media (max-width:560px){
+  body.auth-page{background:#fff}
+  .auth{padding:0}
+  .auth__card{max-width:none;min-height:100%;padding:28px 16px 32px;border-radius:0;box-shadow:none}
+  .auth-page .gf{background:var(--alt);padding-left:16px;padding-right:16px}
+}
+/* forced colours (Windows contrast themes) drop box-shadows: the transparent outline above
+   becomes the visible focus ring there, and the transparent border keeps each button's edge */
+@media (forced-colors:active){
+  .auth input:focus{outline-color:Highlight}
+  .auth__go{border-color:ButtonText}
+}
+@media (prefers-reduced-motion:no-preference){
+  .auth__card{animation:authIn .7s var(--ease) both}
+  @keyframes authIn{from{opacity:0;transform:translateY(16px)}}
+}

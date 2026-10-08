@@ -195,7 +195,7 @@ section{position:relative}
 .tf{max-width:680px;margin:clamp(36px,5vw,56px) auto 0;padding:0 var(--pad)}
 .tf__field{position:relative}
 .tf__field input{width:100%;height:68px;padding:26px 76px 8px 22px;border:1px solid #d2d2d7;border-radius:18px;background:#fff;font-size:19px;outline:none;transition:border-color .2s,box-shadow .2s}
-.tf__field label{position:absolute;left:23px;top:23px;font-size:19px;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.tf__field label{position:absolute;left:23px;top:23px;font-size:19px;color:var(--ink-2);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
 .tf__field input:focus + label,.tf__field input:not(:placeholder-shown) + label{transform:translateY(-12px) scale(.66)}
 .tf__field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
 .tf__go{position:absolute;right:12px;top:12px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;transition:background .2s,transform .3s var(--ease)}
@@ -203,6 +203,9 @@ section{position:relative}
 .tf__go svg{width:18px;height:18px}
 .tf__go:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .tf__note{margin-top:14px;font-size:14px;color:var(--ink-2);text-align:center}
+.tf__note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.form__optin{display:flex;align-items:flex-start;gap:10px;min-height:44px;margin-top:6px;padding:12px 0;font-size:14px;line-height:1.4;text-align:left;cursor:pointer}
+.form__optin input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--blue,#0071e3);cursor:pointer}
 .tf__done{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(0,113,227,.06);font-size:14px;text-align:center}
 .tf__done.is-on{display:block}
 .tf__err{display:none;margin-top:10px;font-size:14px;color:#e30000;text-align:center}
@@ -210,7 +213,7 @@ section{position:relative}
 .tf__who{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .tf__sm{position:relative}
 .tf__sm input{width:100%;height:56px;padding:22px 16px 6px;border:1px solid #d2d2d7;border-radius:14px;background:#fff;font-size:17px;outline:none;transition:border-color .2s,box-shadow .2s}
-.tf__sm label{position:absolute;left:17px;top:17px;font-size:17px;color:var(--ink-3);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
+.tf__sm label{position:absolute;left:17px;top:17px;font-size:17px;color:var(--ink-2);pointer-events:none;transform-origin:0 0;transition:transform .2s var(--ease)}
 .tf__sm input:focus + label,.tf__sm input:not(:placeholder-shown) + label{transform:translateY(-10px) scale(.7)}
 .tf__sm input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.18)}
 @media (max-width:560px){.tf__who{grid-template-columns:1fr}}
@@ -299,13 +302,14 @@ section{position:relative}
   <nav class="gb__in" aria-label="Hanes Distribution">
     <a class="gb__logo" href="index.html">Hanes <span>Distribution</span></a>
     <ul class="gb__list"><li><a href="hanesteel.html">Hanesteel</a></li><li><a href="hanestone.html">Hanestone</a></li><li><a href="hanewood.html">Hanewood</a></li><li><a href="hanesulation.html">Hanesulation</a></li><li><a href="bargainhub.html">Bargainhub</a></li><li><a href="hisense.html">Hisense</a></li><li><a href="tracking.html" aria-current="page">Tracking</a></li><li><a href="contact.html">Contact</a></li></ul>
+    <a class="gb__login" href="auth/login.html">Log in</a>
     <a class="gb__quote" href="contact.html#enquiry">Get a quote</a>
     <button class="gb__burger" type="button" aria-expanded="false" aria-controls="gbPanel" aria-label="Open the Hanes menu"></button>
   </nav>
   <div class="gb__panel" id="gbPanel">
     <small>Hanes brands</small>
     <a href="hanesteel.html">Hanesteel<span>Windows and doors</span></a><a href="hanestone.html">Hanestone<span>Plasterboard</span></a><a href="hanewood.html">Hanewood<span>Plywood, board and LVL</span></a><a href="hanesulation.html">Hanesulation<span>Insulation</span></a><a href="bargainhub.html">Bargainhub<span>Kitchens and interiors</span></a>
-    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html" aria-current="page">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a></div>
+    <div class="gb__sm"><a href="index.html">Hanes Distribution home</a><a href="tracking.html" aria-current="page">Hanes Track</a><a href="hisense.html">Hisense appliances</a><a href="contact.html">Contact us</a><a class="gb__login" href="auth/login.html">Log in</a></div>
     <a class="gb__quote" href="contact.html#enquiry">Get a quote</a>
   </div>
 </div>
@@ -403,8 +407,9 @@ section{position:relative}
           <div class="tf__sm"><input id="tfName" name="name" placeholder=" " required autocomplete="name" maxlength="120"><label for="tfName">Your name</label></div>
           <div class="tf__sm"><input id="tfEmail" name="email" type="email" placeholder=" " required autocomplete="email" maxlength="254"><label for="tfEmail">Email for the update</label></div>
         </div>
+        <label class="form__optin"><input type="checkbox" name="marketingOptIn" value="yes"><span>Send me occasional news and offers.</span></label>
         <p class="tf__err" id="tfErr" role="alert">Enter a tracking ID or order number to continue.</p>
-        <p class="tf__note">Sent straight to our team, and we'll email you the latest status and delivery date.</p>
+        <p class="tf__note">Sent straight to our team, and we'll email you the latest status and delivery date. We'll use your details to reply and follow up on your enquiry. They're kept in our customer system, which Base44 runs for us in the United States. Our <a href="privacy.html">privacy statement</a> explains how to see or correct them.</p>
         <p class="tf__done" id="tfDone" role="status"></p>
       </form>
     </section>
@@ -442,7 +447,7 @@ section{position:relative}
       <div><h2>Visit</h2><ul><li>Head office and showroom<br>93 Main South Road, Sockburn</li><li>Warehouse<br>44 Anchorage Road, Hornby</li><li>Christchurch · Hong Kong · Zhangzhou</li></ul></div>
       <div><h2>Contact</h2><ul><li><a href="mailto:Enquiry@hanesdistribution.co.nz">Enquiry@hanesdistribution.co.nz</a></li><li><a href="contact.html#enquiry">Make an enquiry</a></li></ul></div>
     </div>
-    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span>Christchurch, New Zealand</span></div>
+    <div class="gf__base"><span>© 2026 Hanes Distribution. All rights reserved.</span><span class="gf__links"><a href="privacy.html">Privacy</a><a class="gf__login" href="auth/login.html">Log in</a></span><span>Christchurch, New Zealand</span></div>
   </div>
 </footer>
 
