@@ -591,3 +591,11 @@ test('trust (SEO-H0): hanesteel.html claims no certification in its text, aria-l
   assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Built for New Zealand homes\.<\/h2>/);
   assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
 });
+
+test('trust (SEO-H0): hanesulation.html claims no certification in its text, aria-labels or alt text', () => {
+  const s = read('hanesulation.html');
+  assert.deepEqual(userFacing(s).match(/[^.\n]*\bcertified\b[^.\n]*/gi) || [], []);
+  assert.match(s, /<a href="#certified" data-scroll>Standards<\/a>/);
+  assert.match(s, /<div class="eyebrow" data-reveal>Standards<\/div>\s*<h2 class="h" style="margin-top:12px">Ready to sell\.<\/h2>/);
+  assert.match(s, /<section class="cert" id="certified">/, 'the anchor stays, so old links still land');
+});
