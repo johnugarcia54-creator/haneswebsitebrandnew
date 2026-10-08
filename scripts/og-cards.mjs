@@ -3,8 +3,8 @@
    from scripts/og/card.html with the local Chromium, then writes each image's sha256 back to
    the manifest. Only the site's own photos (stills/) and fonts (fonts/) are used; nothing is
    generated. Run by hand after changing a card's text or photo:
-     node scripts/og-cards.mjs            every card in the manifest
-     node scripts/og-cards.mjs hanesteel  only og/hanesteel.jpg
+     node scripts/og-cards.mjs            every rendered card in the manifest
+     node scripts/og-cards.mjs hanesteel-2  only og/hanesteel-2.jpg
    PLAYWRIGHT_MODULE, CHROMIUM_PATH as in tests/browser/bar.mjs. tests/og.test.mjs checks the
    text against the SEO-H0 never-say list and each image against its sha256.
    ========================================================================================= */
@@ -30,7 +30,7 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PAT
 try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
   for (const card of manifest.cards) {
-    if (only.length && !only.includes(card.file)) continue;
+    if (card.rendered === false || (only.length && !only.includes(card.file))) continue; // an original card, kept as it is
     await page.goto(pathToFileURL(root + 'scripts/og/card.html').href);
     await page.evaluate(async c => {
       const img = document.getElementById('bg');

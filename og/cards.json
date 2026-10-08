@@ -1,5 +1,5 @@
 {
-  "note": "Sharing cards rendered by scripts/og-cards.mjs (scripts/og/card.html) from the site's own photos and fonts. The text here is the exact text in each image; tests/og.test.mjs scans it against the SEO-H0 never-say list and pins each image's sha256. A card that changes gets a new file name, so link previews that cached the old image fetch the new one.",
+  "note": "Every sharing card on the site (og:image, twitter:image). Cards with a photo are rendered by scripts/og-cards.mjs (scripts/og/card.html) from the site's own photos and fonts; the others (rendered: false) are the original cards, kept as they are. The text is the exact text in each image, and photoText any lettering legible in the photo; tests/og.test.mjs scans both against the SEO-H0 never-say list and pins each image's sha256. A card that changes gets a new file name, so link previews that cached the old image fetch the new one.",
   "cards": [
     {
       "file": "hanesteel-2.jpg",
@@ -9,7 +9,8 @@
       "eyebrow": "Hanesteel",
       "title": "Windows and doors, built for New Zealand.",
       "text": "Aluminium and uPVC windows and doors, built for New Zealand homes.",
-      "sha256": "46e9e7e1ae442961fe8563bef533a393f2219d29047c7a941607dfbb54c98225"
+      "sha256": "46e9e7e1ae442961fe8563bef533a393f2219d29047c7a941607dfbb54c98225",
+      "photoText": []
     },
     {
       "file": "hanestone-2.jpg",
@@ -19,7 +20,89 @@
       "eyebrow": "Hanestone",
       "title": "Trusus gypsum board.",
       "text": "Gypsum plasterboard for walls and ceilings, in bulk for retailers and merchants.",
-      "sha256": "76b4455769717df42918282bdcef1de6ab8f408695645669069463c4f9a423b3"
+      "sha256": "76b4455769717df42918282bdcef1de6ab8f408695645669069463c4f9a423b3",
+      "photoText": []
+    },
+    {
+      "file": "hanewood-2.jpg",
+      "page": "hanewood.html",
+      "photo": "stills/hanewood/yard.webp",
+      "position": "50% 50%",
+      "eyebrow": "Hanewood",
+      "title": "From board to beam.",
+      "text": "MDF, HDF, plywood and LVL for merchants and retailers, stocked in Christchurch.",
+      "photoText": [],
+      "sha256": "f94ea51854ccdfb1c21dc10912625a12854d3850bb4fd3428a0b996c9fb606a5"
+    },
+    {
+      "file": "hanesulation-2.jpg",
+      "page": "hanesulation.html",
+      "photo": "stills/hanesulation/attic-2000.webp",
+      "position": "50% 55%",
+      "eyebrow": "Hanesulation",
+      "title": "Warmth, by the roll.",
+      "text": "Glass wool insulation for walls and ceilings, supplied wholesale to NZ merchants.",
+      "photoText": [],
+      "sha256": "072d1dd40d5bdf38ee889aabb0a0cd20796c9223e71967ec7d75e7148fca6916"
+    },
+    {
+      "file": "contact-2.jpg",
+      "page": "contact.html",
+      "photo": "stills/ocean.webp",
+      "position": "50% 50%",
+      "eyebrow": "Contact Hanes",
+      "title": "Let's talk.",
+      "text": "Head office and showroom in Sockburn, warehouse in Hornby, and offices in Hong Kong and Zhangzhou.",
+      "photoText": [],
+      "sha256": "d736f0fe91d7b48ba2deaf2267a322a5bf14827e58e480098bc540f20180bc7b"
+    },
+    {
+      "file": "index.jpg",
+      "page": "index.html",
+      "rendered": false,
+      "eyebrow": "Hanes Distribution",
+      "title": "Engineered supply. Delivered nationwide.",
+      "text": "Sourcing in Asia, 4PL logistics, live tracking, Christchurch warehousing and five house brands.",
+      "photoText": [
+        "HANES DISTRIBUTION",
+        "SCANIA"
+      ],
+      "sha256": "48ace2aa007d9e49c639051beb1ff41095cd9e4dcfc2a8612e3da40b0f157e48"
+    },
+    {
+      "file": "bargainhub.jpg",
+      "page": "bargainhub.html",
+      "rendered": false,
+      "eyebrow": "Bargainhub Interiors",
+      "title": "Your home, assembled.",
+      "text": "Kitchens, bathrooms and whole-home interiors, supplied on one order.",
+      "photoText": [],
+      "sha256": "7d72b66f599268fa259f058f57790553cdf0577790b36dda82b6249c02431866"
+    },
+    {
+      "file": "hisense.jpg",
+      "page": "hisense.html",
+      "rendered": false,
+      "eyebrow": "Hisense × Hanes Distribution",
+      "title": "The whole kitchen. One supplier.",
+      "text": "Hisense TVs, refrigeration, laundry and air conditioning, supplied nationwide.",
+      "photoText": [
+        "Hisense"
+      ],
+      "sha256": "ef27202ec2524113b31183074a87eebc54dc715724f8f20d9b17bef9ac6da47a"
+    },
+    {
+      "file": "tracking.jpg",
+      "page": "tracking.html",
+      "rendered": false,
+      "eyebrow": "Hanes Track",
+      "title": "Know where it is.",
+      "text": "Every order, every milestone, from the factory floor in Asia to the front gate in New Zealand.",
+      "photoText": [
+        "Track a shipment",
+        "Follow a shipment"
+      ],
+      "sha256": "817bd241d32915dc8a52be0b02117a67168d43353f617f4beec3ea8510691dd4"
     }
   ]
 }
