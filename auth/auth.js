@@ -44,6 +44,7 @@ const setText = (el, text) => { if (el) el.textContent = text; };
 const els = { notice: $('notice'), alert: $('alert'), form: $('form'), done: $('done'), retryBox: $('retryBox'), retry: $('retry') };
 
 function note(text) { setText(els.notice, text); show(els.notice, !!text); }
+function heading(title, sub) { setText($('title'), title); setText($('sub'), sub); document.title = title + ' — Bargainhub studio'; }
 function fail(text) {
   setText(els.alert, text);
   show(els.alert, !!text);
@@ -332,8 +333,7 @@ async function confirmPage(sb) {
   // opened with no link at all: the place to paste one (the email's button may lead nowhere, see pasteBox)
   if (!tokenHash && !hash && !confirmLink.type) {
     note('');
-    setText($('title'), 'Open the link from your email'); setText($('sub'), 'Paste the link from your Bargainhub email to continue.');
-    document.title = 'Open the link from your email — Bargainhub studio';
+    heading('Paste the link from your email', 'Paste it below to continue.');
     show($('linkHelp'), true);
     return pasteBox(null);
   }
@@ -343,15 +343,17 @@ async function confirmPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
   if (hash && hash.errorCode) {
     note('');
+    heading("This link can't be used", 'Ask for a new one below.');
     fail(hashLinkError(type).message);
     show(linkHelpFor(type), true);
     return;
   }
   if (hash ? !hash.accessToken || !hash.refreshToken || !CONFIRM_TYPES.includes(type) : !tokenHash || !CONFIRM_TYPES.includes(type)) {
     note('');
-    fail(MESSAGES.link_incomplete);
-    show(linkHelpFor(type), true);
     // e.g. confirm.html?type=recovery after a reload: the token left the address bar, unused
+    heading('Paste the link from your email', 'Paste it below to continue.');
+    fail(MESSAGES.paste_lost);
+    show(linkHelpFor(type), true);
     return pasteBox(CONFIRM_TYPES.includes(type) ? type : null);
   }
   const [title, sub, label] = CONFIRM_COPY[type];
@@ -379,7 +381,7 @@ async function confirmPage(sb) {
     if (out.action === 'error') {
       // before Supabase took the token (no tick, or no connection) the button may be pressed again
       if (!out.retry && (out.code === 'privacy_ack_required' || out.code === 'network')) used = false;
-      else { show(form, false); show(linkHelpFor(type), !out.retry); }
+      else { show(form, false); show(linkHelpFor(type), !out.retry); if (!out.retry) heading("This link can't be used", 'Ask for a new one below.'); }
     }
     // after a verified link, Retry runs only the exchange again (the outcome's retry)
     settle(out);
@@ -424,18 +426,31 @@ function pasteBox(type) {
   const input = $('pasted'), btn = $('pasteGo');
   const open = () => {
     if (btn.disabled) return;
+    if (!input.value.trim()) { fieldError(input, MESSAGES.paste_empty); input.focus(); return; }
     const target = pastedLinkTarget(input.value, cfg.supabaseUrl, type);
     if (!target) { fieldError(input, MESSAGES.paste_not_link); input.focus(); return; }
+    const to = new URL(target, location.origin);
+    // a spent link of no known kind (pasted on a bare confirm.html): nothing to open, so say it here,
+    // with both ways on, rather than guess an invitation
+    const spent = hashLink(to.hash);
+    if (spent && spent.errorCode && !spent.type && !to.searchParams.get('type')) {
+      fieldError(input, '');
+      input.value = '';
+      fail(MESSAGES.link_expired);
+      show($('linkHelp'), true);
+      return;
+    }
     fieldError(input, '');
     input.value = '';
     busy(btn, true, 'Opening…');
-    const to = new URL(target, location.origin);
     // the same page with only a new hash would not load again, so its prologue would never see it
     if (to.pathname === location.pathname && to.search === location.search) { history.replaceState(null, '', to.pathname + to.search + to.hash); location.reload(); }
     else location.assign(to.pathname + to.search + to.hash);
   };
   btn.addEventListener('click', open);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); open(); } });
+  // Back from the page it opened may restore this one from the back/forward cache, button still busy
+  window.addEventListener('pageshow', e => { if (e.persisted) { busy(btn, false); fieldError(input, ''); } });
   show(box, true);
 }
 

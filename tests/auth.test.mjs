@@ -875,7 +875,7 @@ test('confirm.html and reset.html: the paste box is not a second form, starts hi
     assert.match(s, /<div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>/, p);
     assert.match(s, /<label for="pasted">Link from the email<\/label>/, p);
     assert.match(s, /<button class="auth__go" id="pasteGo" type="button">Continue<\/button>/, p);
-    assert.ok(s.includes("So don't press it: copy its link instead") && s.includes('it starts with localhost'), `${p}: copy the link without pressing; or the address the button opened`);
+    assert.ok(s.includes("copy that page's whole address and paste it here") && s.includes('(its address starts with localhost)') && s.includes("copy the button's own link"), `${p}: the address the button opened, or on a computer the button's own link`);
   }
   assert.match(read('auth/auth.css'), /\.auth input\[type=url\]/, 'the paste field is styled like the others (48 px)');
   const js = read('auth/auth.js');
@@ -884,4 +884,6 @@ test('confirm.html and reset.html: the paste box is not a second form, starts hi
   assert.match(js, /return pasteBox\(CONFIRM_TYPES\.includes\(type\) \? type : null\);/, 'confirm.html: an incomplete link too');
   assert.equal((js.match(/pasteBox\(/g) || []).length, 4, 'defined once, called from those three places');
   assert.match(js, /pastedLinkTarget\(input\.value, cfg\.supabaseUrl, type\)/);
+  assert.match(js, /window\.addEventListener\('pageshow', e => \{ if \(e\.persisted\) \{ busy\(btn, false\);/, 'Back from the opened page: the button works again');
+  for (const k of ['paste_empty', 'paste_lost', 'paste_not_link']) assert.ok(lib.MESSAGES[k] && !/\b(test|demo)\b/i.test(lib.MESSAGES[k]), k);
 });

@@ -107,8 +107,8 @@ const TEST_CONFIG_NO_TURNSTILE = configWith('sb_publishable_testOnlyKey123', 'PL
 const PLACEHOLDER_CONFIG = configWith('PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY', 'PLACEHOLDER_TURNSTILE_SITE_KEY');
 
 // a context that records requests, console output and CSP violations
-async function context({ width = 1280, configured = false, turnstile = true, gotrue = {} } = {}) {
-  const ctx = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+async function context({ width = 1280, configured = false, turnstile = true, gotrue = {}, via = browser } = {}) {
+  const ctx = await via.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
   const log = { requests: [], console: [], sb: [] };
   await ctx.addInitScript(() => {
     window.__csp = [];
@@ -538,7 +538,7 @@ try {
     await page.goto(`${base}/auth/confirm.html?type=${type}`, { waitUntil: 'networkidle' });
     const shown = [];
     for (const id of ['#linkHelp', '#linkHelpInvite', '#linkHelpEmail']) if (await visible(page, id)) shown.push(id);
-    check(await text(page, '#alert') === 'This link is incomplete. Open the link from your email again, or ask for a new one.' && shown.join() === help, `B confirm ${type} without a token: ${help} only (${shown.join()})`);
+    check(await text(page, '#alert') === 'This page lost its link. Paste it again below, or ask for a new one.' && shown.join() === help && await visible(page, '#pasteBox'), `B confirm ${type} without a token: ${help} only, and the paste box (${shown.join()})`);
     if (type === 'invite') await axe(page, 'B confirm invite incomplete');
     await ctx.close();
   }
@@ -718,6 +718,25 @@ try {
     studioState.exchange = [];
     await ctx.close();
   }
+  // C8 Back with the back/forward cache on (Playwright turns it off by default): the paste button works again
+  {
+    const bf = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', ignoreDefaultArgs: ['--disable-back-forward-cache'] });
+    const { ctx } = await context({ configured: true, turnstile: false, via: bf });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
+    await page.evaluate(() => { window.__kept = 1; });
+    await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
+    await page.click('#pasteGo');
+    await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    // a page restored from the back/forward cache fires pageshow (persisted), not load
+    await page.goBack({ waitUntil: 'commit' });
+    await page.waitForFunction(() => location.pathname === '/auth/reset.html' && document.readyState === 'complete');
+    check(await page.evaluate(() => window.__kept === 1), 'C8 Back (bfcache on): the page really came back from the cache');
+    check(await page.evaluate(() => { const b = document.getElementById('pasteGo'); return !b.disabled && b.textContent === 'Continue'; }), 'C8 Back (bfcache on): the paste button is ready again');
+    await ctx.close();
+    await bf.close();
+  }
   // C8 at 320 px: the paste field is a full-size target and nothing scrolls sideways
   for (const path of ['/auth/confirm.html', '/auth/reset.html']) {
     const { ctx } = await context({ configured: true, turnstile: false, width: 320 });
@@ -735,7 +754,12 @@ try {
     const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
     const page = await ctx.newPage();
     await page.goto(`${base}/auth/confirm.html`, { waitUntil: 'networkidle' });
-    check(await text(page, '#title') === 'Open the link from your email' && await visible(page, '#pasteBox') && !(await visible(page, '#form')) && !(await visible(page, '#alert')), 'C8 confirm bare: the paste box, no form, no error');
+    check(await text(page, '#title') === 'Paste the link from your email' && await visible(page, '#pasteBox') && !(await visible(page, '#form')) && !(await visible(page, '#alert')), 'C8 confirm bare: the paste box, no form, no error');
+    await page.click('#pasteGo');
+    check(await text(page, '#pasted-err') === 'Paste the link first.', 'C8 confirm bare: an empty paste says so');
+    await page.fill('#pasted', 'http://localhost:3000/#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired');
+    await page.click('#pasteGo');
+    check(page.url() === `${base}/auth/confirm.html` && await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelp') && !(await visible(page, '#linkHelpInvite')), 'C8 confirm bare: a spent link of no known kind is answered in place, not as an invitation');
     check(await visible(page, '#linkHelp'), 'C8 confirm bare: the way to a new reset link stays');
     await axe(page, 'C8 confirm bare @390');
     await page.fill('#pasted', 'https://example.com/hello');
@@ -748,7 +772,7 @@ try {
     check(await text(page, '#title') === 'Reset your password' && !(await visible(page, '#pasteBox')), 'C8 confirm (pasted verify link): the recovery form, token gone from the address bar');
     check(!log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'C8 confirm (pasted verify link): nothing spent before Confirm');
     await page.reload({ waitUntil: 'networkidle' });
-    check(await visible(page, '#pasteBox') && await text(page, '#alert') === 'This link is incomplete. Open the link from your email again, or ask for a new one.', 'C8 confirm reloaded (token already gone, unused): the paste box again');
+    check(await visible(page, '#pasteBox') && await text(page, '#alert') === 'This page lost its link. Paste it again below, or ask for a new one.' && await text(page, '#title') === 'Paste the link from your email', 'C8 confirm reloaded (token already gone, unused): the paste box again, and says so');
     await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
     await page.click('#pasteGo');
     await page.waitForFunction(() => document.getElementById('title').textContent === 'Reset your password');
@@ -791,6 +815,7 @@ try {
     await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
     await page.locator('#alert').waitFor({ state: 'visible' });
     check(await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelp') && !(await visible(page, '#linkHelpInvite')), 'C8 reset: a spent reset address says so, with the way to a new reset link');
+    check(await text(page, '#title') === "This link can't be used" && await text(page, '#sub') === 'Ask for a new one below.', 'C8 reset: the heading follows the outcome (no Confirm to press)');
     await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
     await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
     await page.click('#pasteGo');
