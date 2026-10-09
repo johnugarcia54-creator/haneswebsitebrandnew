@@ -718,6 +718,87 @@ try {
     studioState.exchange = [];
     await ctx.close();
   }
+  // C8 at 320 px: the paste field is a full-size target and nothing scrolls sideways
+  for (const path of ['/auth/confirm.html', '/auth/reset.html']) {
+    const { ctx } = await context({ configured: true, turnstile: false, width: 320 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}${path}`, { waitUntil: 'networkidle' });
+    check(await visible(page, '#pasteBox'), `C8 ${path} @320: the paste box`);
+    await targets(page, `C8 ${path} @320`);
+    await noScroll(page, `C8 ${path} @320`);
+    check(await page.evaluate(() => document.getElementById('pasted').getBoundingClientRect().height >= 44), `C8 ${path} @320: the paste field is at least 44 px tall`);
+    await ctx.close();
+  }
+  // C8. a pasted link: while Supabase's Site URL is unset the email's button lands on localhost, so the
+  //     person pastes the button's link (or that address) on a bare confirm.html or after the reset email
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/confirm.html`, { waitUntil: 'networkidle' });
+    check(await text(page, '#title') === 'Open the link from your email' && await visible(page, '#pasteBox') && !(await visible(page, '#form')) && !(await visible(page, '#alert')), 'C8 confirm bare: the paste box, no form, no error');
+    check(await visible(page, '#linkHelp'), 'C8 confirm bare: the way to a new reset link stays');
+    await axe(page, 'C8 confirm bare @390');
+    await page.fill('#pasted', 'https://example.com/hello');
+    await page.click('#pasteGo');
+    check(await page.locator('#pasted[aria-invalid=true]').count() === 1 && page.url() === `${base}/auth/confirm.html`, 'C8 confirm bare: anything but one of our links is refused in place');
+    await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
+    await page.click('#pasteGo');
+    await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    check(await text(page, '#title') === 'Reset your password' && !(await visible(page, '#pasteBox')), 'C8 confirm (pasted verify link): the recovery form, token gone from the address bar');
+    check(!log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'C8 confirm (pasted verify link): nothing spent before Confirm');
+    await page.reload({ waitUntil: 'networkidle' });
+    check(await visible(page, '#pasteBox') && await text(page, '#alert') === 'This link is incomplete. Open the link from your email again, or ask for a new one.', 'C8 confirm reloaded (token already gone, unused): the paste box again');
+    await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
+    await page.click('#pasteGo');
+    await page.waitForFunction(() => document.getElementById('title').textContent === 'Reset your password');
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html`);
+    const v = log.sb.find(x => x.key === 'POST /auth/v1/verify');
+    check(!!v && v.body.token_hash === 'abc123def456' && v.body.type === 'recovery', 'C8 confirm (pasted verify link): Confirm verifies that token hash, then update-password');
+    check(log.requests.every(r => r.url.startsWith(`${base}/auth/confirm.html?token_hash=`) || !r.url.includes('abc123def456')), 'C8: the token is in no other URL');
+    await ctx.close();
+  }
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/confirm.html`, { waitUntil: 'networkidle' });
+    const access = jwt(user.id, 'otp').replace(/\.c2ln$/, '.c2lnbmF0dXJlLXRlc3Q');
+    await page.fill('#pasted', `localhost:3000/#access_token=${access}&expires_at=${Math.floor(Date.now() / 1000) + 3600}&expires_in=3600&refresh_token=r-recover-123&token_type=bearer&type=recovery`);
+    await page.press('#pasted', 'Enter');
+    await page.waitForFunction(() => document.getElementById('title').textContent === 'Reset your password');
+    check(await page.evaluate(() => location.hash === '' && location.pathname === '/auth/confirm.html'), 'C8 confirm (pasted localhost address): the session form, the hash gone from the address bar');
+    check(!log.sb.length, 'C8 confirm (pasted localhost address): nothing sent to Supabase before Confirm');
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html`);
+    check(log.sb.some(x => x.key === 'GET /auth/v1/user') && !log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'C8 confirm (pasted localhost address): setSession, then update-password');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C8: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
+    check(await visible(page, '#pasteBox') && await visible(page, '#form'), 'C8 reset: the paste box from the start, under the form');
+    await page.fill('#email', 'nobody@example.co.nz');
+    await page.keyboard.press('Enter');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    check(await visible(page, '#pasteBox'), 'C8 reset: still there once the email is on its way');
+    await axe(page, 'C8 reset paste @390');
+    await page.fill('#pasted', 'http://localhost:3000/#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired');
+    await page.click('#pasteGo');
+    await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
+    await page.locator('#alert').waitFor({ state: 'visible' });
+    check(await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelp') && !(await visible(page, '#linkHelpInvite')), 'C8 reset: a spent reset address says so, with the way to a new reset link');
+    await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
+    await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
+    await page.click('#pasteGo');
+    await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
+    check(await text(page, '#title') === 'Reset your password', 'C8 reset: the pasted link opens the recovery confirm');
+    check((await csp(page)).length === 0 && log.console.length === 0, `C8 reset: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
   // C7. (b) an expired or already-used default link: Supabase sends the error in the hash
   for (const [query, type, help, msg] of [
     ['', 'invite', '#linkHelpInvite', 'This invitation link has expired or was already used. Ask for a new one.'],

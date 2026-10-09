@@ -13,7 +13,7 @@
    ========================================================================================= */
 import {
   bhAuthHygiene, safeNext, MESSAGES, exchange, rememberChoice, keepChoice, publicSignupOpen, previewCode, cleanCode,
-  loginFlow, resendFlow, resetFlow, signupFlow, confirmFlow, confirmSessionFlow, hashLink, hashLinkError, passwordFlow, CONFIRM_TYPES, PASSWORD_MIN, PASSWORD_MAX
+  loginFlow, resendFlow, resetFlow, signupFlow, confirmFlow, confirmSessionFlow, hashLink, hashLinkError, pastedLinkTarget, passwordFlow, CONFIRM_TYPES, PASSWORD_MIN, PASSWORD_MAX
 } from '/auth/auth-lib.js';
 import { pickConfig } from '/auth/config.js';
 
@@ -314,6 +314,7 @@ async function resetPage(sb) {
     settle(out);
   });
   show(form, true);
+  pasteBox('recovery'); // there from the start: a reload, Back or a second visit keeps the way in
   captcha = await captchaFor('reset');
 }
 
@@ -328,6 +329,14 @@ const CONFIRM_COPY = {
 const linkHelpFor = type => $(type === 'invite' ? 'linkHelpInvite' : type === 'email' || type === 'email_change' ? 'linkHelpEmail' : 'linkHelp');
 async function confirmPage(sb) {
   const { tokenHash, hash } = confirmLink;
+  // opened with no link at all: the place to paste one (the email's button may lead nowhere, see pasteBox)
+  if (!tokenHash && !hash && !confirmLink.type) {
+    note('');
+    setText($('title'), 'Open the link from your email'); setText($('sub'), 'Paste the link from your Bargainhub email to continue.');
+    document.title = 'Open the link from your email — Bargainhub studio';
+    show($('linkHelp'), true);
+    return pasteBox(null);
+  }
   // (b): the hash's own type wins; an error hash has none, so the query's, else an invitation (the
   // link this fallback exists for)
   const type = hash ? hash.type || (CONFIRM_TYPES.includes(confirmLink.type) ? confirmLink.type : hash.errorCode ? 'invite' : null) : confirmLink.type;
@@ -342,7 +351,8 @@ async function confirmPage(sb) {
     note('');
     fail(MESSAGES.link_incomplete);
     show(linkHelpFor(type), true);
-    return;
+    // e.g. confirm.html?type=recovery after a reload: the token left the address bar, unused
+    return pasteBox(CONFIRM_TYPES.includes(type) ? type : null);
   }
   const [title, sub, label] = CONFIRM_COPY[type];
   setText($('title'), title); setText($('sub'), sub); setText(btn, label);
@@ -400,6 +410,33 @@ async function passwordPage(sb) {
     settle(out);
   });
   show(form, true);
+}
+
+// The pasted link (confirm.html with no link or an incomplete one; the reset page). While
+// Supabase's Site URL is not set, the email's button lands on a page that never loads; the person
+// copies that link, or that page's address, and pastes it here. auth-lib.js turns it into the
+// confirm.html address it was meant to open; nothing is sent anywhere and the token is used only
+// by Confirm on that page. Its own address is never kept: the confirm prologue removes it.
+function pasteBox(type) {
+  const box = $('pasteBox');
+  if (!box || box.dataset.ready) return show(box, !!box);
+  box.dataset.ready = '1';
+  const input = $('pasted'), btn = $('pasteGo');
+  const open = () => {
+    if (btn.disabled) return;
+    const target = pastedLinkTarget(input.value, cfg.supabaseUrl, type);
+    if (!target) { fieldError(input, MESSAGES.paste_not_link); input.focus(); return; }
+    fieldError(input, '');
+    input.value = '';
+    busy(btn, true, 'Opening…');
+    const to = new URL(target, location.origin);
+    // the same page with only a new hash would not load again, so its prologue would never see it
+    if (to.pathname === location.pathname && to.search === location.search) { history.replaceState(null, '', to.pathname + to.search + to.hash); location.reload(); }
+    else location.assign(to.pathname + to.search + to.hash);
+  };
+  btn.addEventListener('click', open);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); open(); } });
+  show(box, true);
 }
 
 /* ---- start ------------------------------------------------------------------------------ */

@@ -40,6 +40,14 @@
       </div>
       <button class="auth__go" type="submit">Confirm</button>
     </form>
+    <div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>
+      <p class="auth__help" id="pasteHelp">Our email's button can open a page that doesn't load. So don't press it: copy its link instead (right-click it, or press and hold it, then Copy link) and paste it here. If you already pressed it, copy the address of the page that opened (it starts with localhost) and paste that.</p>
+      <div class="auth__field">
+        <label for="pasted">Link from the email</label>
+        <input id="pasted" name="pasted" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="8192">
+      </div>
+      <button class="auth__go" id="pasteGo" type="button">Continue</button>
+    </div>
     <div id="retryBox" hidden><button class="auth__go" id="retry" type="button">Retry</button></div>
     <div id="linkHelp" hidden>
       <p class="auth__links"><a href="/auth/reset.html">Ask for a new reset link</a><a href="/auth/login.html">Sign in</a></p>

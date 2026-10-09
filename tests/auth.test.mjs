@@ -825,3 +825,63 @@ test('auth.js: bhAuthHygiene runs first, token_hash leaves the address bar befor
 test('the sign-in pages are noindex and outside the sitemap', () => {
   assert.doesNotMatch(read('sitemap.xml'), /\/auth\//);
 });
+
+test('pastedLinkTarget: a copied email link becomes the confirm.html address it was meant to open, and nothing else does', () => {
+  const P = t => lib.pastedLinkTarget(t, SUPABASE_URL);
+  const H = 'bd974a15d49b6691833dbc7717e8c2a7ae19ca5913133675a3b11cbd';
+  const verify = (type, token = H, host = new URL(SUPABASE_URL).host) => `https://${host}/auth/v1/verify?token=${token}&type=${type}&redirect_to=http://localhost:3000`;
+  // (a) Supabase's own verify link: its token is the token hash, so nothing is spent before Confirm
+  assert.equal(P(verify('recovery')), `/auth/confirm.html?token_hash=${H}&type=recovery`);
+  assert.equal(P(verify('invite')), `/auth/confirm.html?token_hash=${H}&type=invite`);
+  assert.equal(P(verify('signup')), `/auth/confirm.html?token_hash=${H}&type=email`, "Supabase's 'signup' is an email confirmation");
+  assert.equal(P(verify('email_change')), `/auth/confirm.html?token_hash=${H}&type=email_change`);
+  for (const t of ['magiclink', 'reauthentication', '', 'constructor', '__proto__']) assert.equal(P(verify(t)), null, `type ${t}`);
+  for (const tok of ['', 'pkce_' + H, 'abc', 'a b', 'x'.repeat(513), H + '"><script>']) assert.equal(P(verify('recovery', encodeURIComponent(tok))), null, `token ${tok}`);
+  assert.equal(P(verify('recovery', H, 'other.supabase.co')), null, "another project's link");
+  assert.equal(P(verify('recovery').replace('https:', 'http:')), null, 'the project only over https');
+  // whitespace a mail app or a line break adds, angle brackets around a plain-text link
+  assert.equal(P(`  <${verify('recovery').slice(0, 40)}\n${verify('recovery').slice(40)}>  `), `/auth/confirm.html?token_hash=${H}&type=recovery`);
+  // one layer of a mail provider's wrapper
+  assert.equal(P('https://www.google.com/url?q=' + encodeURIComponent(verify('recovery')) + '&sa=D'), `/auth/confirm.html?token_hash=${H}&type=recovery`);
+  assert.equal(P('https://aus01.safelinks.protection.outlook.com/?url=' + encodeURIComponent(verify('invite')) + '&data=x'), `/auth/confirm.html?token_hash=${H}&type=invite`);
+  assert.equal(P('https://evil.example/url?q=' + encodeURIComponent(verify('recovery'))), null, 'only the known wrappers are opened');
+  // (b) the address a spent link was sent to: its session or error hash, on confirm.html
+  const AT = 'eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ4In0.c2lnbmF0dXJlLXNpZw', RT = 'r-recover-123';
+  const hash = `#access_token=${AT}&expires_at=1&expires_in=3600&refresh_token=${RT}&token_type=bearer&type=recovery`;
+  assert.equal(P('http://localhost:3000/' + hash), '/auth/confirm.html' + hash);
+  assert.equal(P('localhost:3000/' + hash), '/auth/confirm.html' + hash, 'as an address bar shows it, without the scheme');
+  const err = '#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired';
+  assert.equal(P('http://localhost:3000/' + err), '/auth/confirm.html' + err, 'a spent link says so on confirm.html');
+  assert.equal(P('http://localhost:3000/#section-2'), null, 'a hash without a link');
+  // the error hash names no type: the page it was pasted on may give one; a hash's own type always wins
+  assert.equal(lib.pastedLinkTarget('http://localhost:3000/' + err, SUPABASE_URL, 'recovery'), '/auth/confirm.html?type=recovery' + err, 'the reset page: a spent reset link');
+  assert.equal(lib.pastedLinkTarget('http://localhost:3000/' + hash, SUPABASE_URL, 'invite'), '/auth/confirm.html' + hash, "the hash's own type");
+  assert.equal(lib.pastedLinkTarget('http://localhost:3000/' + err, SUPABASE_URL, 'bogus'), '/auth/confirm.html' + err, 'only a known type');
+  assert.equal(lib.pastedLinkTarget(verify('invite'), SUPABASE_URL, 'recovery'), `/auth/confirm.html?token_hash=${H}&type=invite`, "a verify link's own type");
+  // (c) our own token_hash link, rebuilt on this site
+  assert.equal(P(`https://hanes-the-website-new.vercel.app/auth/confirm.html?token_hash=${H}&type=invite`), `/auth/confirm.html?token_hash=${H}&type=invite`);
+  assert.equal(P(`https://hanes-the-website-new.vercel.app/auth/confirm.html?token_hash=${H}&type=bogus`), null);
+  // never anything else, never another site, never a script
+  for (const bad of [undefined, null, 42, '', ' ', 'hello', 'javascript:alert(1)//' + hash, 'data:text/html,' + hash, 'https://example.com/', 'https://example.com/auth/v1/verify?token=' + H + '&type=recovery', 'x'.repeat(9000)]) {
+    assert.equal(P(bad), null, String(bad).slice(0, 40));
+  }
+  for (const ok of [verify('recovery'), 'http://localhost:3000/' + hash]) assert.match(P(ok), /^\/auth\/confirm\.html[?#]/, 'always a path on this site');
+  assert.equal(lib.pastedLinkTarget(verify('recovery'), 'not a url'), null);
+});
+
+test('confirm.html and reset.html: the paste box is not a second form, starts hidden and is labelled; auth.js opens it on the reset page and on a confirm.html without a usable link', () => {
+  for (const p of ['confirm', 'reset']) {
+    const s = read(`auth/${p}.html`);
+    assert.match(s, /<div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>/, p);
+    assert.match(s, /<label for="pasted">Link from the email<\/label>/, p);
+    assert.match(s, /<button class="auth__go" id="pasteGo" type="button">Continue<\/button>/, p);
+    assert.ok(s.includes("So don't press it: copy its link instead") && s.includes('it starts with localhost'), `${p}: copy the link without pressing; or the address the button opened`);
+  }
+  assert.match(read('auth/auth.css'), /\.auth input\[type=url\]/, 'the paste field is styled like the others (48 px)');
+  const js = read('auth/auth.js');
+  assert.match(js, /if \(!tokenHash && !hash && !confirmLink\.type\) \{/, 'confirm.html: only with no link at all');
+  assert.match(js, /pasteBox\('recovery'\); \/\/ there from the start/, 'reset: from the start, for a recovery link');
+  assert.match(js, /return pasteBox\(CONFIRM_TYPES\.includes\(type\) \? type : null\);/, 'confirm.html: an incomplete link too');
+  assert.equal((js.match(/pasteBox\(/g) || []).length, 4, 'defined once, called from those three places');
+  assert.match(js, /pastedLinkTarget\(input\.value, cfg\.supabaseUrl, type\)/);
+});

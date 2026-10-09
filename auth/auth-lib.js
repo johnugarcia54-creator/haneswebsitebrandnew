@@ -99,6 +99,7 @@ export const MESSAGES = Object.freeze({
   password_length: `Use ${PASSWORD_MIN} to ${PASSWORD_MAX} characters for your password.`,
   passwords_differ: "The two passwords don't match.",
   link_incomplete: "This link is incomplete. Open the link from your email again, or ask for a new one.",
+  paste_not_link: "That isn't the link from one of our emails. Copy the button's link in the newest email and paste it here.",
   link_expired: 'This link has expired or was already used. Ask for a new one.',
   link_expired_invite: 'This invitation link has expired or was already used. Ask for a new one.',
   session_missing: 'Your link has expired. Open the link from your email again, or ask for a new one.',
@@ -384,6 +385,58 @@ export function hashLink(hash) {
     type: t && Object.hasOwn(HASH_TYPES, t) ? HASH_TYPES[t] : null,
     errorCode: p.get('error_code') || p.get('error') || null
   };
+}
+
+/* ---- a pasted link ------------------------------------------------------------------------
+   While Supabase's Site URL and redirect allow-list are not set (§14), the button in its email
+   goes to /auth/v1/verify, which sends the browser on to the Site URL (localhost:3000, a page
+   that never loads) instead of confirm.html. The person can copy the button's link, or the
+   address the browser was sent to, and paste it on confirm.html or the reset page. This turns
+   it into the confirm.html address that link was meant to open; nothing is sent anywhere and
+   the token is still used only by the Confirm button:
+     (a) Supabase's verify link of this project: its token is the token hash, so it opens the
+         ?token_hash= link of the §3.4 templates (nothing is spent before Confirm);
+     (b) any address carrying the session or error hash of a spent link: that hash on confirm.html;
+     (c) our own ?token_hash= link: the same link, rebuilt.
+   One layer of a mail provider's link wrapper (Google, Outlook Safe Links) is taken off first.
+   Supabase's error hash names no type, so the page it was pasted on may give one (`type`: the reset
+   page says recovery), which confirm.html then uses for its message and its way on.
+   Returns a root-absolute path on this site, or null. */
+const PASTE_MAX = 8192;
+const TOKEN_HASH_SHAPE = /^[A-Za-z0-9_-]{6,512}$/;
+function unwrapMailLink(u) {
+  const host = u.hostname.toLowerCase();
+  if (/^(www\.)?google\.[a-z.]{2,10}$/.test(host) && u.pathname === '/url') return u.searchParams.get('q') || u.searchParams.get('url');
+  if (/\.safelinks\.protection\.outlook\.com$/.test(host)) return u.searchParams.get('url');
+  return null;
+}
+export function pastedLinkTarget(text, supabaseUrl, type = null) {
+  if (typeof text !== 'string' || typeof supabaseUrl !== 'string') return null;
+  let s = text.replace(/\s+/g, '').replace(/^<(.*)>$/, '$1');
+  if (!s || s.length > PASTE_MAX) return null;
+  // an address bar shows localhost:3000/#… without its scheme; a pasted address is never opened, only read
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s = 'http://' + s;
+  let u, sb;
+  try { u = new URL(s); sb = new URL(supabaseUrl); } catch { return null; }
+  for (let i = 0; i < 2; i++) {
+    const inner = unwrapMailLink(u);
+    if (!inner) break;
+    try { u = new URL(inner); } catch { return null; }
+  }
+  if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+  const tokenLink = (tokenHash, t) => {
+    const type = t && Object.hasOwn(HASH_TYPES, t) ? HASH_TYPES[t] : null;
+    if (!type || typeof tokenHash !== 'string' || !TOKEN_HASH_SHAPE.test(tokenHash) || tokenHash.startsWith('pkce_')) return null;
+    return '/auth/confirm.html?token_hash=' + encodeURIComponent(tokenHash) + '&type=' + type;
+  };
+  // (a)
+  if (u.protocol === 'https:' && u.host === sb.host && u.pathname === '/auth/v1/verify') return tokenLink(u.searchParams.get('token'), u.searchParams.get('type'));
+  // (b)
+  const h = hashLink(u.hash);
+  if (h) return '/auth/confirm.html' + (!h.type && CONFIRM_TYPES.includes(type) ? '?type=' + type : '') + u.hash;
+  // (c)
+  if (u.pathname === '/auth/confirm.html' && u.searchParams.has('token_hash')) return tokenLink(u.searchParams.get('token_hash'), u.searchParams.get('type'));
+  return null;
 }
 
 // what a hash link that came back with an error says (Supabase spent or refused the token)
