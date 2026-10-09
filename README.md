@@ -48,6 +48,10 @@ One address serves everything: today `https://hanes-the-website-new.vercel.app`.
 
 Enquiries go by email to Enquiry@hanesdistribution.co.nz and, in production only, are also handed to the studio's CRM outbox (`api/_lib/crm-forward.js`), from which they reach the Base44 CRM. Previews never forward leads.
 
+## Staging
+
+The branch `staging` is the website the staging studio is paired with. Vercel gives its latest deployment the fixed address `https://hanes-the-website-new-git-staging-johnugarcia54-5453s-projects.vercel.app`, which is the staging studio's `APP_ORIGIN` (the studio repository's `fly.staging.toml`), so sign-in, the consultant workspace and Back Office work there end to end against `bargainhub-studio-staging.fly.dev`. Other preview addresses reach the same studio but cannot sign in, because the studio only accepts that origin. `staging` follows `build/website`: bring changes in by merging `build/website` into it, never by rewriting it.
+
 ## Enquiries (the back end)
 
 Every form on the site (contact, the brand pricing forms, Hisense, Hanes Track and the "Get a quote" dialog) posts to `/api/enquiry`, which checks it, writes it up as an email and sends it to Enquiry@hanesdistribution.co.nz with Reply-To set to the customer. Nothing opens the visitor's email app. The function has a hidden spam trap, a minimum fill-in time, a same-site check and a limit of 5 enquiries per address every 10 minutes.
