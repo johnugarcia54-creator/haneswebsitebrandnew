@@ -875,15 +875,16 @@ test('confirm.html and reset.html: the paste box is not a second form, starts hi
     assert.match(s, /<div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>/, p);
     assert.match(s, /<label for="pasted">Link from the email<\/label>/, p);
     assert.match(s, /<button class="auth__go" id="pasteGo" type="button">Continue<\/button>/, p);
-    assert.ok(s.includes("copy that page's whole address and paste it here") && s.includes('(its address starts with localhost)') && s.includes("copy the button's own link"), `${p}: the address the button opened, or on a computer the button's own link`);
+    assert.ok(s.includes("copy that page's whole address and paste it here") && s.includes('(the address starts with localhost)') && s.includes('finish within 10 minutes') && s.includes('use the first') && s.includes('Copy link address'), `${p}: the address the link opened, the time limit, the first page, the computer alternative`);
   }
   assert.match(read('auth/auth.css'), /\.auth input\[type=url\]/, 'the paste field is styled like the others (48 px)');
   const js = read('auth/auth.js');
   assert.match(js, /if \(!tokenHash && !hash && !confirmLink\.type\) \{/, 'confirm.html: only with no link at all');
   assert.match(js, /pasteBox\('recovery'\); \/\/ there from the start/, 'reset: from the start, for a recovery link');
   assert.match(js, /return pasteBox\(CONFIRM_TYPES\.includes\(type\) \? type : null\);/, 'confirm.html: an incomplete link too');
-  assert.equal((js.match(/pasteBox\(/g) || []).length, 4, 'defined once, called from those three places');
+  assert.equal((js.match(/pasteBox\(/g) || []).length, 6, 'defined once; called on reset, a bare or incomplete link, a spent hash and a spent Confirm');
   assert.match(js, /pastedLinkTarget\(input\.value, cfg\.supabaseUrl, type\)/);
   assert.match(js, /window\.addEventListener\('pageshow', e => \{ if \(e\.persisted\) \{ busy\(btn, false\);/, 'Back from the opened page: the button works again');
-  for (const k of ['paste_empty', 'paste_lost', 'paste_not_link']) assert.ok(lib.MESSAGES[k] && !/\b(test|demo)\b/i.test(lib.MESSAGES[k]), k);
+  assert.match(js, /if \(!invite && out\.code === 'invitation_needs_link'\) \{ settle\(\{ \.\.\.out, message: MESSAGES\.reset_too_slow \}\);/, 'update-password: a slow reset says so, in reset words');
+  for (const k of ['paste_empty', 'paste_lost', 'paste_not_link', 'reset_too_slow']) assert.ok(lib.MESSAGES[k] && !/\b(test|demo)\b/i.test(lib.MESSAGES[k]), k);
 });

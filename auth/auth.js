@@ -44,6 +44,8 @@ const setText = (el, text) => { if (el) el.textContent = text; };
 const els = { notice: $('notice'), alert: $('alert'), form: $('form'), done: $('done'), retryBox: $('retryBox'), retry: $('retry') };
 
 function note(text) { setText(els.notice, text); show(els.notice, !!text); }
+// a link opened twice: the second page says expired, the first page's address may still work
+const SPENT_SUB = "If the email's link opened more than one page, paste the first page's address below. Otherwise ask for a new link.";
 function heading(title, sub) { setText($('title'), title); setText($('sub'), sub); document.title = title + ' — Bargainhub studio'; }
 function fail(text) {
   setText(els.alert, text);
@@ -343,10 +345,10 @@ async function confirmPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
   if (hash && hash.errorCode) {
     note('');
-    heading("This link can't be used", 'Ask for a new one below.');
+    heading("This link can't be used", SPENT_SUB);
     fail(hashLinkError(type).message);
     show(linkHelpFor(type), true);
-    return;
+    return pasteBox(CONFIRM_TYPES.includes(type) ? type : null);
   }
   if (hash ? !hash.accessToken || !hash.refreshToken || !CONFIRM_TYPES.includes(type) : !tokenHash || !CONFIRM_TYPES.includes(type)) {
     note('');
@@ -381,7 +383,7 @@ async function confirmPage(sb) {
     if (out.action === 'error') {
       // before Supabase took the token (no tick, or no connection) the button may be pressed again
       if (!out.retry && (out.code === 'privacy_ack_required' || out.code === 'network')) used = false;
-      else { show(form, false); show(linkHelpFor(type), !out.retry); if (!out.retry) heading("This link can't be used", 'Ask for a new one below.'); }
+      else { show(form, false); show(linkHelpFor(type), !out.retry); if (!out.retry) { heading("This link can't be used", SPENT_SUB); pasteBox(type); } }
     }
     // after a verified link, Retry runs only the exchange again (the outcome's retry)
     settle(out);
@@ -409,6 +411,9 @@ async function passwordPage(sb) {
     busy(btn, true, 'Saving…');
     const out = await passwordFlow({ password: form.password.value, invite }, { supabase: sb, exchange });
     busy(btn, false);
+    // an open invitation is accepted only within 10 minutes of the email link (the studio's proof); on a
+    // reset that is a slow finish, not a spent invitation, and the way on is a new reset link
+    if (!invite && out.code === 'invitation_needs_link') { settle({ ...out, message: MESSAGES.reset_too_slow }); show(form, false); show($('linkHelp'), true); return; }
     settle(out);
   });
   show(form, true);

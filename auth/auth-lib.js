@@ -102,6 +102,7 @@ export const MESSAGES = Object.freeze({
   paste_not_link: "That isn't one of our sign-in links. Paste the whole address of the page the email's button opened (it starts with localhost), or the button's own link.",
   paste_empty: 'Paste the link first.',
   paste_lost: 'This page lost its link. Paste it again below, or ask for a new one.',
+  reset_too_slow: 'That took longer than 10 minutes after the email\'s link was opened. Ask for a new reset link and finish straight away.',
   link_expired: 'This link has expired or was already used. Ask for a new one.',
   link_expired_invite: 'This invitation link has expired or was already used. Ask for a new one.',
   session_missing: 'Your link has expired. Open the link from your email again, or ask for a new one.',

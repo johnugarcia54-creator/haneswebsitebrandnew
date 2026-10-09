@@ -737,6 +737,22 @@ try {
     await ctx.close();
     await bf.close();
   }
+  // C8 a reset finished after the studio's 10-minute window: reset words and the way to a new link
+  {
+    const { ctx } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    studioState.exchange = [[409, { error: { code: 'invitation_needs_link', message: 'x' } }]];
+    await page.goto(`${base}/auth/confirm.html?token_hash=abc123def456&type=recovery`, { waitUntil: 'networkidle' });
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/update-password.html`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.fill('#password', 'my-own-new-password');
+    await page.click('button[type=submit]');
+    await page.locator('#alert').waitFor({ state: 'visible' });
+    check(await text(page, '#alert') === "That took longer than 10 minutes after the email's link was opened. Ask for a new reset link and finish straight away." && await visible(page, '#linkHelp') && !(await visible(page, '#form')), 'C8 update-password: a slow reset says so, with a new reset link and no form');
+    studioState.exchange = [];
+    await ctx.close();
+  }
   // C8 at 320 px: the paste field is a full-size target and nothing scrolls sideways
   for (const path of ['/auth/confirm.html', '/auth/reset.html']) {
     const { ctx } = await context({ configured: true, turnstile: false, width: 320 });
@@ -815,7 +831,15 @@ try {
     await page.waitForURL(`${base}/auth/confirm.html?type=recovery`);
     await page.locator('#alert').waitFor({ state: 'visible' });
     check(await text(page, '#alert') === 'This link has expired or was already used. Ask for a new one.' && await visible(page, '#linkHelp') && !(await visible(page, '#linkHelpInvite')), 'C8 reset: a spent reset address says so, with the way to a new reset link');
-    check(await text(page, '#title') === "This link can't be used" && await text(page, '#sub') === 'Ask for a new one below.', 'C8 reset: the heading follows the outcome (no Confirm to press)');
+    check(await text(page, '#title') === "This link can't be used" && (await text(page, '#sub')).startsWith("If the email's link opened more than one page, paste the first page's address below.") && await visible(page, '#pasteBox'), 'C8 reset: the heading follows the outcome, and the first page of a double press can still be pasted');
+    {
+      // the first page's address (still good) pasted after the second press's expired one
+      const access = jwt(user.id, 'otp').replace(/\.c2ln$/, '.c2lnbmF0dXJlLXRlc3Q');
+      await page.fill('#pasted', `http://localhost:3000/#access_token=${access}&expires_at=${Math.floor(Date.now() / 1000) + 3600}&expires_in=3600&refresh_token=r-first-123&token_type=bearer&type=recovery`);
+      await page.click('#pasteGo');
+      await page.waitForFunction(() => document.getElementById('title').textContent === 'Reset your password');
+      check(await visible(page, '#form'), 'C8 reset: after the expired page, the first page pasted gets the recovery form');
+    }
     await page.goto(`${base}/auth/reset.html`, { waitUntil: 'networkidle' });
     await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
     await page.click('#pasteGo');
