@@ -896,7 +896,8 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   /* ---------- Intro: the words go from pale to ink as you read ---------- */
   const mText = $('#mText');
   mText.innerHTML = mText.textContent.replace(/\[([^\]]+)\]|(\S+)/g, (m, b, w) => b ? b.split(' ').map(x => `<span class="w b">${x}</span>`).join(' ') : `<span class="w">${w}</span>`);
-  gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 48%', scrub: true } });
+  if (reduce) gsap.set('#mText .w', { opacity: 1 });
+  else gsap.to('#mText .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '#mText', start: 'top 82%', end: 'bottom 48%', scrub: true } });
 
   /* ---------- Headings: the words drop into place as each one comes into view ---------- */
   if (!reduce) {

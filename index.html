@@ -1060,7 +1060,8 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   /* ---------- Statement ---------- */
   const st = $('#statement');
   st.innerHTML = st.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
-  gsap.to('#statement .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: st, start: 'top 82%', end: 'bottom 45%', scrub: true } });
+  if (reduce) gsap.set('#statement .w', { opacity: 1 });
+  else gsap.to('#statement .w', { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: st, start: 'top 82%', end: 'bottom 45%', scrub: true } });
   $$('[data-count]').forEach(el => {
     const to = +el.dataset.count, suf = el.dataset.suffix || '', o = { v: 0 };
     ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () =>
