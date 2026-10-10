@@ -547,8 +547,9 @@ section{position:relative}
     }).catch(() => {});
   });
 
-  // arriving from another page with #enquiry or #help lands there once the page has settled
-  if (location.hash && $(location.hash) && location.hash !== '#top') setTimeout(() => go(location.hash), 300);
+  // arriving from another page with #enquiry or #help lands there once the page has settled (by id, so a hash like #1 can't throw)
+  const hid = (() => { try { return decodeURIComponent(location.hash.slice(1)); } catch { return ''; } })();
+  if (hid && hid !== 'top' && document.getElementById(hid)) setTimeout(() => go('#' + CSS.escape(hid)), 300);
 
   let rsz = 0, lastW = innerWidth, lastH = innerHeight;
   addEventListener('resize', () => { cancelAnimationFrame(rsz); rsz = requestAnimationFrame(() => {
