@@ -166,3 +166,21 @@ test('handler: failed requests do not use up the send allowance, but are capped 
     assert.equal(n, 1);
   } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
 });
+
+test('handler: a parallel burst cannot slip past the send allowance, and a failed send gives its slot back (#22)', async () => {
+  let n = 0, ok = false;
+  const srv = http.createServer((req, res) => { req.resume(); req.on('end', () => setTimeout(() => {
+    if (!ok) { res.writeHead(500); return res.end('{"message":"down"}'); }
+    n++; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"id":"x"}');
+  }, 30)); });
+  const port = await listen(srv);
+  process.env.RESEND_API_KEY = 'k'; process.env.RESEND_API_URL = `http://127.0.0.1:${port}`;
+  try {
+    for (let i = 0; i < 5; i++) assert.equal((await call('POST', good, { ip: '6.6.6.6' })).status, 502);
+    ok = true;
+    const statuses = await Promise.all(Array.from({ length: 12 }, () => call('POST', good, { ip: '6.6.6.6' }).then(r => r.status)));
+    assert.equal(statuses.filter(s => s === 200).length, 5);
+    assert.equal(statuses.filter(s => s === 429).length, 7);
+    assert.equal(n, 5);
+  } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
+});

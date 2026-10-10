@@ -36,13 +36,15 @@ export default async function handler(req, res) {
   if (v.error) return fail(400, { error: v.error, field: v.field || null });
   if (!configured()) return fail(503, { error: 'not_configured' });
 
+  // hold a slot while sending so a parallel burst cannot pass the check together; give it back if the send fails
+  const release = record(sent);
   try {
     const r = await send(compose(v.data));
-    record(sent);
     console.log(`enquiry sent via ${r.provider}: ${v.data.form} ${r.id || ''}`);
     return json(res, 200, { ok: true });
   } catch (e) {
     console.error('enquiry send failed:', e.message);
+    release();
     return fail(502, { error: 'send_failed' });
   }
 }
