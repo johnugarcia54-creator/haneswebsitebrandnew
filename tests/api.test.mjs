@@ -151,3 +151,19 @@ test('handler: sends a real enquiry, then slows down a flood', async () => {
     assert.equal(n, 5);
   } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
 });
+
+test('handler: refuses an over-length message instead of cutting it short (#21)', async () => {
+  let n = 0;
+  const srv = http.createServer((req, res) => { req.resume(); req.on('end', () => { n++; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"id":"x"}'); }); });
+  const port = await listen(srv);
+  process.env.RESEND_API_KEY = 'k'; process.env.RESEND_API_URL = `http://127.0.0.1:${port}`;
+  try {
+    const r = await call('POST', { ...good, fields: [['Message', 'x'.repeat(5001)]] });
+    assert.equal(r.status, 400);
+    assert.equal(r.body.field, 'message');
+    assert.match(r.body.error, /message is too long/);
+    assert.equal(validate({ ...good, name: 'x'.repeat(121) }).field, 'name');
+    assert.equal(validate({ ...good, fields: [['Message', 'x'.repeat(5000)]] }).data.fields[0][1].length, 5000);
+    assert.equal(n, 0);
+  } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
+});

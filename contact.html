@@ -329,13 +329,13 @@ section{position:relative}
       <div class="enq__grid">
         <form class="form" id="enqForm" data-anim novalidate>
           <div class="fgrid">
-            <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
+            <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name" maxlength="120"><label for="fName">Your name</label></div>
             <div class="fl"><input id="fBiz" name="business" placeholder=" " autocomplete="organization"><label for="fBiz">Business (optional)</label></div>
-            <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
+            <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email" maxlength="254"><label for="fEmail">Email</label></div>
             <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
             <div class="fl fl--sel" id="fTopicWrap"><select id="fTopic" name="topic" required><option value="">Choose one</option><option>Hanesteel windows and doors</option><option>Hanestone plasterboard</option><option>Hanewood plywood, board and LVL</option><option>Hanesulation insulation</option><option>Bargainhub kitchens and interiors</option><option>Hisense appliances</option><option>Shipment tracking</option><option>Something else</option></select><label for="fTopic">Topic</label></div>
             <div class="fl fl--sel"><select id="fRegion" name="region"><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option><option>Outside New Zealand</option></select><label for="fRegion">Region (optional)</label></div>
-            <div class="fl full"><textarea id="fMsg" name="message" placeholder=" " required></textarea><label for="fMsg">How can we help?</label></div>
+            <div class="fl full"><textarea id="fMsg" name="message" placeholder=" " required maxlength="5000"></textarea><label for="fMsg">How can we help?</label></div>
           </div>
           <button class="btn" type="submit">Send enquiry</button>
           <p class="form__err" id="fErr" role="alert">Please add your name, email, a topic and a message.</p>

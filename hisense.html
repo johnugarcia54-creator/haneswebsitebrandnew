@@ -783,14 +783,14 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
     </div>
     <form class="form" id="hsForm" data-anim novalidate>
       <div class="fgrid">
-        <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name"><label for="fName">Your name</label></div>
+        <div class="fl"><input id="fName" name="name" placeholder=" " required autocomplete="name" maxlength="120"><label for="fName">Your name</label></div>
         <div class="fl"><input id="fBiz" name="business" placeholder=" " autocomplete="organization"><label for="fBiz">Business (optional)</label></div>
-        <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email"><label for="fEmail">Email</label></div>
+        <div class="fl"><input id="fEmail" name="email" type="email" placeholder=" " required autocomplete="email" maxlength="254"><label for="fEmail">Email</label></div>
         <div class="fl"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="fPhone">Phone (optional)</label></div>
         <div class="fl fl--sel"><select id="fType" name="type" required><option value="">Choose one</option><option>Retailer</option><option>Merchant</option><option>Builder or developer</option><option>Kitchen or interior designer</option><option>Homeowner</option><option>Other</option></select><label for="fType">You are a</label></div>
         <div class="fl fl--sel"><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select><label for="fRegion">Region</label></div>
         <fieldset class="fset"><legend>Interested in</legend><div class="chips"><label><input type="checkbox" name="interest" value="TVs"><span>TVs</span></label><label><input type="checkbox" name="interest" value="Refrigeration" checked><span>Refrigeration</span></label><label><input type="checkbox" name="interest" value="Laundry"><span>Laundry</span></label><label><input type="checkbox" name="interest" value="Air conditioning"><span>Air conditioning</span></label><label><input type="checkbox" name="interest" value="Cooking"><span>Cooking</span></label><label><input type="checkbox" name="interest" value="Ventilation"><span>Ventilation</span></label></div></fieldset>
-        <div class="fl full"><textarea id="fMsg" name="message" placeholder=" "></textarea><label for="fMsg">Your project, and what you need</label></div>
+        <div class="fl full"><textarea id="fMsg" name="message" placeholder=" " maxlength="5000"></textarea><label for="fMsg">Your project, and what you need</label></div>
       </div>
       <button class="btn btn--gold" type="submit">Send enquiry</button>
       <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We only use your details to reply to you.</p>

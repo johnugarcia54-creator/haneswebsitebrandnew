@@ -572,13 +572,13 @@ html.lite .nav{background:rgba(10,9,7,.94);-webkit-backdrop-filter:none;backdrop
         <p>Takes a minute. A member of our team will be in touch.</p>
         <div class="fgrid">
           <div class="field"><label for="fBiz">Business name</label><input id="fBiz" name="business" required autocomplete="organization"></div>
-          <div class="field"><label for="fName">Your name</label><input id="fName" name="name" required autocomplete="name"></div>
-          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="fName">Your name</label><input id="fName" name="name" required autocomplete="name" maxlength="120"></div>
+          <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required autocomplete="email" maxlength="254"></div>
           <div class="field"><label for="fPhone">Phone</label><input id="fPhone" name="phone" type="tel" autocomplete="tel"></div>
           <div class="field"><label for="fType">Your business</label><select id="fType" name="type" required><option value="">Choose one</option><option>Retailer</option><option>Builders' merchant</option><option>Insulation installer</option><option>Builder</option><option>Other</option></select></div>
           <div class="field"><label for="fRegion">Region</label><select id="fRegion" name="region" required><option value="">Choose one</option><option>Northland</option><option>Auckland</option><option>Waikato</option><option>Bay of Plenty</option><option>Gisborne</option><option>Hawke's Bay</option><option>Taranaki</option><option>Manawatū-Whanganui</option><option>Wellington</option><option>Tasman</option><option>Nelson</option><option>Marlborough</option><option>West Coast</option><option>Canterbury</option><option>Otago</option><option>Southland</option></select></div>
           <fieldset class="field full"><legend>Interested in</legend><div class="toggles"><label><input type="checkbox" name="interest" value="Wall insulation" checked><span>Walls</span></label><label><input type="checkbox" name="interest" value="Ceiling insulation" checked><span>Ceilings</span></label></div></fieldset>
-          <div class="field full"><label for="fMsg">R-values and volumes</label><textarea id="fMsg" name="message" placeholder="For example: R2.6 wall batts and R4.0 ceiling blankets, about 20 packs a week"></textarea></div>
+          <div class="field full"><label for="fMsg">R-values and volumes</label><textarea id="fMsg" name="message" placeholder="For example: R2.6 wall batts and R4.0 ceiling blankets, about 20 packs a week" maxlength="5000"></textarea></div>
         </div>
         <button class="btn btn--gold" type="submit">Request pricing <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
         <p class="form__note">Sent straight to our team at Enquiry@hanesdistribution.co.nz. We only use your details to reply to you.</p>
