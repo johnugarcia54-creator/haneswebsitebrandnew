@@ -1,6 +1,6 @@
 /* POST /api/enquiry: sends a website enquiry to the Hanes inbox (see api/_lib/enquiry.js).
    GET /api/enquiry: a health check that says whether sending is configured. */
-import { validate, compose, send, configured, limited } from './_lib/enquiry.js';
+import { validate, compose, send, configured, limited, record } from './_lib/enquiry.js';
 
 const json = (res, status, body) => { res.statusCode = status; res.setHeader('Content-Type', 'application/json; charset=utf-8'); res.end(JSON.stringify(body)); };
 
@@ -27,19 +27,22 @@ export default async function handler(req, res) {
   if (body && JSON.stringify(body).length > 60000) return json(res, 413, { error: 'Your message is too long. Please shorten it and try again.' });
 
   const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
-  if (limited(ip, Date.now(), Number(process.env.ENQUIRY_RATE_MAX) || 5)) return json(res, 429, { error: 'too_many' });
+  // only sent enquiries (and spam-trap hits) use up the allowance; failed requests have their own, higher cap
+  const sent = `sent:${ip}`, failed = `failed:${ip}`, fail = (status, b) => { record(failed); return json(res, status, b); };
+  if (limited(sent, Date.now(), Number(process.env.ENQUIRY_RATE_MAX) || 5) || limited(failed, Date.now(), 20)) return json(res, 429, { error: 'too_many' });
 
   const v = validate(body);
-  if (v.spam) return json(res, 200, { ok: true });
-  if (v.error) return json(res, 400, { error: v.error, field: v.field || null });
-  if (!configured()) return json(res, 503, { error: 'not_configured' });
+  if (v.spam) { record(sent); return json(res, 200, { ok: true }); }
+  if (v.error) return fail(400, { error: v.error, field: v.field || null });
+  if (!configured()) return fail(503, { error: 'not_configured' });
 
   try {
     const r = await send(compose(v.data));
+    record(sent);
     console.log(`enquiry sent via ${r.provider}: ${v.data.form} ${r.id || ''}`);
     return json(res, 200, { ok: true });
   } catch (e) {
     console.error('enquiry send failed:', e.message);
-    return json(res, 502, { error: 'send_failed' });
+    return fail(502, { error: 'send_failed' });
   }
 }
