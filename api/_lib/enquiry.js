@@ -19,6 +19,8 @@ const LIMITS = { name: 120, email: 254, subject: 140, form: 60, page: 300, label
 // strip control characters (keeping line breaks in long answers) and trim to a length
 const clean = (v, max) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim().slice(0, max);
 const line = (v, max) => clean(v, max).replace(/\s+/g, ' ');
+// true when what the customer typed is over the limit, so it is refused rather than quietly cut short
+const long = (v, max) => String(v ?? '').replace(/\r\n?/g, '\n').trim().length > max;
 export const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export function configured(env = process.env) {
@@ -35,13 +37,16 @@ export function validate(body) {
   const subject = line(body.subject, LIMITS.subject) || 'Website enquiry';
   const form = line(body.form, LIMITS.form) || 'form', page = line(body.page, LIMITS.page);
   if (!name) return { error: 'Please enter your name.', field: 'name' };
-  if (!EMAIL.test(email)) return { error: 'Please enter a valid email address.', field: 'email' };
+  if (long(body.name, LIMITS.name)) return { error: 'Your name is too long. Please shorten it and try again.', field: 'name' };
+  if (long(body.email, LIMITS.email) || !EMAIL.test(email)) return { error: 'Please enter a valid email address.', field: 'email' };
   const rows = Array.isArray(body.fields) ? body.fields.slice(0, LIMITS.fields) : [];
   const fields = [];
   let total = 0;
   for (const r of rows) {
     if (!Array.isArray(r)) continue;
     const k = line(r[0], LIMITS.label), v = clean(r[1], LIMITS.value);
+    // every form's long answer comes from its textarea named "message"
+    if (long(r[1], LIMITS.value)) return { error: `${/^message$/i.test(k) ? 'Your message' : `"${k}"`} is too long. Please shorten it and try again.`, field: 'message' };
     if (!k || !v || /^(name|email)$/i.test(k)) continue;
     total += v.length;
     fields.push([k, v]);
