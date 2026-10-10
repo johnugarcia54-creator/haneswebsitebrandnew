@@ -103,12 +103,13 @@ export async function send(msg, env = process.env) {
   throw e;
 }
 
-/* A light limit on repeat sends from one address, kept in memory for as long as the function stays warm. */
+/* A light limit on repeat sends from one address, kept in memory for as long as the function stays warm.
+   limited() only checks; record() counts a request and returns a function that takes the count back. */
 const hits = new Map();
-export function limited(key, now = Date.now(), max = 5, windowMs = 10 * 60 * 1000) {
-  const list = (hits.get(key) || []).filter(t => now - t < windowMs);
-  if (list.length >= max) { hits.set(key, list); return true; }
-  list.push(now); hits.set(key, list);
+const recent = (key, now, windowMs) => { const list = (hits.get(key) || []).filter(t => now - t < windowMs); hits.set(key, list); return list; };
+export function limited(key, now = Date.now(), max = 5, windowMs = 10 * 60 * 1000) { return recent(key, now, windowMs).length >= max; }
+export function record(key, now = Date.now(), windowMs = 10 * 60 * 1000) {
+  recent(key, now, windowMs).push(now);
   if (hits.size > 5000) hits.clear();
-  return false;
+  return () => { const l = hits.get(key); const i = l ? l.lastIndexOf(now) : -1; if (i >= 0) l.splice(i, 1); };
 }
