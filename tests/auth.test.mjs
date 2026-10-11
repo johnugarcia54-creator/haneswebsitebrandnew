@@ -64,6 +64,71 @@ test('landingFor: the Friday landing for each level, the studio for anything els
     assert.equal(lib.landingFor(s), '/studio/', JSON.stringify(s));
 });
 
+/* ---------- landingFor: the studio's answer first (role portals RP-14) ---------- */
+const SESSIONS = level => [{ level }, { level, auth: {} }, { level, auth: { landing: undefined } }, { level, auth: null }, { level, auth: 'x' }];
+
+test('landingFor: with no auth.landing (an older studio) every level lands exactly as before', () => {
+  for (const [level, want] of [['client', '/studio/#/account'], ['consultant', '/studio/consultant.html'], ['backoffice', '/studio/#/backoffice'],
+    ['admin', '/studio/#/backoffice'], ['visitor', '/studio/'], ['supplier', '/studio/']]) {
+    for (const s of SESSIONS(level)) assert.equal(lib.landingFor(s, ORIGIN), want, `${level} ${JSON.stringify(s)}`);
+  }
+});
+
+test('landingFor: the studio of today sends the same landings as LANDINGS, so nothing moves', () => {
+  // studio backend/modules/10-accounts.cjs LANDING, as sent in session.auth.landing
+  const STUDIO = { visitor: '/studio/', client: '/studio/#/account', consultant: '/studio/consultant.html', backoffice: '/studio/#/backoffice', admin: '/studio/#/backoffice' };
+  for (const [level, landing] of Object.entries(STUDIO)) {
+    assert.equal(lib.landingFor({ level, auth: { landing } }, ORIGIN), lib.landingFor({ level }, ORIGIN), level);
+    assert.equal(lib.landingFor({ level, auth: { landing } }, ORIGIN), landing, level);
+  }
+});
+
+test('landingFor: a safe auth.landing into the studio wins over LANDINGS', () => {
+  for (const [level, landing] of [['admin', '/studio/home.html'], ['client', '/studio/home.html#/today'], ['supplier', '/studio/home.html'],
+    ['consultant', '/studio/home.html?portal=consultant'], [undefined, '/studio/#/account'], ['backoffice', '/studio/']]) {
+    assert.equal(lib.landingFor({ level, auth: { landing } }, ORIGIN), landing, `${level} → ${landing}`);
+    assert.equal(lib.landingFor({ level, auth: { landing } }, 'http://localhost:3000'), landing, `${level} → ${landing} (local)`);
+  }
+});
+
+test('landingFor: an unsafe auth.landing is ignored and LANDINGS decides', () => {
+  const bad = ['//evil.example/studio/', 'https://evil.example/studio/', `${ORIGIN}/studio/home.html`, 'javascript:alert(1)', 'data:text/html,x',
+    '/studio/%2e%2e/evil', '/studio/../index.html', '/studio/\\evil', '/studio/\n//evil', '/studio/%0d%0aLocation:x', '/studio/%2f%2fevil.example',
+    '/studio/' + 'a'.repeat(293), '/', '/index.html', '/api/session', '/studiox/', '/studio', 'studio/home.html',
+    // the sign-in pages pass safeNext as a `next`, but are never a landing (they would loop)
+    '/auth/login.html', '/auth/update-password.html?invite=1', '/auth/',
+    // no escapes at all, even ones a `next` may carry (fail closed)
+    '/studio/%23/backoffice', '/studio/%41', '/studio/home.html?x=%41', '/studio/#/a%20b',
+    '', null, 42, true, {}, ['/studio/home.html'], { toString: () => '/studio/home.html' }];
+  for (const landing of bad) {
+    assert.equal(lib.landingFor({ level: 'consultant', auth: { landing } }, ORIGIN), '/studio/consultant.html', JSON.stringify(String(landing)));
+    assert.equal(lib.landingFor({ level: 'nobody', auth: { landing } }, ORIGIN), '/studio/', JSON.stringify(String(landing)));
+  }
+  // an inherited landing is not the studio's answer
+  assert.equal(lib.landingFor({ level: 'client', auth: Object.create({ landing: '/studio/home.html' }) }, ORIGIN), '/studio/#/account');
+  // no origin to compare with (no page): auth.landing cannot be checked, so LANDINGS decides
+  assert.equal(lib.landingFor({ level: 'admin', auth: { landing: '/studio/home.html' } }), '/studio/#/backoffice');
+  assert.equal(lib.landingFor({ level: 'admin', auth: { landing: '/studio/home.html' } }, ''), '/studio/#/backoffice');
+});
+
+test('landingFor: the page origin is used when none is passed', () => {
+  globalThis.location = { origin: ORIGIN };
+  try {
+    assert.equal(lib.landingFor({ level: 'admin', auth: { landing: '/studio/home.html' } }), '/studio/home.html');
+    assert.equal(lib.landingFor({ level: 'admin', auth: { landing: '//evil.example' } }), '/studio/#/backoffice');
+  } finally { delete globalThis.location; }
+});
+
+test('destination: a safe next still beats the studio\'s landing; an unsafe next falls to it', () => {
+  globalThis.location = { origin: ORIGIN };
+  try {
+    const s = { level: 'consultant', auth: { landing: '/studio/home.html' } };
+    assert.equal(lib.destination(s, '/studio/#/book'), '/studio/#/book');
+    assert.equal(lib.destination(s, '//evil.example', null), '/studio/home.html');
+    assert.equal(lib.destination(s), '/studio/home.html');
+  } finally { delete globalThis.location; }
+});
+
 test('destination: a safe next wins, then the next one, else the landing', () => {
   globalThis.location = { origin: ORIGIN };
   try {
@@ -77,16 +142,23 @@ test('destination: a safe next wins, then the next one, else the landing', () =>
 const EXCHANGE_CODES = ['invalid_input', 'privacy_ack_required', 'invalid_token', 'session_ended', 'email_unconfirmed', 'reauth_required',
   'cross_origin', 'origin_required', 'not_allowed_here', 'signup_closed', 'account_disabled', 'invitation_needs_link',
   'link_requires_invitation', 'rate_limited', 'auth_unavailable', 'auth_settings_unsafe'];
+// the studio's accounts module sends these too (studio backend/modules/10-accounts.cjs)
+const STUDIO_CODES = ['mfa_required', 'email_in_use', 'account_already_linked', 'confirm_link_required', 'exchange_race'];
 
 test('messageFor has its own message for every error code of §4.3, with the wording the addendum fixes', () => {
-  for (const c of EXCHANGE_CODES) {
+  for (const c of [...EXCHANGE_CODES, ...STUDIO_CODES]) {
     assert.ok(Object.hasOwn(lib.MESSAGES, c), c);
     assert.notEqual(lib.messageFor(c), lib.MESSAGES.unexpected, c);
     assert.match(lib.messageFor(c), /^[A-Z“].*[.]$/, `${c}: a sentence`);
   }
   assert.equal(lib.messageFor('signup_closed'), 'Your account is confirmed. Accounts open soon.');
-  assert.equal(lib.messageFor('link_requires_invitation'), 'This email belongs to a staff account. Use the invitation we sent, or ask Back Office.');
+  assert.equal(lib.messageFor('link_requires_invitation'), 'To sign in for the first time, open the invitation link you were sent. For a new one, ask whoever invited you.');
   assert.equal(lib.messageFor('account_disabled'), 'This account is disabled. Contact us.');
+  assert.equal(lib.messageFor('mfa_required'), "This sign-in needs a second step that this page can't do yet. Contact us and we'll help.");
+  assert.equal(lib.messageFor('email_in_use'), "We couldn't finish setting up this sign-in. Contact us and we'll sort it out.");
+  assert.equal(lib.messageFor('account_already_linked'), "We couldn't finish setting up this sign-in. Sign in the way you did before, or contact us.");
+  assert.equal(lib.messageFor('confirm_link_required'), 'To finish setting up, open the link in the email we sent you.');
+  assert.equal(lib.messageFor('exchange_race'), 'Two sign-ins crossed paths. Please sign in again.');
   assert.equal(lib.messageFor('invitation_needs_link'), 'This invitation link has expired or was already used. Ask for a new one.');
   assert.match(lib.messageFor('privacy_ack_required'), /privacy statement/);
   assert.match(lib.messageFor('reauth_required'), /sign in again/);
@@ -103,9 +175,25 @@ test('messageFor: unknown codes, prototype names and non-strings get the general
 
 test('no message reveals whether an account exists', () => {
   for (const [k, m] of Object.entries(lib.MESSAGES)) {
-    if (k === 'link_requires_invitation') continue; // only after a successful sign-in with that account's own password
     assert.doesNotMatch(m, /\b(no account|not registered|already registered|already exists|unknown email|doesn't exist|does not exist)\b/i, k);
+    assert.doesNotMatch(m, /\b(belongs to|another account|already (linked|in use|has an account)|staff account|is taken)\b/i, k);
   }
+});
+
+test('the sign-in wording names no one group: no "staff account", no "Back Office"', () => {
+  for (const [k, m] of Object.entries(lib.MESSAGES)) assert.doesNotMatch(m, /\bstaff\b|back office/i, k);
+});
+
+test('login.html speaks to everyone who signs in; confirm.html and update-password.html send an invitee back to whoever invited them', () => {
+  const login = read('auth/login.html'), confirm = read('auth/confirm.html');
+  assert.match(login, /<p class="auth__sub" id="sub">For clients, consultants, partners and Hanes staff\.<\/p>/);
+  assert.match(login, /<meta name="description" content="Sign in to the Bargainhub studio: for clients, consultants, partners and Hanes staff\.">/);
+  assert.doesNotMatch(login, /consultants and Hanes staff/);
+  assert.match(confirm, /<p class="auth__help">For a new invitation, ask whoever invited you\.<\/p>/);
+  assert.doesNotMatch(confirm, /Back Office/);
+  const update = read('auth/update-password.html');
+  assert.match(update, /<p class="auth__help">For a new invitation, ask whoever invited you\.<\/p>/);
+  assert.doesNotMatch(update, /Back Office/);
 });
 
 /* ---------- rememberChoice (§3.3.4) ---------- */
@@ -448,6 +536,22 @@ test('confirm (b): an error hash maps to the expired-link message for its type (
   assert.equal(lib.hashLinkError('recovery').message, 'This link has expired or was already used. Ask for a new one.');
 });
 
+test('sign-in, confirm and update-password land by the studio\'s answer when it sends one', async () => {
+  globalThis.location = { origin: ORIGIN };
+  try {
+    const session = { user: {}, level: 'admin', auth: { landing: '/studio/home.html' } };
+    let s = stub({ exchangeAnswers: [{ ok: true, status: 200, session }] });
+    assert.deepEqual(await lib.loginFlow({ email: 'a@b.co', password: 'pw', captchaToken: 't' }, s.deps), { action: 'go', to: '/studio/home.html' });
+    s = stub({ exchangeAnswers: [{ ok: true, status: 200, session }] });
+    assert.deepEqual(await lib.confirmSessionFlow({ type: 'email', accessToken: AT, refreshToken: RT, next: [null] }, s.deps), { action: 'go', to: '/studio/home.html' });
+    s = stub({ signedIn: true, exchangeAnswers: [{ ok: true, status: 200, session }] });
+    assert.equal((await lib.passwordFlow({ password: 'a-long-enough-pass' }, s.deps)).to, '/studio/home.html');
+    // an unsafe answer is ignored: the level's landing, as before
+    s = stub({ signedIn: true, exchangeAnswers: [{ ok: true, status: 200, session: { ...session, auth: { landing: 'https://evil.example/' } } }] });
+    assert.equal((await lib.passwordFlow({ password: 'a-long-enough-pass' }, s.deps)).to, '/studio/#/backoffice');
+  } finally { delete globalThis.location; }
+});
+
 test('update-password after (b), as admin: the password, then the exchange, then Back Office', async () => {
   const s = stub({ signedIn: true, exchangeAnswers: [{ ok: true, status: 200, session: { user: {}, level: 'admin' } }] });
   const out = await lib.passwordFlow({ password: 'a-long-enough-pass', invite: true }, s.deps);
@@ -522,7 +626,7 @@ test('sign-in: one message for a wrong password, an unknown email and an unconfi
 
 test('sign-in: exchange refusals use the §3.3.3 wording and end the Supabase session; studio down offers Retry', async () => {
   for (const [status, code, msg] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'],
-    [409, 'link_requires_invitation', 'This email belongs to a staff account. Use the invitation we sent, or ask Back Office.'],
+    [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation link you were sent. For a new one, ask whoever invited you.'],
     [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
     const s = stub({ exchangeAnswers: [fail(status, code)] });
     const out = await lib.loginFlow({ email: 'a@b.co', password: 'pw', captchaToken: 't' }, s.deps);

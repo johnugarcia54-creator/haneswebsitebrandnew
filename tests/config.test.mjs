@@ -183,7 +183,7 @@ for (const [p, expected] of [
 const REDIRECTS = [
   ['/bargainhub', 308, '/bargainhub.html'], ['/hisense', 308, '/hisense.html'], ['/quote', 308, '/contact.html'],
   ['/catalogues', 307, '/hisense.html#catalogues'], ['/login', 307, '/auth/login.html'], ['/signup', 307, '/auth/signup.html'],
-  ['/reset', 307, '/auth/reset.html'], ['/staff', 307, '/auth/login.html?next=/studio/%23/backoffice'], ['/privacy', 307, '/privacy.html'],
+  ['/reset', 307, '/auth/reset.html'], ['/staff', 307, '/auth/login.html'], ['/privacy', 307, '/privacy.html'],
   ['/studio', 307, '/studio/'], ['/index', 308, '/'], ['/track', 308, '/tracking.html']
 ];
 for (const [p, status, location] of REDIRECTS) {
@@ -196,6 +196,20 @@ for (const [p, status, location] of REDIRECTS) {
     }
   });
 }
+
+test('/staff is the plain sign-in page: no forced next, so each person lands by the studio\'s answer (RP-14)', () => {
+  for (const host of [PROD_HOST, PREVIEW_ALIAS]) {
+    const staff = run('/staff', host), login = run('/login', host);
+    assert.equal(staff.location, '/auth/login.html');
+    assert.equal(staff.location, login.location);
+    assert.doesNotMatch(staff.location, /[?#]|next=|backoffice/i);
+  }
+  // and no redirect anywhere forces a next into Back Office
+  for (const r of routes) {
+    const loc = r.headers && (r.headers.Location || r.headers.location);
+    if (typeof loc === 'string') assert.doesNotMatch(loc, /next=.*backoffice/i, r.src);
+  }
+});
 
 test('an unknown address is a 404 with the marketing headers (Vercel serves 404.html)', () => {
   const r = run('/no-such-page');

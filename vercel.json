@@ -31,7 +31,7 @@
     { "src": "^/login$", "status": 307, "headers": { "Location": "/auth/login.html" } },
     { "src": "^/signup$", "status": 307, "headers": { "Location": "/auth/signup.html" } },
     { "src": "^/reset$", "status": 307, "headers": { "Location": "/auth/reset.html" } },
-    { "src": "^/staff$", "status": 307, "headers": { "Location": "/auth/login.html?next=/studio/%23/backoffice" } },
+    { "src": "^/staff$", "status": 307, "headers": { "Location": "/auth/login.html" } },
     { "src": "^/privacy$", "status": 307, "headers": { "Location": "/privacy.html" } },
 
     { "handle": "filesystem" },
