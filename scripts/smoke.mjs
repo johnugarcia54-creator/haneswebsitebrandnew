@@ -22,7 +22,8 @@
 import { pathToFileURL } from 'node:url';
 
 export const PAGES = ['/', '/hanesteel.html', '/hanestone.html', '/hanewood.html', '/hanesulation.html', '/bargainhub.html', '/hisense.html', '/tracking.html', '/contact.html'];
-export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html'];
+export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html',
+  '/auth/zh/login.html', '/auth/zh/reset.html', '/auth/zh/confirm.html', '/auth/zh/update-password.html'];
 export const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
 export const PRODUCTION_HOST = 'hanes-the-website-new.vercel.app';
 export const PRODUCTION_BASE = `https://${PRODUCTION_HOST}`;
@@ -115,6 +116,10 @@ export async function smoke(base, { local = false, production = false, productio
     ok(rd.status === 308 && (rd.headers.get('location') || '').endsWith('/hisense.html'), '/hisense redirects to /hisense.html');
     const rt = await get('/track');
     ok([301, 308].includes(rt.status) && (rt.headers.get('location') || '').endsWith('/tracking.html'), '/track redirects to /tracking.html');
+    // Vercel percent-encodes the query (next=%2Fstudio%2Fhome.html): compare what the page reads, not the spelling
+    const sup = await get('/supplier'), supTo = (() => { try { return new URL(sup.headers.get('location') || '', base); } catch { return null; } })();
+    ok(sup.status === 307 && !!supTo && supTo.origin === new URL(base).origin && supTo.pathname === '/auth/zh/login.html' && [...supTo.searchParams.keys()].join() === 'next' && supTo.searchParams.get('next') === '/studio/home.html',
+      `/supplier redirects to the Chinese sign-in page, then the studio home (HTTP ${sup.status} -> ${sup.headers.get('location')})`);
     const h = await get('/');
     ok(h.headers.get('x-content-type-options') === 'nosniff' && !!h.headers.get('referrer-policy'), 'security headers are set');
     const og = await get('/og/index.jpg');

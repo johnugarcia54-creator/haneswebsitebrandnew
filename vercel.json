@@ -32,6 +32,7 @@
     { "src": "^/signup$", "status": 307, "headers": { "Location": "/auth/signup.html" } },
     { "src": "^/reset$", "status": 307, "headers": { "Location": "/auth/reset.html" } },
     { "src": "^/staff$", "status": 307, "headers": { "Location": "/auth/login.html" } },
+    { "src": "^/supplier$", "status": 307, "headers": { "Location": "/auth/zh/login.html?next=/studio/home.html" } },
     { "src": "^/privacy$", "status": 307, "headers": { "Location": "/privacy.html" } },
 
     { "handle": "filesystem" },

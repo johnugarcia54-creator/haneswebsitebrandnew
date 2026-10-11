@@ -809,8 +809,13 @@ test('pickConfig: chosen by host; placeholders and test keys are never ready on 
 });
 
 /* ---------- auth/ has no HTML sinks ---------- */
-test('no innerHTML, outerHTML, insertAdjacentHTML or document.write anywhere in auth/', () => {
-  for (const f of readdirSync(root + 'auth')) assert.doesNotMatch(read('auth/' + f), /innerHTML|outerHTML|insertAdjacentHTML|document\.write/, f);
+// every file under auth/, at any depth (auth/zh/ holds the Chinese pages)
+const AUTH_FILES = readdirSync(root + 'auth', { recursive: true, withFileTypes: true }).filter(e => e.isFile())
+  .map(e => (e.parentPath || e.path).slice(root.length).replaceAll('\\', '/') + '/' + e.name).sort();
+
+test('no innerHTML, outerHTML, insertAdjacentHTML or document.write anywhere in auth/, sub-folders included', () => {
+  assert.ok(AUTH_FILES.includes('auth/auth.js') && AUTH_FILES.includes('auth/zh/login.html'), 'the walk sees auth/ and auth/zh/');
+  for (const f of AUTH_FILES) assert.doesNotMatch(read(f), /innerHTML|outerHTML|insertAdjacentHTML|document\.write/, f);
 });
 
 
@@ -836,6 +841,21 @@ test('exactly one vendored supabase-js build, its licence names that version, an
   assert.ok(client.indexOf('if (!cfg.supabaseReady) return null;') >= 0 && client.indexOf('if (!cfg.supabaseReady) return null;') < client.indexOf('await loadSupabase()'), 'placeholder keys: the build is never fetched');
   const signup = js.slice(js.indexOf('async function signupPage()'));
   assert.ok(signup.indexOf('if (!open)') < signup.indexOf('supabaseClient()'), 'closed sign-up: the build is never fetched');
+});
+
+// the en-NZ rule, extended (RP-29): every page under auth/ is en-NZ except exactly these Chinese pages,
+// which are zh-CN; a new page in auth/zh/ fails until it is added here on purpose
+const ZH_ALLOW = ['auth/zh/confirm.html', 'auth/zh/login.html', 'auth/zh/reset.html', 'auth/zh/update-password.html'];
+test('every sign-in page is lang="en-NZ", except the explicit zh-CN allow-list, which is exactly the Chinese pages', () => {
+  const html = AUTH_FILES.filter(f => f.endsWith('.html'));
+  assert.deepEqual(html.filter(f => f.startsWith('auth/zh/')), ZH_ALLOW, 'auth/zh/ holds exactly the allow-listed pages');
+  assert.deepEqual(ZH_ALLOW, lib.ZH_PAGES.map(p => `auth/zh/${p}.html`).sort(), 'and they are the pages auth-lib.js sends Chinese visitors to');
+  for (const f of html) {
+    const want = ZH_ALLOW.includes(f) ? 'zh-CN' : 'en-NZ';
+    assert.match(read(f), new RegExp(`^<!doctype html>\\n<html lang="${want}">`), `${f}: lang="${want}"`);
+    assert.equal((read(f).match(/<html\b/g) || []).length, 1, f);
+  }
+  assert.equal(html.length, PAGES.length + ZH_ALLOW.length, 'no other sign-in pages');
 });
 
 for (const p of PAGES) {
@@ -872,6 +892,12 @@ for (const p of PAGES) {
       assert.ok(s.includes(`<label for="${id}"`) || new RegExp(`<label class="auth__check"><input[^>]*id="${id}"`).test(s), `${p}: #${id} has a label`);
     }
     assert.doesNotMatch(s, /\b(claude|opus|sonnet|gpt|openai)\b/i);
+    // the 中文 button (RP-29): in the card, outside the bar, to the same page in Chinese; sign-up has none
+    if (lib.ZH_PAGES.includes(p)) {
+      assert.equal((s.match(/id="langSwitch"/g) || []).length, 1);
+      assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Bargainhub studio</p><a class="auth__lang" id="langSwitch" href="/auth/zh/${p}.html" hreflang="zh-CN" lang="zh-CN">中文</a></div>`), `${p}: the 中文 button`);
+      assert.doesNotMatch(bar, /langSwitch|中文/, 'not in the bar');
+    } else assert.doesNotMatch(s, /langSwitch|\/auth\/zh\//, `${p} has no Chinese page`);
   });
 }
 
@@ -987,7 +1013,7 @@ test('confirm.html and reset.html: the paste box is not a second form, starts hi
   assert.match(js, /pasteBox\('recovery'\); \/\/ there from the start/, 'reset: from the start, for a recovery link');
   assert.match(js, /return pasteBox\(CONFIRM_TYPES\.includes\(type\) \? type : null\);/, 'confirm.html: an incomplete link too');
   assert.equal((js.match(/pasteBox\(/g) || []).length, 6, 'defined once; called on reset, a bare or incomplete link, a spent hash and a spent Confirm');
-  assert.match(js, /pastedLinkTarget\(input\.value, cfg\.supabaseUrl, type\)/);
+  assert.match(js, /pastedLinkTarget\(input\.value, cfg\.supabaseUrl, type, LANG\)/, 'the paste box keeps the page language');
   assert.match(js, /window\.addEventListener\('pageshow', e => \{ if \(e\.persisted\) \{ busy\(btn, false\);/, 'Back from the opened page: the button works again');
   assert.match(js, /if \(!invite && out\.code === 'invitation_needs_link'\) \{ settle\(\{ \.\.\.out, message: MESSAGES\.reset_too_slow \}\);/, 'update-password: a slow reset says so, in reset words');
   for (const k of ['paste_empty', 'paste_lost', 'paste_not_link', 'reset_too_slow']) assert.ok(lib.MESSAGES[k] && !/\b(test|demo)\b/i.test(lib.MESSAGES[k]), k);

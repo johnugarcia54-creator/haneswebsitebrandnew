@@ -10,7 +10,8 @@
    - links into PROXIED_PREFIXES (served by the studio through the rewrite) are not file-checked
    - links to PENDING_APP_PAGES (the sign-in page stream W2 delivers) only warn while that one file
      is not built yet; once it exists it is checked like every other file
-   - app pages (any .html under auth/, when present): noindex, one <h1>, lang="en-NZ", no inline script,
+   - app pages (any .html under auth/, when present): noindex, one <h1>, lang="en-NZ" (or lang="zh-CN" for
+     exactly the pages in ZH_APP_PAGES, the Chinese sign-in pages, and nowhere else), no inline script,
      <style>, style="" or on*= handler (the /auth CSP would block them), every local file exists
    - no innerHTML, outerHTML, insertAdjacentHTML or document.write in any .js under auth/ or assets/guide/
    - no form still promises "We only use your details to reply to you"
@@ -97,13 +98,16 @@ const walk = d => !existsSync(root + d) ? [] : readdirSync(root + d, { withFileT
   .sort((a, b) => a.name.localeCompare(b.name))
   .flatMap(e => e.isDirectory() ? walk(`${d}/${e.name}`) : e.isFile() ? [`${d}/${e.name}`] : []);
 const appPages = walk('auth').filter(n => n.endsWith('.html'));
+// the Chinese sign-in pages (RP-29): the only pages allowed lang="zh-CN", and each of them must be
+const ZH_APP_PAGES = new Set(['auth/zh/login.html', 'auth/zh/confirm.html', 'auth/zh/reset.html', 'auth/zh/update-password.html']);
 for (const f of appPages) {
   const dir = f.slice(0, f.lastIndexOf('/')), s = readFileSync(root + f, 'utf8');
   const m = s.replace(/<!--[\s\S]*?-->/g, '');
   if (!/<meta name="robots" content="noindex[^"]*">/.test(m)) err(f, 'app page should have <meta name="robots" content="noindex">');
   const h1 = (m.match(/<h1\b/gi) || []).length;
   if (h1 !== 1) err(f, `${h1} <h1> headings (want 1)`);
-  if (!/<html lang="en-NZ">/.test(m)) err(f, 'missing lang="en-NZ"');
+  if (ZH_APP_PAGES.has(f)) { if (!/<html lang="zh-CN">/.test(m)) err(f, 'missing lang="zh-CN" (a Chinese sign-in page)'); }
+  else if (!/<html lang="en-NZ">/.test(m)) err(f, 'missing lang="en-NZ"' + (f.startsWith('auth/zh/') ? ' (not in ZH_APP_PAGES: add it there to make it a Chinese page)' : ''));
   if (!/<title>[^<]+<\/title>/.test(m)) err(f, 'no <title>');
   for (const x of m.matchAll(/<script\b([^>]*)>/gi)) if (!/\ssrc\s*=\s*"[^"]+"/i.test(x[1])) err(f, `inline <script> (only external files are allowed): ${x[0].slice(0, 60)}`);
   if (/<style\b/i.test(m)) err(f, '<style> block (use a stylesheet file)');

@@ -168,6 +168,8 @@ for (const [p, expected] of [
   ['/privacy.html', MARKETING],
   ['/assets/site.js', MARKETING],
   ['/auth/login.html', AUTH],
+  ['/auth/zh/login.html', AUTH],
+  ['/auth/zh/confirm.html', AUTH],
   ['/fonts/x.woff2', { ...MARKETING, ...LONG_CACHE }],
   ['/vendor/gsap.min.js', { ...MARKETING, ...LONG_CACHE }],
   ['/og/index.jpg', { ...MARKETING, ...WEEK_CACHE }]
@@ -184,6 +186,7 @@ const REDIRECTS = [
   ['/bargainhub', 308, '/bargainhub.html'], ['/hisense', 308, '/hisense.html'], ['/quote', 308, '/contact.html'],
   ['/catalogues', 307, '/hisense.html#catalogues'], ['/login', 307, '/auth/login.html'], ['/signup', 307, '/auth/signup.html'],
   ['/reset', 307, '/auth/reset.html'], ['/staff', 307, '/auth/login.html'], ['/privacy', 307, '/privacy.html'],
+  ['/supplier', 307, '/auth/zh/login.html?next=/studio/home.html'],
   ['/studio', 307, '/studio/'], ['/index', 308, '/'], ['/track', 308, '/tracking.html']
 ];
 for (const [p, status, location] of REDIRECTS) {
@@ -211,6 +214,23 @@ test('/staff is the plain sign-in page: no forced next, so each person lands by 
   }
 });
 
+test('/supplier is the Chinese sign-in page, then the studio home: a real page, a next that passes safeNext (RP-29)', async () => {
+  const lib = await import('../auth/auth-lib.js');
+  for (const host of [PROD_HOST, PREVIEW_ALIAS, 'localhost:3000']) {
+    const r = run('/supplier', host);
+    assert.equal(r.kind, 'redirect');
+    assert.equal(r.status, 307, 'temporary: the landing may change');
+    const to = new URL(r.location, 'https://' + PROD_HOST);
+    assert.equal(to.pathname, '/auth/zh/login.html');
+    assert.ok(resolveFile(root, to.pathname), 'the Chinese sign-in page is in the deployment');
+    assert.deepEqual([...to.searchParams.keys()], ['next']);
+    assert.equal(lib.safeNext(to.searchParams.get('next'), 'https://' + PROD_HOST), '/studio/home.html', 'auth.js keeps the next');
+    // the redirect leads to a page with the /auth headers
+    assert.deepEqual(run(to.pathname, host).headers, AUTH);
+  }
+  for (const p of ['/supplier/', '/suppliers', '/Supplier/x', '/supplier.html']) assert.notEqual(run(p).location, '/auth/zh/login.html?next=/studio/home.html', p);
+});
+
 test('an unknown address is a 404 with the marketing headers (Vercel serves 404.html)', () => {
   const r = run('/no-such-page');
   assert.equal(r.kind, 'notfound');
@@ -222,9 +242,9 @@ test('an unknown address is a 404 with the marketing headers (Vercel serves 404.
 test('(e) no header name is set by two groups on any path', () => {
   const groups = routes.filter(r => r.continue && r.headers);
   const paths = ['/', '/index.html', '/bargainhub.html', '/privacy.html', '/studio', '/studio/', '/studio/index.html', '/studio/src/app.js',
-    '/studio/consultant.html', '/api/', '/api/enquiry', '/api/session', '/api/auth/exchange', '/auth/login.html', '/auth/', '/fonts/x.woff2',
+    '/studio/consultant.html', '/api/', '/api/enquiry', '/api/session', '/api/auth/exchange', '/auth/login.html', '/auth/', '/auth/zh/login.html', '/fonts/x.woff2',
     '/vendor/gsap.min.js', '/frames2/a/lg/1.webp', '/stills/x.jpg', '/catalogues/tv/001.webp', '/films/a.mp4', '/og/index.jpg',
-    '/login', '/staff', '/catalogues', '/no-such-page', '/assets/site.css', '/sitemap.xml', '/robots.txt'];
+    '/login', '/staff', '/supplier', '/catalogues', '/no-such-page', '/assets/site.css', '/sitemap.xml', '/robots.txt'];
   for (const p of paths) {
     const seen = new Map();
     for (const g of groups) {

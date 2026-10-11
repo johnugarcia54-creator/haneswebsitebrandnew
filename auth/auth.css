@@ -36,6 +36,12 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__card{width:100%;max-width:480px;padding:40px clamp(24px,5vw,44px) 36px;border-radius:28px;background:#fff;box-shadow:0 30px 80px -40px rgba(0,0,0,.28)}
 .auth__card:focus{outline:none}
 .auth__eyebrow{margin:0 0 6px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+/* the eyebrow and the 中文 / English button share the card's top line (the button is outside the bar);
+   a 44 px target whose text sits on the eyebrow's line */
+.auth__top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-12px 0 -6px}
+.auth__top .auth__eyebrow{margin:0}
+.auth a.auth__lang{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-right:-10px;padding:0 10px;border-radius:980px;color:var(--link);font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap}
+.auth a.auth__lang:hover{text-decoration:underline;text-underline-offset:3px}
 .auth h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(30px,5vw,40px);line-height:1.08;letter-spacing:-.03em;text-wrap:balance}
 .auth h1:focus{outline:none}
 .auth__sub{margin:10px 0 0;font-size:17px;line-height:1.4;color:var(--ink-2);text-wrap:pretty}
@@ -67,6 +73,7 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__show{position:absolute;top:2px;right:2px;min-width:64px;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:none;color:var(--link);font:inherit;font-size:15px;font-weight:500;cursor:pointer}
 .auth__show:hover{background:var(--alt)}
 .auth__help{margin:6px 0 0;font-size:14px;line-height:1.4;color:var(--ink-2)}
+#pasteBox .auth__help{margin-bottom:12px} /* the paste box: its help text, then air before the field's label */
 .auth__err{margin:6px 0 0;font-size:14px;line-height:1.4;color:#a8261b;font-weight:500}
 .auth__check{display:flex;align-items:flex-start;gap:12px;min-height:44px;margin:0;padding:11px 0;font-size:16px;line-height:1.4;cursor:pointer}
 .auth__check input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--blue);cursor:pointer}
@@ -76,7 +83,7 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__captcha{min-height:65px;margin:10px 0 4px}
 .auth__captcha:empty{min-height:0}
 .auth__go{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:18px 0 0;padding:0 22px;border:1px solid transparent;border-radius:980px;background:var(--blue);color:#fff!important;font:inherit;font-size:17px;font-weight:500;text-decoration:none!important;cursor:pointer;transition:background .2s,opacity .2s}
-.auth__go:hover{background:#0077ed}
+.auth__go:hover{background:#006edb} /* darker on hover: white text stays above 4.5:1 (#0077ed was 4.3:1) */
 .auth__go:disabled,.auth__go[aria-disabled=true]{opacity:.6;cursor:default}
 .auth__go--quiet{background:#e8e8ed;color:var(--ink)!important}
 .auth__go--quiet:hover{background:#dcdce1}
@@ -84,6 +91,18 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__links{display:flex;flex-wrap:wrap;gap:0 20px;margin:10px 0 0}
 .auth__links a,.auth__alt a{display:inline-flex;align-items:center;min-height:44px}
 .auth__alt{margin:20px 0 0;padding-top:16px;border-top:1px solid #e8e8ed;font-size:15px;color:var(--ink-2)}
+
+/* Chinese (the /auth/zh/ pages, and the 中文 button on the English ones): a CJK stack after the
+   Latin faces, so Latin keeps its look and Han glyphs get PingFang, YaHei or Noto; no tracking
+   (negative or wide letter-spacing breaks Han text), no capitals, a touch more line height */
+:root{--cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",sans-serif}
+body.auth-page:lang(zh),.auth__lang:lang(zh){font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",var(--cjk);letter-spacing:normal}
+.gb:lang(zh),.gf:lang(zh){font-family:"Inter",-apple-system,BlinkMacSystemFont,var(--cjk);letter-spacing:normal}
+body.auth-page:lang(zh){line-height:1.6}
+.auth:lang(zh) h1{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter Tight",var(--cjk);letter-spacing:normal;line-height:1.2}
+.auth__eyebrow:lang(zh){letter-spacing:.04em;text-transform:none}
+.auth__sub:lang(zh),.auth__help:lang(zh),.auth__note:lang(zh),.auth__alert:lang(zh),.auth__done:lang(zh){line-height:1.6}
+.auth:lang(zh) p{line-break:strict}
 
 /* the footer's two links get full-size targets here */
 .auth-page .gf{padding-top:6px}
