@@ -117,7 +117,7 @@ export async function smoke(base, { local = false, production = false, productio
     const rt = await get('/track');
     ok([301, 308].includes(rt.status) && (rt.headers.get('location') || '').endsWith('/tracking.html'), '/track redirects to /tracking.html');
     const sup = await get('/supplier');
-    ok(sup.status === 307 && (sup.headers.get('location') || '').endsWith('/auth/zh/login.html?next=/studio/home.html'), '/supplier redirects to the Chinese sign-in page, then the studio home');
+    ok(sup.status === 307 && (sup.headers.get('location') || '').endsWith('/auth/zh/login.html?next=/studio/home.html'), `/supplier redirects to the Chinese sign-in page, then the studio home (HTTP ${sup.status} -> ${sup.headers.get('location')})`);
     const h = await get('/');
     ok(h.headers.get('x-content-type-options') === 'nosniff' && !!h.headers.get('referrer-policy'), 'security headers are set');
     const og = await get('/og/index.jpg');
