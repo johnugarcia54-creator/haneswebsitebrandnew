@@ -1,8 +1,9 @@
 /* Hanes Distribution: what every page shares, in this order.
    1. bhAuthHygiene(): "keep me signed in" unticked means signed out once the browser closes
       (ADDENDUM §3.3.4). It runs first, before anything reads the sign-in state.
-   2. Log in becomes My account (/studio/#/account) while a Supabase session is kept in this
-      browser. Only localStorage is read: the Supabase SDK is never loaded on these pages.
+   2. Log in becomes My account (/studio/home.html: the studio home opens each person's portal,
+      RP-29b) while a Supabase session is kept in this browser. Only localStorage is read: the
+      Supabase SDK is never loaded on these pages.
    3. BOOKINGS_LIVE: while false, every [data-book] link opens the enquiry dialog with the topic
       "Book a consultant" (assets/enquiry.js); set it to true when bookings ship and they go
       to the studio's booking page instead.
@@ -17,7 +18,7 @@
   'use strict';
   const BOOKINGS_LIVE = false;
   const BOOKING_HREF = 'studio/#/book';
-  const ACCOUNT_HREF = '/studio/#/account';
+  const ACCOUNT_HREF = '/studio/home.html';
   const MILLI_SRC = '/assets/guide/milli.js', MILLI_SHIPPED = true;
   const SB_TOKEN = /^sb-[a-z0-9]+-auth-token$/;
 
