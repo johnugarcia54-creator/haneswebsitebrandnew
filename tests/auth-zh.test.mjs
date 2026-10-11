@@ -44,14 +44,45 @@ test('UI_ZH has exactly the keys of UI, the same shapes, and the same placeholde
   for (const k of Object.keys(lib.UI)) {
     const en = lib.UI[k], zh = UI_ZH[k];
     assert.equal(Array.isArray(zh), Array.isArray(en), k);
-    for (const s of [].concat(zh)) assert.ok(typeof s === 'string' && s.length && HAN.test(s), `${k}: Chinese`);
+    // the title suffix is the brand alone, in Latin script (review, 11 Oct): "Bargainhub Studio"
+    for (const s of [].concat(zh)) assert.ok(typeof s === 'string' && s.length && (k === 'title_suffix' || HAN.test(s)), `${k}: Chinese`);
     if (Array.isArray(en)) assert.equal(zh.length, en.length, k);
     for (const ph of [].concat(en).join(' ').match(/\{[a-z]+\}/g) || []) assert.ok([].concat(zh).join(' ').includes(ph), `${k}: ${ph}`);
   }
-  assert.equal(UI_ZH.title_suffix, ' — Bargainhub 工作室');
+  assert.equal(UI_ZH.title_suffix, ' — Bargainhub Studio');
   assert.deepEqual(lib.textsFor('zh'), { messages: MESSAGES_ZH, ui: UI_ZH });
   assert.deepEqual(lib.textsFor('en'), { messages: lib.MESSAGES, ui: lib.UI });
   for (const x of [undefined, null, 'zh-CN', 'ZH', 'fr', {}]) assert.deepEqual(lib.textsFor(x), { messages: lib.MESSAGES, ui: lib.UI }, String(x));
+});
+
+test('the reviewed Chinese wording (integrator review, 11 Oct): exact texts, 验证 for email, no 索取, no jargon', () => {
+  const want = {
+    auth_unavailable: '您已登录，但系统暂时无法访问，请稍后重试。', network: '您已登录，但系统暂时无法访问，请稍后重试。',
+    invalid_token: '登录失败，请重新登录。', session_ended: '您的登录已过期，请重新登录。',
+    not_allowed_here: '此邮箱无法在本网站登录。', signup_closed: '您的账户已确认，平台即将开放使用。',
+    email_unconfirmed: '请先验证您的邮箱：点击我们发送给您的邮件中的链接。', exchange_race: '检测到另一次登录正在进行，请重新登录。',
+    weak_password: '该密码过于简单，或曾出现在数据泄露中，请换一个密码。', mfa_required: '此账户需要二次验证，本页面暂不支持。请联系我们，我们会协助您。',
+    bad_credentials: '邮箱或密码错误，或账户尚未激活。'
+  };
+  for (const [k, v] of Object.entries(want)) assert.equal(MESSAGES_ZH[k], v, k);
+  for (const k of ['invitation_needs_link', 'link_expired_invite']) assert.match(MESSAGES_ZH[k], /请联系邀请人重新发送邀请。$/, k);
+  const all = [...Object.values(MESSAGES_ZH), ...Object.values(UI_ZH).flat(), ...['login', 'confirm', 'reset', 'update-password'].map(p => read(`auth/zh/${p}.html`))].join('\n');
+  assert.doesNotMatch(all, /索取|向我们发送咨询|工作室|确认邮件|跳到表单/, 'the replaced wording is gone');
+  assert.doesNotMatch([MESSAGES_ZH.paste_not_link, MESSAGES_ZH.paste_lost].join(' '), /Supabase|localhost/i, 'no jargon in the paste messages');
+  const login = read('auth/zh/login.html'), reset = read('auth/zh/reset.html'), confirm = read('auth/zh/confirm.html');
+  assert.ok(login.includes('>重新发送验证邮件</button>') && confirm.includes('“重新发送验证邮件”'), '验证 for email verification');
+  assert.ok(login.includes('关闭浏览器后将自动退出登录。部分浏览器恢复标签页时会保持登录状态；使用公用电脑时，请手动“退出登录”。'));
+  assert.ok(login.includes('<p class="auth__alt">账户仅限受邀开通。尚未收到邀请？<a href="/contact.html#enquiry" hreflang="en-NZ">请联系我们</a></p>'));
+  assert.ok(reset.includes('<p class="auth__alt">想起密码了？<a href="/auth/zh/login.html">返回登录</a></p>'));
+  assert.ok(read('auth/zh/update-password.html').includes('建议使用几个词语组合，既好记又安全。'));
+  for (const p of ['login', 'confirm', 'reset', 'update-password']) {
+    const s = read(`auth/zh/${p}.html`);
+    assert.ok(s.includes('<a class="auth__skip" href="#main">跳至表单</a>'), p);
+    assert.ok(s.includes('>联系我们咨询</a>'), `${p}: 联系我们咨询`);
+  }
+  assert.ok(MESSAGES_ZH.accounts_closed.includes('请联系我们咨询') && MESSAGES_ZH.not_configured.includes('请联系我们咨询'));
+  // polish: the paste box's help text has air before the field's label (en and zh share auth.css)
+  assert.match(read('auth/auth.css'), /#pasteBox \.auth__help\{margin-bottom:12px\}/);
 });
 
 test('the Chinese copy is ours and waits for a native speaker: ZH_REVIEWED stays false until then', () => {
@@ -281,7 +312,8 @@ for (const p of ZH) {
     assert.match(s, /^<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">/);
     assert.match(s, /<meta name="robots" content="noindex, nofollow">/);
     assert.match(s, /<meta name="referrer" content="no-referrer">/);
-    assert.match(s, /<title>[^<]*[一-鿿][^<]* — Bargainhub 工作室<\/title>/);
+    assert.match(s, /<title>[^<]*[一-鿿][^<]* — Bargainhub Studio<\/title>/);
+    assert.doesNotMatch(s, /工作室/, 'the brand is written "Bargainhub Studio" in Latin script');
     assert.match(s, /<meta name="description" content="[^"]*[一-鿿][^"]*">/);
     assert.equal((s.match(/<h1\b/g) || []).length, 1);
     assert.match(s, /<h1 id="title">[一-鿿]+<\/h1>/);
@@ -323,7 +355,7 @@ for (const p of ZH) {
       else assert.match(attrs, /hreflang="en-NZ"/, `${p}: ${href} is marked as English`);
     }
     // the English button
-    assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Bargainhub 工作室</p><a class="auth__lang" id="langSwitch" href="/auth/${p}.html" hreflang="en-NZ" lang="en-NZ">English</a></div>`), 'the English button');
+    assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Bargainhub Studio</p><a class="auth__lang" id="langSwitch" href="/auth/${p}.html" hreflang="en-NZ" lang="en-NZ">English</a></div>`), 'the English button');
     assert.doesNotMatch(s, /\b(claude|opus|sonnet|gpt|openai)\b/i);
     // fictional data only
     assert.doesNotMatch(s.replace(/name@example\.com/g, ''), /@[a-z0-9-]+\.[a-z]/i, 'no real addresses');
@@ -336,11 +368,14 @@ test('the Chinese confirm and reset pages keep the paste box, the invite tick an
     assert.match(s, /<div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>/, p);
     assert.match(s, /<label for="pasted">邮件中的链接<\/label>/, p);
     assert.match(s, /<button class="auth__go" id="pasteGo" type="button">继续<\/button>/, p);
-    assert.ok(s.includes('localhost') && s.includes('10 分钟') && s.includes('第一个') && s.includes('复制链接地址'), `${p}: the address, the time limit, the first page, the computer alternative`);
+    assert.ok(s.includes('10 分钟') && s.includes('第一个') && s.includes('复制链接地址') && s.includes('垃圾邮件'), `${p}: the time limit, the first page, the computer alternative, spam`);
+    const help = (s.match(/<p class="auth__help" id="pasteHelp">([^<]*)<\/p>/) || [])[1] || '';
+    assert.ok(help && HAN.test(help), `${p}: the paste help is Chinese`);
+    assert.doesNotMatch(help, /Supabase|localhost|Auth/i, `${p}: no jargon for suppliers`);
   }
   const confirm = read('auth/zh/confirm.html');
   assert.match(confirm, /<input id="privacy" name="privacy" type="checkbox" data-required="请勾选“我已阅读隐私声明”后继续。" aria-describedby="privacy-read"><span>我已阅读隐私声明。<\/span>/);
-  assert.ok(confirm.includes('<a href="/privacy.html" target="_blank" rel="noopener noreferrer" hreflang="en-NZ">阅读隐私声明（英文，在新标签页中打开）</a>'), 'opens in a new tab, says it is in English');
+  assert.ok(confirm.includes('<a href="/privacy.html" target="_blank" rel="noopener noreferrer" hreflang="en-NZ">隐私声明（英文版，新窗口打开）</a>'), 'opens in a new tab, says it is in English');
   assert.ok(confirm.includes('<p class="auth__help">如需新的邀请，请联系邀请您的人。</p>'), 'an invitee asks whoever invited them');
   assert.ok(read('auth/zh/update-password.html').includes('<p class="auth__help">如需新的邀请，请联系邀请您的人。</p>'), 'update-password says the same (RP-14)');
   // RP-14: the invitation may arrive as a link (email or WeChat), so "the invitation link you were sent", not "emailed"
