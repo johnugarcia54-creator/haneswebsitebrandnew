@@ -946,7 +946,7 @@ try {
       await targets(page, label);
       const lang = await page.evaluate(() => { const r = document.getElementById('langSwitch').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; });
       check(lang[0] >= 44 && lang[1] >= 44, `${label}: the English button is a 44 px target (${lang.join('×')})`);
-      if (width !== 320) await axe(page, label);
+      await axe(page, label); // 320 too: the narrowest layout gets the same WCAG 2.2 AA rules
       if (process.env.SCREENSHOT_DIR && p === 'login' && width !== 320) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/zh-login-${width}.png`, fullPage: true });
       if (process.env.SCREENSHOT_DIR && p === 'confirm' && width !== 320) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/zh-confirm-invite-${width}.png`, fullPage: true });
       check((await csp(page)).length === 0 && log.console.length === 0, `${label}: zero CSP violations and console errors (${log.console.join(' | ')})`);
@@ -961,7 +961,7 @@ try {
     await page.goto(`${base}/supplier`, { waitUntil: 'networkidle' });
     check(page.url() === `${base}/auth/zh/login.html?next=/studio/home.html`, `D /supplier: the Chinese sign-in page with next=/studio/home.html (${page.url()})`);
     await page.locator('#form').waitFor({ state: 'visible' });
-    check(await text(page, 'h1') === '登录' && await page.title() === '登录 — Bargainhub 工作室', 'D /supplier: 登录');
+    check(await text(page, 'h1') === '登录' && await page.title() === '登录' + UI_ZH.title_suffix && UI_ZH.title_suffix === ' — Bargainhub Studio', 'D /supplier: 登录 — Bargainhub Studio');
     check(await page.getAttribute('#langSwitch', 'href') === '/auth/login.html?next=%2Fstudio%2Fhome.html', 'D /supplier: English keeps next');
     // empty submit: the field messages in Chinese
     await page.click('button[type=submit]');
@@ -983,7 +983,7 @@ try {
     await page.fill('#email', 'gongyingshang@example.test'); await page.fill('#password', 'wrong-password-123');
     await page.click('button[type=submit]');
     await page.locator('#alert').waitFor({ state: 'visible' });
-    check(await text(page, '#alert') === MESSAGES_ZH.bad_credentials && await text(page, '#resend') === '重新发送确认邮件', 'D login: the uniform error in Chinese, with Resend');
+    check(await text(page, '#alert') === MESSAGES_ZH.bad_credentials && await text(page, '#resend') === '重新发送验证邮件', 'D login: the uniform error in Chinese, with Resend');
     await page.click('#resend');
     await page.locator('#notice').waitFor({ state: 'visible' });
     const rs = log.sb.find(x => x.key === 'POST /auth/v1/resend');

@@ -73,6 +73,7 @@ body.auth-page{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-dir
 .auth__show{position:absolute;top:2px;right:2px;min-width:64px;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:none;color:var(--link);font:inherit;font-size:15px;font-weight:500;cursor:pointer}
 .auth__show:hover{background:var(--alt)}
 .auth__help{margin:6px 0 0;font-size:14px;line-height:1.4;color:var(--ink-2)}
+#pasteBox .auth__help{margin-bottom:12px} /* the paste box: its help text, then air before the field's label */
 .auth__err{margin:6px 0 0;font-size:14px;line-height:1.4;color:#a8261b;font-weight:500}
 .auth__check{display:flex;align-items:flex-start;gap:12px;min-height:44px;margin:0;padding:11px 0;font-size:16px;line-height:1.4;cursor:pointer}
 .auth__check input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--blue);cursor:pointer}
