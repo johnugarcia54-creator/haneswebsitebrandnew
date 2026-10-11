@@ -97,6 +97,8 @@ test('landingFor: an unsafe auth.landing is ignored and LANDINGS decides', () =>
     '/studio/' + 'a'.repeat(293), '/', '/index.html', '/api/session', '/studiox/', '/studio', 'studio/home.html',
     // the sign-in pages pass safeNext as a `next`, but are never a landing (they would loop)
     '/auth/login.html', '/auth/update-password.html?invite=1', '/auth/',
+    // no escapes at all, even ones a `next` may carry (fail closed)
+    '/studio/%23/backoffice', '/studio/%41', '/studio/home.html?x=%41', '/studio/#/a%20b',
     '', null, 42, true, {}, ['/studio/home.html'], { toString: () => '/studio/home.html' }];
   for (const landing of bad) {
     assert.equal(lib.landingFor({ level: 'consultant', auth: { landing } }, ORIGIN), '/studio/consultant.html', JSON.stringify(String(landing)));

@@ -43,12 +43,13 @@ export const DEFAULT_LANDING = '/studio/';
 // The studio's own answer wins: the session's auth.landing (studio 10-accounts.cjs LANDING).
 // The landing rule (RP-27 and RP-31 pin their landings to it): auth.landing is accepted only when it
 // is an own string property that is a relative path starting with /studio/, at most NEXT_MAX (300)
-// characters, with no backslash, no dot segments (. or ..), no spaces or control characters and no
-// percent-escapes of dot, slash, backslash, percent, space or control characters (safeNext), and it
-// stays on this origin. Anything else (including /auth/ pages, which would loop) falls back to LANDINGS.
+// characters, with no '%' at all (no escapes), no backslash, no dot segments (. or ..) and no spaces
+// or control characters (safeNext), and it stays on this origin. Anything else (including /auth/
+// pages, which would loop) falls back to LANDINGS. Stricter than `next`, which may carry %23.
 export function studioLanding(session, origin = globalThis.location && globalThis.location.origin) {
   const auth = session && typeof session === 'object' && session.auth && typeof session.auth === 'object' ? session.auth : null;
-  const landing = auth && Object.hasOwn(auth, 'landing') ? safeNext(auth.landing, origin) : null;
+  const raw = auth && Object.hasOwn(auth, 'landing') ? auth.landing : null;
+  const landing = typeof raw === 'string' && !raw.includes('%') ? safeNext(raw, origin) : null;
   return landing && landing.startsWith('/studio/') ? landing : null;
 }
 
