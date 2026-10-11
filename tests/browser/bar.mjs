@@ -14,7 +14,7 @@
    - 390 px: the page never scrolls sideways
    - 390, 834, 880, 1024 and 1440 px: Tab walks the bar in the order it is shown
    - a Supabase token key with "keep me signed in" turns every Log in into My account
-     (/studio/#/account), and nothing on the page loads supabase-js
+     (/studio/home.html), and nothing on the page loads supabase-js
    ========================================================================================= */
 import { createRequire } from 'node:module';
 import { readdirSync } from 'node:fs';
@@ -132,7 +132,7 @@ try {
     await page.goto(`${base}/${p}`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
     const links = await page.evaluate(() => [...document.querySelectorAll('a.gb__login, a.gf__login')].map(a => [a.textContent.trim(), a.getAttribute('href')]));
-    check(links.length >= 3 && links.every(([t, h]) => t === 'My account' && h === '/studio/#/account'), `${p}: signed in, every Log in reads My account (${JSON.stringify(links)})`);
+    check(links.length >= 3 && links.every(([t, h]) => t === 'My account' && h === '/studio/home.html'), `${p}: signed in, every Log in reads My account (${JSON.stringify(links)})`);
     check(!scripts.some(u => /supabase/i.test(u)), `${p}: supabase-js is never loaded (${scripts.filter(u => /supabase/i.test(u)).join(', ')})`);
     await sweep(page, p, 'My account');
     await page.close();
