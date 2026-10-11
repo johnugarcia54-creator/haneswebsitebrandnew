@@ -177,11 +177,17 @@ test('bhAuthHygiene never throws and never blocks: blocked storage, a throwing o
   assert.equal(boot(p).bhAuthHygiene(page({ store: st }).w), 'unavailable');
 });
 
+test('My account opens the studio home, which sends each person to their portal (RP-29b; after the studio\'s RP-27)', () => {
+  const src = readFileSync(root + 'assets/site.js', 'utf8');
+  assert.equal((src.match(/const ACCOUNT_HREF = '([^']+)';/) || [])[1], '/studio/home.html');
+  assert.doesNotMatch(src, /studio\/#\/account/, 'no other copy of the old landing');
+});
+
 test('My account: shown only while a Supabase session is kept, and only after the hygiene ran', async () => {
   // signed in and remembered: every Log in becomes My account, with an absolute link
   let p = page({ store: storage({ [TOKEN]: 't', bh_remember: '1' }) });
   boot(p);
-  for (const a of p.links) { assert.equal(a.textContent, 'My account'); assert.equal(a.getAttribute('href'), '/studio/#/account'); }
+  for (const a of p.links) { assert.equal(a.textContent, 'My account'); assert.equal(a.getAttribute('href'), '/studio/home.html'); }
   // browser closed with the box unticked: the hygiene clears the token first, so it stays Log in
   p = page({ store: storage({ [TOKEN]: 't' }) });
   boot(p);

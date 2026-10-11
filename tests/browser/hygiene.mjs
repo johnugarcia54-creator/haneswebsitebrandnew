@@ -73,7 +73,7 @@ try {
         labels: [...document.querySelectorAll('a.gb__login, a.gf__login')].map(a => `${a.textContent.trim()}|${a.getAttribute('href')}`),
         token: localStorage.getItem(t) !== null
       }), TOKEN);
-      const want = label === 'My account' ? 'My account|/studio/#/account' : null;
+      const want = label === 'My account' ? 'My account|/studio/home.html' : null;
       check(r.labels.length === 3 && r.labels.every(x => (want ? x === want : x.startsWith('Log in|'))), `${p} ${what}: ${label} (${r.labels.join(', ')})`);
       check(r.token === tokenLeft, `${p} ${what}: token ${tokenLeft ? 'kept' : 'absent'}`);
       check(seen.length === calls, `${p} ${what}: ${calls} studio calls (${JSON.stringify(seen)})`);
