@@ -232,6 +232,9 @@ test('dev.mjs: pages, redirects, /studio/ proxied with the staging secret, /api/
     const login = await raw(port, '/login');
     assert.equal(login.status, 307);
     assert.equal(login.headers.location, '/auth/login.html');
+    const staff = await raw(port, '/staff');
+    assert.equal(staff.status, 307);
+    assert.equal(staff.headers.location, '/auth/login.html', '/staff: the sign-in page with no forced next');
 
     for (const p of ['/scripts/dev.mjs', '/package.json', '/.git/config']) assert.equal((await raw(port, p)).status, 404, p);
     // the function's source is never served: under /api/ it is just another studio path

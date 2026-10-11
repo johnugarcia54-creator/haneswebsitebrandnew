@@ -282,6 +282,25 @@ try {
     check(!(await ctx.cookies(base)).some(c => c.name === 'bh_live'), 'B login: ticked leaves no bh_live');
     await ctx.close();
   }
+  // B2b. /staff is the plain sign-in page; each person lands by the studio's answer (RP-14)
+  for (const [landing, level, want] of [[undefined, 'consultant', '/studio/consultant.html'], ['/studio/#/backoffice', 'admin', '/studio/#/backoffice'],
+    ['/studio/home.html', 'consultant', '/studio/home.html'], ['//evil.example/studio/', 'consultant', '/studio/consultant.html'], ['/auth/login.html', 'client', '/studio/#/account']]) {
+    // without a Turnstile key: the CSP vercel.json serves today, which a redirected navigation keeps
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    const session = { user: { id: 'u3' }, csrfToken: 'c', level };
+    if (landing !== undefined) session.auth = { landing };
+    studioState.exchange.push([200, session]);
+    await page.goto(`${base}/staff`, { waitUntil: 'networkidle' });
+    check(page.url() === `${base}/auth/login.html`, `B /staff: the sign-in page with no forced next (${page.url()})`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.fill('#email', 'aroha@example.co.nz'); await page.fill('#password', 'a-good-long-password');
+    await page.click('button[type=submit]');
+    await page.waitForURL(u => u.pathname.startsWith('/studio/'));
+    check(log.console.length === 0, `B /staff: zero console errors (${log.console.join(' | ')})`);
+    check(page.url() === `${base}${want}`, `B /staff: ${level} with auth.landing ${JSON.stringify(landing)} lands on ${want} (${page.url()})`);
+    await ctx.close();
+  }
   for (const evil of ['//evil.example', 'https://evil.example/', 'javascript:alert(1)', '/studio/%2e%2e/x', '/\\evil.example']) {
     const { ctx } = await context({ configured: true });
     const page = await ctx.newPage();
@@ -333,7 +352,7 @@ try {
     check(true, 'B login: Retry signs in');
     await ctx.close();
   }
-  for (const [status, code, want] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'], [409, 'link_requires_invitation', 'This email belongs to a staff account. Use the invitation we sent, or ask Back Office.'], [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
+  for (const [status, code, want] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'], [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation we emailed you. For a new one, ask whoever invited you.'], [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
     const { ctx, log } = await context({ configured: true });
     const page = await ctx.newPage();
     studioState.exchange.push([status, { error: { code, message: 'x' } }]);

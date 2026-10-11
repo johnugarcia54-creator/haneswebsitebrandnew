@@ -9,14 +9,16 @@
      revokeOthers?:boolean, privacyNoticeVersion?:string}; the token is never put in a URL.
      Our server checks Origin itself, so no CSRF token is sent (there is no session yet).
    - 200 = the S0 session payload {user, csrfToken, level, capabilities, features, home, ...};
-     only `level` is read here (client | consultant | backoffice | admin), to pick the landing.
+     `auth.landing` picks the landing when it is a safe path into the studio; otherwise `level`
+     (client | consultant | backoffice | admin) does, through LANDINGS.
    - Errors are {error:{code, message}} with the codes of §4.3: invalid_input,
      privacy_ack_required, invalid_token, session_ended, email_unconfirmed, reauth_required,
      cross_origin, origin_required, not_allowed_here, signup_closed, account_disabled,
      invitation_needs_link, link_requires_invitation, rate_limited, auth_unavailable,
-     auth_settings_unsafe. Any other answer: a 5xx or no answer at all (network, the 10 s
-     timeout) means "signed in, but the studio is unavailable for a moment" with Retry; any
-     other 4xx gets a general message.
+     auth_settings_unsafe; and from the studio's accounts module: mfa_required, email_in_use,
+     account_already_linked, confirm_link_required, exchange_race. Any other answer: a 5xx or
+     no answer at all (network, the 10 s timeout) means "signed in, but the studio is
+     unavailable for a moment" with Retry; any other 4xx gets a general message.
    - POST /api/codes/preview {code} -> {valid:true, consultantFirstName, percentBp} or
      {valid:false} (ADDENDUM §5.2, stream P1a).
    - GET /api/settings/public -> {settings:{accounts:{publicSignup}}} (S0 §1).
@@ -38,7 +40,18 @@ export const LANDINGS = Object.freeze({
 });
 export const DEFAULT_LANDING = '/studio/';
 
-export function landingFor(session) {
+// The studio's own answer wins: the session's auth.landing (studio 10-accounts.cjs LANDING), when it
+// passes safeNext and is a path into the studio (never the sign-in pages, never another origin).
+// LANDINGS stays as the fallback for an older studio or a landing that fails those checks.
+export function studioLanding(session, origin = globalThis.location && globalThis.location.origin) {
+  const auth = session && typeof session === 'object' && session.auth && typeof session.auth === 'object' ? session.auth : null;
+  const landing = auth && Object.hasOwn(auth, 'landing') ? safeNext(auth.landing, origin) : null;
+  return landing && landing.startsWith('/studio/') ? landing : null;
+}
+
+export function landingFor(session, origin) {
+  const fromStudio = studioLanding(session, origin);
+  if (fromStudio) return fromStudio;
   const level = session && typeof session === 'object' ? session.level : null;
   return typeof level === 'string' && Object.hasOwn(LANDINGS, level) ? LANDINGS[level] : DEFAULT_LANDING;
 }
@@ -82,7 +95,12 @@ export const MESSAGES = Object.freeze({
   signup_closed: 'Your account is confirmed. Accounts open soon.',
   account_disabled: 'This account is disabled. Contact us.',
   invitation_needs_link: 'This invitation link has expired or was already used. Ask for a new one.',
-  link_requires_invitation: 'This email belongs to a staff account. Use the invitation we sent, or ask Back Office.',
+  link_requires_invitation: 'To sign in for the first time, open the invitation we emailed you. For a new one, ask whoever invited you.',
+  mfa_required: "This sign-in needs a second step that this page can't do yet. Contact us and we'll help.",
+  email_in_use: "We couldn't finish setting up this sign-in. Contact us and we'll sort it out.",
+  account_already_linked: "We couldn't finish setting up this sign-in. Sign in the way you did before, or contact us.",
+  confirm_link_required: 'To finish setting up, open the link in the email we sent you.',
+  exchange_race: 'Two sign-ins crossed paths. Please sign in again.',
   rate_limited: 'Too many attempts. Wait a few minutes, then try again.',
   auth_unavailable: "You're signed in, but the studio is unavailable for a moment.",
   auth_settings_unsafe: "You're signed in, but the studio is unavailable for a moment.",
