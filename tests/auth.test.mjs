@@ -150,7 +150,7 @@ test('messageFor has its own message for every error code of §4.3, with the wor
     assert.match(lib.messageFor(c), /^[A-Z“].*[.]$/, `${c}: a sentence`);
   }
   assert.equal(lib.messageFor('signup_closed'), 'Your account is confirmed. Accounts open soon.');
-  assert.equal(lib.messageFor('link_requires_invitation'), 'To sign in for the first time, open the invitation we emailed you. For a new one, ask whoever invited you.');
+  assert.equal(lib.messageFor('link_requires_invitation'), 'To sign in for the first time, open the invitation link you were sent. For a new one, ask whoever invited you.');
   assert.equal(lib.messageFor('account_disabled'), 'This account is disabled. Contact us.');
   assert.equal(lib.messageFor('mfa_required'), "This sign-in needs a second step that this page can't do yet. Contact us and we'll help.");
   assert.equal(lib.messageFor('email_in_use'), "We couldn't finish setting up this sign-in. Contact us and we'll sort it out.");
@@ -182,13 +182,16 @@ test('the sign-in wording names no one group: no "staff account", no "Back Offic
   for (const [k, m] of Object.entries(lib.MESSAGES)) assert.doesNotMatch(m, /\bstaff\b|back office/i, k);
 });
 
-test('login.html speaks to everyone who signs in; confirm.html sends an invitee back to whoever invited them', () => {
+test('login.html speaks to everyone who signs in; confirm.html and update-password.html send an invitee back to whoever invited them', () => {
   const login = read('auth/login.html'), confirm = read('auth/confirm.html');
   assert.match(login, /<p class="auth__sub" id="sub">For clients, consultants, partners and Hanes staff\.<\/p>/);
   assert.match(login, /<meta name="description" content="Sign in to the Bargainhub studio: for clients, consultants, partners and Hanes staff\.">/);
   assert.doesNotMatch(login, /consultants and Hanes staff/);
   assert.match(confirm, /<p class="auth__help">For a new invitation, ask whoever invited you\.<\/p>/);
   assert.doesNotMatch(confirm, /Back Office/);
+  const update = read('auth/update-password.html');
+  assert.match(update, /<p class="auth__help">For a new invitation, ask whoever invited you\.<\/p>/);
+  assert.doesNotMatch(update, /Back Office/);
 });
 
 /* ---------- rememberChoice (§3.3.4) ---------- */
@@ -621,7 +624,7 @@ test('sign-in: one message for a wrong password, an unknown email and an unconfi
 
 test('sign-in: exchange refusals use the §3.3.3 wording and end the Supabase session; studio down offers Retry', async () => {
   for (const [status, code, msg] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'],
-    [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation we emailed you. For a new one, ask whoever invited you.'],
+    [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation link you were sent. For a new one, ask whoever invited you.'],
     [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
     const s = stub({ exchangeAnswers: [fail(status, code)] });
     const out = await lib.loginFlow({ email: 'a@b.co', password: 'pw', captchaToken: 't' }, s.deps);
