@@ -328,7 +328,7 @@ async function resetPage(sb) {
 
 const CONFIRM_COPY = { email: UI.confirm_email, email_change: UI.confirm_email_change, recovery: UI.confirm_recovery, invite: UI.confirm_invite };
 // the way on after a failed link depends on what the link was for: a new reset link, a new
-// invitation (from the consultant or Back Office) or Resend confirmation on the sign-in page
+// invitation (from whoever invited them) or Resend confirmation on the sign-in page
 const linkHelpFor = type => $(type === 'invite' ? 'linkHelpInvite' : type === 'email' || type === 'email_change' ? 'linkHelpEmail' : 'linkHelp');
 async function confirmPage(sb) {
   const { tokenHash, hash } = confirmLink;

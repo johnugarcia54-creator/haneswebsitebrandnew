@@ -360,7 +360,7 @@ try {
     check(true, 'B login: Retry signs in');
     await ctx.close();
   }
-  for (const [status, code, want] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'], [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation we emailed you. For a new one, ask whoever invited you.'], [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
+  for (const [status, code, want] of [[403, 'signup_closed', 'Your account is confirmed. Accounts open soon.'], [409, 'link_requires_invitation', 'To sign in for the first time, open the invitation link you were sent. For a new one, ask whoever invited you.'], [403, 'account_disabled', 'This account is disabled. Contact us.']]) {
     const { ctx, log } = await context({ configured: true });
     const page = await ctx.newPage();
     studioState.exchange.push([status, { error: { code, message: 'x' } }]);

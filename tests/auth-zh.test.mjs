@@ -342,6 +342,10 @@ test('the Chinese confirm and reset pages keep the paste box, the invite tick an
   assert.match(confirm, /<input id="privacy" name="privacy" type="checkbox" data-required="请勾选“我已阅读隐私声明”后继续。" aria-describedby="privacy-read"><span>我已阅读隐私声明。<\/span>/);
   assert.ok(confirm.includes('<a href="/privacy.html" target="_blank" rel="noopener noreferrer" hreflang="en-NZ">阅读隐私声明（英文，在新标签页中打开）</a>'), 'opens in a new tab, says it is in English');
   assert.ok(confirm.includes('<p class="auth__help">如需新的邀请，请联系邀请您的人。</p>'), 'an invitee asks whoever invited them');
+  assert.ok(read('auth/zh/update-password.html').includes('<p class="auth__help">如需新的邀请，请联系邀请您的人。</p>'), 'update-password says the same (RP-14)');
+  // RP-14: the invitation may arrive as a link (email or WeChat), so "the invitation link you were sent", not "emailed"
+  assert.equal(MESSAGES_ZH.link_requires_invitation, '首次登录时，请打开您收到的邀请链接。如需新的邀请，请联系邀请您的人。');
+  assert.doesNotMatch(MESSAGES_ZH.link_requires_invitation, /邮件/);
   assert.equal(MESSAGES_ZH.privacy_ack_required, '请勾选“我已阅读隐私声明”后继续。', 'the tick says the same as the message');
   const login = read('auth/zh/login.html');
   assert.match(login, /<input id="remember" name="remember" type="checkbox" aria-describedby="remember-help">/, 'unticked by default');
