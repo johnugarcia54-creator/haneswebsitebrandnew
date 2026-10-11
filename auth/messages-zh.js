@@ -25,7 +25,7 @@ export const MESSAGES_ZH = Object.freeze({
   signup_closed: '您的账户已确认。账户即将开放。',
   account_disabled: '此账户已停用。请联系我们。',
   invitation_needs_link: '此邀请链接已过期或已被使用。请索取新的邀请。',
-  link_requires_invitation: '首次登录时，请打开我们通过邮件发给您的邀请。如需新的邀请，请联系邀请您的人。',
+  link_requires_invitation: '首次登录时，请打开您收到的邀请链接。如需新的邀请，请联系邀请您的人。',
   mfa_required: '此登录需要第二步验证，本页面暂不支持。请联系我们，我们会协助您。',
   email_in_use: '我们无法完成此登录的设置。请联系我们，我们会为您处理。',
   account_already_linked: '我们无法完成此登录的设置。请按您之前的方式登录，或联系我们。',
