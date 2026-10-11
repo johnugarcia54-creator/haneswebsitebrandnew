@@ -25,6 +25,8 @@
    If A1's contract differs, change it here and in tests/auth.test.mjs, nowhere else.
    ========================================================================================= */
 
+import { MESSAGES_ZH, UI_ZH } from './messages-zh.js';
+
 export const PRIVACY_NOTICE_VERSION = '2026-10-09';
 export const EXCHANGE_PATH = '/api/auth/exchange';
 export const EXCHANGE_TIMEOUT_MS = 10000;
@@ -80,6 +82,19 @@ export function destination(session, ...candidates) {
   return landingFor(session);
 }
 
+/* ---- the two languages (RP-29) -----------------------------------------------------------
+   English pages live in /auth/, Chinese ones (for our suppliers and the China team) in /auth/zh/.
+   Every flow takes deps.lang ('en', the default, or 'zh'): it picks the messages and keeps the
+   person in their language for every page it sends them to and every link Supabase emails. */
+export const LANGS = Object.freeze(['en', 'zh']);
+// the pages that exist in Chinese; sign-up does not (suppliers are invited)
+export const ZH_PAGES = Object.freeze(['login', 'confirm', 'reset', 'update-password']);
+export const langOf = v => (v === 'zh' ? 'zh' : 'en');
+// /auth/<name>.html or /auth/zh/<name>.html (English when there is no Chinese page)
+export const authPage = (name, lang) => (langOf(lang) === 'zh' && ZH_PAGES.includes(name) ? '/auth/zh/' : '/auth/') + name + '.html';
+const msgs = lang => (langOf(lang) === 'zh' ? MESSAGES_ZH : MESSAGES);
+export const textsFor = lang => ({ messages: msgs(lang), ui: langOf(lang) === 'zh' ? UI_ZH : UI });
+
 /* ---- what we say (NZ English; nothing reveals whether an account exists) ------------------ */
 export const MESSAGES = Object.freeze({
   // the exchange (§4.3)
@@ -133,8 +148,79 @@ export const MESSAGES = Object.freeze({
   not_configured: "Sign-in is being set up. It will be ready here soon; until then, send us an enquiry and we'll help."
 });
 
-export function messageFor(code) {
-  return typeof code === 'string' && Object.hasOwn(MESSAGES, code) ? MESSAGES[code] : MESSAGES.unexpected;
+export function messageFor(code, lang) {
+  const m = msgs(lang);
+  return typeof code === 'string' && Object.hasOwn(m, code) ? m[code] : m.unexpected;
+}
+
+// the words auth.js puts on the page itself (UI_ZH in auth/messages-zh.js has the same keys)
+export const UI = Object.freeze({
+  title_suffix: ' — Bargainhub studio',
+  spent_title: "This link can't be used",
+  spent_sub: "If the email's link opened more than one page, paste the first page's address below. Otherwise ask for a new link.",
+  paste_title: 'Paste the link from your email',
+  paste_sub: 'Paste it below to continue.',
+  choose_password: 'Choose your password',
+  confirm_email: ['Confirm your email', 'Press Confirm to finish setting up your account.', 'Confirm'],
+  confirm_email_change: ['Confirm your new email', 'Press Confirm to start using your new email address.', 'Confirm'],
+  confirm_recovery: ['Reset your password', 'Press Confirm, then choose a new password.', 'Confirm'],
+  confirm_invite: ['Accept your invitation', 'Read the privacy statement, tick the box, then press Confirm and continue to choose your password.', 'Confirm and continue'],
+  reauth_note: 'Your new password is saved. Sign in with it to continue.',
+  enter_email: 'Enter your email address.',
+  enter_password: 'Enter your password.',
+  enter_name: 'Enter your name.',
+  enter_other: 'Enter this.',
+  tick_box: 'Tick this box to continue.',
+  email_format: 'Enter an email address, like name@example.co.nz.',
+  min_chars: 'Use at least {n} characters.',
+  max_chars: 'Use at most {n} characters.',
+  show: 'Show',
+  hide: 'Hide',
+  show_password: 'Show password',
+  hide_password: 'Hide password',
+  signing_in: 'Signing in…',
+  sending: 'Sending…',
+  confirming: 'Confirming…',
+  saving: 'Saving…',
+  opening: 'Opening…',
+  trying_again: 'Trying again…',
+  captcha_load_failed: "The security check couldn't load. Reload the page, or check that nothing is blocking challenges.cloudflare.com."
+});
+
+// The same page in the other language (the 中文 / English button). It carries only what that page
+// uses: a safe next, the confirm type, invite=1 and reason=reauth. On confirm.html the link held in
+// memory goes too (`link`: auth.js passes it only when the button is pressed, so it is never in an
+// href); the page it opens removes it from the address bar at once, as it does any email link.
+// Returns a root-absolute path, or null when the page has no counterpart.
+export function otherLangPage(pathname, search, link = null, origin = globalThis.location && globalThis.location.origin) {
+  const m = typeof pathname === 'string' ? /^\/auth\/(zh\/)?([a-z-]+)\.html$/.exec(pathname) : null;
+  if (!m || !ZH_PAGES.includes(m[2])) return null;
+  const to = m[1] ? 'en' : 'zh', name = m[2];
+  let p;
+  try { p = new URLSearchParams(typeof search === 'string' ? search : ''); } catch { return null; }
+  const q = new URLSearchParams();
+  const next = safeNext(p.get('next'), origin);
+  if (next) q.set('next', next);
+  if (name === 'confirm' && CONFIRM_TYPES.includes(p.get('type'))) q.set('type', p.get('type'));
+  if (name === 'update-password' && p.get('invite') === '1') q.set('invite', '1');
+  if (name === 'login' && p.get('reason') === 'reauth') q.set('reason', 'reauth');
+  let hash = '';
+  if (name === 'confirm' && link && typeof link === 'object') {
+    if (typeof link.tokenHash === 'string' && TOKEN_HASH_SHAPE.test(link.tokenHash) && CONFIRM_TYPES.includes(link.type)) {
+      q.set('token_hash', link.tokenHash);
+      q.set('type', link.type);
+    } else if (link.hash && typeof link.hash === 'object') {
+      const h = new URLSearchParams(), x = link.hash;
+      if (typeof x.accessToken === 'string' && JWT_SHAPE.test(x.accessToken) && typeof x.refreshToken === 'string' && REFRESH_SHAPE.test(x.refreshToken)) {
+        h.set('access_token', x.accessToken); h.set('refresh_token', x.refreshToken);
+      }
+      if (typeof x.errorCode === 'string' && /^[a-z_]{1,64}$/.test(x.errorCode)) h.set('error_code', x.errorCode);
+      if (CONFIRM_TYPES.includes(x.type)) h.set('type', x.type);
+      if (h.has('access_token') || h.has('error_code')) hash = '#' + h.toString();
+    }
+  }
+  const qs = q.toString();
+  return authPage(name, to) + (qs ? '?' + qs : '') + hash;
 }
 
 // the studio is down, unreachable, timed out (408) or busy (429), not a refusal: the Supabase
@@ -264,16 +350,17 @@ const CAPTCHA = new Set(['captcha_failed']);
 // they answer success: anything else would say whether the account exists (§3.3.5).
 const EMAIL_RATE = new Set(['over_email_send_rate_limit']);
 // what a person sees for a Supabase error in each flow; never says whether an account exists
-export function supabaseMessage(error, flow) {
+export function supabaseMessage(error, flow, lang) {
+  const M = msgs(lang);
   const code = supabaseCode(error);
-  if (code === 'network') return MESSAGES.supabase_network;
-  if (RATE.has(code)) return MESSAGES.rate_limited;
-  if (CAPTCHA.has(code)) return MESSAGES.captcha_failed;
-  if (code === 'weak_password') return MESSAGES.weak_password;
-  if (code === 'same_password') return MESSAGES.same_password;
-  if (flow === 'login') return MESSAGES.bad_credentials;
-  if (flow === 'password') return code === 'session_missing' || code === 'session_not_found' || code === 'no_authorization' ? MESSAGES.session_missing : MESSAGES.unexpected;
-  return MESSAGES.unexpected;
+  if (code === 'network') return M.supabase_network;
+  if (RATE.has(code)) return M.rate_limited;
+  if (CAPTCHA.has(code)) return M.captcha_failed;
+  if (code === 'weak_password') return M.weak_password;
+  if (code === 'same_password') return M.same_password;
+  if (flow === 'login') return M.bad_credentials;
+  if (flow === 'password') return code === 'session_missing' || code === 'session_not_found' || code === 'no_authorization' ? M.session_missing : M.unexpected;
+  return M.unexpected;
 }
 
 /* ---- the flows ----------------------------------------------------------------------------
@@ -290,13 +377,13 @@ const tokenOf = async supabase => {
 // run an exchange with the token of the current session; `onOk(session)` makes the outcome
 async function exchangeStep(deps, extra, onOk) {
   const token = await tokenOf(deps.supabase);
-  if (!token) return { action: 'error', code: 'session_missing', message: MESSAGES.session_missing };
+  if (!token) return { action: 'error', code: 'session_missing', message: msgs(deps.lang).session_missing };
   const r = await deps.exchange(token, extra);
   if (r.ok) return onOk(r.session);
-  if (retryable(r)) return { action: 'error', code: r.code, message: messageFor(r.code), retry: () => exchangeStep(deps, extra, onOk) };
+  if (retryable(r)) return { action: 'error', code: r.code, message: messageFor(r.code, deps.lang), retry: () => exchangeStep(deps, extra, onOk) };
   await signOutLocal(deps.supabase);
-  if (r.code === 'reauth_required') return { action: 'go', to: '/auth/login.html?reason=reauth', code: r.code };
-  return { action: 'error', code: r.code, message: messageFor(r.code) };
+  if (r.code === 'reauth_required') return { action: 'go', to: authPage('login', deps.lang) + '?reason=reauth', code: r.code };
+  return { action: 'error', code: r.code, message: messageFor(r.code, deps.lang) };
 }
 
 export const validEmail = e => typeof e === 'string' && e.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
@@ -309,36 +396,38 @@ const needsToken = (captcha, captchaToken) => captcha !== false && !captchaToken
 
 // sign-in (§3.3.3): the remember choice first, then Supabase (with Turnstile when on), then our server
 export async function loginFlow({ email, password, remember, captchaToken, captcha = true, next = [] }, deps) {
-  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: msgs(deps.lang).captcha_needed };
   (deps.rememberChoice || rememberChoice)(!!remember, deps.w);
   const { error } = await deps.supabase.auth.signInWithPassword(captcha === false ? { email, password } : { email, password, options: { captchaToken } });
   if (error) {
     const code = supabaseCode(error);
-    return { action: 'error', code, message: supabaseMessage(error, 'login'), resend: code !== 'network' && !RATE.has(code) && !CAPTCHA.has(code) };
+    return { action: 'error', code, message: supabaseMessage(error, 'login', deps.lang), resend: code !== 'network' && !RATE.has(code) && !CAPTCHA.has(code) };
   }
   return exchangeStep(deps, {}, session => ({ action: 'go', to: destination(session, ...next) }));
 }
 
 // Resend confirmation (§3.3.3), with its own Turnstile token when on; the answer never depends on the account
 export async function resendFlow({ email, captchaToken, captcha = true, origin }, deps) {
-  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
-  const redirect = { emailRedirectTo: origin + '/auth/confirm.html' };
+  const M = msgs(deps.lang);
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: M.captcha_needed };
+  const redirect = { emailRedirectTo: origin + authPage('confirm', deps.lang) };
   const { error } = await deps.supabase.auth.resend({ type: 'signup', email, options: captcha === false ? redirect : { captchaToken, ...redirect } });
   const code = supabaseCode(error);
-  if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.resend_sent };
-  if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'resend') };
-  return { action: 'done', message: MESSAGES.resend_sent };
+  if (EMAIL_RATE.has(code)) return { action: 'done', message: M.resend_sent };
+  if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'resend', deps.lang) };
+  return { action: 'done', message: M.resend_sent };
 }
 
 // Password reset (§3.3.5): always the same answer, unless nothing could be sent at all
 export async function resetFlow({ email, captchaToken, captcha = true, origin }, deps) {
-  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: MESSAGES.captcha_needed };
-  const redirect = { redirectTo: origin + '/auth/confirm.html' };
+  const M = msgs(deps.lang);
+  if (needsToken(captcha, captchaToken)) return { action: 'error', code: 'captcha_needed', message: M.captcha_needed };
+  const redirect = { redirectTo: origin + authPage('confirm', deps.lang) };
   const { error } = await deps.supabase.auth.resetPasswordForEmail(email, captcha === false ? redirect : { ...redirect, captchaToken });
   const code = supabaseCode(error);
-  if (EMAIL_RATE.has(code)) return { action: 'done', message: MESSAGES.reset_sent };
-  if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'reset') };
-  return { action: 'done', message: MESSAGES.reset_sent };
+  if (EMAIL_RATE.has(code)) return { action: 'done', message: M.reset_sent };
+  if (code === 'network' || RATE.has(code) || CAPTCHA.has(code)) return { action: 'error', code, message: supabaseMessage(error, 'reset', deps.lang) };
+  return { action: 'done', message: M.reset_sent };
 }
 
 // Sign-up (§3.3.1): one answer for a new and an existing email (Supabase obfuscates the latter)
@@ -368,15 +457,16 @@ export async function signupFlow({ name, email, password, code, privacyAck, mark
 //   recovery     -> verifyOtp, then update-password (no exchange until the password is set)
 //   email, email_change -> verifyOtp, then the exchange, then next or the landing
 export async function confirmFlow({ type, tokenHash, privacyAck, next = [] }, deps) {
+  const M = msgs(deps.lang);
   if (!CONFIRM_TYPES.includes(type) || typeof tokenHash !== 'string' || !/^[A-Za-z0-9_-]{6,512}$/.test(tokenHash)) {
-    return { action: 'error', code: 'link_incomplete', message: MESSAGES.link_incomplete };
+    return { action: 'error', code: 'link_incomplete', message: M.link_incomplete };
   }
-  if (type === 'invite' && !privacyAck) return { action: 'error', code: 'privacy_ack_required', message: MESSAGES.privacy_ack_required };
+  if (type === 'invite' && !privacyAck) return { action: 'error', code: 'privacy_ack_required', message: M.privacy_ack_required };
   (deps.keepChoice || keepChoice)(deps.w); // the new session survives the next page's hygiene
   const { data, error } = await deps.supabase.auth.verifyOtp({ token_hash: tokenHash, type });
   if (error || !data || !data.session) {
-    if (supabaseCode(error) === 'network') return { action: 'error', code: 'network', message: MESSAGES.supabase_network };
-    return { action: 'error', code: 'link_expired', message: type === 'invite' ? MESSAGES.link_expired_invite : MESSAGES.link_expired };
+    if (supabaseCode(error) === 'network') return { action: 'error', code: 'network', message: M.supabase_network };
+    return { action: 'error', code: 'link_expired', message: type === 'invite' ? M.link_expired_invite : M.link_expired };
   }
   return afterConfirm({ type, next }, deps);
 }
@@ -422,6 +512,7 @@ export function hashLink(hash) {
    One layer of a mail provider's link wrapper (Google, Outlook Safe Links) is taken off first.
    Supabase's error hash names no type, so the page it was pasted on may give one (`type`: the reset
    page says recovery), which confirm.html then uses for its message and its way on.
+   `lang` keeps the person in their language: 'zh' opens /auth/zh/confirm.html.
    Returns a root-absolute path on this site, or null. */
 const PASTE_MAX = 8192;
 const TOKEN_HASH_SHAPE = /^[A-Za-z0-9_-]{6,512}$/;
@@ -431,7 +522,8 @@ function unwrapMailLink(u) {
   if (/\.safelinks\.protection\.outlook\.com$/.test(host)) return u.searchParams.get('url');
   return null;
 }
-export function pastedLinkTarget(text, supabaseUrl, type = null) {
+export function pastedLinkTarget(text, supabaseUrl, type = null, lang = 'en') {
+  const confirmPage = authPage('confirm', lang);
   if (typeof text !== 'string' || typeof supabaseUrl !== 'string') return null;
   let s = text.replace(/\s+/g, '').replace(/^<(.*)>$/, '$1');
   if (!s || s.length > PASTE_MAX) return null;
@@ -448,35 +540,36 @@ export function pastedLinkTarget(text, supabaseUrl, type = null) {
   const tokenLink = (tokenHash, t) => {
     const type = t && Object.hasOwn(HASH_TYPES, t) ? HASH_TYPES[t] : null;
     if (!type || typeof tokenHash !== 'string' || !TOKEN_HASH_SHAPE.test(tokenHash) || tokenHash.startsWith('pkce_')) return null;
-    return '/auth/confirm.html?token_hash=' + encodeURIComponent(tokenHash) + '&type=' + type;
+    return confirmPage + '?token_hash=' + encodeURIComponent(tokenHash) + '&type=' + type;
   };
   // (a)
   if (u.protocol === 'https:' && u.host === sb.host && u.pathname === '/auth/v1/verify') return tokenLink(u.searchParams.get('token'), u.searchParams.get('type'));
   // (b)
   const h = hashLink(u.hash);
-  if (h) return '/auth/confirm.html' + (!h.type && CONFIRM_TYPES.includes(type) ? '?type=' + type : '') + u.hash;
-  // (c)
-  if (u.pathname === '/auth/confirm.html' && u.searchParams.has('token_hash')) return tokenLink(u.searchParams.get('token_hash'), u.searchParams.get('type'));
+  if (h) return confirmPage + (!h.type && CONFIRM_TYPES.includes(type) ? '?type=' + type : '') + u.hash;
+  // (c) (either language's confirm.html; the page it was pasted on keeps its own)
+  if ((u.pathname === '/auth/confirm.html' || u.pathname === '/auth/zh/confirm.html') && u.searchParams.has('token_hash')) return tokenLink(u.searchParams.get('token_hash'), u.searchParams.get('type'));
   return null;
 }
 
 // what a hash link that came back with an error says (Supabase spent or refused the token)
-export function hashLinkError(type) {
-  return { action: 'error', code: 'link_expired', message: type === 'invite' ? MESSAGES.link_expired_invite : MESSAGES.link_expired };
+export function hashLinkError(type, lang) {
+  const M = msgs(lang);
+  return { action: 'error', code: 'link_expired', message: type === 'invite' ? M.link_expired_invite : M.link_expired };
 }
 
 // The same order as confirmFlow, with setSession in place of verifyOtp (the token is already spent)
 export async function confirmSessionFlow({ type, accessToken, refreshToken, privacyAck, next = [] }, deps) {
   if (!CONFIRM_TYPES.includes(type) || typeof accessToken !== 'string' || !JWT_SHAPE.test(accessToken) ||
       typeof refreshToken !== 'string' || !REFRESH_SHAPE.test(refreshToken)) {
-    return { action: 'error', code: 'link_incomplete', message: MESSAGES.link_incomplete };
+    return { action: 'error', code: 'link_incomplete', message: msgs(deps.lang).link_incomplete };
   }
-  if (type === 'invite' && !privacyAck) return { action: 'error', code: 'privacy_ack_required', message: MESSAGES.privacy_ack_required };
+  if (type === 'invite' && !privacyAck) return { action: 'error', code: 'privacy_ack_required', message: msgs(deps.lang).privacy_ack_required };
   (deps.keepChoice || keepChoice)(deps.w); // the new session survives the next page's hygiene
   const { data, error } = await deps.supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
   if (error || !data || !data.session) {
-    if (supabaseCode(error) === 'network') return { action: 'error', code: 'network', message: MESSAGES.supabase_network };
-    return hashLinkError(type);
+    if (supabaseCode(error) === 'network') return { action: 'error', code: 'network', message: msgs(deps.lang).supabase_network };
+    return hashLinkError(type, deps.lang);
   }
   return afterConfirm({ type, next }, deps);
 }
@@ -484,20 +577,21 @@ export async function confirmSessionFlow({ type, accessToken, refreshToken, priv
 // the part after verifyOtp (or setSession); also what Retry runs when the studio was unavailable
 export function afterConfirm({ type, next = [] }, deps) {
   if (type === 'invite') {
-    return exchangeStep(deps, { purpose: 'invite', privacyNoticeVersion: PRIVACY_NOTICE_VERSION }, () => ({ action: 'go', to: '/auth/update-password.html?invite=1' }));
+    return exchangeStep(deps, { purpose: 'invite', privacyNoticeVersion: PRIVACY_NOTICE_VERSION }, () => ({ action: 'go', to: authPage('update-password', deps.lang) + '?invite=1' }));
   }
-  if (type === 'recovery') return { action: 'go', to: '/auth/update-password.html' };
+  if (type === 'recovery') return { action: 'go', to: authPage('update-password', deps.lang) };
   return exchangeStep(deps, {}, session => ({ action: 'go', to: destination(session, ...next) }));
 }
 
 // Setting a password (§3.3.2a, §3.3.5 step 3): updateUser first, then the exchange with revokeOthers
 export async function passwordFlow({ password, confirm, invite }, deps) {
-  if (!validPassword(password)) return { action: 'error', code: 'password_length', message: MESSAGES.password_length };
-  if (confirm !== undefined && confirm !== password) return { action: 'error', code: 'passwords_differ', message: MESSAGES.passwords_differ };
+  const M = msgs(deps.lang);
+  if (!validPassword(password)) return { action: 'error', code: 'password_length', message: M.password_length };
+  if (confirm !== undefined && confirm !== password) return { action: 'error', code: 'passwords_differ', message: M.passwords_differ };
   const { error } = await deps.supabase.auth.updateUser({ password });
-  if (error) return { action: 'error', code: supabaseCode(error), message: supabaseMessage(error, 'password') };
+  if (error) return { action: 'error', code: supabaseCode(error), message: supabaseMessage(error, 'password', deps.lang) };
   return exchangeStep(deps, { revokeOthers: true }, session => ({
-    action: 'done', message: invite ? MESSAGES.password_set : MESSAGES.password_changed, to: landingFor(session)
+    action: 'done', message: invite ? M.password_set : M.password_changed, to: landingFor(session)
   }));
 }
 

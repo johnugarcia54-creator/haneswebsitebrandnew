@@ -6,13 +6,16 @@
         address bar (history.replaceState) at once.
      3. The settings for this host (auth/config.js). While the publishable key is still a
         placeholder, the page says "Sign-in is being set up" and makes no call to Supabase.
+   The page's lang picks the words: lang="zh-CN" (the /auth/zh/ pages, RP-29) speaks Chinese and
+   keeps the person on Chinese pages; anything else is English. The 中文 / English button opens the
+   same page in the other language, with what that page needs (otherLangPage in auth-lib.js).
    Text is only ever set with textContent; nothing is parsed as HTML. Turnstile is loaded here
    (explicit rendering) on login, sign-up and reset only, and only once its site key is real.
    Until then (integrator decision) sign-in, resend and reset run without it and send no captcha
    token, nothing is loaded from Cloudflare, and sign-up stays closed ("Accounts open soon").
    ========================================================================================= */
 import {
-  bhAuthHygiene, safeNext, MESSAGES, exchange, rememberChoice, keepChoice, publicSignupOpen, previewCode, cleanCode,
+  bhAuthHygiene, safeNext, textsFor, langOf, otherLangPage, exchange, rememberChoice, keepChoice, publicSignupOpen, previewCode, cleanCode,
   loginFlow, resendFlow, resetFlow, signupFlow, confirmFlow, confirmSessionFlow, hashLink, hashLinkError, pastedLinkTarget, passwordFlow, CONFIRM_TYPES, PASSWORD_MIN, PASSWORD_MAX
 } from '/auth/auth-lib.js';
 import { pickConfig } from '/auth/config.js';
@@ -21,6 +24,8 @@ bhAuthHygiene(window);
 
 const page = document.body.dataset.page;
 const params = new URLSearchParams(location.search);
+const LANG = langOf(document.documentElement.lang === 'zh-CN' ? 'zh' : 'en');
+const { messages: MESSAGES, ui: UI } = textsFor(LANG);
 
 // confirm.html: the one-time token never stays in the address bar, the history or a later Referer.
 // (a) ?token_hash= (the §3.4 templates) is the primary link; (b) the hash Supabase's default link
@@ -45,8 +50,8 @@ const els = { notice: $('notice'), alert: $('alert'), form: $('form'), done: $('
 
 function note(text) { setText(els.notice, text); show(els.notice, !!text); }
 // a link opened twice: the second page says expired, the first page's address may still work
-const SPENT_SUB = "If the email's link opened more than one page, paste the first page's address below. Otherwise ask for a new link.";
-function heading(title, sub) { setText($('title'), title); setText($('sub'), sub); document.title = title + ' — Bargainhub studio'; }
+const SPENT_SUB = UI.spent_sub;
+function heading(title, sub) { setText($('title'), title); setText($('sub'), sub); document.title = title + UI.title_suffix; }
 function fail(text) {
   setText(els.alert, text);
   show(els.alert, !!text);
@@ -87,7 +92,7 @@ function fieldError(input, text) {
   input.setAttribute('aria-invalid', 'true');
   input.setAttribute('aria-describedby', [id, ...described].join(' '));
 }
-const LABEL = { email: 'your email address', password: 'your password', name: 'your name' };
+const ENTER = { email: UI.enter_email, password: UI.enter_password, name: UI.enter_name };
 // checks the form's own fields; returns true, or puts the messages on the fields and focuses the first
 function checkFields(form) {
   let first = null;
@@ -95,10 +100,10 @@ function checkFields(form) {
     if (input.type === 'hidden' || input.disabled) continue;
     let msg = '';
     const v = input.type === 'checkbox' ? input.checked : input.value.trim();
-    if (input.required && !v) msg = input.type === 'checkbox' ? (input.dataset.required || 'Tick this box to continue.') : `Enter ${LABEL[input.name] || 'this'}.`;
-    else if (input.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'Enter an email address, like name@example.co.nz.';
-    else if (input.type !== 'checkbox' && input.dataset.min && [...input.value].length < Number(input.dataset.min)) msg = `Use at least ${input.dataset.min} characters.`;
-    else if (input.type !== 'checkbox' && input.maxLength > 0 && [...input.value].length > input.maxLength) msg = `Use at most ${input.maxLength} characters.`;
+    if (input.required && !v) msg = input.type === 'checkbox' ? (input.dataset.required || UI.tick_box) : (Object.hasOwn(ENTER, input.name) ? ENTER[input.name] : UI.enter_other);
+    else if (input.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = UI.email_format;
+    else if (input.type !== 'checkbox' && input.dataset.min && [...input.value].length < Number(input.dataset.min)) msg = UI.min_chars.replace('{n}', input.dataset.min);
+    else if (input.type !== 'checkbox' && input.maxLength > 0 && [...input.value].length > input.maxLength) msg = UI.max_chars.replace('{n}', input.maxLength);
     fieldError(input, msg);
     if (msg && !first) first = input;
   }
@@ -112,8 +117,8 @@ for (const btn of document.querySelectorAll('.auth__show')) {
   btn.addEventListener('click', () => {
     const on = input.type === 'password';
     input.type = on ? 'text' : 'password';
-    btn.textContent = on ? 'Hide' : 'Show';
-    btn.setAttribute('aria-label', on ? 'Hide password' : 'Show password'); // the name always holds the visible word (WCAG 2.5.3)
+    btn.textContent = on ? UI.hide : UI.show;
+    btn.setAttribute('aria-label', on ? UI.hide_password : UI.show_password); // the name always holds the visible word (WCAG 2.5.3)
   });
 }
 
@@ -182,7 +187,7 @@ async function mountCaptcha(container, action) {
     });
     return { token: () => token, reset: () => { token = ''; try { ts.reset(id); } catch { /* gone */ } } };
   } catch {
-    fail("The security check couldn't load. Reload the page, or check that nothing is blocking challenges.cloudflare.com.");
+    fail(UI.captcha_load_failed);
     return NO_CAPTCHA;
   }
 }
@@ -191,7 +196,7 @@ async function mountCaptcha(container, action) {
 let retryWith = null;
 els.retry && els.retry.addEventListener('click', async () => {
   if (!retryWith) return;
-  busy(els.retry, true, 'Trying again…');
+  busy(els.retry, true, UI.trying_again);
   const out = await retryWith();
   busy(els.retry, false);
   settle(out);
@@ -224,7 +229,7 @@ function notReady() {
 /* ---- the pages ------------------------------------------------------------------------- */
 async function loginPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
-  note(params.get('reason') === 'reauth' ? 'Your new password is saved. Sign in with it to continue.' : '');
+  note(params.get('reason') === 'reauth' ? UI.reauth_note : '');
   rememberNext();
   let captcha = NO_CAPTCHA;
   const resendBox = $('resendBox'), resend = $('resend');
@@ -233,11 +238,11 @@ async function loginPage(sb) {
     if (btn.disabled) return;
     show(els.alert, false); show(resendBox, false); show(els.retryBox, false);
     if (!checkFields(form)) return;
-    busy(btn, true, 'Signing in…');
+    busy(btn, true, UI.signing_in);
     const out = await loginFlow({
       email: form.email.value.trim(), password: form.password.value, remember: form.remember.checked,
       captchaToken: captcha.token(), captcha: CAPTCHA_ON, next: [queryNext, storedNext()]
-    }, { supabase: sb, exchange, rememberChoice, w: window });
+    }, { supabase: sb, exchange, rememberChoice, w: window, lang: LANG });
     captcha.reset();
     busy(btn, false);
     settle(out, { onError: o => show(resendBox, !!o.resend) });
@@ -245,8 +250,8 @@ async function loginPage(sb) {
   resend.addEventListener('click', async () => {
     const email = form.email.value.trim();
     if (!checkFields(form.querySelector('.auth__field'))) return;
-    busy(resend, true, 'Sending…');
-    const out = await resendFlow({ email, captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb });
+    busy(resend, true, UI.sending);
+    const out = await resendFlow({ email, captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb, lang: LANG });
     captcha.reset();
     busy(resend, false);
     if (out.action === 'done') { show(resendBox, false); show(els.alert, false); note(out.message); els.notice.focus(); } else fail(out.message);
@@ -310,8 +315,8 @@ async function resetPage(sb) {
     if (btn.disabled) return;
     show(els.alert, false);
     if (!checkFields(form)) return;
-    busy(btn, true, 'Sending…');
-    const out = await resetFlow({ email: form.email.value.trim(), captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb });
+    busy(btn, true, UI.sending);
+    const out = await resetFlow({ email: form.email.value.trim(), captchaToken: captcha.token(), captcha: CAPTCHA_ON, origin: location.origin }, { supabase: sb, lang: LANG });
     captcha.reset();
     busy(btn, false);
     settle(out);
@@ -321,12 +326,7 @@ async function resetPage(sb) {
   captcha = await captchaFor('reset');
 }
 
-const CONFIRM_COPY = {
-  email: ['Confirm your email', 'Press Confirm to finish setting up your account.', 'Confirm'],
-  email_change: ['Confirm your new email', 'Press Confirm to start using your new email address.', 'Confirm'],
-  recovery: ['Reset your password', 'Press Confirm, then choose a new password.', 'Confirm'],
-  invite: ['Accept your invitation', 'Read the privacy statement, tick the box, then press Confirm and continue to choose your password.', 'Confirm and continue']
-};
+const CONFIRM_COPY = { email: UI.confirm_email, email_change: UI.confirm_email_change, recovery: UI.confirm_recovery, invite: UI.confirm_invite };
 // the way on after a failed link depends on what the link was for: a new reset link, a new
 // invitation (from the consultant or Back Office) or Resend confirmation on the sign-in page
 const linkHelpFor = type => $(type === 'invite' ? 'linkHelpInvite' : type === 'email' || type === 'email_change' ? 'linkHelpEmail' : 'linkHelp');
@@ -335,7 +335,7 @@ async function confirmPage(sb) {
   // opened with no link at all: the place to paste one (the email's button may lead nowhere, see pasteBox)
   if (!tokenHash && !hash && !confirmLink.type) {
     note('');
-    heading('Paste the link from your email', 'Paste it below to continue.');
+    heading(UI.paste_title, UI.paste_sub);
     show($('linkHelp'), true);
     return pasteBox(null);
   }
@@ -345,22 +345,22 @@ async function confirmPage(sb) {
   const form = els.form, btn = form.querySelector('button[type=submit]');
   if (hash && hash.errorCode) {
     note('');
-    heading("This link can't be used", SPENT_SUB);
-    fail(hashLinkError(type).message);
+    heading(UI.spent_title, SPENT_SUB);
+    fail(hashLinkError(type, LANG).message);
     show(linkHelpFor(type), true);
     return pasteBox(CONFIRM_TYPES.includes(type) ? type : null);
   }
   if (hash ? !hash.accessToken || !hash.refreshToken || !CONFIRM_TYPES.includes(type) : !tokenHash || !CONFIRM_TYPES.includes(type)) {
     note('');
     // e.g. confirm.html?type=recovery after a reload: the token left the address bar, unused
-    heading('Paste the link from your email', 'Paste it below to continue.');
+    heading(UI.paste_title, UI.paste_sub);
     fail(MESSAGES.paste_lost);
     show(linkHelpFor(type), true);
     return pasteBox(CONFIRM_TYPES.includes(type) ? type : null);
   }
   const [title, sub, label] = CONFIRM_COPY[type];
   setText($('title'), title); setText($('sub'), sub); setText(btn, label);
-  document.title = title + ' — Bargainhub studio';
+  document.title = title + UI.title_suffix;
   const privacy = form.privacy;
   show($('inviteAck'), type === 'invite');
   privacy.required = type === 'invite';
@@ -373,8 +373,8 @@ async function confirmPage(sb) {
     show(els.alert, false);
     if (!checkFields(form)) return;
     used = true; // the token (or the session) works once: never send it twice
-    busy(btn, true, 'Confirming…');
-    const deps = { supabase: sb, exchange, keepChoice, w: window };
+    busy(btn, true, UI.confirming);
+    const deps = { supabase: sb, exchange, keepChoice, w: window, lang: LANG };
     const next = [params.get('next'), storedNext()];
     const out = hash
       ? await confirmSessionFlow({ type, accessToken: hash.accessToken, refreshToken: hash.refreshToken, privacyAck: privacy.checked, next }, deps)
@@ -383,7 +383,7 @@ async function confirmPage(sb) {
     if (out.action === 'error') {
       // before Supabase took the token (no tick, or no connection) the button may be pressed again
       if (!out.retry && (out.code === 'privacy_ack_required' || out.code === 'network')) used = false;
-      else { show(form, false); show(linkHelpFor(type), !out.retry); if (!out.retry) { heading("This link can't be used", SPENT_SUB); pasteBox(type); } }
+      else { show(form, false); show(linkHelpFor(type), !out.retry); if (!out.retry) { heading(UI.spent_title, SPENT_SUB); pasteBox(type); } }
     }
     // after a verified link, Retry runs only the exchange again (the outcome's retry)
     settle(out);
@@ -393,7 +393,7 @@ async function confirmPage(sb) {
 
 async function passwordPage(sb) {
   const invite = params.get('invite') === '1';
-  if (invite) { setText($('title'), 'Choose your password'); document.title = 'Choose your password — Bargainhub studio'; }
+  if (invite) { setText($('title'), UI.choose_password); document.title = UI.choose_password + UI.title_suffix; }
   const { data } = await sb.auth.getSession().catch(() => ({ data: null }));
   if (!data || !data.session) {
     note('');
@@ -408,8 +408,8 @@ async function passwordPage(sb) {
     if (btn.disabled) return;
     show(els.alert, false);
     if (!checkFields(form)) return;
-    busy(btn, true, 'Saving…');
-    const out = await passwordFlow({ password: form.password.value, invite }, { supabase: sb, exchange });
+    busy(btn, true, UI.saving);
+    const out = await passwordFlow({ password: form.password.value, invite }, { supabase: sb, exchange, lang: LANG });
     busy(btn, false);
     // an open invitation is accepted only within 10 minutes of the email link (the studio's proof); on a
     // reset that is a slow finish, not a spent invitation, and the way on is a new reset link
@@ -432,7 +432,7 @@ function pasteBox(type) {
   const open = () => {
     if (btn.disabled) return;
     if (!input.value.trim()) { fieldError(input, MESSAGES.paste_empty); input.focus(); return; }
-    const target = pastedLinkTarget(input.value, cfg.supabaseUrl, type);
+    const target = pastedLinkTarget(input.value, cfg.supabaseUrl, type, LANG);
     if (!target) { fieldError(input, MESSAGES.paste_not_link); input.focus(); return; }
     const to = new URL(target, location.origin);
     // a spent link of no known kind (pasted on a bare confirm.html): nothing to open, so say it here,
@@ -447,7 +447,7 @@ function pasteBox(type) {
     }
     fieldError(input, '');
     input.value = '';
-    busy(btn, true, 'Opening…');
+    busy(btn, true, UI.opening);
     // the same page with only a new hash would not load again, so its prologue would never see it
     if (to.pathname === location.pathname && to.search === location.search) { history.replaceState(null, '', to.pathname + to.search + to.hash); location.reload(); }
     else location.assign(to.pathname + to.search + to.hash);
@@ -457,6 +457,20 @@ function pasteBox(type) {
   // Back from the page it opened may restore this one from the back/forward cache, button still busy
   window.addEventListener('pageshow', e => { if (e.persisted) { busy(btn, false); fieldError(input, ''); } });
   show(box, true);
+}
+
+/* ---- 中文 / English ------------------------------------------------------------------------- */
+// the same page in the other language; on confirm.html the link held in memory goes with it, but
+// only when pressed (never in the href), so a Chinese supplier with an English email keeps the link
+const langSwitch = $('langSwitch');
+if (langSwitch) {
+  const to = otherLangPage(location.pathname, '?' + params.toString());
+  if (to) langSwitch.setAttribute('href', to);
+  langSwitch.addEventListener('click', e => {
+    if (page !== 'confirm' || (!confirmLink.tokenHash && !confirmLink.hash)) return;
+    const withLink = otherLangPage(location.pathname, '?' + params.toString(), confirmLink);
+    if (withLink) { e.preventDefault(); location.assign(withLink); }
+  });
 }
 
 /* ---- start ------------------------------------------------------------------------------ */

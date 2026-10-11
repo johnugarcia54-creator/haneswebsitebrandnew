@@ -22,7 +22,8 @@
 import { pathToFileURL } from 'node:url';
 
 export const PAGES = ['/', '/hanesteel.html', '/hanestone.html', '/hanewood.html', '/hanesulation.html', '/bargainhub.html', '/hisense.html', '/tracking.html', '/contact.html'];
-export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html'];
+export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html',
+  '/auth/zh/login.html', '/auth/zh/reset.html', '/auth/zh/confirm.html', '/auth/zh/update-password.html'];
 export const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
 export const PRODUCTION_HOST = 'hanes-the-website-new.vercel.app';
 export const PRODUCTION_BASE = `https://${PRODUCTION_HOST}`;
@@ -115,6 +116,8 @@ export async function smoke(base, { local = false, production = false, productio
     ok(rd.status === 308 && (rd.headers.get('location') || '').endsWith('/hisense.html'), '/hisense redirects to /hisense.html');
     const rt = await get('/track');
     ok([301, 308].includes(rt.status) && (rt.headers.get('location') || '').endsWith('/tracking.html'), '/track redirects to /tracking.html');
+    const sup = await get('/supplier');
+    ok(sup.status === 307 && (sup.headers.get('location') || '').endsWith('/auth/zh/login.html?next=/studio/home.html'), '/supplier redirects to the Chinese sign-in page, then the studio home');
     const h = await get('/');
     ok(h.headers.get('x-content-type-options') === 'nosniff' && !!h.headers.get('referrer-policy'), 'security headers are set');
     const og = await get('/og/index.jpg');

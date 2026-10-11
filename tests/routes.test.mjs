@@ -235,6 +235,13 @@ test('dev.mjs: pages, redirects, /studio/ proxied with the staging secret, /api/
     const staff = await raw(port, '/staff');
     assert.equal(staff.status, 307);
     assert.equal(staff.headers.location, '/auth/login.html', '/staff: the sign-in page with no forced next');
+    const supplier = await raw(port, '/supplier');
+    assert.equal(supplier.status, 307);
+    assert.equal(supplier.headers.location, '/auth/zh/login.html?next=/studio/home.html', '/supplier: the Chinese sign-in page, then the studio home');
+    const zh = await raw(port, '/auth/zh/login.html');
+    assert.equal(zh.status, 200, 'the Chinese sign-in page is served');
+    assert.match(zh.body, /^<!doctype html>\n<html lang="zh-CN">/);
+    assert.match(zh.headers['content-security-policy'] || '', /frame-ancestors 'none'/, 'with the /auth CSP');
 
     for (const p of ['/scripts/dev.mjs', '/package.json', '/.git/config']) assert.equal((await raw(port, p)).status, 404, p);
     // the function's source is never served: under /api/ it is just another studio path

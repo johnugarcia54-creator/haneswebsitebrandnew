@@ -26,6 +26,13 @@
       Cloudflare, sign-in, Resend and reset with no widget, nothing loaded from Cloudflare and no
       captcha token sent; sign-up stays closed even when the studio says it is open; and an
       invite and a recovery through confirm and update-password, with axe on each.
+   D. The Chinese pages (RP-29), /auth/zh/*.html: zh-CN, the CJK font stack and normal letter-spacing,
+      no sign-up link, the same CSP, zero CSP violations and console errors, no horizontal scroll and
+      44 px targets at 320, 390 and 1440 px, axe clean; /supplier opens the Chinese sign-in page and
+      lands on the studio home; the errors, the reset email's link, the paste box, an invite through
+      confirm and update-password all stay in Chinese; the 中文 / English button keeps next, and on
+      confirm.html carries the link only when pressed.
+   SCREENSHOT_DIR  when set, D saves the Chinese sign-in page at 390 and 1440 px there (for review).
    ========================================================================================= */
 import http from 'node:http';
 import { createRequire } from 'node:module';
@@ -33,6 +40,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createDevServer } from '../../scripts/dev.mjs';
 import { pickConfig } from '../../auth/config.js';
+import { MESSAGES_ZH, UI_ZH } from '../../auth/messages-zh.js';
 
 const require = createRequire(import.meta.url);
 const loadPlaywright = () => {
@@ -121,7 +129,7 @@ async function context({ width = 1280, configured = false, turnstile = true, got
   await ctx.route(`${base}/auth/config.js`, r => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body, headers: { 'Cache-Control': 'no-store' } }));
   // with a Turnstile key the pages get the Turnstile CSP, as vercel.json will in the same commit
   const policy = configured && turnstile ? CSP_TURNSTILE : CSP_NO_TURNSTILE;
-  if (policy !== CSP) await ctx.route(/\/auth\/[a-z-]+\.html(\?|$)/, async r => { const res = await r.fetch(); await r.fulfill({ response: res, headers: { ...res.headers(), 'content-security-policy': policy } }); });
+  if (policy !== CSP) await ctx.route(/\/auth\/(zh\/)?[a-z-]+\.html(\?|$)/, async r => { const res = await r.fetch(); await r.fulfill({ response: res, headers: { ...res.headers(), 'content-security-policy': policy } }); });
   if (configured) {
     await ctx.route('https://challenges.cloudflare.com/**', r => r.fulfill({ status: 200, contentType: 'text/javascript', body: TURNSTILE_STUB, headers: { 'Access-Control-Allow-Origin': '*' } }));
     await ctx.route(`${SB}/**`, async r => {
@@ -130,7 +138,7 @@ async function context({ width = 1280, configured = false, turnstile = true, got
       if (req.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
       let body = null; try { body = req.postDataJSON(); } catch { /* none */ }
       const key = `${req.method()} ${url.pathname}${url.pathname === '/auth/v1/token' ? '?' + url.searchParams.get('grant_type') : ''}`;
-      log.sb.push({ key, body, apikey: req.headers().apikey || null, referer: req.headers().referer || null });
+      log.sb.push({ key, body, query: url.search, apikey: req.headers().apikey || null, referer: req.headers().referer || null });
       const answer = gotrue[key] ? gotrue[key](body) : {
         'POST /auth/v1/token?password': [200, sessionBody('password')],
         'POST /auth/v1/verify': [200, sessionBody('otp')],
@@ -237,11 +245,11 @@ try {
     check(await visible(page, '#form') && !(await visible(page, '#notice')), 'B login: form shown once set up, the loading note gone');
     check(log.requests.filter(r => /\/vendor\/supabase-js-[\d.]+\.min\.js$/.test(r.url)).length === 1, 'B login: supabase-js loaded once, once the keys are real');
     const order = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
       await page.keyboard.press('Tab');
       order.push(await page.evaluate(() => { const a = document.activeElement; return a.id || a.className || a.tagName; }));
     }
-    check(JSON.stringify(order.slice(0, 8)) === JSON.stringify(['auth__skip', 'gb__logo', 'gb__back', 'email', 'password', 'auth__show', 'remember', 'auth__go']), `B login: keyboard order ${order.join(' > ')}`);
+    check(JSON.stringify(order.slice(0, 9)) === JSON.stringify(['auth__skip', 'gb__logo', 'gb__back', 'langSwitch', 'email', 'password', 'auth__show', 'remember', 'auth__go']), `B login: keyboard order ${order.join(' > ')}`);
     const r0 = await page.evaluate(() => window.__tsRenders[0]);
     check(r0.sitekey === '1x00000000000000000000AA' && r0.action === 'login', 'B login: Turnstile rendered explicitly with the site key and action');
     // Enter with empty fields: field errors announced, nothing sent
@@ -881,6 +889,202 @@ try {
     check(await page.evaluate(() => location.hash === ''), `C7 confirm (b) ${type} otp_expired: the hash leaves the address bar`);
     check(!log.sb.length, `C7 confirm (b) ${type} otp_expired: nothing is sent to Supabase`);
     if (type === 'invite') await axe(page, 'C7 confirm invite expired (b)');
+    await ctx.close();
+  }
+
+  /* ================= D. the Chinese pages (RP-29) ================= */
+  const ZH_PAGES = ['login', 'reset', 'confirm', 'update-password'];
+  // D1. as committed (placeholders), at 390 and 1440: the same rules as A, in Chinese
+  for (const width of [390, 1440]) {
+    for (const p of ZH_PAGES) {
+      const label = `D ${p} @${width}`;
+      const { ctx, log } = await context({ width });
+      const page = await ctx.newPage();
+      const resp = await page.goto(`${base}/auth/zh/${p}.html${p === 'confirm' ? '?token_hash=abc123def456&type=email' : ''}`, { waitUntil: 'networkidle' });
+      check(resp.headers()['content-security-policy'] === CSP_NO_TURNSTILE, `${label}: exactly the /auth CSP without Cloudflare`);
+      check(resp.headers()['referrer-policy'] === 'no-referrer' && /noindex/.test(resp.headers()['x-robots-tag'] || '') && (resp.headers()['cache-control'] || '').includes('no-store'), `${label}: no-referrer, noindex and no-store headers`);
+      await page.waitForTimeout(150);
+      check(await page.evaluate(() => document.documentElement.lang) === 'zh-CN', `${label}: lang="zh-CN"`);
+      check((await page.locator('main').innerText()).includes(MESSAGES_ZH.not_configured), `${label}: says "${MESSAGES_ZH.not_configured.slice(0, 12)}…"`);
+      check(!(await visible(page, '#form')) && await visible(page, '#setupHelp'), `${label}: no form while not set up, the enquiry links instead`);
+      check((await page.locator('h1').count()) === 1 && (await page.locator('script:not([src])').count()) === 0, `${label}: one h1, no inline script`);
+      check(await page.locator('a[href*="signup"]').count() === 0, `${label}: no sign-up link`);
+      check(!log.requests.some(r => /supabase\.co|cloudflare\.com|\/vendor\/supabase-js/.test(r.url)), `${label}: nothing from Supabase or Cloudflare`);
+      if (p === 'confirm') check(!page.url().includes('token_hash'), `${label}: token_hash removed from the address bar`);
+      const type = await page.evaluate(() => {
+        const b = getComputedStyle(document.body), h = getComputedStyle(document.querySelector('h1')), e = getComputedStyle(document.querySelector('.auth__eyebrow'));
+        return { body: b.fontFamily, h1: h.fontFamily, bodyLs: b.letterSpacing, h1Ls: h.letterSpacing, eyebrowCase: e.textTransform };
+      });
+      check(/PingFang SC/.test(type.body) && /Microsoft YaHei/.test(type.body) && /PingFang SC/.test(type.h1), `${label}: the CJK font stack (${type.body})`);
+      check(type.bodyLs === 'normal' && type.h1Ls === 'normal' && type.eyebrowCase === 'none', `${label}: normal letter-spacing, no capitals (${type.bodyLs}, ${type.h1Ls})`);
+      check(await text(page, '#langSwitch') === 'English' && await page.getAttribute('#langSwitch', 'href') === `/auth/${p}.html${p === 'confirm' ? '?type=email' : ''}`, `${label}: the English button to the same page (${await page.getAttribute('#langSwitch', 'href')})`);
+      check(await page.locator('.gb #langSwitch').count() === 0, `${label}: the button is outside the bar`);
+      check((await csp(page)).length === 0, `${label}: zero CSP violations (${(await csp(page)).join(', ')})`);
+      check(log.console.length === 0, `${label}: zero console errors (${log.console.join(' | ')})`);
+      await noScroll(page, label);
+      await axe(page, label);
+      await ctx.close();
+    }
+  }
+  // D2. set up, at 320, 390 and 1440: the forms themselves, no horizontal scroll, 44 px targets, axe
+  for (const width of [320, 390, 1440]) {
+    for (const p of ZH_PAGES) {
+      const label = `D ${p} set up @${width}`;
+      const { ctx, log } = await context({ width, configured: true, turnstile: false });
+      const page = await ctx.newPage();
+      if (p === 'update-password') {
+        // a session first, as an invitation would leave it
+        await page.goto(`${base}/auth/zh/confirm.html?token_hash=abc123def456&type=invite`, { waitUntil: 'networkidle' });
+        await page.check('#privacy'); await page.click('button[type=submit]');
+        await page.waitForURL(`${base}/auth/zh/update-password.html?invite=1`);
+        await page.locator('#form').waitFor({ state: 'visible' });
+      } else {
+        await page.goto(`${base}/auth/zh/${p}.html${p === 'confirm' ? '?token_hash=abc123def456&type=invite' : ''}`, { waitUntil: 'networkidle' });
+        await page.locator('#form').waitFor({ state: 'visible' });
+      }
+      await noScroll(page, label);
+      await targets(page, label);
+      const lang = await page.evaluate(() => { const r = document.getElementById('langSwitch').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; });
+      check(lang[0] >= 44 && lang[1] >= 44, `${label}: the English button is a 44 px target (${lang.join('×')})`);
+      if (width !== 320) await axe(page, label);
+      if (process.env.SCREENSHOT_DIR && p === 'login' && width !== 320) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/zh-login-${width}.png`, fullPage: true });
+      if (process.env.SCREENSHOT_DIR && p === 'confirm' && width !== 320) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/zh-confirm-invite-${width}.png`, fullPage: true });
+      check((await csp(page)).length === 0 && log.console.length === 0, `${label}: zero CSP violations and console errors (${log.console.join(' | ')})`);
+      await ctx.close();
+    }
+  }
+  // D3. /supplier: the Chinese sign-in page, then the studio home; a wrong password in Chinese first
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390, gotrue: {} });
+    const page = await ctx.newPage();
+    studioState.exchange.push([200, { user: { id: 'u-sup' }, csrfToken: 'c', level: 'client', auth: { landing: '/studio/home.html' } }]);
+    await page.goto(`${base}/supplier`, { waitUntil: 'networkidle' });
+    check(page.url() === `${base}/auth/zh/login.html?next=/studio/home.html`, `D /supplier: the Chinese sign-in page with next=/studio/home.html (${page.url()})`);
+    await page.locator('#form').waitFor({ state: 'visible' });
+    check(await text(page, 'h1') === '登录' && await page.title() === '登录 — Bargainhub 工作室', 'D /supplier: 登录');
+    check(await page.getAttribute('#langSwitch', 'href') === '/auth/login.html?next=%2Fstudio%2Fhome.html', 'D /supplier: English keeps next');
+    // empty submit: the field messages in Chinese
+    await page.click('button[type=submit]');
+    check(await text(page, '#email-err') === UI_ZH.enter_email && (await page.evaluate(() => document.activeElement.id)) === 'email', 'D login: empty submit says 请输入您的邮箱地址 and focuses the field');
+    await page.fill('#email', 'not-an-email');
+    await page.click('button[type=submit]');
+    check(await text(page, '#email-err') === UI_ZH.email_format, 'D login: a malformed email in Chinese');
+    // Show / Hide in Chinese, and the name follows the word
+    await page.click('.auth__show');
+    check(await text(page, '.auth__show') === '隐藏' && await page.getAttribute('.auth__show', 'aria-label') === '隐藏密码' && await page.getAttribute('#password', 'type') === 'text', 'D login: 显示 becomes 隐藏');
+    await page.click('.auth__show');
+    check(log.sb.length === 0, 'D login: nothing sent before the fields pass');
+    await ctx.close();
+  }
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390, gotrue: { 'POST /auth/v1/token?password': () => [400, { code: 'invalid_credentials', error_code: 'invalid_credentials', msg: 'Invalid login credentials' }] } });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/zh/login.html`, { waitUntil: 'networkidle' });
+    await page.fill('#email', 'gongyingshang@example.test'); await page.fill('#password', 'wrong-password-123');
+    await page.click('button[type=submit]');
+    await page.locator('#alert').waitFor({ state: 'visible' });
+    check(await text(page, '#alert') === MESSAGES_ZH.bad_credentials && await text(page, '#resend') === '重新发送确认邮件', 'D login: the uniform error in Chinese, with Resend');
+    await page.click('#resend');
+    await page.locator('#notice').waitFor({ state: 'visible' });
+    const rs = log.sb.find(x => x.key === 'POST /auth/v1/resend');
+    check(await text(page, '#notice') === MESSAGES_ZH.resend_sent && rs && new URLSearchParams(rs.query).get('redirect_to') === `${base}/auth/zh/confirm.html`, `D login: Resend answers in Chinese and its link comes back to the Chinese confirm page (${rs && rs.query})`);
+    await axe(page, 'D login error @390');
+    check(log.console.length === 1 && /status of 400/.test(log.console[0]), `D login: no console errors but Supabase's own 400 for the wrong password (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    studioState.exchange.push([200, { user: { id: 'u-sup' }, csrfToken: 'c', level: 'client', auth: { landing: '/studio/home.html' } }]);
+    await page.goto(`${base}/supplier`, { waitUntil: 'networkidle' });
+    await page.locator('#form').waitFor({ state: 'visible' });
+    await page.fill('#email', 'gongyingshang@example.test'); await page.fill('#password', 'a-good-long-password');
+    await page.click('button[type=submit]');
+    await page.waitForURL(u => u.pathname.startsWith('/studio/'));
+    check(page.url() === `${base}/studio/home.html`, `D /supplier: signed in, on the studio home (${page.url()})`);
+    check(log.console.length === 0, `D /supplier: zero console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // D4. reset in Chinese: the same answer, the emailed link comes back to the Chinese confirm page; the paste box
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/zh/reset.html`, { waitUntil: 'networkidle' });
+    await page.fill('#email', 'nobody@example.test');
+    await page.keyboard.press('Enter');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    check(await text(page, '#done') === MESSAGES_ZH.reset_sent, 'D reset: always the same answer, in Chinese');
+    const rc = log.sb.find(x => x.key === 'POST /auth/v1/recover');
+    check(rc && new URLSearchParams(rc.query).get('redirect_to') === `${base}/auth/zh/confirm.html`, `D reset: the email's link comes back to /auth/zh/confirm.html (${rc && rc.query})`);
+    await page.click('#pasteGo');
+    check(await text(page, '#pasted-err') === MESSAGES_ZH.paste_empty, 'D reset: an empty paste in Chinese');
+    await page.fill('#pasted', 'hello');
+    await page.click('#pasteGo');
+    check(await text(page, '#pasted-err') === MESSAGES_ZH.paste_not_link, 'D reset: not a link, in Chinese');
+    await page.fill('#pasted', `${SB}/auth/v1/verify?token=abc123def456&type=recovery&redirect_to=http://localhost:3000`);
+    await page.click('#pasteGo');
+    await page.waitForURL(`${base}/auth/zh/confirm.html?type=recovery`);
+    check(await text(page, '#title') === UI_ZH.confirm_recovery[0] && await text(page, 'button[type=submit]') === UI_ZH.confirm_recovery[2], 'D reset: the pasted link opens the Chinese recovery confirm');
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/zh/update-password.html`);
+    check(await text(page, 'h1') === '设置新密码', 'D confirm recovery: on to the Chinese update-password page');
+    check((await csp(page)).length === 0 && log.console.length === 0, `D reset: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // D5. an invitation in Chinese: confirm (the privacy tick), the invite exchange, then the password
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false, width: 390 });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/zh/confirm.html?token_hash=abc123def456&type=invite`, { waitUntil: 'networkidle' });
+    check(page.url().endsWith('/auth/zh/confirm.html?type=invite'), 'D confirm invite: token_hash gone from the address bar');
+    check(await text(page, 'h1') === UI_ZH.confirm_invite[0] && await text(page, 'button[type=submit]') === UI_ZH.confirm_invite[2] && await page.title() === UI_ZH.confirm_invite[0] + UI_ZH.title_suffix, 'D confirm invite: 接受邀请 / 确认并继续');
+    await page.click('button[type=submit]');
+    check(await text(page, '#privacy-err') === MESSAGES_ZH.privacy_ack_required && !log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'D confirm invite: the privacy tick first, in Chinese');
+    await page.check('#privacy');
+    const before = studioSeen.length;
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/zh/update-password.html?invite=1`);
+    const ex = studioSeen.slice(before).filter(x => x.url === '/api/auth/exchange');
+    check(ex.length === 1 && ex[0].body.purpose === 'invite', 'D confirm invite: verifyOtp, then the invite exchange');
+    await page.locator('#form').waitFor({ state: 'visible' });
+    check(await text(page, '#title') === UI_ZH.choose_password && await page.title() === UI_ZH.choose_password + UI_ZH.title_suffix, 'D update-password: 设置您的密码');
+    await page.fill('#password', 'short');
+    await page.click('button[type=submit]');
+    check(await text(page, '#password-err') === UI_ZH.min_chars.replace('{n}', '12'), 'D update-password: 12 characters at least, in Chinese');
+    await page.fill('#password', 'my-own-new-password');
+    await page.click('button[type=submit]');
+    await page.locator('#done').waitFor({ state: 'visible' });
+    check(await text(page, '#done') === MESSAGES_ZH.password_set && await text(page, '#continue') === '继续', 'D update-password: 密码已设置, then 继续');
+    await axe(page, 'D update-password done @390');
+    check((await csp(page)).length === 0 && log.console.length === 0, `D invite: zero CSP violations and console errors (${log.console.join(' | ')})`);
+    await ctx.close();
+  }
+  // D6. 中文 / English: the same page, next kept; on confirm.html the held link goes only when pressed
+  {
+    const { ctx, log } = await context({ configured: true, turnstile: false });
+    const page = await ctx.newPage();
+    await page.goto(`${base}/auth/login.html?next=/studio/home.html`, { waitUntil: 'networkidle' });
+    check(await text(page, '#langSwitch') === '中文' && await page.getAttribute('#langSwitch', 'lang') === 'zh-CN', 'D switch: the English page offers 中文');
+    await page.click('#langSwitch');
+    await page.waitForURL(`${base}/auth/zh/login.html?next=%2Fstudio%2Fhome.html`);
+    check(await text(page, 'h1') === '登录', 'D switch: 中文 opens the Chinese sign-in page with next');
+    await page.click('#langSwitch');
+    await page.waitForURL(`${base}/auth/login.html?next=%2Fstudio%2Fhome.html`);
+    check(await text(page, 'h1') === 'Sign in', 'D switch: English goes back, next still there');
+    // an English invitation email, opened by a Chinese supplier
+    await page.goto(`${base}/auth/confirm.html?token_hash=abc123def456&type=invite`, { waitUntil: 'networkidle' });
+    check(await page.getAttribute('#langSwitch', 'href') === '/auth/zh/confirm.html?type=invite', 'D switch: the token is never in the href');
+    await page.click('#langSwitch');
+    await page.waitForURL(`${base}/auth/zh/confirm.html?type=invite`);
+    check(await text(page, 'h1') === UI_ZH.confirm_invite[0] && await visible(page, '#form'), 'D switch: the Chinese confirm page holds the invitation, token gone from the address bar');
+    check(!log.sb.some(x => x.key === 'POST /auth/v1/verify'), 'D switch: nothing consumed by switching');
+    await page.check('#privacy');
+    await page.click('button[type=submit]');
+    await page.waitForURL(`${base}/auth/zh/update-password.html?invite=1`);
+    const v = log.sb.find(x => x.key === 'POST /auth/v1/verify');
+    check(v && v.body.token_hash === 'abc123def456' && v.body.type === 'invite', 'D switch: Confirm on the Chinese page uses that link');
+    check(log.requests.every(r => !r.referer), 'D switch: no Referer on any request');
+    check(log.console.length === 0, `D switch: zero console errors (${log.console.join(' | ')})`);
     await ctx.close();
   }
   studioState.publicSignup = false;

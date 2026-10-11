@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>确认 — Bargainhub 工作室</title>
+<meta name="description" content="确认您在 Bargainhub 工作室的邮箱地址或邀请，然后继续设置。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/auth/auth.css">
+<script type="module" src="/auth/auth.js"></script>
+</head>
+<body class="auth-page" data-page="confirm">
+<a class="auth__skip" href="#main">跳到表单</a>
+
+<header class="gb" id="gb">
+  <nav class="gb__in" aria-label="Hanes Distribution">
+    <a class="gb__logo" href="/">Hanes <span>Distribution</span></a>
+    <a class="gb__back" href="/"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 1L3 5l4 4"/></svg>返回网站</a>
+  </nav>
+</header>
+
+<main class="auth" id="main" tabindex="-1">
+  <section class="auth__card" aria-labelledby="title">
+    <div class="auth__top"><p class="auth__eyebrow">Bargainhub 工作室</p><a class="auth__lang" id="langSwitch" href="/auth/confirm.html" hreflang="en-NZ" lang="en-NZ">English</a></div>
+    <h1 id="title">确认</h1>
+    <p class="auth__sub" id="sub">点击“确认”以继续。</p>
+    <p class="auth__note" id="notice" role="status" tabindex="-1">正在准备登录…</p>
+    <noscript><p class="auth__alert">登录需要 JavaScript。请启用后刷新此页面。</p></noscript>
+    <p class="auth__alert" id="alert" role="alert" tabindex="-1" hidden></p>
+    <p class="auth__done" id="done" role="status" tabindex="-1" hidden></p>
+    <form class="auth__form" id="form" method="post" novalidate hidden>
+      <div id="inviteAck" hidden>
+        <p class="auth__links" id="privacy-read"><a href="/privacy.html" target="_blank" rel="noopener noreferrer" hreflang="en-NZ">阅读隐私声明（英文，在新标签页中打开）</a></p>
+        <label class="auth__check"><input id="privacy" name="privacy" type="checkbox" data-required="请勾选“我已阅读隐私声明”后继续。" aria-describedby="privacy-read"><span>我已阅读隐私声明。</span></label>
+      </div>
+      <button class="auth__go" type="submit">确认</button>
+    </form>
+    <div class="auth__form" id="pasteBox" role="group" aria-labelledby="pasteHelp" hidden>
+      <p class="auth__help" id="pasteHelp">邮件由 Supabase Auth 发出（可能需要几分钟，请同时查看垃圾邮件）。如果邮件中的链接打开的页面无法加载（地址以 localhost 开头），请复制该页面的完整地址并粘贴到这里，然后在 10 分钟内完成。如果打开了不止一个页面，请使用第一个。在电脑上，您也可以右键点击邮件中的链接，选择“复制链接地址”，然后粘贴。</p>
+      <div class="auth__field">
+        <label for="pasted">邮件中的链接</label>
+        <input id="pasted" name="pasted" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="8192">
+      </div>
+      <button class="auth__go" id="pasteGo" type="button">继续</button>
+    </div>
+    <div id="retryBox" hidden><button class="auth__go" id="retry" type="button">重试</button></div>
+    <div id="linkHelp" hidden>
+      <p class="auth__links"><a href="/auth/zh/reset.html">索取新的重置链接</a><a href="/auth/zh/login.html">登录</a></p>
+    </div>
+    <div id="linkHelpInvite" hidden>
+      <p class="auth__help">如需新的邀请，请联系邀请您的人。</p>
+      <p class="auth__links"><a href="/contact.html#enquiry" hreflang="en-NZ">联系我们</a><a href="/auth/zh/login.html">登录</a></p>
+    </div>
+    <div id="linkHelpEmail" hidden>
+      <p class="auth__help">如需新的确认链接，请登录并选择“重新发送确认邮件”。</p>
+      <p class="auth__links"><a href="/auth/zh/login.html">登录</a></p>
+    </div>
+    <div id="setupHelp" hidden>
+      <p class="auth__links"><a href="/contact.html#enquiry" hreflang="en-NZ">向我们发送咨询</a><a href="/bargainhub.html" hreflang="en-NZ">关于 Bargainhub</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="gf">
+  <div class="gf__in">
+    <div class="gf__base"><span>© 2026 Hanes Distribution 保留所有权利。</span><span class="gf__links"><a href="/privacy.html" hreflang="en-NZ">隐私</a><a href="/contact.html" hreflang="en-NZ">联系我们</a></span></div>
+  </div>
+</footer>
+</body>
+</html>
