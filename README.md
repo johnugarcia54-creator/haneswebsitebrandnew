@@ -23,7 +23,7 @@ Shared engines: `assets/globe.js` (the dotted globe on the Contact and home page
 Every page shares `assets/site.css` and `assets/site.js`: the global bar that links the home page and every brand, with Log in and Get a quote (below 880 px it becomes a burger that opens the full menu), and the common footer with Privacy and Log in. `assets/site.js` also:
 
 - runs `bhAuthHygiene()` first: when a visitor signed in without "Keep me signed in" and has since closed the browser, it removes the Supabase session from this browser and signs the studio session out (the same function, between its BEGIN and END lines, is copied unchanged into the sign-in pages and the studio)
-- shows My account (`/studio/#/account`) in place of Log in while a Supabase session is kept in the browser; it never loads the Supabase SDK
+- shows My account (`/studio/home.html`) in place of Log in while a Supabase session is kept in the browser; it never loads the Supabase SDK
 - keeps every Book a consultant link (`data-book`) on the enquiry dialog while `BOOKINGS_LIVE` is `false`; set it to `true` when bookings ship and they go to `studio/#/book`
 - loads Milli, the guide (`assets/guide/milli.js`), after the page has loaded and the browser is idle, once `MILLI_SHIPPED` is `true` (`npm run check` fails if it is true without the file, and also fails while the file exists but the flag is still false, unless the line says `MILLI_SHIPPED = false; // held`)
 
