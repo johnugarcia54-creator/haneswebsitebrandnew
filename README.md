@@ -50,13 +50,15 @@ Optional: `ENQUIRY_TO` sends enquiries somewhere else (separate several addresse
 
 `npm run seo` writes every page's title, description, canonical address, sharing tags (with the 1200 × 630 images in `og/`) and structured data for Google, plus `sitemap.xml` and `robots.txt`, from the list in `scripts/seo.mjs`. When the site moves to its own domain, run `npm run seo -- --site https://www.hanesdistribution.co.nz` and commit the result.
 
+The Hanesteel and Hanestone sharing images are drawn by `npm run og` from the words in `scripts/og.mjs` (it needs Playwright; see the top of that file). `npm run check` refuses any certification claim in those words.
+
 `vercel.json` adds security headers, caching for images, films and fonts, and short addresses such as `/hisense`, `/contact` and `/track`.
 
 ## Working on the site
 
 - `npm install`, then `npm run dev` to run the whole site with the API on http://localhost:3000
 - `npm test`: the enquiry API tests (sends through stand-in Resend and SMTP servers, so nothing leaves your machine)
-- `npm run check`: every link, anchor, image and file, one `<h1>` per page, alt text, and the SEO tags, sitemap and robots.txt
+- `npm run check`: every link, anchor, image and file, one `<h1>` per page, alt text, and the SEO tags, sitemap and robots.txt, and no withdrawn claims in the sharing image words
 
 - `node scripts/smoke.mjs <url>`: tests a deployed site (pages, sitemap, short URLs, headers, and the enquiry API without sending an email)
 

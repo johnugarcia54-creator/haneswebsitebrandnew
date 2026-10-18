@@ -7,9 +7,11 @@
      and valid structured data, and every image has alt text
    - the sitemap lists every page, and robots.txt points at it
    - no page still sends enquiries through the visitor's email app
+   - no sharing image in scripts/og.mjs makes a withdrawn certification claim
    ========================================================================================= */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { OG, WITHDRAWN } from './og.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const SITE = JSON.parse(readFileSync(root + 'package.json', 'utf8')).homepage.replace(/\/+$/, '');
@@ -79,6 +81,15 @@ for (const f of pages) {
 }
 const robots = existsSync(root + 'robots.txt') ? readFileSync(root + 'robots.txt', 'utf8') : '';
 if (!robots.includes(`Sitemap: ${SITE}/sitemap.xml`)) err('robots.txt', 'should point at the sitemap');
+
+// ---------- sharing images: the words drawn into og/*.jpg
+for (const c of OG) {
+  if (!existsSync(root + 'og/' + c.file)) err('scripts/og.mjs', `missing og/${c.file}`);
+  if (!existsSync(root + c.photo)) err('scripts/og.mjs', `${c.file}: missing photo ${c.photo}`);
+  const words = `${c.eyebrow} ${c.headline} ${c.line}`, hit = words.match(WITHDRAWN);
+  if (hit) err('scripts/og.mjs', `${c.file} says "${hit[0]}", a withdrawn claim: change the words and run npm run og`);
+}
+for (const f of ['hanesteel.jpg', 'hanestone.jpg']) if (!OG.some(c => c.file === f)) err('scripts/og.mjs', `og/${f} is not drawn from the OG list, so its words can't be checked`);
 
 for (const w of warn) console.log('warning  ' + w);
 for (const e of errors) console.log('ERROR    ' + e);
