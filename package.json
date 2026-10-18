@@ -3,6 +3,9 @@
   "private": true,
   "description": "Hanes Distribution website: static pages plus the /api/enquiry email function, hosted on Vercel.",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "check": "node scripts/check.mjs",
