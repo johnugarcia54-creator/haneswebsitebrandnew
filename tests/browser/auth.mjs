@@ -961,7 +961,7 @@ try {
     await page.goto(`${base}/supplier`, { waitUntil: 'networkidle' });
     check(page.url() === `${base}/auth/zh/login.html?next=/studio/home.html`, `D /supplier: the Chinese sign-in page with next=/studio/home.html (${page.url()})`);
     await page.locator('#form').waitFor({ state: 'visible' });
-    check(await text(page, 'h1') === '登录' && await page.title() === '登录' + UI_ZH.title_suffix && UI_ZH.title_suffix === ' — Bargainhub Studio', 'D /supplier: 登录 — Bargainhub Studio');
+    check(await text(page, 'h1') === '登录' && await page.title() === '登录' + UI_ZH.title_suffix && UI_ZH.title_suffix === ' — Hanes Distribution', 'D /supplier: 登录 — Hanes Distribution');
     check(await page.getAttribute('#langSwitch', 'href') === '/auth/login.html?next=%2Fstudio%2Fhome.html', 'D /supplier: English keeps next');
     // empty submit: the field messages in Chinese
     await page.click('button[type=submit]');

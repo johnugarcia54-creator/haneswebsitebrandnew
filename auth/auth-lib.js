@@ -159,7 +159,7 @@ export function messageFor(code, lang) {
 
 // the words auth.js puts on the page itself (UI_ZH in auth/messages-zh.js has the same keys)
 export const UI = Object.freeze({
-  title_suffix: ' — Bargainhub studio',
+  title_suffix: ' — Hanes Distribution',
   spent_title: "This link can't be used",
   spent_sub: "If the email's link opened more than one page, paste the first page's address below. Otherwise ask for a new link.",
   paste_title: 'Paste the link from your email',
