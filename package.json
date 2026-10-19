@@ -12,7 +12,7 @@
   "dependencies": {
     "nodemailer": "10.0.15"
   },
-  "homepage": "https://hanes-the-website-new.vercel.app",
+  "homepage": "https://www.hanesdistribution.co.nz",
   "engines": {
     "node": "24.x"
   },

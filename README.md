@@ -88,7 +88,7 @@ Local and test only: `PORT`, `HOST`, `STUDIO_DEV_URL` and `STUDIO_EDGE_SECRET_ST
 
 ## Search and sharing
 
-`npm run seo` writes every page's title, description, canonical address, sharing tags (with the 1200 × 630 images in `og/`) and structured data for Google, plus `sitemap.xml` and `robots.txt`, from the list in `scripts/seo.mjs`. When the site moves to its own domain, run `npm run seo -- --site https://www.hanesdistribution.co.nz` and commit the result.
+`npm run seo` writes every page's title, description, canonical address, sharing tags (with the 1200 × 630 images in `og/`) and structured data for Google, plus `sitemap.xml` and `robots.txt`, from the list in `scripts/seo.mjs`. The address they name is `package.json` `homepage`, `https://www.hanesdistribution.co.nz` since the move to the site's own domain (`npm run seo -- --site <address>` changes it and rewrites everything; `tests/og.test.mjs` pins it).
 
 `vercel.json` adds security headers, caching for images, films and fonts, and short addresses such as `/hisense`, `/contact`, `/track`, `/login` and `/studio`. The studio content on `bargainhub.html` is indexed; `/studio/` itself and the sign-in pages are not.
 

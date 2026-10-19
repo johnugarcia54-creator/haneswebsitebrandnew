@@ -11,6 +11,8 @@ import { NEVER } from './_never-say.mjs';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = f => readFileSync(root + f, 'utf8');
 const { cards } = JSON.parse(read('og/cards.json'));
+// the site's canonical address (npm run seo -- --site writes it to package.json)
+const SITE = JSON.parse(read('package.json')).homepage;
 
 // a baseline JPEG's size from its SOF0 or SOF2 marker
 const jpegSize = b => {
@@ -66,6 +68,23 @@ test('the pages that share a card point og:image and twitter:image at it, under 
   for (const c of cards.filter(c => c.rendered !== false)) {
     const page = read(c.page);
     for (const m of ['property="og:image"', 'name="twitter:image"'])
-      assert.ok(page.includes(`<meta ${m} content="https://hanes-the-website-new.vercel.app/og/${c.file}">`), `${c.file}: ${m}`);
+      assert.ok(page.includes(`<meta ${m} content="${SITE}/og/${c.file}">`), `${c.file}: ${m}`);
   }
+});
+
+test('search and sharing name the canonical address, https://www.hanesdistribution.co.nz, and no other host (SEC-2)', () => {
+  assert.equal(SITE, 'https://www.hanesdistribution.co.nz');
+  const pages = readdirSync(root).filter(f => f.endsWith('.html') && f !== '404.html');
+  for (const p of pages) {
+    const seo = (read(p).match(/<!-- seo -->([\s\S]*?)<!-- \/seo -->/) || [])[1] || '';
+    assert.ok(seo, `${p}: the seo block`);
+    const urls = [...seo.matchAll(/https?:\/\/[^"\s<]+/g)].map(m => m[0]).filter(u => !u.startsWith('https://schema.org'));
+    assert.ok(urls.length >= 5, `${p}: canonical, og:url, og:image, twitter:image and JSON-LD`);
+    for (const u of urls) assert.ok(u.startsWith(SITE + '/'), `${p}: ${u}`);
+    assert.ok(seo.includes(`<link rel="canonical" href="${SITE}/`), `${p}: canonical`);
+  }
+  const locs = [...read('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  assert.equal(locs.length, pages.length);
+  for (const u of locs) assert.ok(u.startsWith(SITE + '/'), u);
+  assert.ok(read('robots.txt').split('\n').includes(`Sitemap: ${SITE}/sitemap.xml`));
 });
