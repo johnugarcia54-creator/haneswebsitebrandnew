@@ -43,7 +43,8 @@ window.HanesEnquiry = (() => {
     const fields = (o.fields || []).map(([k, v]) => [k, v == null ? '' : String(v).trim()]).filter(([, v]) => v);
     const btn = form.querySelector('[type="submit"]'), text = btn && btn.textContent.trim() ? btn.innerHTML : null;
     form.dataset.sending = '1'; form.setAttribute('aria-busy', 'true');
-    if (btn) { btn.disabled = true; if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
+    // aria-disabled, not disabled: a disabled button loses keyboard focus, and form.dataset.sending already stops a second send
+    if (btn) { btn.setAttribute('aria-disabled', 'true'); if (text) btn.textContent = 'Sending…'; else btn.classList.add('is-busy'); }
     if (status) status.classList.remove('is-on', 'is-err', 'is-ok');
     let ok = false;
     try {
@@ -71,7 +72,7 @@ window.HanesEnquiry = (() => {
       say(status, `We couldn't send this from the website just now, so your email app has opened with everything filled in. If it didn't open, email us at ${MAIL}.`, 'err');
     } finally {
       delete form.dataset.sending; form.removeAttribute('aria-busy');
-      if (btn) { btn.disabled = false; if (text) btn.innerHTML = text; else btn.classList.remove('is-busy'); }
+      if (btn) { btn.removeAttribute('aria-disabled'); if (text) btn.innerHTML = text; else btn.classList.remove('is-busy'); }
     }
     return ok;
   }
