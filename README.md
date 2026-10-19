@@ -35,16 +35,16 @@ Every page shares `assets/site.css` and `assets/site.js`: the global bar that li
 
 ## How it fits together
 
-One address serves everything: today `https://hanes-the-website-new.vercel.app`.
+Each address serves everything (pages, sign-in, the studio). Production has two while the site moves to its own domain: `https://www.hanesdistribution.co.nz`, the address clients use (live here once the domain is moved to this Vercel project; the bare `hanesdistribution.co.nz` redirects to it in Vercel), and `https://hanes-the-website-new.vercel.app`, which keeps working until a later change redirects it to www. `https://portal.hanesdistribution.co.nz` is the staging address: its Vercel domain is pinned to the `staging` branch, so it reaches the staging studio.
 
 | Path | Served by |
 |---|---|
 | the pages above, `assets/`, images, films, fonts | Vercel, from this repository |
 | `/auth/*.html` (log in, sign up, reset, confirm, set a password) | Vercel, from this repository; sign-in itself is Supabase (project `mputtezdhevwwjgwktvi`, Sydney) |
 | `/api/enquiry` | Vercel: the enquiry function in this repository |
-| `/studio/` and everything under it, every other `/api/*` | rewritten to the Bargainhub studio server on Fly.io (`bargainhub-studio.fly.dev` for production, `bargainhub-studio-staging.fly.dev` for previews and local work), with a secret `x-studio-edge` header the studio's edge gate checks |
+| `/studio/` and everything under it, every other `/api/*` | rewritten to the Bargainhub studio server on Fly.io (`bargainhub-studio.fly.dev` for the two production addresses, `bargainhub-studio-staging.fly.dev` for every other address: portal, previews and local work), with a secret `x-studio-edge` header the studio's edge gate checks |
 
-`vercel.json` is written in Vercel's `routes` form, in this order: one header route per path group (the sign-in pages get a strict Content-Security-Policy that only lets them talk to this site and the Supabase project), the short addresses and old redirects, the files of this repository, then the studio rewrites. `scripts/routes.mjs` evaluates those routes exactly as Vercel does; `scripts/dev.mjs` serves through it and `tests/config.test.mjs` checks it.
+`vercel.json` is written in Vercel's `routes` form, in this order: one header route per path group (the sign-in pages get a strict Content-Security-Policy that only lets them talk to this site and the Supabase project), the short addresses and old redirects, the files of this repository, then the studio rewrites (the production pair once per production address, as literal copies, then the staging pair for every other host). `scripts/routes.mjs` evaluates those routes exactly as Vercel does; `scripts/dev.mjs` serves through it and `tests/config.test.mjs` checks it.
 
 Enquiries go by email to Enquiry@hanesdistribution.co.nz and, in production only, are also handed to the studio's CRM outbox (`api/_lib/crm-forward.js`), from which they reach the Base44 CRM. Previews never forward leads.
 

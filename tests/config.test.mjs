@@ -17,6 +17,13 @@ const config = JSON.parse(readFileSync(root + 'vercel.json', 'utf8'));
 const routes = config.routes;
 
 const PROD_HOST = 'hanes-the-website-new.vercel.app';
+// the custom domain clients use: production too, through literal copies of the two production rules.
+// Both hosts reach production Fly while the domain moves (the vercel.app -> www redirect is a later PR).
+// The bare hanesdistribution.co.nz is a Vercel domain redirect to www, so it never reaches these routes.
+const WWW_HOST = 'www.hanesdistribution.co.nz';
+const PROD_HOSTS = [PROD_HOST, WWW_HOST];
+// the staging address: a Vercel domain pinned to the staging branch, so a Preview deployment
+const PORTAL_HOST = 'portal.hanesdistribution.co.nz';
 const PREVIEW_ALIAS = 'hanes-the-website-new-git-staging-hanes.vercel.app';
 const PROD_DEPLOYMENT_URL = 'hanes-the-website-new-k3j9x2abc-hanes.vercel.app';
 const PROD_FLY = 'https://bargainhub-studio.fly.dev';
@@ -28,7 +35,7 @@ const PREVIEW_ENV = { STUDIO_EDGE_SECRET_PROD: 'not-this-environment', STUDIO_ED
 // the deployment: this repository's files, plus the W2 sign-in pages and a font named in the case table
 const EXTRA = new Set(['/auth/login.html', '/fonts/x.woff2']);
 const filesystem = p => EXTRA.has(p) || !!resolveFile(root, p);
-const run = (path, host = PROD_HOST, env = host === PROD_HOST ? PRODUCTION_ENV : PREVIEW_ENV) => matchRoute(routes, { path, host, env, filesystem });
+const run = (path, host = PROD_HOST, env = PROD_HOSTS.includes(host) ? PRODUCTION_ENV : PREVIEW_ENV) => matchRoute(routes, { path, host, env, filesystem });
 
 const PERMISSIONS = 'camera=(), microphone=(), geolocation=(), payment=()';
 const MARKETING = {
@@ -46,7 +53,7 @@ const AUTH_CSP_REST = `connect-src ${AUTH_CONNECT_SRC}; img-src 'self' data:; st
 // Turnstile site key the widget's script and frame are allowed from Cloudflare; until then nothing is
 const AUTH_CSP_TURNSTILE = `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; ${AUTH_CSP_REST}`;
 const AUTH_CSP_NO_TURNSTILE = `default-src 'self'; script-src 'self'; frame-src 'none'; ${AUTH_CSP_REST}`;
-const TURNSTILE_ON = [PROD_HOST, 'localhost:3000'].some(h => pickConfig(h).turnstileReady);
+const TURNSTILE_ON = [...PROD_HOSTS, 'localhost:3000'].some(h => pickConfig(h).turnstileReady);
 const AUTH = {
   'Content-Security-Policy': TURNSTILE_ON ? AUTH_CSP_TURNSTILE : AUTH_CSP_NO_TURNSTILE,
   'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex, nofollow',
@@ -81,7 +88,7 @@ test('route order is the contract: header routes, redirects, filesystem, product
   const collapsed = seq.filter((k, i) => k !== seq[i - 1]);
   assert.deepEqual(collapsed, ['header', 'redirect', 'fs', 'prod', 'staging']);
   assert.equal(seq.filter(k => k === 'header').length, 6);
-  assert.equal(seq.filter(k => k === 'prod').length, 2);
+  assert.equal(seq.filter(k => k === 'prod').length, 2 * PROD_HOSTS.length, 'the studio and API rules, once per production host');
   assert.equal(seq.filter(k => k === 'staging').length, 2);
   for (const r of routes.filter(r => r.src)) assert.match(r.src, /^\^.*\$$/, `${r.src} is anchored`);
 });
@@ -95,9 +102,9 @@ test('/studio (prod) → 307 to /studio/', () => {
   assert.equal(r.location, '/studio/');
 });
 
-for (const p of ['/studio/', '/studio/index.html', '/studio/src/app.js', '/studio/consultant.html']) {
-  test(`${p} (prod) → production Fly with the production secret and the studio headers`, () => {
-    const r = run(p);
+for (const host of PROD_HOSTS) for (const p of ['/studio/', '/studio/index.html', '/studio/src/app.js', '/studio/consultant.html']) {
+  test(`${p} (prod, ${host}) → production Fly with the production secret and the studio headers`, () => {
+    const r = run(p, host);
     assert.equal(r.kind, 'proxy');
     assert.equal(r.dest, PROD_FLY + p.slice('/studio'.length));
     assert.deepEqual(r.requestHeaders, { 'x-studio-edge': PRODUCTION_ENV.STUDIO_EDGE_SECRET_PROD });
@@ -107,25 +114,29 @@ for (const p of ['/studio/', '/studio/index.html', '/studio/src/app.js', '/studi
 }
 
 test('/studio/ itself is rewritten (empty capture → the studio root), and the query string is kept', () => {
-  assert.equal(run('/studio/').dest, PROD_FLY + '/');
-  assert.equal(run('/studio/x?y=1').dest, PROD_FLY + '/x?y=1');
-  assert.equal(run('/studio/#/account'.split('#')[0]).dest, PROD_FLY + '/', 'the hash never reaches the server');
+  for (const host of PROD_HOSTS) {
+    assert.equal(run('/studio/', host).dest, PROD_FLY + '/', host);
+    assert.equal(run('/studio/x?y=1', host).dest, PROD_FLY + '/x?y=1', host);
+    assert.equal(run('/studio/#/account'.split('#')[0], host).dest, PROD_FLY + '/', 'the hash never reaches the server');
+  }
 });
 
-test('/api/enquiry (prod) → the website function from the filesystem, with the API headers', () => {
-  for (const p of ['/api/enquiry', '/api/enquiry?x=1']) {
-    const r = run(p);
-    assert.equal(r.kind, 'filesystem');
-    assert.equal(r.path, '/api/enquiry');
-    assert.deepEqual(r.headers, API);
-    assert.deepEqual(r.requestHeaders, {}, 'the function never receives the edge secret');
+test('/api/enquiry stays the website function from the filesystem, with the API headers, on every host', () => {
+  for (const host of [...PROD_HOSTS, PORTAL_HOST, PREVIEW_ALIAS, PROD_DEPLOYMENT_URL, 'localhost:3000']) {
+    for (const p of ['/api/enquiry', '/api/enquiry?x=1']) {
+      const r = run(p, host);
+      assert.equal(r.kind, 'filesystem', `${host}${p}`);
+      assert.equal(r.path, '/api/enquiry');
+      assert.deepEqual(r.headers, API);
+      assert.deepEqual(r.requestHeaders, {}, 'the function never receives the edge secret');
+    }
   }
   assert.equal(resolveFile(root, '/api/enquiry').type, 'function');
 });
 
-for (const [p, up] of [['/api/session', '/api/session'], ['/api/auth/exchange', '/api/auth/exchange'], ['/api/', '/api/'], ['/api/enquiry/x', '/api/enquiry/x'], ['/api/session?scope=mine', '/api/session?scope=mine']]) {
-  test(`${p} (prod) → production Fly ${up}, caching off`, () => {
-    const r = run(p);
+for (const host of PROD_HOSTS) for (const [p, up] of [['/api/session', '/api/session'], ['/api/auth/exchange', '/api/auth/exchange'], ['/api/', '/api/'], ['/api/enquiry/x', '/api/enquiry/x'], ['/api/session?scope=mine', '/api/session?scope=mine']]) {
+  test(`${p} (prod, ${host}) → production Fly ${up}, caching off`, () => {
+    const r = run(p, host);
     assert.equal(r.kind, 'proxy');
     assert.equal(r.dest, PROD_FLY + up);
     assert.equal(r.respectOriginCacheControl, false);
@@ -134,12 +145,26 @@ for (const [p, up] of [['/api/session', '/api/session'], ['/api/auth/exchange', 
   });
 }
 
-test('the preview alias goes to staging Fly with the staging secret', () => {
-  for (const [p, dest] of [['/studio/', STAGING_FLY + '/'], ['/api/session', STAGING_FLY + '/api/session']]) {
-    const r = run(p, PREVIEW_ALIAS, PREVIEW_ENV);
-    assert.equal(r.kind, 'proxy');
-    assert.equal(r.dest, dest);
-    assert.deepEqual(r.requestHeaders, { 'x-studio-edge': PREVIEW_ENV.STUDIO_EDGE_SECRET_STAGING });
+test('the preview alias and portal (the staging address) go to staging Fly with the staging secret', () => {
+  for (const host of [PREVIEW_ALIAS, PORTAL_HOST, 'PORTAL.hanesdistribution.co.nz:443']) {
+    for (const [p, dest, cache] of [['/studio/', STAGING_FLY + '/', true], ['/studio/src/app.js?v=2', STAGING_FLY + '/src/app.js?v=2', true],
+      ['/api/session', STAGING_FLY + '/api/session', false], ['/api/auth/exchange', STAGING_FLY + '/api/auth/exchange', false]]) {
+      const r = run(p, host, PREVIEW_ENV);
+      assert.equal(r.kind, 'proxy', `${host}${p}`);
+      assert.equal(r.dest, dest, `${host}${p}`);
+      assert.equal(r.respectOriginCacheControl, cache);
+      assert.deepEqual(r.requestHeaders, { 'x-studio-edge': PREVIEW_ENV.STUDIO_EDGE_SECRET_STAGING });
+      assert.equal(r.route.has, undefined, `${host}${p} matched a production rule`);
+    }
+  }
+});
+
+test('portal never reaches production Fly, even in a build that holds the production secret', () => {
+  for (const p of ['/studio/', '/api/session', '/api/auth/exchange']) {
+    const r = run(p, PORTAL_HOST, PRODUCTION_ENV);
+    assert.ok(r.dest.startsWith(STAGING_FLY + '/'), r.dest);
+    assert.deepEqual(r.requestHeaders, { 'x-studio-edge': 'not-this-environment' });
+    assert.ok(!JSON.stringify(r).includes(PRODUCTION_ENV.STUDIO_EDGE_SECRET_PROD));
   }
 });
 
@@ -151,9 +176,14 @@ test('a production deployment opened on its own URL chooses the STAGING secret, 
     assert.deepEqual(r.requestHeaders, { 'x-studio-edge': 'not-this-environment' });
     assert.ok(!JSON.stringify(r).includes(PRODUCTION_ENV.STUDIO_EDGE_SECRET_PROD));
   }
-  // nor a look-alike host
-  for (const h of ['hanes-the-website-new.vercel.app.evil.example', 'xhanes-the-website-new.vercel.app'])
-    assert.ok(run('/api/session', h, PRODUCTION_ENV).dest.startsWith(STAGING_FLY));
+  // nor a look-alike host, nor any other name on the domain (the bare domain only ever redirects to www)
+  for (const h of ['hanes-the-website-new.vercel.app.evil.example', 'xhanes-the-website-new.vercel.app',
+    'www.hanesdistribution.co.nz.evil.example', 'xwww.hanesdistribution.co.nz', 'hanesdistribution.co.nz', 'staging.hanesdistribution.co.nz', 'www.hanesdistribution.co'])
+    for (const p of ['/studio/', '/api/session']) {
+      const r = run(p, h, PRODUCTION_ENV);
+      assert.ok(r.dest.startsWith(STAGING_FLY + '/'), `${h}${p}: ${r.dest}`);
+      assert.deepEqual(r.requestHeaders, { 'x-studio-edge': 'not-this-environment' }, h);
+    }
 });
 
 test('local development (any other host) goes to the staging rules', () => {
@@ -175,10 +205,12 @@ for (const [p, expected] of [
   ['/og/index.jpg', { ...MARKETING, ...WEEK_CACHE }]
 ]) {
   test(`${p} → filesystem with its group's headers`, () => {
-    const r = run(p);
-    assert.equal(r.kind, 'filesystem');
-    assert.deepEqual(r.headers, expected);
-    assert.deepEqual(r.requestHeaders, {});
+    for (const host of [...PROD_HOSTS, PORTAL_HOST]) {
+      const r = run(p, host);
+      assert.equal(r.kind, 'filesystem', host);
+      assert.deepEqual(r.headers, expected, host);
+      assert.deepEqual(r.requestHeaders, {});
+    }
   });
 }
 
@@ -191,7 +223,7 @@ const REDIRECTS = [
 ];
 for (const [p, status, location] of REDIRECTS) {
   test(`${p} → ${status} ${location}`, () => {
-    for (const host of [PROD_HOST, PREVIEW_ALIAS]) {
+    for (const host of [...PROD_HOSTS, PORTAL_HOST, PREVIEW_ALIAS]) {
       const r = run(p, host);
       assert.equal(r.kind, 'redirect');
       assert.equal(r.status, status);
@@ -269,25 +301,45 @@ test('the studio and API groups never get the marketing CSP or frame headers (Fl
 
 test('(f) every rewrite sets x-studio-edge from an env name, and the production rewrites carry has host', () => {
   const rewrites = routes.filter(r => r.dest);
-  assert.equal(rewrites.length, 4);
+  assert.equal(rewrites.length, 2 * PROD_HOSTS.length + 2);
   for (const r of rewrites) {
     assert.match(r.dest, /^https:\/\/bargainhub-studio(-staging)?\.fly\.dev\//);
     assert.equal(r.continue, undefined);
     const prod = r.dest.startsWith(PROD_FLY + '/');
     const name = prod ? 'STUDIO_EDGE_SECRET_PROD' : 'STUDIO_EDGE_SECRET_STAGING';
     assert.deepEqual(r.transforms, [{ type: 'request.headers', op: 'set', target: { key: 'x-studio-edge' }, args: '$' + name, env: [name] }]);
-    if (prod) assert.deepEqual(r.has, [{ type: 'host', value: PROD_HOST }]);
-    else assert.equal(r.has, undefined);
+    if (prod) {
+      assert.equal(r.has.length, 1);
+      assert.equal(r.has[0].type, 'host');
+      assert.ok(PROD_HOSTS.includes(r.has[0].value), r.has[0].value);
+    } else assert.equal(r.has, undefined);
     assert.equal(r.respectOriginCacheControl, r.src.startsWith('^/studio/'));
   }
   // the /api rewrites can never take the enquiry function
   for (const r of rewrites.filter(r => r.src.startsWith('^/api/'))) assert.equal(r.src, '^/api/((?!enquiry$).*)$');
 });
 
+test('(f) each production host has the same two production rules, literal copies that differ only in has host', () => {
+  const prod = routes.filter(r => r.has);
+  const bare = r => { const { has, ...rest } = r; return rest; };
+  const pair = host => prod.filter(r => r.has[0].value === host);
+  const first = pair(PROD_HOST);
+  assert.deepEqual(first.map(r => r.src), ['^/studio/(.*)$', '^/api/((?!enquiry$).*)$']);
+  for (const host of PROD_HOSTS) {
+    const rules = pair(host);
+    assert.equal(rules.length, 2, host);
+    assert.deepEqual(rules.map(bare), first.map(bare), `${host}: the same rules as ${PROD_HOST}`);
+    for (const r of rules) assert.deepEqual(r.has, [{ type: 'host', value: host }]);
+  }
+  // every production rule comes before both staging fallbacks, which take every other host
+  const lastProd = Math.max(...prod.map(r => routes.indexOf(r)));
+  assert.ok(routes.filter(r => r.dest && !r.has).every(r => routes.indexOf(r) > lastProd));
+});
+
 test('no secret value is written in vercel.json', () => {
   const text = readFileSync(root + 'vercel.json', 'utf8');
   const args = [...text.matchAll(/"args":\s*"([^"]*)"/g)].map(m => m[1]);
-  assert.equal(args.length, 4);
+  assert.equal(args.length, 2 * PROD_HOSTS.length + 2);
   for (const a of args) assert.match(a, /^\$STUDIO_EDGE_SECRET_(PROD|STAGING)$/);
   assert.equal(/not-this-environment|x-studio-edge"\s*:/.test(text), false);
 });
