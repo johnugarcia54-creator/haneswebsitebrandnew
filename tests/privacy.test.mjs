@@ -39,9 +39,10 @@ test('privacy.html names the agency and privacy contact from COMPANY.md, with no
   const html = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
   assert.ok(!html.includes('data-owner-ask="O10"'));
   assert.ok(html.includes('COMPANY.md'));
-  assert.ok(html.includes('This statement is from Hanes Distribution'));
+  assert.ok(html.includes('This statement is from Bargainhub Limited, trading as Hanes Distribution (“we”, “us”).'), 'the legal entity, trading as the brand clients see');
+  assert.ok(!html.includes('also trades as Bargainhub'));
   assert.ok(html.includes('The Privacy Officer, Hanes Distribution'));
-  assert.ok(html.includes('93 Main South Road, Sockburn, Christchurch, New Zealand'));
+  assert.ok(html.includes('<dd>Hanes Distribution, 2/93 Main South Road, Sockburn, Christchurch, New Zealand</dd>'), 'the company address, not the showroom');
   assert.ok(html.includes('mailto:Enquiry@hanesdistribution.co.nz'));
 });
 
