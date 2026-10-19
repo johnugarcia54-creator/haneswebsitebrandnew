@@ -61,8 +61,8 @@ export const PAGES = [
     description: 'Contact Hanes Distribution: head office and showroom in Sockburn, warehouse in Hornby, Christchurch, and offices in Hong Kong and Zhangzhou.',
     og: 'contact-2.jpg', ogAlt: 'A container ship at sea, on its way to New Zealand', about: 'contact' },
   { file: 'privacy.html', name: 'Privacy statement', priority: '0.3',
-    title: 'Privacy statement — Hanes Distribution and Bargainhub',
-    description: 'How Hanes Distribution and Bargainhub collect, use, store and share your personal information, who processes it for us and where, and your rights.',
+    title: 'Privacy statement — Hanes Distribution',
+    description: 'How Hanes Distribution collects, uses, stores and shares your personal information, who processes it for us and where, and your rights.',
     og: 'index.jpg', ogAlt: 'A Hanes Distribution truck: engineered supply, delivered nationwide' }
 ];
 
