@@ -22,7 +22,11 @@
                        https://challenges.cloudflare.com); tests/config.test.mjs enforces this.
    ========================================================================================= */
 export const SUPABASE_URL = 'https://mputtezdhevwwjgwktvi.supabase.co';
-// SEC-2 (the custom domain, week 2) adds www.hanesdistribution.co.nz here
+// SEC-2 (the custom domain, week 2) adds www.hanesdistribution.co.nz here.
+// The two production aliases in vercel.json (the team alias and the git-main alias) reach the
+// production studio but get the `staging` block on purpose: sign-in completes only on the
+// studio's APP_ORIGIN, this host, and the two blocks are identical today. When a production-only
+// Turnstile key goes in, decide whether they join this list (and that widget's hostnames) too.
 export const PRODUCTION_HOSTS = Object.freeze(['hanes-the-website-new.vercel.app']);
 
 export const AUTH_CONFIG = Object.freeze({
