@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { matchRoute, resolveFile } from '../scripts/routes.mjs';
-import { pickConfig } from '../auth/config.js';
+import { pickConfig, PRODUCTION_HOSTS } from '../auth/config.js';
 
 const require = createRequire(import.meta.url);
 const { routesSchema, normalizeRoutes, getTransformedRoutes } = require('@vercel/routing-utils');
@@ -53,7 +53,7 @@ const AUTH_CSP_REST = `connect-src ${AUTH_CONNECT_SRC}; img-src 'self' data:; st
 // Turnstile site key the widget's script and frame are allowed from Cloudflare; until then nothing is
 const AUTH_CSP_TURNSTILE = `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; ${AUTH_CSP_REST}`;
 const AUTH_CSP_NO_TURNSTILE = `default-src 'self'; script-src 'self'; frame-src 'none'; ${AUTH_CSP_REST}`;
-const TURNSTILE_ON = [...PROD_HOSTS, 'localhost:3000'].some(h => pickConfig(h).turnstileReady);
+const TURNSTILE_ON = [...PRODUCTION_HOSTS, 'localhost:3000'].some(h => pickConfig(h).turnstileReady);
 const AUTH = {
   'Content-Security-Policy': TURNSTILE_ON ? AUTH_CSP_TURNSTILE : AUTH_CSP_NO_TURNSTILE,
   'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex, nofollow',
@@ -334,6 +334,14 @@ test('(f) each production host has the same two production rules, literal copies
   // every production rule comes before both staging fallbacks, which take every other host
   const lastProd = Math.max(...prod.map(r => routes.indexOf(r)));
   assert.ok(routes.filter(r => r.dest && !r.has).every(r => routes.indexOf(r) > lastProd));
+});
+
+test('the hosts vercel.json sends to production Fly are exactly the production hosts of auth/config.js', () => {
+  const routed = [...new Set(routes.filter(r => r.has).map(r => r.has[0].value))].sort();
+  assert.deepEqual(routed, [...PROD_HOSTS].sort());
+  assert.deepEqual([...PRODUCTION_HOSTS].sort(), routed, 'a host the sign-in pages treat as production must reach production Fly, and only those');
+  for (const h of PRODUCTION_HOSTS) assert.equal(pickConfig(h).name, 'production', h);
+  assert.equal(pickConfig(PORTAL_HOST).name, 'staging', 'portal is the staging address');
 });
 
 test('no secret value is written in vercel.json', () => {

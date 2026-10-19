@@ -785,22 +785,30 @@ test('config.js: production and staging both use our one Supabase project; keys 
     assert.equal(AUTH_CONFIG[env].supabaseUrl, SUPABASE_URL);
     for (const k of ['publishableKey', 'turnstileSiteKey']) assert.match(AUTH_CONFIG[env][k], /^(PLACEHOLDER_[A-Z_]+|sb_publishable_[A-Za-z0-9_-]+|0x[A-Za-z0-9_-]+)$/, `${env}.${k}`);
   }
-  assert.deepEqual([...PRODUCTION_HOSTS], ['hanes-the-website-new.vercel.app']);
+  assert.deepEqual([...PRODUCTION_HOSTS], ['hanes-the-website-new.vercel.app', 'www.hanesdistribution.co.nz']);
+  assert.ok(Object.isFrozen(PRODUCTION_HOSTS));
   const cfg = read('auth/config.js');
   assert.doesNotMatch(cfg, /sb_secret_|service_role|eyJ[A-Za-z0-9_-]{20,}/, 'never a secret key or a JWT');
 });
 
 test('pickConfig: chosen by host; placeholders and test keys are never ready on production', () => {
-  assert.equal(pickConfig('hanes-the-website-new.vercel.app').name, 'production');
-  assert.equal(pickConfig('HANES-THE-WEBSITE-NEW.VERCEL.APP').name, 'production');
-  for (const h of ['hanes-the-website-new-git-staging-x.vercel.app', 'localhost:3000', 'evil.example', '', undefined]) assert.equal(pickConfig(h).name, 'staging', String(h));
+  // both production addresses while the domain moves (vercel.app until the later redirect to www)
+  for (const h of ['hanes-the-website-new.vercel.app', 'HANES-THE-WEBSITE-NEW.VERCEL.APP', 'www.hanesdistribution.co.nz', 'WWW.HanesDistribution.co.nz'])
+    assert.equal(pickConfig(h).name, 'production', h);
+  // portal is the staging address; the bare domain only ever redirects to www; look-alikes are not production
+  for (const h of ['hanes-the-website-new-git-staging-x.vercel.app', 'portal.hanesdistribution.co.nz', 'hanesdistribution.co.nz',
+    'www.hanesdistribution.co.nz.evil.example', 'xwww.hanesdistribution.co.nz', 'www.hanesdistribution.co.nz:8443', 'localhost:3000', 'evil.example', '', undefined])
+    assert.equal(pickConfig(h).name, 'staging', String(h));
   const p = pickConfig('hanes-the-website-new.vercel.app');
   if (/PLACEHOLDER/.test(AUTH_CONFIG.production.publishableKey)) assert.equal(p.supabaseReady, false);
   const fake = (pk, ts) => ({ production: { supabaseUrl: SUPABASE_URL, publishableKey: pk, turnstileSiteKey: ts }, staging: { supabaseUrl: SUPABASE_URL, publishableKey: pk, turnstileSiteKey: ts } });
   const real = fake('sb_publishable_abcdefghijkl', '0x4AAAAAAABBBBBBBB');
-  assert.deepEqual([pickConfig('hanes-the-website-new.vercel.app', real).supabaseReady, pickConfig('hanes-the-website-new.vercel.app', real).turnstileReady], [true, true]);
   const testKey = fake('sb_publishable_abcdefghijkl', '1x00000000000000000000AA');
-  assert.equal(pickConfig('hanes-the-website-new.vercel.app', testKey).turnstileReady, false, "Cloudflare's always-pass key never on production");
+  for (const h of PRODUCTION_HOSTS) {
+    assert.deepEqual([pickConfig(h, real).supabaseReady, pickConfig(h, real).turnstileReady], [true, true], h);
+    assert.equal(pickConfig(h, testKey).turnstileReady, false, `${h}: Cloudflare's always-pass key never on production`);
+  }
+  assert.equal(pickConfig('portal.hanesdistribution.co.nz', testKey).turnstileReady, true, 'portal is staging: test keys work there');
   assert.equal(pickConfig('localhost:3000', testKey).turnstileReady, true);
   assert.equal(pickConfig('x', fake('PLACEHOLDER_SUPABASE_PUBLISHABLE_KEY', 'PLACEHOLDER_TURNSTILE_SITE_KEY')).supabaseReady, false);
   assert.equal(pickConfig('x', fake('sb_secret_abcdefghijkl', '0x4AAAAAAABBBBBBBB')).supabaseReady, false, 'a secret key is refused');

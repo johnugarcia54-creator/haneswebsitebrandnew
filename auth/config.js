@@ -2,8 +2,9 @@
    auth/config.js: the public sign-in settings (ADDENDUM §6.3). Committed on purpose: the
    publishable key and the Turnstile site key are public by design. No secret ever goes here.
 
-   Which block applies is chosen by location.host: the production host gets `production`,
-   everything else (the staging alias, previews, localhost) gets `staging`. Both use the one
+   Which block applies is chosen by location.host: the production hosts get `production`,
+   everything else (portal.hanesdistribution.co.nz and the staging alias, previews, localhost)
+   gets `staging`. Both use the one
    Supabase project (integrator decision 1: staging shares it, with EXCHANGE_ALLOWLIST on the
    staging studio), so the /auth CSP's connect-src names exactly this URL.
 
@@ -14,16 +15,19 @@
                        If it ever read PLACEHOLDER again, the pages would say "Sign-in is being
                        set up" and make no call to Supabase.
    - turnstileSiteKey: still a PLACEHOLDER until the owner creates the widget (Cloudflare
-                       dashboard -> Turnstile -> the widget for the launch origin and the
-                       staging alias; starts 0x4). While it is, nothing loads from Cloudflare:
+                       dashboard -> Turnstile -> the widget for both production hosts, portal
+                       and the staging alias; starts 0x4). While it is, nothing loads from Cloudflare:
                        sign-in, resend and reset run without Turnstile and send no captcha
                        token, and sign-up stays closed. Setting it means changing the /auth CSP
                        in vercel.json in the same commit (script-src and frame-src gain
                        https://challenges.cloudflare.com); tests/config.test.mjs enforces this.
    ========================================================================================= */
 export const SUPABASE_URL = 'https://mputtezdhevwwjgwktvi.supabase.co';
-// SEC-2 (the custom domain, week 2) adds www.hanesdistribution.co.nz here
-export const PRODUCTION_HOSTS = Object.freeze(['hanes-the-website-new.vercel.app']);
+// Both production addresses while the site moves to its own domain (SEC-2): www, the address
+// clients use, and the vercel.app address until the later vercel.app -> www redirect. The bare
+// hanesdistribution.co.nz is never here: Vercel redirects it to www before any page is served.
+// The same two hosts carry the production rules in vercel.json (tests/config.test.mjs).
+export const PRODUCTION_HOSTS = Object.freeze(['hanes-the-website-new.vercel.app', 'www.hanesdistribution.co.nz']);
 
 export const AUTH_CONFIG = Object.freeze({
   production: Object.freeze({
