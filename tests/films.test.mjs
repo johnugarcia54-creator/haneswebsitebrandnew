@@ -22,7 +22,10 @@ test('every looping film has a button that pauses it', () => {
   for (const f of pages) for (const id of loopingFilms(f)) {
     const btn = [...src[f].matchAll(/<button\b[^>]*>/g)].map(m => m[0]).find(b => b.includes(`aria-controls="${id}"`));
     assert.ok(btn, `${f}: #${id} loops on its own but has no pause button (a <button aria-controls="${id}">)`);
-    assert.match(src[f], new RegExp(`\\$\\('#${id}'\\)|getElementById\\('${id}'\\)|"${id}"|'${id}'`), `${f}: #${id} is never wired up`);
+    // the page's script must look the button up (by its id, or by aria-controls), or it never pauses anything
+    const js = [...src[f].matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n');
+    const btnId = (btn.match(/\sid="([^"]+)"/) || [])[1];
+    assert.ok((btnId && js.includes(`'#${btnId}'`)) || js.includes('[aria-controls='), `${f}: the pause button for #${id} is never wired up`);
   }
 });
 
