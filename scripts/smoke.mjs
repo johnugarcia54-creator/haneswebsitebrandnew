@@ -12,26 +12,42 @@
    --local         skip what only Vercel and the studio provide (redirects, headers, rewrites)
    --production    also require what only production promises (DEPLOY_ENV=Production does the same)
 
+   The production addresses (PRODUCTION_HOSTS, the same list as auth/config.js and vercel.json's
+   production rules) are https://hanes-the-website-new.vercel.app and, once the domain is moved
+   to this project, https://www.hanesdistribution.co.nz. A run on either is a production run that
+   tests the studio on that address itself.
+
    A production deployment's own address (hanes-the-website-new-<hash>-<team>.vercel.app, the
    URL Vercel reports) matches no production rule in vercel.json, so its /studio/ and /api/*
    go to STAGING Fly with x-studio-edge: not-this-environment and are refused there (ADDENDUM
-   §2.3). For such a deployment the studio and API checks therefore run against the production
-   address (PRODUCTION_HOST), which is the one that reaches production Fly, and the deployment
-   address itself must fail closed: /studio/ and /api/auth/health answer 403 edge_only.
+   §2.3). For such a deployment the studio and API checks therefore run against PRODUCTION_BASE,
+   a production address, and the deployment address itself must fail closed: /studio/ and
+   /api/auth/health answer 403 edge_only.
    ========================================================================================= */
 import { pathToFileURL } from 'node:url';
+import { PRODUCTION_HOSTS } from '../auth/config.js';
 
 export const PAGES = ['/', '/hanesteel.html', '/hanestone.html', '/hanewood.html', '/hanesulation.html', '/bargainhub.html', '/hisense.html', '/tracking.html', '/contact.html'];
 export const AUTH_PAGES = ['/auth/login.html', '/auth/signup.html', '/auth/reset.html', '/auth/confirm.html', '/auth/update-password.html',
   '/auth/zh/login.html', '/auth/zh/reset.html', '/auth/zh/confirm.html', '/auth/zh/update-password.html'];
 export const SUPABASE_ORIGIN = 'https://mputtezdhevwwjgwktvi.supabase.co';
+export { PRODUCTION_HOSTS };
+/* The production address a production build's own deployment address hands its studio and API
+   checks to (and the whole run, when that address is behind Deployment Protection). It stays the
+   vercel.app address while the domain moves, because that is the one that reaches production Fly
+   both before the owner moves www to this project (www still serves the old site until then) and
+   after. It becomes www.hanesdistribution.co.nz with the vercel.app -> www redirect (a later
+   change), when vercel.app stops serving the studio. */
 export const PRODUCTION_HOST = 'hanes-the-website-new.vercel.app';
 export const PRODUCTION_BASE = `https://${PRODUCTION_HOST}`;
 
-/* Where the studio and API checks run. On production they must go through the production
+// is this one of the addresses vercel.json sends to production Fly?
+export const isProductionAddress = base => PRODUCTION_HOSTS.includes(new URL(base).host);
+
+/* Where the studio and API checks run. On production they must go through a production
    address; any other address of a production build only reaches staging and must be refused. */
 export function rewriteBases(base, { production = false, productionBase } = {}) {
-  const prod = (productionBase || (new URL(base).host === PRODUCTION_HOST ? base : PRODUCTION_BASE)).replace(/\/+$/, '');
+  const prod = (productionBase || (isProductionAddress(base) ? base : PRODUCTION_BASE)).replace(/\/+$/, '');
   if (!production || prod === base) return { studio: base, failClosed: null };
   return { studio: prod, failClosed: base };
 }
@@ -173,7 +189,7 @@ async function main() {
   const base = (process.argv[2] || '').replace(/\/+$/, '');
   const local = process.argv.includes('--local');
   if (!/^https?:\/\//.test(base)) { console.error('Usage: node scripts/smoke.mjs https://deployment-url [--local] [--production]'); process.exit(2); }
-  const production = process.argv.includes('--production') || /^production$/i.test(process.env.DEPLOY_ENV || '') || new URL(base).host === PRODUCTION_HOST;
+  const production = process.argv.includes('--production') || /^production$/i.test(process.env.DEPLOY_ENV || '') || isProductionAddress(base);
 
   // a deployment behind Vercel's login (Deployment Protection) can't be tested from outside: say so and stop
   const protectedAt = async b => {
@@ -183,7 +199,7 @@ async function main() {
   };
   let target = base;
   const shut = await protectedAt(base);
-  if (shut && production && new URL(base).host !== PRODUCTION_HOST) {
+  if (shut && production && !isProductionAddress(base)) {
     // Deployment Protection covers a production build's own address but not the production address: test that instead
     console.log(`::notice::${base} is behind Vercel Deployment Protection (HTTP ${shut}), so the checks run against ${PRODUCTION_BASE}; the fail-closed check of the deployment address is skipped.`);
     target = PRODUCTION_BASE;
