@@ -387,6 +387,8 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
 .snd{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:999px;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);font-size:14px;color:#fff;white-space:nowrap}
 .snd svg{width:16px;height:16px}
 .snd:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.film__btns{display:flex;gap:10px}
+.snd[hidden]{display:none}
 
 /* ---------- Why through Hanes ---------- */
 .why{background:#000}
@@ -748,7 +750,7 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
   <section class="film" aria-label="The Hisense film">
     <div class="film__card" id="filmCard">
       <video id="film" src="films/hisense.mp4" poster="stills/hisense.webp" muted loop playsinline preload="metadata" aria-label="Film: the Hisense range"></video>
-      <div class="film__cap"><div><h2>See the range in motion.</h2><p>Hisense home appliances, supplied through Hanes Distribution.</p></div><button class="snd" id="snd" type="button" aria-pressed="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 6h2.5l3.5-3v10l-3.5-3H2.5z"/><path id="sndWave" d="M11 5.5c1 .8 1 4.2 0 5M12.8 3.8c2 1.7 2 6.7 0 8.4" opacity=".3"/></svg><span>Sound on</span></button></div>
+      <div class="film__cap"><div><h2>See the range in motion.</h2><p>Hisense home appliances, supplied through Hanes Distribution.</p></div><div class="film__btns"><button class="snd" id="filmPlay" type="button" aria-controls="film" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5h2.5v11H4zM9.5 2.5H12v11H9.5z"/></svg><span>Pause</span></button><button class="snd" id="snd" type="button" aria-pressed="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.5 6h2.5l3.5-3v10l-3.5-3H2.5z"/><path id="sndWave" d="M11 5.5c1 .8 1 4.2 0 5M12.8 3.8c2 1.7 2 6.7 0 8.4" opacity=".3"/></svg><span>Sound on</span></button></div></div>
     </div>
   </section>
 
@@ -1127,10 +1129,15 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
     } }, .72)
     .to({}, { duration: .12 }, .88);
 
-  /* ---------- The film: grows as it arrives, plays while on screen ---------- */
-  const film = $('#film'), snd = $('#snd');
+  /* ---------- The film: grows as it arrives, plays while on screen (not under reduced motion), and the Pause button holds it ---------- */
+  const film = $('#film'), snd = $('#snd'), filmPlay = $('#filmPlay');
+  let held = false; // the visitor paused it, so scrolling back must not restart it
   gsap.fromTo('#filmCard', { scale: .86, borderRadius: 40 }, { scale: 1, borderRadius: 28, ease: 'none', scrollTrigger: { trigger: '#filmCard', start: 'top bottom', end: 'center center', scrub: true } });
-  new IntersectionObserver(es => { if (es[0].isIntersecting) film.play().catch(() => {}); else film.pause(); }, { threshold: .35 }).observe(film);
+  if (!reduce) new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!held) film.play().catch(() => {}); } else film.pause(); }, { threshold: .35 }).observe(film);
+  const syncPlay = () => { filmPlay.querySelector('span').textContent = film.paused ? 'Play' : 'Pause'; filmPlay.querySelector('path').setAttribute('d', film.paused ? 'M4.5 2.5l9 5.5-9 5.5z' : 'M4 2.5h2.5v11H4zM9.5 2.5H12v11H9.5z'); };
+  film.addEventListener('play', () => { held = false; syncPlay(); }); film.addEventListener('pause', syncPlay);
+  filmPlay.addEventListener('click', () => { if (film.paused) film.play().catch(() => {}); else { held = true; film.pause(); } });
+  filmPlay.hidden = false; syncPlay();
   snd.addEventListener('click', () => {
     film.muted = !film.muted; if (!film.muted) film.play().catch(() => {});
     snd.setAttribute('aria-pressed', String(!film.muted)); snd.querySelector('span').textContent = film.muted ? 'Sound on' : 'Sound off';
