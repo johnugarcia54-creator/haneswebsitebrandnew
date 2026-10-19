@@ -50,7 +50,7 @@ Enquiries go by email to Enquiry@hanesdistribution.co.nz and, in production only
 
 ## Staging
 
-The branch `staging` is the website the staging studio is paired with. Vercel gives its latest deployment the fixed address `https://hanes-the-website-new-git-staging-johnugarcia54-5453s-projects.vercel.app`, which is the staging studio's `APP_ORIGIN` (the studio repository's `fly.staging.toml`), so sign-in, the consultant workspace and Back Office work there end to end against `bargainhub-studio-staging.fly.dev`. Other preview addresses reach the same studio but cannot sign in, because the studio only accepts that origin. `staging` follows `build/website`: bring changes in by merging `build/website` into it, never by rewriting it.
+The branch `staging` is the website the staging studio (`bargainhub-studio-staging.fly.dev`) is paired with. Its address is `https://portal.hanesdistribution.co.nz`: that domain is pinned to `staging` in Vercel, and the studio repository's `fly.staging.toml` names it as the staging studio's `APP_ORIGIN`, the one origin that can sign in, so sign-in, the consultant workspace and Back Office work there end to end. Until portal answers (it needs the owner's `portal` CNAME), the studio's deploy keeps the previous `APP_ORIGIN`, the branch's fixed Vercel address `https://hanes-the-website-new-git-staging-johnugarcia54-5453s-projects.vercel.app`. The first staging deploy after portal answers moves sign-in to portal; from then on that alias still shows the website but cannot sign in. Other preview addresses reach the same studio but never sign in, because the studio accepts only one origin. `staging` follows `build/website`: bring changes in by merging `build/website` into it, never by rewriting it.
 
 ## Enquiries (the back end)
 
