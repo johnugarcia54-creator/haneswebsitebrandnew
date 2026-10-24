@@ -145,7 +145,7 @@ body.is-loading .gb{opacity:0;pointer-events:none}
 .qd input[type=checkbox]:focus-visible{outline:2px solid #0071e3;outline-offset:2px}
 .qd__send{width:100%;min-height:50px;margin-top:20px;border:0;border-radius:980px;background:#0071e3;color:#fff;font:inherit;font-size:17px;font-weight:500;cursor:pointer;transition:background .2s,opacity .2s}
 .qd__send:hover{background:#0077ed}
-.qd__send:disabled{opacity:.6;cursor:default}
+.qd__send:disabled,.qd__send[aria-disabled="true"]{opacity:.6;cursor:default}
 .qd__send:focus-visible,.qd__x:focus-visible{outline:2px solid #0071e3;outline-offset:3px}
 .qd__status{display:none;margin:14px 0 0;padding:12px 14px;border-radius:12px;font-size:14px}
 .qd__status.is-on{display:block}
