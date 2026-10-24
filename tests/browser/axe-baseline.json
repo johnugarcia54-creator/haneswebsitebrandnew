@@ -2,8 +2,6 @@
  "note": "Accessibility violations already present when W1b was reviewed (2026-10-07), recorded with node tests/browser/axe.mjs --write-baseline. Compared node by node with an export of main (8ea24e6): W1b added none; the only differences were three bargainhub.html .slide__cap nodes that axe now names article:nth-child(n) instead of .slide:nth-child(n). tests/browser/axe.mjs fails only on violations not listed here. Fix these, then rewrite the list.",
  "recorded": "2026-10-07",
  "known": [
-  "404.html @1280 | color-contrast | .nf__eyebrow",
-  "404.html @390 | color-contrast | .nf__eyebrow",
   "bargainhub.html @1280 | color-contrast | #design > .sticky > div:nth-child(1) > .eyebrow",
   "bargainhub.html @1280 | color-contrast | .details__head > div > .eyebrow[data-reveal=\"\"]",
   "bargainhub.html @1280 | color-contrast | .pkg__copy > .eyebrow",
