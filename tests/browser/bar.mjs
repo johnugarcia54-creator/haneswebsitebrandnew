@@ -10,7 +10,8 @@
      MIN_LOGO_GAP px of visible space between the logo and the first link's text; the same
      sweep again signed in, where the longer "My account" takes Log in's place
    - 320, 390, 600, 834 and 879 px: the bar links, Log in and Get a quote are hidden and the
-     burger shows; opened, the panel shows Log in; Escape closes it
+     burger shows; opened, the panel shows Log in and Tab stays in the bar and panel (the page
+     behind is inert); Escape closes it and leaves inert only what was inert before
    - 390 px: the page never scrolls sideways
    - 390, 834, 880, 1024 and 1440 px: Tab walks the bar in the order it is shown
    - a Supabase token key with "keep me signed in" turns every Log in into My account
@@ -57,6 +58,9 @@ const measure = () => {
   };
 };
 
+// the children of <body> that are inert right now (the phone menu makes the rest inert while open)
+const inertNow = () => [...document.body.children].filter(el => el.inert).map(el => el.tagName + (el.id ? '#' + el.id : '') + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).join('.') : ''));
+
 async function sweep(page, p, label) {
   for (let w = 880; w <= 1440; w += 10) {
     await page.setViewportSize({ width: w, height: 900 });
@@ -93,6 +97,7 @@ try {
       check(m.burger, `${p} @${w}: burger shown`);
       check(m.shown.slice(1).every(x => !x), `${p} @${w}: bar links, Log in and Get a quote hidden (${m.shown.map(Number).join('')})`);
       if (w === 390) check(m.scrollW <= w, `${p} @390: no sideways scroll (scrollWidth ${m.scrollW})`);
+      const inertBefore = await page.evaluate(inertNow);
       await page.click('#gb .gb__burger');
       await page.waitForTimeout(450);
       const panel = await page.evaluate(() => {
@@ -100,8 +105,19 @@ try {
         return { text: a.textContent.trim(), visible: r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && Number(s.opacity) > 0.5 && r.bottom <= innerHeight + 2000, expanded: document.querySelector('#gb .gb__burger').getAttribute('aria-expanded') };
       });
       check(panel.visible && panel.text === 'Log in' && panel.expanded === 'true', `${p} @${w}: the open panel shows Log in (${JSON.stringify(panel)})`);
+      // while the menu is open the page behind it is inert, so Tab stays in the bar and panel;
+      // BODY is focus passing to the browser's own controls at the end of the menu
+      const left = [];
+      for (let i = 0; i < 14; i++) {
+        await page.keyboard.press('Tab');
+        const at = await page.evaluate(() => { const a = document.activeElement; return !a || a === document.body || a.closest('#gb') ? null : `${a.tagName}${a.id ? '#' + a.id : ''} "${(a.textContent || a.getAttribute('aria-label') || '').trim().slice(0, 24)}"`; });
+        if (at) left.push(at);
+      }
+      check(!left.length, `${p} @${w}: Tab stays in the open menu (it reached ${JSON.stringify(left)})`);
       await page.keyboard.press('Escape');
       check(await page.evaluate(() => !document.documentElement.classList.contains('gb-open')), `${p} @${w}: Escape closes the panel`);
+      const inertAfter = await page.evaluate(inertNow);
+      check(JSON.stringify(inertAfter) === JSON.stringify(inertBefore), `${p} @${w}: once closed, exactly what was inert before the menu opened is inert (${JSON.stringify(inertBefore)} then ${JSON.stringify(inertAfter)})`);
     }
     // keyboard order through the bar matches what is on screen, at the review widths
     for (const w of [390, 834, 880, 1024, 1440]) {
