@@ -412,7 +412,8 @@ test('BOOKINGS_LIVE flips only links: hisense.html\'s catalogue buttons (button[
 
 /* ---------- scripts/smoke.mjs: reads only, and its enquiry posts can never create a lead ---------- */
 import http from 'node:http';
-import { ENQUIRY_PROBES, smoke, looksSecret, AUTH_PAGES, rewriteBases, PRODUCTION_BASE } from '../scripts/smoke.mjs';
+import { ENQUIRY_PROBES, smoke, looksSecret, AUTH_PAGES, rewriteBases, PRODUCTION_BASE, PRODUCTION_HOSTS as SMOKE_PRODUCTION_HOSTS, isProductionAddress } from '../scripts/smoke.mjs';
+import { PRODUCTION_HOSTS } from '../auth/config.js';
 import enquiryHandler from '../api/enquiry.js';
 import { validate } from '../api/_lib/enquiry.js';
 import { createDevServer } from '../scripts/dev.mjs';
@@ -495,7 +496,26 @@ test('rewriteBases: production checks the studio on the production address; prev
   assert.deepEqual(rewriteBases(dep, { production: true }), { studio: PRODUCTION_BASE, failClosed: dep });
   assert.deepEqual(rewriteBases(PRODUCTION_BASE, { production: true }), { studio: PRODUCTION_BASE, failClosed: null });
   assert.deepEqual(rewriteBases(dep, { production: false }), { studio: dep, failClosed: null });
+  // the deployment address hands over to vercel.app, the address that reaches production Fly before and
+  // after www moves to this project; it becomes www only with the vercel.app -> www redirect
   assert.equal(PRODUCTION_BASE, 'https://hanes-the-website-new.vercel.app');
+});
+
+test('smoke.mjs: both production addresses test the studio on themselves; portal and the rest are not production', () => {
+  assert.deepEqual([...SMOKE_PRODUCTION_HOSTS], ['hanes-the-website-new.vercel.app', 'www.hanesdistribution.co.nz']);
+  assert.equal(SMOKE_PRODUCTION_HOSTS, PRODUCTION_HOSTS, 'one list: auth/config.js');
+  assert.ok(SMOKE_PRODUCTION_HOSTS.includes(new URL(PRODUCTION_BASE).host));
+  for (const b of ['https://hanes-the-website-new.vercel.app', 'https://www.hanesdistribution.co.nz', 'https://WWW.hanesdistribution.co.nz']) {
+    assert.equal(isProductionAddress(b), true, b);
+    assert.deepEqual(rewriteBases(b, { production: true }), { studio: b, failClosed: null }, b);
+  }
+  const www = 'https://www.hanesdistribution.co.nz';
+  assert.deepEqual(rewriteBases(www, { production: true }), { studio: www, failClosed: null }, 'never handed to vercel.app');
+  for (const b of ['https://portal.hanesdistribution.co.nz', 'https://hanesdistribution.co.nz', 'https://hanes-the-website-new-abc123-team.vercel.app',
+    'https://hanes-the-website-new-git-staging-johnugarcia54-5453s-projects.vercel.app', 'https://www.hanesdistribution.co.nz.evil.example', 'http://127.0.0.1:3000'])
+    assert.equal(isProductionAddress(b), false, b);
+  // portal is a staging-branch domain: tested on itself, never with production's expectations
+  assert.deepEqual(rewriteBases('https://portal.hanesdistribution.co.nz', { production: false }), { studio: 'https://portal.hanesdistribution.co.nz', failClosed: null });
 });
 
 test('smoke.mjs on a production deployment address: studio and API checks use the production address, the deployment address fails closed', async () => {

@@ -15,6 +15,8 @@ Dashboard → Authentication → URL Configuration.
 |---|---|---|---|
 | 1.1 | Site URL | `https://hanes-the-website-new.vercel.app` (no trailing slash; it moves to `https://www.hanesdistribution.co.nz` with the SEC-2 cutover) | yes |
 | 1.2 | Redirect URLs: production | `https://hanes-the-website-new.vercel.app/auth/**` | yes |
+| 1.2a | Redirect URLs: production on the site's own domain | `https://www.hanesdistribution.co.nz/auth/**` (add it before the domain moves to this project; keep 1.2 until vercel.app redirects to www) | no |
+| 1.2b | Redirect URLs: the staging address | `https://portal.hanesdistribution.co.nz/auth/**` (add it before the `portal` CNAME goes in) | yes, before the `portal` CNAME |
 | 1.3 | Redirect URLs: previews and staging | `https://hanes-the-website-new-*-johnugarcia54-5453s-projects.vercel.app/auth/**` | yes |
 | 1.4 | Redirect URLs: local tests | `http://localhost:3000/auth/**` | no |
 

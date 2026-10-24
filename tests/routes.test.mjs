@@ -259,6 +259,12 @@ test('dev.mjs never sends the production secret, even for the production host; w
     assert.ok(!JSON.stringify(seen[0].headers).includes('prod-test-value'));
     await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new-abc123-hanes.vercel.app' } });
     assert.equal(seen[1].headers['x-studio-edge'], 'staging-test-value');
+    // the custom domain is a production host too: still no production secret from a workstation
+    await raw(port, '/api/session', { headers: { Host: 'www.hanesdistribution.co.nz' } });
+    assert.equal(seen[2].headers['x-studio-edge'], undefined);
+    assert.ok(!JSON.stringify(seen[2].headers).includes('prod-test-value'));
+    await raw(port, '/api/session', { headers: { Host: 'portal.hanesdistribution.co.nz' } });
+    assert.equal(seen[3].headers['x-studio-edge'], 'staging-test-value');
   });
   await withServers({}, async (port, seen) => {
     await raw(port, '/api/session', { headers: { 'X-Studio-Edge': 'forged' } });

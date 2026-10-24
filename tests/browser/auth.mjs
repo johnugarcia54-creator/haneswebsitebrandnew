@@ -39,7 +39,7 @@ import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createDevServer } from '../../scripts/dev.mjs';
-import { pickConfig } from '../../auth/config.js';
+import { pickConfig, PRODUCTION_HOSTS } from '../../auth/config.js';
 import { MESSAGES_ZH, UI_ZH } from '../../auth/messages-zh.js';
 
 const require = createRequire(import.meta.url);
@@ -59,7 +59,7 @@ const CSP_REST = "connect-src 'self' https://mputtezdhevwwjgwktvi.supabase.co; i
 const CSP_TURNSTILE = `default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; ${CSP_REST}`;
 const CSP_NO_TURNSTILE = `default-src 'self'; script-src 'self'; frame-src 'none'; ${CSP_REST}`;
 // what vercel.json serves: it follows the committed Turnstile site key (tests/config.test.mjs)
-const CSP = ['hanes-the-website-new.vercel.app', 'localhost:3000'].some(h => pickConfig(h).turnstileReady) ? CSP_TURNSTILE : CSP_NO_TURNSTILE;
+const CSP = [...PRODUCTION_HOSTS, 'localhost:3000'].some(h => pickConfig(h).turnstileReady) ? CSP_TURNSTILE : CSP_NO_TURNSTILE;
 const SB = 'https://mputtezdhevwwjgwktvi.supabase.co';
 const PAGES = ['login', 'signup', 'reset', 'confirm', 'update-password'];
 const PORT = Number(process.env.PORT || 3000), STUB_PORT = Number(process.env.STUB_PORT || 4190);
