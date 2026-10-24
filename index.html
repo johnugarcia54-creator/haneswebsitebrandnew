@@ -237,6 +237,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .reel__go svg{width:14px;height:14px;transition:transform .3s var(--ease)}
 .reel__go:hover svg{transform:translateX(3px)}
 @media (max-width:600px){.reel__go{right:12px;bottom:12px;padding:7px 11px 7px 13px;font-size:12px}}
+.film-btn{position:absolute;right:20px;top:16px;z-index:3;display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);color:#fff;font-size:13px;font-weight:600;letter-spacing:-.01em;transition:background .3s var(--ease)}
+.film-btn:hover{background:rgba(255,255,255,.28)}
+.film-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.film-btn svg{width:12px;height:12px}
+.film-btn[hidden]{display:none}
+@media (max-width:600px){.film-btn{right:12px;top:12px;min-height:32px;padding:0 11px;font-size:12px}}
 .reel__tabs{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px}
 .reel__glide{position:absolute;z-index:-1;top:0;left:0;height:100%;width:0;border-radius:20px;background:var(--surface);opacity:0;transition:transform .7s var(--ease),width .7s var(--ease),opacity .4s}
 .reel__tab{text-align:left;padding:14px 16px 16px;border-radius:20px;color:var(--ink-3);transition:color .4s var(--ease)}
@@ -514,6 +520,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
       <div class="net__stage" id="netStage" data-zoom>
         <div class="media" data-parallax><video id="netVideo" src="films/journey.mp4" poster="stills/ocean.webp" muted loop playsinline preload="metadata" aria-label="Film: one order travelling from Asia to New Zealand"></video></div>
         <div class="tag"><span class="dot"></span>Live route · Asia → New Zealand</div>
+        <button class="film-btn" type="button" aria-controls="netVideo" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5h2.5v11H4zM9.5 2.5H12v11H9.5z"/></svg><span>Pause</span></button>
       </div>
       <div class="rail" id="rail">
         <div class="rail__item" data-reveal="drop"><div class="rail__bar"><i></i></div><b>01</b><span>Engineered at source</span></div>
@@ -584,6 +591,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
         <div class="reel__stage" data-zoom>
           <div class="media" data-parallax><video id="bVideo" src="films/brands.mp4" poster="stills/laser.webp" muted loop playsinline preload="metadata" aria-label="Film: the five Hanes brands"></video></div>
           <div class="reel__tag" id="reelTag">The house of Hanes</div>
+          <button class="film-btn" type="button" aria-controls="bVideo" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5h2.5v11H4zM9.5 2.5H12v11H9.5z"/></svg><span>Pause</span></button>
           <a class="reel__go" id="reelGo" href="#range" data-scroll><span>Explore the brands</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
         <div class="reel__tabs" id="reelTabs">
@@ -1029,13 +1037,19 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     if (reduce) return s.set(s.count - 1);
     const o = { f: s.fpos }; gsap.to(o, { f: s.count - 1, duration: dur * (1 - s.fpos / (s.count - 1)), ease: 'none', onUpdate: () => s.set(o.f) });
   };
-  // muted looping videos: play only while on screen; onTick keeps UI in sync with the film while it plays
+  // muted looping videos: play only while on screen (not under reduced motion); onTick keeps UI in sync with the film while it plays.
+  // Each has a Pause/Play button; once the visitor pauses, scrolling back does not restart it.
   const autoVideo = (v, onTick) => {
+    const btn = $(`.film-btn[aria-controls="${v.id}"]`); let held = false;
+    const sync = () => { btn.querySelector('span').textContent = v.paused ? 'Play' : 'Pause'; btn.querySelector('path').setAttribute('d', v.paused ? 'M4.5 2.5l9 5.5-9 5.5z' : 'M4 2.5h2.5v11H4zM9.5 2.5H12v11H9.5z'); };
+    v.addEventListener('play', () => { held = false; sync(); }); v.addEventListener('pause', sync);
+    btn.addEventListener('click', () => { if (v.paused) v.play().catch(() => {}); else { held = true; v.pause(); } });
+    btn.hidden = false; sync();
     if (reduce) return;
     let on = false; const tick = () => onTick(v.currentTime / (v.duration || 20.04));
     new IntersectionObserver(es => {
       const vis = es[es.length - 1].isIntersecting; if (vis === on) return; on = vis;
-      if (vis) { v.play().catch(() => {}); gsap.ticker.add(tick); } else { v.pause(); gsap.ticker.remove(tick); }
+      if (vis) { if (!held) v.play().catch(() => {}); gsap.ticker.add(tick); } else { v.pause(); gsap.ticker.remove(tick); }
     }, { threshold: .3 }).observe(v);
   };
 
