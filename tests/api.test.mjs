@@ -171,6 +171,10 @@ test('handler: refuses an over-length message instead of cutting it short (#21)'
     assert.equal(r.body.field, 'message');
     assert.match(r.body.error, /message is too long/);
     assert.equal(validate({ ...good, name: 'x'.repeat(121) }).field, 'name');
+    // an address over 254 characters is refused, not cut into a different address that still looks valid
+    const at254 = 'a'.repeat(64) + '@' + ['b'.repeat(63), 'c'.repeat(63), 'd'.repeat(58), 'co'].join('.');
+    assert.equal(validate({ ...good, email: at254 }).data.email, at254);
+    assert.equal(validate({ ...good, email: at254 + 'm' }).field, 'email');
     assert.equal(validate({ ...good, fields: [['Message', 'x'.repeat(5000)]] }).data.fields[0][1].length, 5000);
     assert.equal(n, 0);
   } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
