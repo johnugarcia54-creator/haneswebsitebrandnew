@@ -1216,8 +1216,8 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     .to('#hsTag', { autoAlpha: 0, duration: .04 }, .9)
     .to(hc2, { close: 1, duration: .07, ease: 'power2.inOut', onUpdate: applyHS }, .93);
   // tabbing to 'Explore Hisense' while #hsB is faded out: go to where it is shown, so the focused button is never invisible
-  $('#hsB').addEventListener('focusin', () => {
-    const t = hsTL.time(); if (t >= .66 && t < .9) return;
+  $('#hsB').addEventListener('focusin', e => {
+    const t = hsTL.time(); if ((t >= .66 && t < .9) || !e.target.matches(':focus-visible')) return;   // keyboard focus only, not a mouse click
     const st = hsTL.scrollTrigger, y = st.start + (st.end - st.start) * .78 / hsTL.duration();
     if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
   });

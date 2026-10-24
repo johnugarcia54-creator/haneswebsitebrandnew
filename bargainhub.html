@@ -1053,8 +1053,8 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
   ctaTL.to({}, { duration: .2 });
   applyCta();
   // tabbing into the copy before it has been scrolled in: go to where it is shown, so the focused link is never invisible
-  $('#ctaCopy').addEventListener('focusin', () => {
-    if (ctaTL.progress() >= 1) return;
+  $('#ctaCopy').addEventListener('focusin', e => {
+    if (ctaTL.progress() >= 1 || !e.target.matches(':focus-visible')) return;   // keyboard focus only, not a mouse click
     const y = ctaTL.scrollTrigger.end;
     if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
   });

@@ -913,8 +913,8 @@ html.lite .nav{background:rgba(0,0,0,.94);-webkit-backdrop-filter:none;backdrop-
   if (!reduce) ctaTL.fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .3, stagger: .05, ease: 'back.out(1.5)' }, .5)
     .fromTo('#ctaCopy > :not(h2)', { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: .3, stagger: .06, ease: 'power3.out' }, .55);
   // tabbing into the copy before it has been scrolled in: go to where it is shown, so the focused link is never invisible
-  $('#ctaCopy').addEventListener('focusin', () => {
-    if (ctaTL.progress() >= 1) return;
+  $('#ctaCopy').addEventListener('focusin', e => {
+    if (ctaTL.progress() >= 1 || !e.target.matches(':focus-visible')) return;   // keyboard focus only, not a mouse click
     const y = ctaTL.scrollTrigger.end;
     if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
   });
