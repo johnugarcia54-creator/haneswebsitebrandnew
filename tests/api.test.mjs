@@ -25,6 +25,14 @@ test('validate rejects missing or bad details', () => {
   assert.ok(validate({ ...good, fields: [['Message', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(1000)]] }).error);
 });
 
+test('validate rejects addresses that would add mailto or Reply-To header fields', () => {
+  for (const email of ['x@evil.co?cc=accounts%40hanesdistribution.co.nz&subject=Bank&body=Pay', 'a@b.c&d', 'a@b.co#frag', 'x?cc=a%40b.co@evil.co', 'a@b_c.co', 'a@-b.co'])
+    assert.equal(validate({ ...good, email }).field, 'email', email);
+  for (const email of ['aroha@example.co.nz', "o'brien+quotes@mail.hanes-distribution.co.nz", 'A.B@Example.COM'])
+    assert.equal(validate({ ...good, email }).error, undefined, email);
+  assert.match(compose(validate(good).data).html, /href="mailto:aroha@example\.co\.nz"/);
+});
+
 test('validate flags bots', () => {
   assert.equal(validate({ ...good, website: 'http://spam.example' }).spam, true);
   assert.equal(validate({ ...good, elapsed: 300 }).spam, true);

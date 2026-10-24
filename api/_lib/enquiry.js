@@ -17,7 +17,8 @@
 export const DEFAULT_TO = 'Enquiry@hanesdistribution.co.nz';
 import { randomUUID } from 'node:crypto';
 
-const EMAIL = /^[^\s@<>()[\]\\,;:"]{1,64}@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]{2,}$/;
+// an allow-list, so the address can't carry mailto or header extras such as ?cc=, &body= or %40
+const EMAIL = /^[A-Za-z0-9.!$'*+\/^_`{|}~-]{1,64}@(?=.{1,253}$)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
 const LIMITS = { name: 120, email: 254, subject: 140, form: 60, page: 300, label: 60, value: 5000, fields: 30, total: 20000 };
 
 // strip control characters (keeping line breaks in long answers) and trim to a length
