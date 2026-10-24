@@ -297,6 +297,7 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
 .bk__bk{inset:0;transform:rotateY(180deg) translateZ(calc(var(--t) / 2));border-radius:5px 2px 2px 5px;background:var(--c2)}
 .bk__3d > .bk__s{left:calc(var(--t) / -2);top:0;width:var(--t);height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;transform:rotateY(-90deg);background:linear-gradient(90deg,var(--c2),var(--c1) 22%,var(--c1) 78%,var(--c2))}
 .bk__s b{writing-mode:vertical-rl;font-size:clamp(7px,.62vw,9px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:var(--st,#e9cf93)}
+.bk__s b::after{content:attr(data-t)}
 .bk__p{left:calc(100% - var(--t) / 2);top:3px;bottom:3px;width:var(--t);transform:rotateY(90deg);background:repeating-linear-gradient(90deg,#e4dfd4 0 1px,#fbf8f1 1px 3px)}
 .bk__tp{left:3px;right:3px;top:calc(var(--t) / -2);height:var(--t);transform:rotateX(90deg);background:repeating-linear-gradient(0deg,#e4dfd4 0 1px,#fbf8f1 1px 3px)}
 .bk__cap{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
@@ -731,20 +732,20 @@ figcaption p{margin-top:4px;font-size:15px;line-height:1.4;color:var(--dim)}
     </div>
     <div class="shelf" id="shelf">
       <button class="bk" type="button" data-book="tv" style="--t:28px;--c1:#1b1530;--c2:#0b0a14" aria-label="TVs, 52 pages: open the Hisense TV Collection">
-        <span class="bk__3d"><i class="bk__f"><img src="catalogues/tv/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense TV Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
-        <span class="bk__cap"><b>TVs</b><small>52 pages</small><em>Flip through</em></span>
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/tv/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b data-t="Hisense TV Collection"></b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>TVs</b> <small>52 pages</small> <em>Flip through</em></span>
       </button>
       <button class="bk" type="button" data-book="fridge" style="--t:20px;--c1:#2a2c30;--c2:#121315" aria-label="Refrigerators, 32 pages: open the Hisense Refrigerator Collection">
-        <span class="bk__3d"><i class="bk__f"><img src="catalogues/fridge/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Refrigerator Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
-        <span class="bk__cap"><b>Refrigerators</b><small>32 pages</small><em>Flip through</em></span>
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/fridge/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b data-t="Hisense Refrigerator Collection"></b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Refrigerators</b> <small>32 pages</small> <em>Flip through</em></span>
       </button>
       <button class="bk" type="button" data-book="laundry" style="--t:26px;--c1:#bfe3d7;--c2:#8ccab8;--st:#1d5a50" aria-label="Washing machines, 48 pages: open the Hisense Washing Machine Collection">
-        <span class="bk__3d"><i class="bk__f"><img src="catalogues/laundry/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Washing Machine Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
-        <span class="bk__cap"><b>Washing machines</b><small>48 pages</small><em>Flip through</em></span>
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/laundry/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b data-t="Hisense Washing Machine Collection"></b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Washing machines</b> <small>48 pages</small> <em>Flip through</em></span>
       </button>
       <button class="bk" type="button" data-book="air" style="--t:14px;--c1:#a8dcd8;--c2:#5fb8b2;--st:#0f4f4a" aria-label="Air conditioners, 18 pages: open the Hisense Air Conditioner Collection">
-        <span class="bk__3d"><i class="bk__f"><img src="catalogues/air/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b>Hisense Air Conditioner Collection</b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
-        <span class="bk__cap"><b>Air conditioners</b><small>18 pages</small><em>Flip through</em></span>
+        <span class="bk__3d"><i class="bk__f"><img src="catalogues/air/cover-sm.webp" alt="" loading="lazy" decoding="async"></i><i class="bk__s"><b data-t="Hisense Air Conditioner Collection"></b></i><i class="bk__p"></i><i class="bk__tp"></i><i class="bk__bk"></i></span>
+        <span class="bk__cap"><b>Air conditioners</b> <small>18 pages</small> <em>Flip through</em></span>
       </button>
     </div>
     <p class="shelf__note" data-anim>Catalogue pages are Hisense's 2026 catalogues. Models, specifications and warranties may differ in New Zealand, so ask us for the New Zealand range.</p>
