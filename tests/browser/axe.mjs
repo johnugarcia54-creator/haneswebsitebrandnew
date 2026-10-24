@@ -73,8 +73,14 @@ try {
       await page.goto(`${base}/${p}`, { waitUntil: 'load' });
       await page.waitForFunction(() => !document.body.classList.contains('is-loading'), null, { timeout: 30000 }).catch(() => {});
       await page.waitForTimeout(600);
-      // reveal everything that scroll animations hold back, so axe sees the finished page
-      await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += innerHeight / 2) { scrollTo(0, y); await new Promise(r => setTimeout(r, 30)); } });
+      // reveal everything that scroll animations hold back, so axe sees the finished page. Each stop waits
+      // for two frames as well as 30 ms: IntersectionObserver and ScrollTrigger only see a position once a
+      // frame has been drawn there, and under load 30 ms can pass without one, so a block scrolled past
+      // was left hidden and axe then named its revealed twin by a different, shorter selector
+      await page.evaluate(async () => {
+        const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        for (let y = 0; y < document.body.scrollHeight; y += innerHeight / 2) { scrollTo(0, y); await new Promise(r => setTimeout(r, 30)); await frames(); }
+      });
       await page.waitForTimeout(800);
       await audit(page, `${p} @${width}`);
       // page forms with a typed value: the floating labels shrink above the value
