@@ -907,11 +907,12 @@ html.lite .nav{background:rgba(0,0,0,.94);-webkit-backdrop-filter:none;backdrop-
     .fromTo('#hwSheen', { xPercent: -100 }, { xPercent: 280, duration: .7 }, .2);
 
   /* ---------- CTA: the room settles in and the words drop in over it ---------- */
-  // opacity only (not autoAlpha): visibility:hidden would take the quote and directions links out of the Tab order
+  // opacity only (not autoAlpha): visibility:hidden would take the quote and directions links out of the Tab order,
+  // so the faded copy takes no clicks until it is shown
   const ctaTL = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top bottom', end: 'bottom bottom', scrub: true } })
     .fromTo('#ctaImg', { scale: 1.25 }, { scale: 1, duration: 1 }, 0);
   if (!reduce) ctaTL.fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .3, stagger: .05, ease: 'back.out(1.5)' }, .5)
-    .fromTo('#ctaCopy > :not(h2)', { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: .3, stagger: .06, ease: 'power3.out' }, .55);
+    .fromTo('#ctaCopy > :not(h2)', { opacity: 0, y: -24, pointerEvents: 'none' }, { opacity: 1, y: 0, pointerEvents: 'auto', duration: .3, stagger: .06, ease: 'power3.out' }, .55);
   // tabbing into the copy before it has been scrolled in: go to where it is shown, so the focused link is never invisible
   $('#ctaCopy').addEventListener('focusin', e => {
     if (ctaTL.progress() >= 1 || !e.target.matches(':focus-visible')) return;   // keyboard focus only, not a mouse click

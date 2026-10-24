@@ -1043,12 +1043,13 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
      ========================================================= */
   const ctaFrame = $('#ctaFrame'), cf = { k: 1 };
   const applyCta = () => insetClip(ctaFrame, innerWidth < 700 ? [10, 5, 10, 5, 24] : [12, 8, 12, 8, 32], cf.k);
-  // opacity only (not autoAlpha): visibility:hidden would take the consultant and showroom links out of the Tab order
+  // opacity only (not autoAlpha): visibility:hidden would take the consultant and showroom links out of the Tab order,
+  // so the faded copy takes no clicks until it is shown
   const ctaTL = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top top', end: 'bottom bottom', scrub: true } })
     .to(cf, { k: 0, duration: .55, ease: 'power2.inOut', onUpdate: applyCta }, 0)
     .fromTo('#ctaImg', { scale: 1.18 }, { scale: 1, duration: .8 }, 0);
   if (reduce) gsap.set('#ctaCopy', { opacity: 1 });
-  else ctaTL.fromTo('#ctaCopy', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .3, ease: 'power3.out' }, .45)
+  else ctaTL.fromTo('#ctaCopy', { opacity: 0, y: 60, pointerEvents: 'none' }, { opacity: 1, y: 0, pointerEvents: 'auto', duration: .3, ease: 'power3.out' }, .45)
     .fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .22, stagger: .04, ease: 'back.out(1.5)' }, .48);
   ctaTL.to({}, { duration: .2 });
   applyCta();
