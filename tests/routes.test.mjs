@@ -259,6 +259,14 @@ test('dev.mjs never sends the production secret, even for the production host; w
     assert.ok(!JSON.stringify(seen[0].headers).includes('prod-test-value'));
     await raw(port, '/studio/', { headers: { Host: 'hanes-the-website-new-abc123-hanes.vercel.app' } });
     assert.equal(seen[1].headers['x-studio-edge'], 'staging-test-value');
+    // nor for the project's other production addresses, which vercel.json also sends to production (C20)
+    for (const Host of ['hanes-the-website-new-johnugarcia54-5453s-projects.vercel.app', 'hanes-the-website-new-git-main-johnugarcia54-5453s-projects.vercel.app']) {
+      await raw(port, '/api/session', { headers: { Host } });
+      const last = seen.at(-1);
+      assert.equal(last.url, '/api/session');
+      assert.equal(last.headers['x-studio-edge'], undefined, Host);
+      assert.ok(!JSON.stringify(last.headers).includes('prod-test-value'), Host);
+    }
   });
   await withServers({}, async (port, seen) => {
     await raw(port, '/api/session', { headers: { 'X-Studio-Edge': 'forged' } });

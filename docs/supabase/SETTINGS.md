@@ -30,10 +30,10 @@ Dashboard → Authentication → Emails → Templates. In each template, replace
 
 | # | Template | Link (`href`) | Subject | Staging tonight |
 |---|---|---|---|---|
-| 2.1 | Invite user | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=invite` | You're invited to the Bargainhub studio | yes |
-| 2.2 | Reset password | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=recovery` | Reset your Bargainhub password | yes |
-| 2.3 | Confirm signup | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=email&next=/studio/%23/account` | Confirm your Bargainhub account | no (sign-up is closed) |
-| 2.4 | Change email address | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=email_change` | Confirm your new email | no (not offered on Friday) |
+| 2.1 | Invite user | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=invite` | You are invited to Hanes Distribution | yes |
+| 2.2 | Reset password | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=recovery` | Reset your Hanes Distribution password | yes |
+| 2.3 | Confirm signup | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=email&next=/studio/%23/account` | Confirm your email for Hanes Distribution | no (sign-up is closed) |
+| 2.4 | Change email address | `{{ .SiteURL }}/auth/confirm.html?token_hash={{ .TokenHash }}&type=email_change` | Confirm your new email for Hanes Distribution | no (not offered on Friday) |
 | 2.5 | Magic link, Reauthentication | keep the defaults (not used) | – | – |
 
 Why these links: a token_hash link spends nothing when it is opened. The token is spent only when

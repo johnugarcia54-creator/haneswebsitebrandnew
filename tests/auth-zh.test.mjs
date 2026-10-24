@@ -44,12 +44,13 @@ test('UI_ZH has exactly the keys of UI, the same shapes, and the same placeholde
   for (const k of Object.keys(lib.UI)) {
     const en = lib.UI[k], zh = UI_ZH[k];
     assert.equal(Array.isArray(zh), Array.isArray(en), k);
-    // the title suffix is the brand alone, in Latin script (review, 11 Oct): "Bargainhub Studio"
+    // the title suffix is the brand alone, in Latin script (review, 11 Oct): "Hanes Distribution"
     for (const s of [].concat(zh)) assert.ok(typeof s === 'string' && s.length && (k === 'title_suffix' || HAN.test(s)), `${k}: Chinese`);
     if (Array.isArray(en)) assert.equal(zh.length, en.length, k);
     for (const ph of [].concat(en).join(' ').match(/\{[a-z]+\}/g) || []) assert.ok([].concat(zh).join(' ').includes(ph), `${k}: ${ph}`);
   }
-  assert.equal(UI_ZH.title_suffix, ' — Bargainhub Studio');
+  assert.equal(UI_ZH.title_suffix, ' — Hanes Distribution');
+  assert.equal(UI_ZH.title_suffix, lib.UI.title_suffix, 'the same brand in both languages');
   assert.deepEqual(lib.textsFor('zh'), { messages: MESSAGES_ZH, ui: UI_ZH });
   assert.deepEqual(lib.textsFor('en'), { messages: lib.MESSAGES, ui: lib.UI });
   for (const x of [undefined, null, 'zh-CN', 'ZH', 'fr', {}]) assert.deepEqual(lib.textsFor(x), { messages: lib.MESSAGES, ui: lib.UI }, String(x));
@@ -312,8 +313,8 @@ for (const p of ZH) {
     assert.match(s, /^<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">/);
     assert.match(s, /<meta name="robots" content="noindex, nofollow">/);
     assert.match(s, /<meta name="referrer" content="no-referrer">/);
-    assert.match(s, /<title>[^<]*[一-鿿][^<]* — Bargainhub Studio<\/title>/);
-    assert.doesNotMatch(s, /工作室/, 'the brand is written "Bargainhub Studio" in Latin script');
+    assert.match(s, /<title>[^<]*[一-鿿][^<]* — Hanes Distribution<\/title>/);
+    assert.doesNotMatch(s, /工作室/, 'the brand is written "Hanes Distribution" in Latin script');
     assert.match(s, /<meta name="description" content="[^"]*[一-鿿][^"]*">/);
     assert.equal((s.match(/<h1\b/g) || []).length, 1);
     assert.match(s, /<h1 id="title">[一-鿿]+<\/h1>/);
@@ -355,7 +356,7 @@ for (const p of ZH) {
       else assert.match(attrs, /hreflang="en-NZ"/, `${p}: ${href} is marked as English`);
     }
     // the English button
-    assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Bargainhub Studio</p><a class="auth__lang" id="langSwitch" href="/auth/${p}.html" hreflang="en-NZ" lang="en-NZ">English</a></div>`), 'the English button');
+    assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Hanes Distribution</p><a class="auth__lang" id="langSwitch" href="/auth/${p}.html" hreflang="en-NZ" lang="en-NZ">English</a></div>`), 'the English button');
     assert.doesNotMatch(s, /\b(claude|opus|sonnet|gpt|openai)\b/i);
     // fictional data only
     assert.doesNotMatch(s.replace(/name@example\.com/g, ''), /@[a-z0-9-]+\.[a-z]/i, 'no real addresses');

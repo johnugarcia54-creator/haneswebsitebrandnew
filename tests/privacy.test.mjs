@@ -39,10 +39,24 @@ test('privacy.html names the agency and privacy contact from COMPANY.md, with no
   const html = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
   assert.ok(!html.includes('data-owner-ask="O10"'));
   assert.ok(html.includes('COMPANY.md'));
-  assert.ok(html.includes('This statement is from Hanes Distribution'));
+  assert.ok(html.includes('This statement is from Bargainhub Limited, trading as Hanes Distribution (“we”, “us”).'), 'the legal entity, trading as the brand clients see');
+  assert.ok(!html.includes('also trades as Bargainhub'));
   assert.ok(html.includes('The Privacy Officer, Hanes Distribution'));
-  assert.ok(html.includes('93 Main South Road, Sockburn, Christchurch, New Zealand'));
+  assert.ok(html.includes('<dd>Hanes Distribution, 2/93 Main South Road, Sockburn, Christchurch, New Zealand</dd>'), 'the company address, not the showroom');
   assert.ok(html.includes('mailto:Enquiry@hanesdistribution.co.nz'));
+});
+
+// Clients see the brand "Hanes Distribution". "Bargainhub" is left only in the legal name and
+// where it names the kitchens brand: its links in the header, menu and footer, and its Brand entry.
+test('privacy.html speaks as Hanes Distribution; Bargainhub only as the legal name and the kitchens brand', () => {
+  assert.ok(s.includes('<title>Privacy statement — Hanes Distribution</title>'));
+  assert.ok(s.includes('<p class="pv__eyebrow">Hanes Distribution</p>'));
+  assert.ok(s.includes('our sign-in pages and the Hanes Distribution design studio.'));
+  assert.ok(s.includes('Details a Hanes Distribution consultant records with you'));
+  const rest = s.replace(/Bargainhub Limited, trading as Hanes Distribution/g, '')
+    .replace(/<a href="bargainhub\.html">Bargainhub(?:<span>Kitchens and interiors<\/span>)?<\/a>/g, '')
+    .replace(/\{"@type":"Brand","name":"Bargainhub"\}/g, '');
+  assert.doesNotMatch(rest, /Bargainhub/i);
 });
 
 test('Turnstile row names every page it runs on: sign-in, sign-up and password reset', () => {

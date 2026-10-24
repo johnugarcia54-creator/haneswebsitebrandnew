@@ -187,7 +187,7 @@ test('the sign-in wording names no one group: no "staff account", no "Back Offic
 test('login.html speaks to everyone who signs in; confirm.html and update-password.html send an invitee back to whoever invited them', () => {
   const login = read('auth/login.html'), confirm = read('auth/confirm.html');
   assert.match(login, /<p class="auth__sub" id="sub">For clients, consultants, partners and Hanes staff\.<\/p>/);
-  assert.match(login, /<meta name="description" content="Sign in to the Bargainhub studio: for clients, consultants, partners and Hanes staff\.">/);
+  assert.match(login, /<meta name="description" content="Sign in to Hanes Distribution: for clients, consultants, partners and Hanes staff\.">/);
   assert.doesNotMatch(login, /consultants and Hanes staff/);
   assert.match(confirm, /<p class="auth__help">For a new invitation, ask whoever invited you\.<\/p>/);
   assert.doesNotMatch(confirm, /Back Office/);
@@ -858,6 +858,25 @@ test('every sign-in page is lang="en-NZ", except the explicit zh-CN allow-list, 
   assert.equal(html.length, PAGES.length + ZH_ALLOW.length, 'no other sign-in pages');
 });
 
+// owner rule (launch, 19 Oct): clients see the brand "Hanes Distribution", in Latin script in Chinese too;
+// "Bargainhub" names only the kitchens brand, so on the sign-in pages it is only the link to that brand's page
+test('the sign-in pages say Hanes Distribution in the eyebrow and every title; Bargainhub is only the link to the kitchens page', () => {
+  assert.equal(lib.UI.title_suffix, ' — Hanes Distribution');
+  const kitchensLink = /<a href="\/bargainhub\.html"(?: hreflang="en-NZ")?>(?:About Bargainhub|关于 Bargainhub)<\/a>/g;
+  for (const f of AUTH_FILES.filter(f => /\.(html|js)$/.test(f))) {
+    const s = read(f);
+    assert.doesNotMatch(s, /Bargainhub studio/i, f);
+    assert.doesNotMatch(s.replace(kitchensLink, ''), /Bargainhub/i, `${f}: "Bargainhub" outside the link to the kitchens page`);
+  }
+  for (const f of AUTH_FILES.filter(f => f.endsWith('.html'))) {
+    const s = read(f);
+    assert.match(s, /<title>[^<]+ — Hanes Distribution<\/title>/, f);
+    assert.match(s, /<p class="auth__eyebrow">Hanes Distribution<\/p>/, f);
+    assert.match(s, /<meta name="description" content="[^"]*Hanes Distribution[^"]*">/, f);
+  }
+  assert.ok(read('auth/login.html').includes('<p class="auth__alt">New to Hanes Distribution? <a href="/auth/signup.html">Create an account</a></p>'));
+});
+
 for (const p of PAGES) {
   test(`auth/${p}.html: noindex, one h1, en-NZ, no inline code, root-absolute paths, the simplified bar and footer`, () => {
     const s = read(`auth/${p}.html`);
@@ -895,7 +914,7 @@ for (const p of PAGES) {
     // the 中文 button (RP-29): in the card, outside the bar, to the same page in Chinese; sign-up has none
     if (lib.ZH_PAGES.includes(p)) {
       assert.equal((s.match(/id="langSwitch"/g) || []).length, 1);
-      assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Bargainhub studio</p><a class="auth__lang" id="langSwitch" href="/auth/zh/${p}.html" hreflang="zh-CN" lang="zh-CN">中文</a></div>`), `${p}: the 中文 button`);
+      assert.ok(s.includes(`<div class="auth__top"><p class="auth__eyebrow">Hanes Distribution</p><a class="auth__lang" id="langSwitch" href="/auth/zh/${p}.html" hreflang="zh-CN" lang="zh-CN">中文</a></div>`), `${p}: the 中文 button`);
       assert.doesNotMatch(bar, /langSwitch|中文/, 'not in the bar');
     } else assert.doesNotMatch(s, /langSwitch|\/auth\/zh\//, `${p} has no Chinese page`);
   });
@@ -910,7 +929,7 @@ test('the wording the addendum fixes is on the pages, as static text', () => {
   assert.match(login, /<input id="password" name="password" type="password" autocomplete="current-password" maxlength="72" required>/, 'sign-in never refuses a password by its length');
   for (const f of ['signup', 'update-password']) assert.match(read(`auth/${f}.html`), /autocomplete="new-password" maxlength="72" data-min="12"/, `${f}: 12 to 72`);
   assert.ok(signup.includes(lib.MESSAGES.accounts_closed), 'the closed state of §3.3.1');
-  assert.ok(signup.includes('By creating an account you agree that Bargainhub (Hanes Distribution) can keep your designs and contact details and contact you about your project. Sign-in is handled by Supabase in Sydney; your contact details also go into our customer system, run by Base44 in the United States. <a href="/privacy.html">Privacy statement</a>'), 'the §11.2 sign-up notice');
+  assert.ok(signup.includes('By creating an account you agree that Hanes Distribution can keep your designs and contact details and contact you about your project. Sign-in is handled by Supabase in Sydney; your contact details also go into our customer system, run by Base44 in the United States. <a href="/privacy.html">Privacy statement</a>'), 'the §11.2 sign-up notice');
   assert.match(signup, /<input id="privacy" name="privacy" type="checkbox" required[^>]*><span>I've read the privacy statement\.<\/span>/);
   assert.match(signup, /<input id="marketing" name="marketing" type="checkbox"><span>Send me occasional news and offers\.<\/span>/, 'optional, unticked');
   const confirm = read('auth/confirm.html');

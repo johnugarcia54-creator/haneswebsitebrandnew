@@ -64,7 +64,7 @@ export const MESSAGES_ZH = Object.freeze({
 });
 
 export const UI_ZH = Object.freeze({
-  title_suffix: ' — Bargainhub Studio',
+  title_suffix: ' — Hanes Distribution',
   spent_title: '此链接无法使用',
   spent_sub: '如果邮件中的链接打开了不止一个页面，请在下方粘贴第一个页面的地址；否则请重新获取链接。',
   paste_title: '粘贴邮件中的链接',
