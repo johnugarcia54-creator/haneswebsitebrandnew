@@ -1,8 +1,11 @@
 /* POST /api/enquiry: sends a website enquiry to the Hanes inbox (see api/_lib/enquiry.js).
    In order: origin, size, rate limit, validation and the spam trap (and "not configured" when no
-   email provider is set); then the CRM forward to the studio (api/_lib/crm-forward.js, ADDENDUM
-   §7.3), then the email, which gains one line saying what the CRM did. The email is primary: a failed forward never fails the request, and spam,
+   email provider is set); then the send slot is taken, before the CRM forward to the studio
+   (api/_lib/crm-forward.js, ADDENDUM §7.3), then the email, which gains one line saying what the CRM did. The email is primary: a failed forward never fails the request, and spam,
    refused or rate-limited enquiries are never forwarded.
+   Only sent enquiries and spam-trap hits count toward the limit (ENQUIRY_RATE_MAX, default 5 per
+   address in 10 minutes); invalid requests (400), "not configured" (503) and failed sends (502)
+   have their own cap of 20; a request refused with 429 counts toward neither.
    GET /api/enquiry: a health check that says whether sending is configured. */
 import { validate, compose, send, configured, limited, record } from './_lib/enquiry.js';
 import { leadFrom, forwardLead, emailLine } from './_lib/crm-forward.js';

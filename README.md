@@ -54,7 +54,7 @@ The branch `staging` is the website the staging studio is paired with. Vercel gi
 
 ## Enquiries (the back end)
 
-Every form on the site (contact, the brand pricing forms, Hisense, Hanes Track and the "Get a quote" dialog) posts to `/api/enquiry`, which checks it, writes it up as an email and sends it to Enquiry@hanesdistribution.co.nz with Reply-To set to the customer. Nothing opens the visitor's email app. The function has a hidden spam trap, a minimum fill-in time, a same-site check and a limit of 5 enquiries per address every 10 minutes.
+Every form on the site (contact, the brand pricing forms, Hisense, Hanes Track and the "Get a quote" dialog) posts to `/api/enquiry`, which checks it, writes it up as an email and sends it to Enquiry@hanesdistribution.co.nz with Reply-To set to the customer. Nothing opens the visitor's email app. The function has a hidden spam trap, a minimum fill-in time, a same-site check and a limit of 5 enquiries per address every 10 minutes. Only enquiries it sends (and spam-trap hits) count toward that limit; forms it turns away as invalid, and sends that fail, have their own limit of 20.
 
 - `api/enquiry.js`: the endpoint (`GET` is a health check that reports whether email is configured)
 - `api/_lib/enquiry.js`: validation, the email itself, and sending
