@@ -1207,7 +1207,7 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     .to('#hsTag', { autoAlpha: 1, duration: .04 }, .3)
     .fromTo('#hsA', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .06, ease: 'power3.out' }, .32)
     .to('#hsA', { autoAlpha: 0, y: -40, duration: .05, ease: 'power2.in' }, .56)
-    .set('#hsB .btn', { pointerEvents: 'none' }, 0)
+    .set('#hsB .btn', { pointerEvents: 'none', immediateRender: true }, 0)
     .fromTo('#hsB', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .06, ease: 'power3.out' }, .6)
     .set('#hsB .btn', { pointerEvents: 'auto' }, .6)
     .fromTo('.hs__cats span', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .04, stagger: .012 }, .63)
