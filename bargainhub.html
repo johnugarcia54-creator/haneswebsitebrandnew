@@ -1043,13 +1043,21 @@ html.lite .nav{background:rgba(255,255,255,.96);-webkit-backdrop-filter:none;bac
      ========================================================= */
   const ctaFrame = $('#ctaFrame'), cf = { k: 1 };
   const applyCta = () => insetClip(ctaFrame, innerWidth < 700 ? [10, 5, 10, 5, 24] : [12, 8, 12, 8, 32], cf.k);
-  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top top', end: 'bottom bottom', scrub: true } })
+  // opacity only (not autoAlpha): visibility:hidden would take the consultant and showroom links out of the Tab order
+  const ctaTL = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#quote', start: 'top top', end: 'bottom bottom', scrub: true } })
     .to(cf, { k: 0, duration: .55, ease: 'power2.inOut', onUpdate: applyCta }, 0)
-    .fromTo('#ctaImg', { scale: 1.18 }, { scale: 1, duration: .8 }, 0)
-    .fromTo('#ctaCopy', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .3, ease: 'power3.out' }, .45)
-    .fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .22, stagger: .04, ease: 'back.out(1.5)' }, .48)
-    .to({}, { duration: .2 });
+    .fromTo('#ctaImg', { scale: 1.18 }, { scale: 1, duration: .8 }, 0);
+  if (reduce) gsap.set('#ctaCopy', { opacity: 1 });
+  else ctaTL.fromTo('#ctaCopy', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .3, ease: 'power3.out' }, .45)
+    .fromTo(splitDrop($('#ctaCopy h2')), { yPercent: -118 }, { yPercent: 0, duration: .22, stagger: .04, ease: 'back.out(1.5)' }, .48);
+  ctaTL.to({}, { duration: .2 });
   applyCta();
+  // tabbing into the copy before it has been scrolled in: go to where it is shown, so the focused link is never invisible
+  $('#ctaCopy').addEventListener('focusin', () => {
+    if (ctaTL.progress() >= 1) return;
+    const y = ctaTL.scrollTrigger.end;
+    if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
+  });
 
   /* ---------- Load: the three images the build needs, then hand over ---------- */
   const fill = $('#lfill');

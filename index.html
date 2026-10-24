@@ -1194,7 +1194,9 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
   gsap.from('.door__text > *', { y: 60, autoAlpha: 0, ...blur(10), stagger: .08, ease: 'power2.out',
     scrollTrigger: { trigger: '#hisense', start: 'top 80%', end: 'top 10%', scrub: true } });
   const hss = { f: 0 };
-  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hisense', start: 'top top', end: 'bottom bottom', scrub: true,
+  // #hsB fades with opacity only (not autoAlpha): visibility:hidden would take 'Explore Hisense' out of the Tab order,
+  // so its button only takes clicks while it is shown
+  const hsTL = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '#hisense', start: 'top top', end: 'bottom bottom', scrub: true,
       onEnter: () => seq.hs.load() } })
     .to('#doorL', { rotateY: -108, duration: .24, ease: 'power2.in' }, .06)
     .to('#doorR', { rotateY: 108, duration: .24, ease: 'power2.in' }, .06)
@@ -1205,10 +1207,20 @@ html.lite :is(.nav.is-solid,.hs__cats span,.card__go,.play){-webkit-backdrop-fil
     .to('#hsTag', { autoAlpha: 1, duration: .04 }, .3)
     .fromTo('#hsA', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .06, ease: 'power3.out' }, .32)
     .to('#hsA', { autoAlpha: 0, y: -40, duration: .05, ease: 'power2.in' }, .56)
-    .fromTo('#hsB', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: .06, ease: 'power3.out' }, .6)
+    .set('#hsB .btn', { pointerEvents: 'none' }, 0)
+    .fromTo('#hsB', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .06, ease: 'power3.out' }, .6)
+    .set('#hsB .btn', { pointerEvents: 'auto' }, .6)
     .fromTo('.hs__cats span', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .04, stagger: .012 }, .63)
-    .to(['#hsB', '#hsTag'], { autoAlpha: 0, duration: .04 }, .9)
+    .to('#hsB', { opacity: 0, duration: .04 }, .9)
+    .set('#hsB .btn', { pointerEvents: 'none' }, .9)
+    .to('#hsTag', { autoAlpha: 0, duration: .04 }, .9)
     .to(hc2, { close: 1, duration: .07, ease: 'power2.inOut', onUpdate: applyHS }, .93);
+  // tabbing to 'Explore Hisense' while #hsB is faded out: go to where it is shown, so the focused button is never invisible
+  $('#hsB').addEventListener('focusin', () => {
+    const t = hsTL.time(); if (t >= .66 && t < .9) return;
+    const st = hsTL.scrollTrigger, y = st.start + (st.end - st.start) * .78 / hsTL.duration();
+    if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y);
+  });
 
   /* ---------- Marquee with scroll velocity ---------- */
   // width is measured once (not per tick: reading it after other style writes forced a layout every frame), and it only runs while on screen
