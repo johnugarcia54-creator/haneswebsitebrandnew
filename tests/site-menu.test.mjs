@@ -51,7 +51,9 @@ test('opening the menu makes the rest of the page inert, but not the bar', () =>
 
 test('closing the menu restores the page, leaving what was already inert alone', () => {
   const p = load();
-  p.btn.fire('click'); p.btn.fire('click');
+  p.btn.fire('click');
+  assert.equal(p.main.inert, true);
+  p.btn.fire('click');
   assert.equal(p.open(), false);
   assert.equal(p.main.inert, false);
   assert.equal(p.footer.inert, false);
