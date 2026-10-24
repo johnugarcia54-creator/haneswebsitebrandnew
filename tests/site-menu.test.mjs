@@ -25,11 +25,13 @@ function load() {
   loader.inert = true;   // already inert before the menu opens
   page = { btn, link, gb, main, footer, loader, win, focused: null };
   const document = {
+    readyState: 'loading',
     documentElement: { classList: { toggle: (c, v) => (v ? classes.add(c) : classes.delete(c)), contains: c => classes.has(c) } },
     body: { children: [gb, loader, main, footer] },
     getElementById: id => (id === 'gb' ? gb : null) };
-  const ctx = { document, innerWidth: 390,
+  const ctx = { document, innerWidth: 390, location: { pathname: '/contact.html' },
     addEventListener: (t, f) => { (win[t] ||= []).push(f); } };
+  ctx.window = ctx;   // site.js also runs window.HanesSite, bhAuthHygiene(window) and loadMilli(window)
   page.ctx = ctx;
   page.fireWin = (t, e = {}) => { for (const f of win[t] || []) f(e); };
   page.open = () => classes.has('gb-open');
