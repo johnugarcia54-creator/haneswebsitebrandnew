@@ -30,7 +30,7 @@ const page = () => {
   let answer;
   const fetch = () => new Promise(r => { answer = (code, json = {}) => r({ ok: code < 300, status: code, json: async () => json }); });
   const location = { protocol: 'https:', pathname: '/contact.html', search: '', href: '' };
-  const window = {};
+  const window = { crypto: { randomUUID: () => '00000000-0000-4000-8000-000000000001' } }; // enquiry.js gives every enquiry a submissionId
   vm.runInNewContext(code, { window, document, location, fetch, URLSearchParams, HTMLDialogElement: undefined });
   return { HanesEnquiry: window.HanesEnquiry, document, form, btn, status, location, reply: (c, j) => answer(c, j) };
 };
