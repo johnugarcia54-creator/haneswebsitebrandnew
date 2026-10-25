@@ -7,10 +7,30 @@ vendor/supabase-js-2.118.0.min.js is the unmodified browser (UMD) build of supab
              (npm's dist.integrity, checked against the downloaded tarball)
   SHA-256:   ee3be8de192b97cb1d73d1e95d6b82bb1f6b658c0f97c4ef757fc331996ed3d3 (the vendored file)
 
+Kept for the studio (2026-10-25): vendor/supabase-js-2.117.3.min.js, the build before this one,
+stays because the studio still names it. The studio's default SDK address (SUPABASE_SDK_URL in
+backend/supabase-auth.cjs, in the studio repository) is /vendor/supabase-js-2.117.3.min.js, and
+its portals load that address from this site to exchange a sign-in and to sign out. auth.js does
+not load it. Delete it, and this record, only after both studio environments (staging and
+production) have deployed a change that names 2.118.0.
+
+  Package:   @supabase/supabase-js 2.117.3 (published 2026-10-07T12:34Z)
+  File:      dist/umd/supabase.js from the npm tarball, copied byte for byte
+  Tarball:   https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.117.3.tgz
+  Integrity: sha512-K+f8PimXDunPWQ63CKRXaF5pbVPJxmfw5ryAnh0s9S9PkwcuqBjiSpIaqpF7KLDljeYwXIL85ST8QxaO0+XuvA==
+             (npm's dist.integrity, checked against the downloaded tarball)
+  SHA-256:   d6a5c4414a5d4ce646d9c1de223aa7067d3ff664c15394ffeb7fcffc763354a3 (the kept file)
+
 The filename carries the version because /vendor/ is served immutable for a year (vercel.json).
 To upgrade: npm pack @supabase/supabase-js@<new> in a scratch folder, check dist.integrity,
 copy dist/umd/supabase.js to vendor/supabase-js-<new>.min.js, update this file and
-SUPABASE_SRC in auth/auth.js (tests/auth.test.mjs checks they agree), and delete the old file.
+SUPABASE_SRC in auth/auth.js, and the current and kept names in tests/auth.test.mjs and
+tests/vendor.test.mjs (they check all of these agree). Do not delete the old file in the same
+change: the studio repository names it too (the SUPABASE_SDK_URL default in
+backend/supabase-auth.cjs, its pins in tests/accounts-exchange.test.cjs and
+tests/supabase-auth.test.cjs, and docs/api/S1-accounts.md). Keep it with a record as above,
+move the studio to the new file, and delete the old file here only after both studio
+environments have deployed that change.
 
 The package's licence follows, unchanged.
 
