@@ -132,7 +132,7 @@ const go = to => { forgetNext(); location.assign(to); };
 /* ---- Supabase and Turnstile, only once the keys are real ------------------------------ */
 // the vendored supabase-js build (213 KiB) loads only when a page will use it (§6.7): never
 // while the keys are placeholders, never on the closed sign-up page
-const SUPABASE_SRC = '/vendor/supabase-js-2.117.3.min.js';
+const SUPABASE_SRC = '/vendor/supabase-js-2.118.0.min.js';
 let supabaseLoading = null;
 function loadSupabase() {
   if (window.supabase) return Promise.resolve(window.supabase);

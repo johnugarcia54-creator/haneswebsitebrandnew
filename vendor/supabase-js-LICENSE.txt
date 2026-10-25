@@ -1,16 +1,16 @@
-vendor/supabase-js-2.117.3.min.js is the unmodified browser (UMD) build of supabase-js.
+vendor/supabase-js-2.118.0.min.js is the unmodified browser (UMD) build of supabase-js.
 
-  Package:   @supabase/supabase-js 2.117.3 (the newest release on 2026-10-07; published 2026-10-07T12:34Z)
+  Package:   @supabase/supabase-js 2.118.0 (the newest release on 2026-10-25; published 2026-10-15T12:57Z)
   File:      dist/umd/supabase.js from the npm tarball, copied byte for byte
-  Tarball:   https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.117.3.tgz
-  Integrity: sha512-K+f8PimXDunPWQ63CKRXaF5pbVPJxmfw5ryAnh0s9S9PkwcuqBjiSpIaqpF7KLDljeYwXIL85ST8QxaO0+XuvA==
+  Tarball:   https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.118.0.tgz
+  Integrity: sha512-FxI8UXMVC2UG7IkeiI8fuQZqq2oI3JeSuN8MPIC2RLVaoEAxKS0nqE6kii9Ewpq8f9gNPM6git1Y8f0vN/QLFw==
              (npm's dist.integrity, checked against the downloaded tarball)
-  SHA-256:   d6a5c4414a5d4ce646d9c1de223aa7067d3ff664c15394ffeb7fcffc763354a3 (the vendored file)
+  SHA-256:   ee3be8de192b97cb1d73d1e95d6b82bb1f6b658c0f97c4ef757fc331996ed3d3 (the vendored file)
 
 The filename carries the version because /vendor/ is served immutable for a year (vercel.json).
 To upgrade: npm pack @supabase/supabase-js@<new> in a scratch folder, check dist.integrity,
-copy dist/umd/supabase.js to vendor/supabase-js-<new>.min.js, update this file and the script
-tags in auth/*.html (tests/auth.test.mjs checks they agree), and delete the old file.
+copy dist/umd/supabase.js to vendor/supabase-js-<new>.min.js, update this file and
+SUPABASE_SRC in auth/auth.js (tests/auth.test.mjs checks they agree), and delete the old file.
 
 The package's licence follows, unchanged.
 
