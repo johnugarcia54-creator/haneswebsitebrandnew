@@ -12,11 +12,10 @@ vendor/ScrollTrigger-3.15.0.min.js is the unmodified browser build of its Scroll
 The filenames carry the version because /vendor/ is served immutable for a year (vercel.json).
 To upgrade: npm pack gsap@<new> in a scratch folder, check dist.integrity, copy
 dist/gsap.min.js to vendor/gsap-<new>.min.js and dist/ScrollTrigger.min.js to
-vendor/ScrollTrigger-<new>.min.js, update this file, the two script tags on every page that
-loads them and the GSAP address in tests/config.test.mjs (tests/vendor.test.mjs checks they
-agree), and delete the old files. On 2026-10-25 the studio repository named neither file;
-check it again before deleting, and keep an old file with a record (as supabase-js-LICENSE.txt
-does) while anything else still names it.
+vendor/ScrollTrigger-<new>.min.js, update this file and the two script tags on every page that
+loads them (tests/vendor.test.mjs checks they agree), and delete the old files. On 2026-10-25
+the studio repository named neither file; check it again before deleting, and keep an old file
+with a record (as supabase-js-LICENSE.txt does) while anything else still names it.
 
 The package ships no licence file. Its licence is the one its package.json names, at the
 address given there; that page is not copied here. The licence lines the tarball ships follow,

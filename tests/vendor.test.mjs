@@ -63,8 +63,16 @@ test('exactly one vendored GSAP build and one ScrollTrigger build, both named by
   assert.doesNotMatch(read('package.json'), /gsap/i, 'not a dependency of the site');
 });
 
-test('the GSAP licence quotes the licence lines both builds carry, unchanged', () => {
+// the License section that ends the tarball's README.md, as gsap 3.15.0 ships it (checked against the tarball
+// on 2026-10-25); the tarball is not in the repository, so a release that changes it changes this too
+const GSAP_README_LICENSE = '### License\n' +
+  'GreenSock\'s standard "no charge" license can be viewed at <a href="https://gsap.com/standard-license">https://gsap.com/standard-license</a>.\n' +
+  '\n' +
+  'Copyright (c) 2008-2026, GreenSock. All rights reserved.';
+
+test('the GSAP licence quotes, unchanged, the README License section and the licence lines both builds carry', () => {
   const licence = read('vendor/gsap-LICENSE.txt');
+  assert.ok(licence.includes('README.md, the License section:\n\n' + GSAP_README_LICENSE + '\n\n'), 'quotes the README License section and its copyright line');
   for (const file of [GSAP[0], SCROLLTRIGGER[0]]) {
     const lines = read('vendor/' + file).split('\n').slice(0, 8);
     const at = lines.findIndex(l => l.startsWith(' * @license '));
