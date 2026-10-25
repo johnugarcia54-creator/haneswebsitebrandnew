@@ -221,7 +221,7 @@ for (const [p, expected] of [
   ['/auth/zh/login.html', AUTH],
   ['/auth/zh/confirm.html', AUTH],
   ['/fonts/x.woff2', { ...MARKETING, ...LONG_CACHE }],
-  ['/vendor/gsap.min.js', { ...MARKETING, ...LONG_CACHE }],
+  ['/vendor/gsap-3.15.0.min.js', { ...MARKETING, ...LONG_CACHE }],
   ['/og/index.jpg', { ...MARKETING, ...WEEK_CACHE }]
 ]) {
   test(`${p} → filesystem with its group's headers`, () => {
@@ -293,7 +293,7 @@ test('(e) no header name is set by two groups on any path', () => {
   const groups = routes.filter(r => r.continue && r.headers);
   const paths = ['/', '/index.html', '/bargainhub.html', '/privacy.html', '/studio', '/studio/', '/studio/index.html', '/studio/src/app.js',
     '/studio/consultant.html', '/api/', '/api/enquiry', '/api/session', '/api/auth/exchange', '/auth/login.html', '/auth/', '/auth/zh/login.html', '/fonts/x.woff2',
-    '/vendor/gsap.min.js', '/frames2/a/lg/1.webp', '/stills/x.jpg', '/catalogues/tv/001.webp', '/films/a.mp4', '/og/index.jpg',
+    '/vendor/gsap-3.15.0.min.js', '/frames2/a/lg/1.webp', '/stills/x.jpg', '/catalogues/tv/001.webp', '/films/a.mp4', '/og/index.jpg',
     '/login', '/staff', '/supplier', '/catalogues', '/no-such-page', '/assets/site.css', '/sitemap.xml', '/robots.txt'];
   for (const p of paths) {
     const seen = new Map();
