@@ -1,0 +1,41 @@
+vendor/gsap-3.15.0.min.js is the unmodified browser build of GSAP (the animation engine), and
+vendor/ScrollTrigger-3.15.0.min.js is the unmodified browser build of its ScrollTrigger plugin.
+
+  Package:   gsap 3.15.0 (the newest release on 2026-10-25; published 2026-04-13T13:15Z)
+  Files:     dist/gsap.min.js and dist/ScrollTrigger.min.js from the npm tarball, copied byte for byte
+  Tarball:   https://registry.npmjs.org/gsap/-/gsap-3.15.0.tgz
+  Integrity: sha512-dMW4CWBTUK1AEEDeZc1g4xpPGIrSf9fJF960qbTZmN/QwZIWY5wgliS6JWl9/25fpTGJrMRtSjGtOmPnfjZB+A==
+             (npm's dist.integrity, checked against the downloaded tarball)
+  SHA-256:   92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb (vendor/gsap-3.15.0.min.js)
+             b0b14d67b55b0c43c756ac0b106cfcb09d0879945f6ead64451065b0672916a2 (vendor/ScrollTrigger-3.15.0.min.js)
+
+The filenames carry the version because /vendor/ is served immutable for a year (vercel.json).
+To upgrade: npm pack gsap@<new> in a scratch folder, check dist.integrity, copy
+dist/gsap.min.js to vendor/gsap-<new>.min.js and dist/ScrollTrigger.min.js to
+vendor/ScrollTrigger-<new>.min.js, update this file and the two script tags on every page that
+loads them (tests/vendor.test.mjs checks they agree), and delete the old files. On 2026-10-25
+the studio repository named neither file; check it again before deleting, and keep an old file
+with a record (as supabase-js-LICENSE.txt does) while anything else still names it.
+
+The package ships no licence file. Its licence is the one its package.json names, at the
+address given there; that page is not copied here. The licence lines the tarball ships follow,
+unchanged.
+
+------------------------------------------------------------------------------------------------
+
+package.json, the "license" field:
+
+Standard 'no charge' license: https://gsap.com/standard-license.
+
+README.md, the License section:
+
+### License
+GreenSock's standard "no charge" license can be viewed at <a href="https://gsap.com/standard-license">https://gsap.com/standard-license</a>.
+
+Copyright (c) 2008-2026, GreenSock. All rights reserved.
+
+dist/gsap.min.js and dist/ScrollTrigger.min.js, the licence lines in the comment at the top of
+each (the vendored files keep that comment):
+
+ * @license Copyright 2026, GreenSock. All rights reserved.
+ * Subject to the terms at https://gsap.com/standard-license.

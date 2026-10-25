@@ -34,8 +34,8 @@ const STAGING_FLY = 'https://bargainhub-studio-staging.fly.dev';
 const PRODUCTION_ENV = { STUDIO_EDGE_SECRET_PROD: 'test-prod-value', STUDIO_EDGE_SECRET_STAGING: 'not-this-environment' };
 const PREVIEW_ENV = { STUDIO_EDGE_SECRET_PROD: 'not-this-environment', STUDIO_EDGE_SECRET_STAGING: 'test-staging-value' };
 
-// the deployment: this repository's files, plus the W2 sign-in pages and a font named in the case table
-const EXTRA = new Set(['/auth/login.html', '/fonts/x.woff2']);
+// the deployment: this repository's files, plus the W2 sign-in pages, and a font and a vendor build named in the case table
+const EXTRA = new Set(['/auth/login.html', '/fonts/x.woff2', '/vendor/x.min.js']);
 const filesystem = p => EXTRA.has(p) || !!resolveFile(root, p);
 const run = (path, host = PROD_HOST, env = PRODUCTION_HOSTS.includes(host) ? PRODUCTION_ENV : PREVIEW_ENV) => matchRoute(routes, { path, host, env, filesystem });
 
@@ -221,7 +221,7 @@ for (const [p, expected] of [
   ['/auth/zh/login.html', AUTH],
   ['/auth/zh/confirm.html', AUTH],
   ['/fonts/x.woff2', { ...MARKETING, ...LONG_CACHE }],
-  ['/vendor/gsap.min.js', { ...MARKETING, ...LONG_CACHE }],
+  ['/vendor/x.min.js', { ...MARKETING, ...LONG_CACHE }],
   ['/og/index.jpg', { ...MARKETING, ...WEEK_CACHE }]
 ]) {
   test(`${p} → filesystem with its group's headers`, () => {
@@ -293,7 +293,7 @@ test('(e) no header name is set by two groups on any path', () => {
   const groups = routes.filter(r => r.continue && r.headers);
   const paths = ['/', '/index.html', '/bargainhub.html', '/privacy.html', '/studio', '/studio/', '/studio/index.html', '/studio/src/app.js',
     '/studio/consultant.html', '/api/', '/api/enquiry', '/api/session', '/api/auth/exchange', '/auth/login.html', '/auth/', '/auth/zh/login.html', '/fonts/x.woff2',
-    '/vendor/gsap.min.js', '/frames2/a/lg/1.webp', '/stills/x.jpg', '/catalogues/tv/001.webp', '/films/a.mp4', '/og/index.jpg',
+    '/vendor/x.min.js', '/frames2/a/lg/1.webp', '/stills/x.jpg', '/catalogues/tv/001.webp', '/films/a.mp4', '/og/index.jpg',
     '/login', '/staff', '/supplier', '/catalogues', '/no-such-page', '/assets/site.css', '/sitemap.xml', '/robots.txt'];
   for (const p of paths) {
     const seen = new Map();
