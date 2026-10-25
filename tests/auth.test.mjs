@@ -821,21 +821,32 @@ test('no innerHTML, outerHTML, insertAdjacentHTML or document.write anywhere in 
 
 /* ---------- the five pages (§6.3) ---------- */
 const PAGES = ['login', 'signup', 'reset', 'confirm', 'update-password'];
-const SDK_FILES = readdirSync(root + 'vendor').filter(f => /^supabase-js-\d+\.\d+\.\d+\.min\.js$/.test(f));
+/* exactly these builds, by name: the one auth.js loads, and 2.117.3, kept only because the studio still
+   names it as its SDK address (vendor/supabase-js-LICENSE.txt). It goes once both studios name 2.118.0. */
+const SDK_CURRENT = 'supabase-js-2.118.0.min.js';
+const SDK_KEPT_FOR_STUDIO = 'supabase-js-2.117.3.min.js';
+const SDK_FILES = readdirSync(root + 'vendor').filter(f => /^supabase-js.*\.js$/.test(f)).sort();
 
-test('exactly one vendored supabase-js build, its licence names that version, and auth.js loads it only when needed', () => {
-  assert.equal(SDK_FILES.length, 1, SDK_FILES.join());
-  const version = SDK_FILES[0].match(/(\d+\.\d+\.\d+)/)[1];
+test('the vendored supabase-js builds are the current one and the one kept for the studio, and auth.js loads the current one only when needed', () => {
+  assert.deepEqual(SDK_FILES, [SDK_KEPT_FOR_STUDIO, SDK_CURRENT].sort());
   const licence = read('vendor/supabase-js-LICENSE.txt');
-  assert.match(licence, new RegExp(`@supabase/supabase-js ${version.replaceAll('.', '\\.')}`));
+  for (const f of SDK_FILES) {
+    const v = f.match(/^supabase-js-(\d+\.\d+\.\d+)\.min\.js$/)[1].replaceAll('.', '\\.');
+    assert.match(licence, new RegExp(`Package: +@supabase/supabase-js ${v} `), `the licence records ${f}`);
+    assert.match(read('vendor/' + f), /^var supabase=/, `${f}: the UMD build (window.supabase)`);
+  }
+  assert.ok(licence.startsWith(`vendor/${SDK_CURRENT} is the unmodified`), 'the licence names the current build first');
+  assert.match(licence, new RegExp(`Kept for the studio \\(\\d{4}-\\d{2}-\\d{2}\\): vendor/${SDK_KEPT_FOR_STUDIO.replaceAll('.', '\\.')},`), 'and says why the old one stays, and since when');
   assert.match(licence, /MIT License/);
-  assert.match(licence, /sha512-[A-Za-z0-9+/=]+/, 'records the tarball integrity');
-  assert.match(read('vendor/' + SDK_FILES[0]), /^var supabase=/, 'the UMD build (window.supabase)');
+  assert.equal((licence.match(/Integrity: sha512-[A-Za-z0-9+/=]+/g) || []).length, 2, 'records both tarball integrities');
   assert.doesNotMatch(read('package.json'), /supabase/, 'not a dependency of the site');
+  // the kept build is only an address for the studio: nothing on this site loads it
+  const site = [...AUTH_FILES, ...readdirSync(root).filter(f => f.endsWith('.html')), ...readdirSync(root + 'assets').filter(f => f.endsWith('.js')).map(f => 'assets/' + f)];
+  for (const f of site) assert.ok(!read(f).includes(SDK_KEPT_FOR_STUDIO), `${f} does not load the kept build`);
   // §6.7: no page loads supabase-js up front; auth.js adds that one build once the keys are real
   for (const p of PAGES) assert.doesNotMatch(read(`auth/${p}.html`), /supabase-js/, p);
   const js = read('auth/auth.js');
-  assert.ok(js.includes(`const SUPABASE_SRC = '/vendor/${SDK_FILES[0]}';`), 'auth.js names the vendored build');
+  assert.ok(js.includes(`const SUPABASE_SRC = '/vendor/${SDK_CURRENT}';`), 'auth.js names the current build');
   assert.equal((js.match(/vendor\/supabase-js/g) || []).length, 1, 'and no other');
   const client = js.slice(js.indexOf('async function supabaseClient()'));
   assert.ok(client.indexOf('if (!cfg.supabaseReady) return null;') >= 0 && client.indexOf('if (!cfg.supabaseReady) return null;') < client.indexOf('await loadSupabase()'), 'placeholder keys: the build is never fetched');
