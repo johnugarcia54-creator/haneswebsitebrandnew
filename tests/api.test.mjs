@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import net from 'node:net';
-import { validate, compose, send, configured, limited, DEFAULT_TO } from '../api/_lib/enquiry.js';
+import { validate, compose, send, configured, limited, record, DEFAULT_TO } from '../api/_lib/enquiry.js';
 import handler from '../api/enquiry.js';
 
 const good = { name: 'Aroha Smith', email: 'aroha@example.co.nz', subject: 'Hanesteel quote', form: 'test', page: '/hanesteel.html', elapsed: 9000, website: '',
@@ -23,6 +23,14 @@ test('validate rejects missing or bad details', () => {
   assert.equal(validate({ ...good, email: 'a@b' }).field, 'email');
   assert.ok(validate(null).error);
   assert.ok(validate({ ...good, fields: [['Message', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(5000)], ['More', 'x'.repeat(1000)]] }).error);
+});
+
+test('validate rejects addresses that would add mailto or Reply-To header fields', () => {
+  for (const email of ['x@evil.co?cc=accounts%40hanesdistribution.co.nz&subject=Bank&body=Pay', 'a@b.c&d', 'a@b.co#frag', 'x?cc=a%40b.co@evil.co', 'a@b_c.co', 'a@-b.co'])
+    assert.equal(validate({ ...good, email }).field, 'email', email);
+  for (const email of ['aroha@example.co.nz', "o'brien+quotes@mail.hanes-distribution.co.nz", 'A.B@Example.COM'])
+    assert.equal(validate({ ...good, email }).error, undefined, email);
+  assert.match(compose(validate(good).data).html, /href="mailto:aroha@example\.co\.nz"/);
 });
 
 test('validate flags bots', () => {
@@ -114,7 +122,7 @@ test('send delivers through SMTP', async () => {
 
 test('limited allows five sends per address in ten minutes', () => {
   const t = 1e12;
-  for (let i = 0; i < 5; i++) assert.equal(limited('1.2.3.4', t + i), false);
+  for (let i = 0; i < 5; i++) { assert.equal(limited('1.2.3.4', t + i), false); record('1.2.3.4', t + i); }
   assert.equal(limited('1.2.3.4', t + 10), true);
   assert.equal(limited('5.6.7.8', t + 10), false);
   assert.equal(limited('1.2.3.4', t + 11 * 60 * 1000), false);
@@ -148,6 +156,59 @@ test('handler: sends a real enquiry, then slows down a flood', async () => {
   try {
     for (let i = 0; i < 5; i++) assert.deepEqual(await call('POST', good, { ip: '9.9.9.9' }), { status: 200, body: { ok: true } });
     assert.equal((await call('POST', good, { ip: '9.9.9.9' })).status, 429);
+    assert.equal(n, 5);
+  } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
+});
+
+test('handler: refuses an over-length message instead of cutting it short (#21)', async () => {
+  let n = 0;
+  const srv = http.createServer((req, res) => { req.resume(); req.on('end', () => { n++; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"id":"x"}'); }); });
+  const port = await listen(srv);
+  process.env.RESEND_API_KEY = 'k'; process.env.RESEND_API_URL = `http://127.0.0.1:${port}`;
+  try {
+    const r = await call('POST', { ...good, fields: [['Message', 'x'.repeat(5001)]] });
+    assert.equal(r.status, 400);
+    assert.equal(r.body.field, 'message');
+    assert.match(r.body.error, /message is too long/);
+    assert.equal(validate({ ...good, name: 'x'.repeat(121) }).field, 'name');
+    // an address over 254 characters is refused, not cut into a different address that still looks valid
+    const at254 = 'a'.repeat(64) + '@' + ['b'.repeat(63), 'c'.repeat(63), 'd'.repeat(58), 'co'].join('.');
+    assert.equal(validate({ ...good, email: at254 }).data.email, at254);
+    assert.equal(validate({ ...good, email: at254 + 'm' }).field, 'email');
+    assert.equal(validate({ ...good, fields: [['Message', 'x'.repeat(5000)]] }).data.fields[0][1].length, 5000);
+    assert.equal(n, 0);
+  } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
+});
+
+test('handler: failed requests do not use up the send allowance, but are capped too (#22)', async () => {
+  let n = 0;
+  const srv = http.createServer((req, res) => { req.resume(); req.on('end', () => { n++; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"id":"x"}'); }); });
+  const port = await listen(srv);
+  process.env.RESEND_API_KEY = 'k'; process.env.RESEND_API_URL = `http://127.0.0.1:${port}`;
+  try {
+    for (let i = 0; i < 5; i++) assert.equal((await call('POST', { ...good, email: 'nope' }, { ip: '8.8.8.8' })).status, 400);
+    assert.deepEqual(await call('POST', good, { ip: '8.8.8.8' }), { status: 200, body: { ok: true } });
+    assert.equal(n, 1);
+    for (let i = 0; i < 15; i++) assert.equal((await call('POST', { ...good, name: '' }, { ip: '8.8.8.8' })).status, 400);
+    assert.equal((await call('POST', good, { ip: '8.8.8.8' })).status, 429);
+    assert.equal(n, 1);
+  } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
+});
+
+test('handler: a parallel burst cannot slip past the send allowance, and a failed send gives its slot back (#22)', async () => {
+  let n = 0, ok = false;
+  const srv = http.createServer((req, res) => { req.resume(); req.on('end', () => setTimeout(() => {
+    if (!ok) { res.writeHead(500); return res.end('{"message":"down"}'); }
+    n++; res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"id":"x"}');
+  }, 30)); });
+  const port = await listen(srv);
+  process.env.RESEND_API_KEY = 'k'; process.env.RESEND_API_URL = `http://127.0.0.1:${port}`;
+  try {
+    for (let i = 0; i < 5; i++) assert.equal((await call('POST', good, { ip: '6.6.6.6' })).status, 502);
+    ok = true;
+    const statuses = await Promise.all(Array.from({ length: 12 }, () => call('POST', good, { ip: '6.6.6.6' }).then(r => r.status)));
+    assert.equal(statuses.filter(s => s === 200).length, 5);
+    assert.equal(statuses.filter(s => s === 429).length, 7);
     assert.equal(n, 5);
   } finally { srv.close(); delete process.env.RESEND_API_KEY; delete process.env.RESEND_API_URL; }
 });

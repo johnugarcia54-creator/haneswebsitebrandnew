@@ -1,0 +1,277 @@
+{
+  "version": "2026-10-09.w3-1",
+  "about": "Milli's static decision tree (ADDENDUM §8.6), hand-built by W3 because kb-draft.json was not available in this checkout. Every answer either carries the page and the exact sentence it rests on (the website's unit suite checks that each quote is still in that page's visible text, and that every figure in an answer is in its quotes), or is marked as text the integrator mandated. G1's tools/guide-faq.cjs replaces this file later.",
+  "omitted": [
+    {
+      "topic": "the consultant code",
+      "reason": "allowed by the integrator, but no page in this checkout publishes it, so Milli leaves it out until one does"
+    },
+    {
+      "topic": "what the free studio includes, and sign-up",
+      "reason": "no page in this checkout publishes those lines yet, so 'What's free?' hands over to a sales consultant"
+    },
+    {
+      "topic": "everything in ADDENDUM §8.5 'Never say' (as amended at 9670114, SEO-H0)",
+      "reason": "never said, even where a page still shows it; the unit suite scans this file for each term"
+    }
+  ],
+  "chips": {
+    "index": ["brand", "kitchen", "track", "person"],
+    "bargainhub": ["studio", "free", "packages", "booking", "person"],
+    "hanesteel": ["audience-hanesteel", "pricing-hanesteel", "person"],
+    "hanestone": ["audience-hanestone", "pricing-hanestone", "person"],
+    "hanewood": ["audience-hanewood", "pricing-hanewood", "person"],
+    "hanesulation": ["audience-hanesulation", "pricing-hanesulation", "person"],
+    "hisense": ["audience-hisense", "pricing-hisense", "person"]
+  },
+  "topics": {
+    "index": "Project enquiry",
+    "bargainhub": "Bargainhub kitchens and interiors",
+    "hanesteel": "Hanesteel windows and doors",
+    "hanestone": "Hanestone plasterboard",
+    "hanewood": "Hanewood plywood, board and LVL",
+    "hanesulation": "Hanesulation insulation",
+    "hisense": "Hisense appliances",
+    "tracking": "Shipment tracking"
+  },
+  "nodes": {
+    "brand": {
+      "label": "Which brand do I need?",
+      "answer": "Hanes has five brands on one supply line, and supplies Hisense home appliances too. What are you looking for?",
+      "sources": [
+        { "page": "index.html", "quote": "Five brands." },
+        { "page": "index.html", "quote": "One supply line." },
+        { "page": "hisense.html", "quote": "Hisense TVs and home appliances are supplied through Hanes Distribution." }
+      ],
+      "next": ["brand-windows", "brand-plasterboard", "brand-timber", "brand-insulation", "brand-interiors", "brand-appliances"]
+    },
+    "brand-windows": {
+      "label": "Windows and doors",
+      "answer": "Hanesteel: windows and doors, priced on one quote from our Christchurch team.",
+      "sources": [
+        {
+          "page": "hanesteel.html",
+          "quote": "We'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn."
+        }
+      ],
+      "actions": [{"id": "go_hanesteel"}]
+    },
+    "brand-plasterboard": {
+      "label": "Plasterboard",
+      "answer": "Trusus gypsum plasterboard for walls and ceilings, in bulk for merchants. Ask us for the product documents.",
+      "mandated": "integrator: Hanestone's answer, word for word (SEO-H0)",
+      "actions": [{"id": "go_hanestone"}]
+    },
+    "brand-timber": {
+      "label": "Plywood, board and LVL",
+      "answer": "Hanewood: full packs of board, plywood and LVL, for timber merchants, retailers and builders' suppliers.",
+      "sources": [
+        { "page": "hanewood.html", "quote": "Full packs of board, plywood and LVL, ready when your yard needs them." },
+        { "page": "hanewood.html", "quote": "For timber merchants, retailers and builders' suppliers." }
+      ],
+      "actions": [{"id": "go_hanewood"}]
+    },
+    "brand-insulation": {
+      "label": "Insulation",
+      "answer": "Hanesulation: one brand for every wall and ceiling, supplied to retailers and the trade.",
+      "sources": [
+        { "page": "hanesulation.html", "quote": "One brand for every wall and ceiling." },
+        {
+          "page": "hanesulation.html",
+          "quote": "Hanesulation is a Hanes Distribution brand, supplied to retailers and the trade."
+        }
+      ],
+      "actions": [{"id": "go_hanesulation"}]
+    },
+    "brand-interiors": {
+      "label": "Kitchens and interiors",
+      "answer": "Bargainhub: kitchens, bathrooms and whole-home interiors, designed with you and supplied warehouse-direct.",
+      "sources": [
+        {
+          "page": "index.html",
+          "quote": "Kitchens, bathrooms and whole-home interiors, designed with you and supplied warehouse-direct."
+        }
+      ],
+      "actions": [{"id": "go_bargainhub"}]
+    },
+    "brand-appliances": {
+      "label": "Home appliances",
+      "answer": "Hisense TVs and home appliances are supplied through Hanes Distribution.",
+      "sources": [{"page": "hisense.html", "quote": "Hisense TVs and home appliances are supplied through Hanes Distribution."}],
+      "actions": [{"id": "go_hisense"}]
+    },
+    "kitchen": {
+      "label": "Start a kitchen design",
+      "answer": "Bargainhub designs kitchens, bathrooms and whole-home interiors with you. Bring a sketch, a photo or just a feeling. We turn it into plans and a 3D model.",
+      "sources": [
+        {
+          "page": "index.html",
+          "quote": "Kitchens, bathrooms and whole-home interiors, designed with you and supplied warehouse-direct."
+        },
+        { "page": "bargainhub.html", "quote": "Bring a sketch, a photo or just a feeling." },
+        {
+          "page": "bargainhub.html",
+          "quote": "We turn it into plans and a 3D model, then supply every panel, benchtop and fitting to make it real."
+        }
+      ],
+      "actions": [{"id": "open_studio"}, {"id": "go_bargainhub"}]
+    },
+    "track": {
+      "label": "Track a shipment",
+      "answer": "Enter your tracking ID or order number on the Hanes Track page, and we'll come back to you with where it is and when it's due.",
+      "sources": [
+        {
+          "page": "tracking.html",
+          "quote": "Enter your tracking ID or order number, and we'll come back to you with where it is and when it's due."
+        }
+      ],
+      "actions": [{"id": "go_tracking"}]
+    },
+    "person": {
+      "label": "Talk to a person",
+      "answer": "Tell us what you need, and the right person will come back to you. You can also email Enquiry@hanesdistribution.co.nz.",
+      "sources": [
+        {
+          "page": "contact.html",
+          "quote": "Tell us what you're building or what you need, and the right person will come back to you."
+        },
+        { "page": "contact.html", "quote": "Enquiry@hanesdistribution.co.nz" }
+      ],
+      "opens": "open_enquiry",
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "studio": {
+      "label": "How does the design studio work?",
+      "answer": "Bring a sketch, a photo or just a feeling. We turn it into plans and a 3D model, then supply every panel, benchtop and fitting to make it real. You see the plans, elevations, finishes and a render before you commit.",
+      "sources": [
+        { "page": "bargainhub.html", "quote": "Bring a sketch, a photo or just a feeling." },
+        {
+          "page": "bargainhub.html",
+          "quote": "We turn it into plans and a 3D model, then supply every panel, benchtop and fitting to make it real."
+        },
+        { "page": "bargainhub.html", "quote": "Plans, elevations, finishes and a render, before you commit." }
+      ],
+      "actions": [{"id": "open_studio"}, {"id": "open_booking"}]
+    },
+    "free": {
+      "label": "What's free?",
+      "answer": "I can't answer that from this page yet. Talk to one of our sales consultants for more information.",
+      "sources": [{"page": "bargainhub.html", "quote": "Talk to one of our sales consultants for more information."}],
+      "actions": [{"id": "open_booking"}]
+    },
+    "packages": {
+      "label": "Packages",
+      "answer": "Whole-home packages start from $45k + GST. That's a starting price, excluding GST; yours depends on the size of your home and the finishes you choose. Talk to one of our sales consultants for more information.",
+      "sources": [
+        { "page": "bargainhub.html", "quote": "Whole-home packages start from $45k + GST." },
+        {
+          "page": "bargainhub.html",
+          "quote": "Starting price, excluding GST; yours depends on the size of your home and the finishes you choose."
+        },
+        { "page": "bargainhub.html", "quote": "Talk to one of our sales consultants for more information." }
+      ],
+      "actions": [{"id": "open_packages"}, {"id": "open_booking"}]
+    },
+    "booking": {
+      "label": "Book a consultant",
+      "answer": "Talk to one of our sales consultants for more information. You are welcome to visit our showroom at 93 Main South Road, Sockburn, Christchurch.",
+      "sources": [
+        { "page": "bargainhub.html", "quote": "Talk to one of our sales consultants for more information." },
+        { "page": "bargainhub.html", "quote": "You are welcome to visit our showroom." },
+        { "page": "contact.html", "quote": "93 Main South Road, Sockburn, Christchurch." }
+      ],
+      "actions": [{"id": "open_booking"}, {"id": "open_showroom"}]
+    },
+    "audience-hanesteel": {
+      "label": "Is this for homeowners or trade?",
+      "answer": "Tell us about your build or renovation, and we'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn.",
+      "sources": [
+        { "page": "hanesteel.html", "quote": "Tell us about your build or renovation." },
+        {
+          "page": "hanesteel.html",
+          "quote": "We'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn."
+        }
+      ],
+      "actions": [{"id": "open_enquiry"}, {"id": "open_showroom"}]
+    },
+    "pricing-hanesteel": {
+      "label": "Get pricing",
+      "answer": "We'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn. Tell us about your build or renovation.",
+      "sources": [
+        {
+          "page": "hanesteel.html",
+          "quote": "We'll price your windows and doors on one quote, from our Christchurch team at 93 Main South Road, Sockburn."
+        },
+        { "page": "hanesteel.html", "quote": "Tell us about your build or renovation." }
+      ],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "audience-hanestone": {
+      "label": "Is this for homeowners or trade?",
+      "answer": "Bulk orders only, for retailers and merchants.",
+      "sources": [{"page": "hanestone.html", "quote": "Bulk orders only, for retailers and merchants."}],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "pricing-hanestone": {
+      "label": "Get pricing",
+      "answer": "Tell us what you move, and we'll come back with pricing built around your volumes.",
+      "sources": [{"page": "hanestone.html", "quote": "Tell us what you move, and we'll come back with pricing built around your volumes."}],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "audience-hanewood": {
+      "label": "Is this for homeowners or trade?",
+      "answer": "Hanewood is for timber merchants, retailers and builders' suppliers, with bulk pricing built around your volumes, not a price list.",
+      "sources": [
+        { "page": "hanewood.html", "quote": "For timber merchants, retailers and builders' suppliers." },
+        { "page": "hanewood.html", "quote": "Built around your volumes, not a price list." }
+      ],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "pricing-hanewood": {
+      "label": "Get pricing",
+      "answer": "Tell us what you move, and we'll come back with pricing built around your volumes.",
+      "sources": [{"page": "hanewood.html", "quote": "Tell us what you move, and we'll come back with pricing built around your volumes."}],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "audience-hanesulation": {
+      "label": "Is this for homeowners or trade?",
+      "answer": "Hanesulation is supplied to retailers and the trade. Tell us about your business, and we'll come back to you with pricing built around your volumes.",
+      "sources": [
+        {
+          "page": "hanesulation.html",
+          "quote": "Hanesulation is a Hanes Distribution brand, supplied to retailers and the trade."
+        },
+        { "page": "hanesulation.html", "quote": "We'll come back to you with pricing built around your volumes." }
+      ],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "pricing-hanesulation": {
+      "label": "Get pricing",
+      "answer": "Pricing for stockists, built around what you sell, not a price list. Tell us about your business, and we'll come back to you with pricing built around your volumes.",
+      "sources": [
+        { "page": "hanesulation.html", "quote": "Pricing for stockists." },
+        { "page": "hanesulation.html", "quote": "Built around what you sell, not a price list." },
+        { "page": "hanesulation.html", "quote": "We'll come back to you with pricing built around your volumes." }
+      ],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "audience-hisense": {
+      "label": "Is this for homeowners or trade?",
+      "answer": "Retailers and merchants can stock Hisense through Hanes. For a project, tell us about it, and we'll come back to you with the range and pricing.",
+      "sources": [
+        { "page": "hisense.html", "quote": "Stock Hisense through Hanes." },
+        {
+          "page": "hisense.html",
+          "quote": "Tell us about your project, and we'll come back to you with the range and pricing."
+        }
+      ],
+      "actions": [{"id": "open_enquiry"}]
+    },
+    "pricing-hisense": {
+      "label": "Get pricing",
+      "answer": "Tell us about your project, and we'll come back to you with the range and pricing.",
+      "sources": [{"page": "hisense.html", "quote": "Tell us about your project, and we'll come back to you with the range and pricing."}],
+      "actions": [{"id": "open_enquiry"}]
+    }
+  }
+}

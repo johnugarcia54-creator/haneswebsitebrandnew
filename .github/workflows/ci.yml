@@ -12,11 +12,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      matrix:
+        # Node 24 is the newest LTS Vercel runs (owner rule: newest LTS); 22 stays covered too.
+        node: [24, 22]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
       - name: Enquiry API tests

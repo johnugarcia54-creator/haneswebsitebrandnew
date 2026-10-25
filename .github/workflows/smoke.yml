@@ -15,8 +15,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Pages, SEO files, redirects, headers and the enquiry API
+          node-version: 24
+      # reads only: the three enquiry posts are refused before any email or CRM lead (scripts/smoke.mjs)
+      - name: Pages, sign-in pages, SEO files, redirects, headers, the studio rewrite and the enquiry API
         env:
           DEPLOY_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+          DEPLOY_ENV: ${{ github.event.deployment_status.environment }}
         run: node scripts/smoke.mjs "$DEPLOY_URL"
