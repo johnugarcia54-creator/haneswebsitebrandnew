@@ -108,7 +108,7 @@ test('leadFrom keeps the message to 4000 characters and the body to 16 KB', () =
   assert.equal(long.message.length, 4000);
   // characters that take three bytes each, and quotes that JSON doubles, still fit in 16 KB
   for (const ch of ['€', '"', '😀']) {
-    const big = leadFrom(validate({ ...good, name: ch.repeat(60), subject: ch.repeat(70), page: '/' + ch.repeat(140), fields: [['Phone', ch.repeat(20)], ['Business', ch.repeat(60)], ['Message', ch.repeat(4990)], ['More', ch.repeat(4990)]] }).data);
+    const big = leadFrom(validate({ ...good, name: ch.repeat(60), subject: ch.repeat(70), page: '/' + ch.repeat(140), fields: [['Phone', ch.repeat(20)], ['Business', ch.repeat(60)], ['Message', ch.repeat(Math.floor(4990 / ch.length))], ['More', ch.repeat(Math.floor(4990 / ch.length))]] }).data);
     assert.ok(Buffer.byteLength(JSON.stringify(big)) <= MAX_BODY, ch);
     assert.ok(big.message.length > 1000 && big.message.length <= 4000, ch);
     assert.ok(!/[\ud800-\udbff]$/.test(big.message), 'no half surrogate at the end');
@@ -447,6 +447,24 @@ test('handler: spam, refused and rate-limited enquiries are never forwarded', as
     };
     assert.deepEqual(await flood(), [200, 200, 200, 200, 200, 429]);
     assert.equal(s.seen.length, 5);
+  } finally { s.close(); }
+});
+
+test('handler: a parallel burst cannot slip past the allowance while the CRM forward is slow, and sends nothing extra to the CRM (#22)', async () => {
+  // the slot must be taken before the awaited forward, not after it: otherwise all of a burst pass the check together
+  const s = await studio((req, res) => setTimeout(reply(202, { status: 'held', ref: 'r' }), 60, req, res));
+  try {
+    const mail = await mailbox();
+    Object.assign(process.env, { RESEND_API_KEY: 'k', RESEND_API_URL: mail.url }, fwd(s.url));
+    const srv = http.createServer((req, res) => handler(req, res)); const port = await listen(srv);
+    const log = console.log; console.log = () => {};
+    try {
+      const statuses = await Promise.all(Array.from({ length: 30 }, () => fetch(`http://127.0.0.1:${port}/api/enquiry`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '10.201.0.1' }, body: JSON.stringify(golden) }).then(r => r.status)));
+      assert.equal(statuses.filter(x => x === 200).length, 5);
+      assert.equal(statuses.filter(x => x === 429).length, 25);
+      assert.equal(mail.mails.length, 5);
+      assert.equal(s.seen.length, 5);
+    } finally { console.log = log; srv.close(); mail.close(); for (const k of [...FORWARD_ENV, 'RESEND_API_KEY', 'RESEND_API_URL']) delete process.env[k]; }
   } finally { s.close(); }
 });
 

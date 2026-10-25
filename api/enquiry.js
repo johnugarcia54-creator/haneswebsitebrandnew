@@ -1,10 +1,13 @@
 /* POST /api/enquiry: sends a website enquiry to the Hanes inbox (see api/_lib/enquiry.js).
    In order: origin, size, rate limit, validation and the spam trap (and "not configured" when no
-   email provider is set); then the CRM forward to the studio (api/_lib/crm-forward.js, ADDENDUM
-   §7.3), then the email, which gains one line saying what the CRM did. The email is primary: a failed forward never fails the request, and spam,
+   email provider is set); then the send slot is taken, before the CRM forward to the studio
+   (api/_lib/crm-forward.js, ADDENDUM §7.3), then the email, which gains one line saying what the CRM did. The email is primary: a failed forward never fails the request, and spam,
    refused or rate-limited enquiries are never forwarded.
+   Only sent enquiries and spam-trap hits count toward the limit (ENQUIRY_RATE_MAX, default 5 per
+   address in 10 minutes); invalid requests (400), "not configured" (503) and failed sends (502)
+   have their own cap of 20; a request refused with 429 counts toward neither.
    GET /api/enquiry: a health check that says whether sending is configured. */
-import { validate, compose, send, configured, limited } from './_lib/enquiry.js';
+import { validate, compose, send, configured, limited, record } from './_lib/enquiry.js';
 import { leadFrom, forwardLead, emailLine } from './_lib/crm-forward.js';
 
 const json = (res, status, body) => { res.statusCode = status; res.setHeader('Content-Type', 'application/json; charset=utf-8'); res.end(JSON.stringify(body)); };
@@ -32,12 +35,18 @@ export default async function handler(req, res) {
   if (body && JSON.stringify(body).length > 60000) return json(res, 413, { error: 'Your message is too long. Please shorten it and try again.' });
 
   const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
-  if (limited(ip, Date.now(), Number(process.env.ENQUIRY_RATE_MAX) || 5)) return json(res, 429, { error: 'too_many' });
+  // only sent enquiries (and spam-trap hits) use up the allowance; failed requests have their own, higher cap
+  const sent = `sent:${ip}`, failed = `failed:${ip}`, fail = (status, b) => { record(failed); return json(res, status, b); };
+  if (limited(sent, Date.now(), Number(process.env.ENQUIRY_RATE_MAX) || 5) || limited(failed, Date.now(), 20)) return json(res, 429, { error: 'too_many' });
 
   const v = validate(body);
-  if (v.spam) return json(res, 200, { ok: true });
-  if (v.error) return json(res, 400, { error: v.error, field: v.field || null });
-  if (!configured()) return json(res, 503, { error: 'not_configured' });
+  if (v.spam) { record(sent); return json(res, 200, { ok: true }); }
+  if (v.error) return fail(400, { error: v.error, field: v.field || null });
+  if (!configured()) return fail(503, { error: 'not_configured' });
+
+  // hold a slot from here, before the awaited CRM forward and the send, so a parallel burst cannot
+  // pass the check together; give it back if the send fails
+  const release = record(sent);
 
   // without the forward's settings the line is '' and the email is exactly as before
   let note = '', crm = 'unconfirmed';
@@ -58,6 +67,7 @@ export default async function handler(req, res) {
     // the event id and the forward's status (no personal data), so a lead the CRM already holds
     // can be matched before the visitor's fallback email is entered by hand
     console.error('enquiry send failed:', e.message, `(event ${v.data.submissionId}, crm ${crm})`);
-    return json(res, 502, { error: 'send_failed' });
+    release();
+    return fail(502, { error: 'send_failed' });
   }
 }

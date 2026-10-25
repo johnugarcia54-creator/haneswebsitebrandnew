@@ -8,7 +8,8 @@
       "Book a consultant" (assets/enquiry.js); set it to true when bookings ship and they go
       to the studio's booking page instead.
    4. The global bar stays on screen. On a small screen it opens the full list of sections, and
-      Get a quote, and closes again once a link is chosen.
+      Get a quote, and closes again once a link is chosen. While it is open the rest of the page
+      is inert, so Tab stays in the menu.
    5. Milli, the guide (assets/guide/milli.js): loaded after the page has loaded and the browser
       is idle (at most 4 s later), never on the sign-in pages or in the studio. MILLI_SHIPPED says
       whether the file is deployed (npm run check keeps it honest), so a page without it never
@@ -101,8 +102,14 @@
   const root = document.documentElement, gb = document.getElementById('gb');
   const btn = gb && gb.querySelector('.gb__burger');
   if (btn) {
+    // While the menu is open the rest of the page is inert, so Tab stays in the bar and panel.
+    // Only what this script made inert is restored, so anything already inert stays that way.
+    let held = [];
     const setOpen = v => {
       root.classList.toggle('gb-open', v);
+      held.forEach(el => { el.inert = false; });
+      held = v ? [...document.body.children].filter(el => el !== gb && !el.inert) : [];
+      held.forEach(el => { el.inert = true; });
       btn.setAttribute('aria-expanded', String(v));
       btn.setAttribute('aria-label', v ? 'Close the Hanes menu' : 'Open the Hanes menu');
     };

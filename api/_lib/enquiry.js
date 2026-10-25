@@ -17,13 +17,16 @@
 export const DEFAULT_TO = 'Enquiry@hanesdistribution.co.nz';
 import { randomUUID } from 'node:crypto';
 
-const EMAIL = /^[^\s@<>()[\]\\,;:"]{1,64}@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:".]{2,}$/;
+// an allow-list, so the address can't carry mailto or header extras such as ?cc=, &body= or %40
+const EMAIL = /^[A-Za-z0-9.!$'*+\/^_`{|}~-]{1,64}@(?=.{1,253}$)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
 const LIMITS = { name: 120, email: 254, subject: 140, form: 60, page: 300, label: 60, value: 5000, fields: 30, total: 20000 };
 
 // strip control characters (keeping line breaks in long answers) and trim to a length
 const clean = (v, max) => String(v ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim().slice(0, max);
 const line = (v, max) => clean(v, max).replace(/\s+/g, ' ');
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// true when what the customer typed is over the limit, so it is refused rather than quietly cut short
+const long = (v, max) => String(v ?? '').replace(/\r\n?/g, '\n').trim().length > max;
 export const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export function configured(env = process.env) {
@@ -43,13 +46,16 @@ export function validate(body) {
   const subject = line(body.subject, LIMITS.subject) || 'Website enquiry';
   const form = line(body.form, LIMITS.form) || 'form', page = line(body.page, LIMITS.page);
   if (!name) return { error: 'Please enter your name.', field: 'name' };
-  if (!EMAIL.test(email)) return { error: 'Please enter a valid email address.', field: 'email' };
+  if (long(body.name, LIMITS.name)) return { error: 'Your name is too long. Please shorten it and try again.', field: 'name' };
+  if (long(body.email, LIMITS.email) || !EMAIL.test(email)) return { error: 'Please enter a valid email address.', field: 'email' };
   const rows = Array.isArray(body.fields) ? body.fields.slice(0, LIMITS.fields) : [];
   const fields = [];
   let total = 0;
   for (const r of rows) {
     if (!Array.isArray(r)) continue;
     const k = line(r[0], LIMITS.label), v = clean(r[1], LIMITS.value);
+    // every form's long answer comes from its textarea named "message"
+    if (long(r[1], LIMITS.value)) return { error: `${/^message$/i.test(k) ? 'Your message' : `"${k}"`} is too long. Please shorten it and try again.`, field: 'message' };
     if (!k || !v || /^(name|email)$/i.test(k)) continue;
     total += v.length;
     fields.push([k, v]);
@@ -116,12 +122,13 @@ export async function send(msg, env = process.env) {
   throw e;
 }
 
-/* A light limit on repeat sends from one address, kept in memory for as long as the function stays warm. */
+/* A light limit on repeat sends from one address, kept in memory for as long as the function stays warm.
+   limited() only checks; record() counts a request and returns a function that takes the count back. */
 const hits = new Map();
-export function limited(key, now = Date.now(), max = 5, windowMs = 10 * 60 * 1000) {
-  const list = (hits.get(key) || []).filter(t => now - t < windowMs);
-  if (list.length >= max) { hits.set(key, list); return true; }
-  list.push(now); hits.set(key, list);
+const recent = (key, now, windowMs) => { const list = (hits.get(key) || []).filter(t => now - t < windowMs); hits.set(key, list); return list; };
+export function limited(key, now = Date.now(), max = 5, windowMs = 10 * 60 * 1000) { return recent(key, now, windowMs).length >= max; }
+export function record(key, now = Date.now(), windowMs = 10 * 60 * 1000) {
+  recent(key, now, windowMs).push(now);
   if (hits.size > 5000) hits.clear();
-  return false;
+  return () => { const l = hits.get(key); const i = l ? l.lastIndexOf(now) : -1; if (i >= 0) l.splice(i, 1); };
 }
